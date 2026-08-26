@@ -98,22 +98,22 @@ def load_inputs() -> dict:
             **bound_row(locked_bounds, "transparent_rule_retention_0.95"),
         },
         {
-            "label": r"Full MIL, $\rho=.90$",
+            "label": r"Diagnostic, $\rho=.90$",
             "group": "full",
             **bound_row(locked_bounds, "weak_mil_ai_retention_0.90"),
         },
         {
-            "label": r"Full MIL, $\rho=.95$",
+            "label": r"Diagnostic, $\rho=.95$",
             "group": "full",
             **bound_row(locked_bounds, "weak_mil_ai_retention_0.95"),
         },
         {
-            "label": r"No-equality MIL, $\rho=.90$",
+            "label": r"Primary, $\rho=.90$",
             "group": "no_geo",
             **bound_row(ablation_bounds, "weak_mil_ai_retention_0.90"),
         },
         {
-            "label": r"No-equality MIL, $\rho=.95$",
+            "label": r"Primary, $\rho=.95$",
             "group": "no_geo",
             **bound_row(ablation_bounds, "weak_mil_ai_retention_0.95"),
         },
@@ -157,12 +157,15 @@ def configure_style() -> None:
     mpl.rcParams.update(
         {
             "font.family": "DejaVu Sans",
-            "font.size": 8.0,
-            "axes.titlesize": 9.0,
+            "font.size": 8.6,
+            "axes.titlesize": 8.8,
             "axes.labelsize": 8.0,
-            "xtick.labelsize": 7.4,
-            "ytick.labelsize": 7.4,
-            "legend.fontsize": 7.2,
+            "xtick.labelsize": 7.6,
+            "ytick.labelsize": 7.6,
+            "legend.fontsize": 7.3,
+            "pdf.fonttype": 42,
+            "ps.fonttype": 42,
+            "svg.fonttype": "none",
             "axes.linewidth": 0.7,
             "axes.edgecolor": "#374151",
             "axes.labelcolor": "#111827",
@@ -180,25 +183,27 @@ def configure_style() -> None:
 
 def draw_figure(data: dict, output: Path, dpi: int) -> None:
     configure_style()
-    fig = plt.figure(figsize=(12.4, 3.65))
+    # Size the source close to ACM's final two-column width so text is not
+    # silently reduced to unreadable 4--5 pt type at inclusion time.
+    fig = plt.figure(figsize=(7.2, 3.25))
     grid = fig.add_gridspec(
         1,
         3,
-        width_ratios=(0.88, 1.15, 1.82),
-        left=0.055,
-        right=0.985,
-        bottom=0.22,
-        top=0.83,
-        wspace=0.43,
+        width_ratios=(0.90, 1.12, 1.80),
+        left=0.075,
+        right=0.99,
+        bottom=0.25,
+        top=0.80,
+        wspace=0.50,
     )
     ax_a = fig.add_subplot(grid[0, 0])
     ax_b = fig.add_subplot(grid[0, 1])
     ax_c = fig.add_subplot(grid[0, 2])
 
     display = {
-        "rule": "Transparent rule",
-        "full": "Full MIL\n(diagnostic)",
-        "no_geo": "No-equality MIL\n(primary)",
+        "rule": "Rule",
+        "full": "Diagnostic MIL",
+        "no_geo": "Primary MIL",
     }
     order = ["rule", "full", "no_geo"]
 
@@ -223,7 +228,7 @@ def draw_figure(data: dict, output: Path, dpi: int) -> None:
             xytext=(5, 0),
             textcoords="offset points",
             va="center",
-            fontsize=7.2,
+            fontsize=7.6,
             color=COLORS[key],
             fontweight="bold" if key == "no_geo" else "normal",
         )
@@ -235,7 +240,7 @@ def draw_figure(data: dict, output: Path, dpi: int) -> None:
     ax_a.set_ylim(-0.65, 2.65)
     ax_a.grid(axis="x", which="major")
     ax_a.set_xlabel("Brier score (log scale; lower is better)")
-    ax_a.set_title("(a) Held-out node prediction", loc="left", fontweight="bold")
+    ax_a.set_title("(a) Node prediction", loc="left", fontweight="bold")
     for spine in ("top", "right", "left"):
         ax_a.spines[spine].set_visible(False)
     ax_a.tick_params(axis="y", length=0)
@@ -276,7 +281,7 @@ def draw_figure(data: dict, output: Path, dpi: int) -> None:
                 ha="center",
                 va="bottom" if key != "full" else "top",
                 color=COLORS[key],
-                fontsize=6.8,
+                fontsize=7.2,
                 fontweight="bold" if key == "no_geo" else "normal",
             )
     ax_b.set_xticks(x, metric_labels)
@@ -285,7 +290,7 @@ def draw_figure(data: dict, output: Path, dpi: int) -> None:
     ax_b.set_yticks([0.6, 0.7, 0.8, 0.9, 1.0])
     ax_b.grid(axis="y")
     ax_b.set_ylabel("Rank metric (higher is better)")
-    ax_b.set_title("(b) Hidden true-edge ranking", loc="left", fontweight="bold")
+    ax_b.set_title("(b) Hidden-edge ranking", loc="left", fontweight="bold")
     ax_b.legend(
         loc="lower center",
         bbox_to_anchor=(0.5, -0.47),
@@ -343,8 +348,12 @@ def draw_figure(data: dict, output: Path, dpi: int) -> None:
         color=COLORS["truth"],
         fontweight="bold",
     )
-    # Full MIL at rho=.95 is the only displayed interval that misses truth.
-    full_95_y = yy[[row["label"].startswith("Full MIL") for row in bounds].index(True) + 1]
+    # Diagnostic MIL at rho=.95 is the only displayed interval that misses truth.
+    full_95_y = next(
+        yy[index]
+        for index, row in enumerate(bounds)
+        if row["group"] == "full" and ".95" in row["label"]
+    )
     ax_c.scatter(
         truth,
         full_95_y,
@@ -357,11 +366,11 @@ def draw_figure(data: dict, output: Path, dpi: int) -> None:
     ax_c.annotate(
         "excludes truth",
         xy=(truth, full_95_y),
-        xytext=(-5, -10),
+        xytext=(-5, 6),
         textcoords="offset points",
         ha="right",
-        va="top",
-        fontsize=6.7,
+        va="bottom",
+        fontsize=7.1,
         color=COLORS["full"],
     )
     ax_c.set_yticks(yy, [row["label"] for row in bounds])
@@ -375,38 +384,19 @@ def draw_figure(data: dict, output: Path, dpi: int) -> None:
     ax_c.grid(axis="x")
     ax_c.tick_params(axis="y", length=0)
     ax_c.set_xlabel("Feasible same-income-bin share")
-    ax_c.set_title("(c) Set-packing identification intervals", loc="left", fontweight="bold")
+    ax_c.set_title("(c) Exposure intervals", loc="left", fontweight="bold")
     for spine in ("top", "right", "left"):
         ax_c.spines[spine].set_visible(False)
 
     fig.suptitle(
         "Known-truth synthetic benchmark (not an empirical Chicago estimate)",
-        x=0.055,
+        x=0.075,
         y=0.965,
         ha="left",
-        fontsize=10.2,
+        fontsize=9.4,
         fontweight="bold",
         color="#111827",
     )
-    fig.text(
-        0.985,
-        0.965,
-        "Full MIL: diagnostic feature map  |  No-equality MIL: production-primary",
-        ha="right",
-        va="top",
-        fontsize=7.3,
-        color="#4B5563",
-    )
-    fig.text(
-        0.985,
-        0.035,
-        r"Intervals retain at least $\rho$ of the model-optimal matching score; hidden pairs never enter training.",
-        ha="right",
-        va="bottom",
-        fontsize=6.8,
-        color="#4B5563",
-    )
-
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=dpi, bbox_inches="tight", pad_inches=0.04)
     plt.close(fig)

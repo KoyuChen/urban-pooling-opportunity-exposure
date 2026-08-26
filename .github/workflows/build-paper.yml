@@ -25,5 +25,5 @@ jobs:
       - name: Upload compiled draft
         uses: actions/upload-artifact@v4
         with:
-          name: thicker-but-narrower-draft
+          name: admissible-sets-draft
           path: paper/Thicker_But_Narrower_Draft.pdf

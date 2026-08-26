@@ -16,45 +16,38 @@ California, USA}
 \usepackage{enumitem}
 \usepackage{graphicx}
 \usepackage{tabularx}
-\usepackage{xcolor}
 \usepackage{microtype}
 \usepackage{url}
 
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\ind}{\mathbb{I}}
-\newcommand{\todoemp}{\textcolor{red!70!black}{\textbf{TBD}}}
 \newcommand{\methodname}{\textsc{BoundPool}}
 \newtheorem{proposition}{Proposition}
 
 \newcommand{\paperabstract}{%
-Ride-pooling algorithms jointly determine operational efficiency and which
-travelers could share a service chain, but public mobility releases suppress
-the group identifiers needed to study that exposure margin. We introduce
-\methodname, a weakly supervised structured-inference framework for bounding
-neighborhood-level \emph{opportunity exposure} from privacy-coarsened trip
-records. Trips are nodes; temporal, origin--destination, and directional
-constraints define candidate pairs. A multiple-instance
-noisy-OR model learns edge hazards using only trip-level match indicators. We
-then optimize socioeconomic mixing statistics over all exact-cover packings
-consistent with observed match status, reporting an admissible interval rather
-than a single imputed co-rider graph. In a locked Chicago-coordinate synthetic
-benchmark, a geography-equality-free score improves held-out node Brier loss
-by 90.2\% over a transparent rule, raises hidden-edge mean reciprocal rank
-from 0.781 to 0.941, and retains all 80 hidden pairs. Its 90\% score-retention
-interval is 34.5\% narrower than the untrimmed range and covers truth; its 95\%
-interval is 58.6\% narrower and also covers. A diagnostic map containing
-tract-equality indicators appears sharper but mechanically encodes the
-synthetic same-income target and excludes truth at 95\%, exposing proxy-induced
-false precision.
-We pair the method with a reproducible design for Chicago's 2026 ride-pooling
-policy change and publicly released TNP and ACS data. The current draft reports
-the completed method validation and pre-policy feasibility audit; complete-day
-Chicago structural and causal estimates are explicitly reserved for the next
-data run. The framework studies compatibility-weighted opportunity exposure,
-not observed co-presence, individual socioeconomic status, or echo chambers.}
+Ride-pooling algorithms can increase feasible matches while changing which
+neighborhoods enter the resulting sharing opportunities. Public Chicago
+records retain trip-level sharing authorization, match outcomes, and pooled
+chain size but suppress the group identifiers needed to measure that
+composition. Our target is neighborhood-level \emph{opportunity exposure}, not
+verified co-presence, individual socioeconomic status, or an echo chamber. We
+introduce \methodname, which screens physically plausible candidate edges,
+learns compatibility scores from node-level match indicators through a
+multiple-instance noisy-OR model, and optimizes mixing statistics over every
+exact-cover pairing consistent with the released records. The output is an
+admissible interval rather than an imputed co-rider graph. In a locked
+Chicago-coordinate synthetic benchmark, the primary geography-equality-free
+score narrows the untrimmed interval by 58.6\% at $\rho=0.95$ while retaining
+the hidden pairing; a geography-equality diagnostic looks sharper but excludes
+truth at the same score floor, revealing proxy-induced false precision.
+Method validation and the pre-policy feasibility audit are complete.
+Complete-day Chicago structural and causal estimates for the January 2026
+policy change are reserved for the production data run. AI is therefore a
+model-indexed tightening device; the score-free physical range remains the
+coverage reference.}
 
-\title{Thicker but Narrower? Weakly Supervised Bounds on Opportunity Exposure in Urban Ride-Pooling Markets}
+\title{Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records}
 
 \author{Keyu Chen}
 \affiliation{%
@@ -68,7 +61,7 @@ not observed co-presence, individual socioeconomic status, or echo chambers.}
 \ccsdesc[500]{Computing methodologies~Machine learning}
 \ccsdesc[300]{Information systems~Geographic information systems}
 \ccsdesc[300]{Applied computing~Transportation}
-\keywords{ride pooling, weak supervision, partial identification, set packing,
+\keywords{ride pooling, weak supervision, partial identification, exact cover,
 urban mobility, socioeconomic exposure, privacy-coarsened data}
 \maketitle
 
@@ -76,54 +69,54 @@ urban mobility, socioeconomic exposure, privacy-coarsened data}
 \label{sec:introduction}
 
 Urban pooling platforms use prediction and combinatorial optimization to
-decide which requests can share a vehicle. These decisions do more than reduce
-vehicle miles: they define a technologically mediated set of potential
-cross-neighborhood encounters. The scientific question is therefore not only
-whether a thicker pooling market produces more matches, but whether the
-additional feasible matches broaden or narrow socioeconomic opportunity
-exposure. Market thickness can reduce aggregate matching through search
-frictions \citep{linetessine2020thickness}, and ride-sharing density economies
-can distribute service access unevenly across space \citep{ghili2026access}.
-Our outcome is a separate compositional margin under suppressed group links.
+decide which requests can share a vehicle. A thicker pool may create more
+cross-neighborhood opportunities, or it may add matches mainly within already
+similar parts of a city. Thickness need not even raise aggregate matching when
+search frictions grow with market size \citep{linetessine2020thickness}, and
+ride-sharing density economies can distribute service access unevenly across
+space \citep{ghili2026access}. Our outcome is different from both match rate
+and access. The scientific question is whether additional feasible matches
+broaden or narrow the socioeconomic composition of opportunity exposure.
 
-That question is difficult precisely where public evidence is most available.
-The City of Chicago releases trip-level Transportation Network Provider (TNP)
-records with rounded timestamps, coarse origins and destinations, sharing
-authorization, realized match status, and the number of component trips in a
-pooled service chain. It does not release the chain identifier, vehicle
-identifier, provider, or stable rider identity. Treating nearby trips as known
-co-riders would convert privacy coarsening into false certainty. Conversely,
-discarding the relational object leaves only an ordinary match-rate regression
-and cannot measure the exposure margin.
+The public observation operator makes that question nonstandard. Chicago's
+Transportation Network Provider records report sharing authorization,
+realized match status, and \texttt{trips\_pooled} for each trip, but suppress
+the service-chain identifier, vehicle identifier, provider, and stable rider
+identity. Declaring spatiotemporally nearby rows to be co-riders would turn
+privacy coarsening into false certainty. Dropping the relational object would
+leave a node-level match-rate regression that cannot measure exposure. We take
+a third route: characterize the set of groupings consistent with the released
+records and propagate the remaining ambiguity into a service-chain
+opportunity estimand, not a claim of verified co-presence.
 
-We propose a third route: infer an \emph{admissible set} of latent groupings and
-carry that ambiguity into the scientific estimand. \methodname first builds a
-sparse candidate graph from physically interpretable constraints.
-It then learns edge compatibility from node-level match labels through a
-multiple-instance likelihood, without constructing pair labels. Finally, a
-set-packing program finds the minimum and maximum socioeconomic mixing
-statistics over feasible groupings. The result is conditional on declared
-candidate and score restrictions, but it makes those assumptions visible and
-testable.
+\methodname{} performs three operations. It first screens candidate edges using
+declared temporal, origin--destination, and directional constraints. It then
+learns compatibility scores from node-level match labels with a noisy-OR
+likelihood; no pair label is created, and an edge score is not a posterior
+probability that two riders shared a vehicle. Finally, it minimizes and
+maximizes the mixing statistic over globally feasible exact-cover pairings.
+The untrimmed physical set is the coverage reference. A score-retention floor
+is a model-indexed sensitivity restriction, not a confidence interval.
 
-Our contributions are fourfold. First, we formulate suppressed pooling groups
-as a structured missing-data problem rather than a clustering target.
-Second, we develop a scalable weak-supervision objective that converts public
-node outcomes into edge hazards while preserving the absence of edge truth.
-Third, we replace a single reconstructed network with optimization-based
-opportunity-exposure bounds and diagnose the coverage cost of aggressive model
-restriction. Fourth, we provide a human-experiment-free empirical design that
-combines Chicago TNP records, tract-level ACS covariates, and the January 2026
-pooling-policy change.
+Completed evidence establishes the method's boundary, not a Chicago policy
+sign. On the locked known-truth generator, the candidate graph
+covers all hidden pairs, the primary score tightens the interval while
+retaining truth, and a diagnostic score with geography-equality features
+creates false precision by excluding truth at a stringent retention level.
+The production design is locked to complete Chicago market days and the
+January 6, 2026 policy change; the prefix extract supplies only a schema and
+feasibility audit. Complete-day latent-group estimation, exposure intervals,
+and policy signs are reserved for the production extract and are not claimed
+in this draft.
 
-The locked pilot supplies an important negative result as well as a positive
-one. A full feature map sharply improves node calibration but uses tract
-equality that becomes an algebraic proxy for the synthetic same-income target;
-its 95\% score floor misses truth. Removing six geography-equality features
-preserves node performance, improves hidden-edge ranking, and restores
-coverage, although continuous coordinates can still proxy SES. AI therefore
-organizes model-indexed admissible sets, while the score-free range remains
-primary.
+The paper makes four contributions. First, it formulates suppressed pooling
+groups as structured missing relations rather than a clustering target.
+Second, it maps node-level match outcomes into edge scores without
+manufacturing pair labels. Third, it reports optimization-based admissible
+intervals for opportunity exposure and audits the coverage cost of model-based
+tightening. Fourth, it provides a reproducible, human-experiment-free policy
+design whose data, estimand, diagnostics, and claim gates are fixed in advance;
+this is a design contribution, not a policy conclusion.
 
 \input{sections/related_work}
 
@@ -143,6 +136,42 @@ empty again; two component riders need not have been simultaneously present.
 Each component has a separate row and the same count, but the common chain ID
 is suppressed. Accordingly, our pair estimand is a service-chain compatibility
 opportunity, not physical co-presence.
+
+\subsection{What the observation operator preserves}
+
+The release does not merely add noise to a conventional supervised-learning
+table. It preserves outcomes on individual rows while deleting the relational
+key that would join those rows. Table~\ref{tab:observation-operator} separates
+what each field licenses from the stronger interpretation it cannot support.
+This distinction fixes the analysis unit before modeling: trips are observed
+nodes, two-trip service chains are latent exact-cover pairs, and every reported
+exposure statistic is conditional on a declared set of feasible joins.
+
+\begin{table}[t]
+  \caption{Scientific content of the privacy-coarsened release.}
+  \label{tab:observation-operator}
+  \small
+  \begin{tabularx}{\columnwidth}{@{}p{0.24\columnwidth}XX@{}}
+    \toprule
+    Released object & What it identifies & What it does not identify \\
+    \midrule
+    Match indicator & Row entered a successful shared service chain & Partner, group, vehicle, or overlap in occupancy \\
+    \texttt{trips\_pooled} & Customer-trip count from empty vehicle to empty vehicle & Common chain key, order, or simultaneous presence \\
+    Rounded time and centroids & A declared physical candidate set & Realized assignment within that set \\
+    Origin ACS join & Neighborhood socioeconomic context & Rider income, race, or preference \\
+    Missing stable IDs & Structural absence of repeated persons and groups & Durable ties, belief reinforcement, or echo chambers \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+Two sources of selection remain visible even before latent pairing. Sharing
+authorization determines who can enter the pool, and geographic suppression
+determines whose neighborhood context can enter $H$ or $D$. We therefore keep
+authorization/matching outcomes on their full eligible denominators, restrict
+the primary exposure statistic to pair-eligible rows with joined origin
+geography, and report the resulting support loss by treatment cell. Neither
+complete-case analysis nor a learned score repairs non-random suppression; both
+only define a transparent target population.
 
 A deterministic two-character trip-ID-prefix sample covers December 9, 2025
 through February 2, 2026 and contains 53,241 trips, including 3,048 authorized
@@ -208,133 +237,63 @@ In the prefix feasibility sample, the approximate newly covered zone during
 weekday active hours shows authorization increasing from 5.95\% to 8.08\% and
 matched/all trips from 4.61\% to 6.89\%. Mean additional charges increase from
 \$5.69 to \$6.31 in the treated cell. These are unadjusted go/no-go signals,
-not causal estimates. Table~\ref{tab:data} separates completed facts from the
-complete-day analysis still required.
-
-\begin{table}[t]
-  \caption{Raw policy-window feasibility signals (not causal).}
-  \label{tab:raw-policy}
-  \small
-  \centering
-  \resizebox{\columnwidth}{!}{%
-  \begin{tabular}{@{}llrrrr@{}}
-    \toprule
-    Cell & Period & $N$ & Authorized & Matched/all & Add'l charges \\
-    \midrule
-    Target & Pre  & 3,797  & 5.95\% & 4.61\% & \$5.69 \\
-    Target & Post & 4,047  & 8.08\% & 6.89\% & \$6.31 \\
-    Comparison & Pre  & 10,975 & 5.53\% & 3.54\% & \$6.86 \\
-    Comparison & Post & 11,369 & 5.82\% & 3.97\% & \$6.85 \\
-    \bottomrule
-  \end{tabular}}
-  \vspace{2pt}
-  \parbox{0.97\columnwidth}{\footnotesize\emph{Note.} Four-week windows around
-  January 6, 2026; approximate feasibility-stage zone; no sampling uncertainty
-  or causal adjustment.}
-\end{table}
-
-\begin{table}[t]
-  \caption{Data layers and current completion status.}
-  \label{tab:data}
-  \small
-  \begin{tabularx}{\columnwidth}{p{0.25\columnwidth}p{0.20\columnwidth}X}
-    \toprule
-    Layer & Status & Scientific use \\
-    \midrule
-    Chicago prefix sample & Complete & Schema, missingness, aggregate feasibility only \\
-    Chicago complete days & \todoemp & Candidate graph, held-out node calibration, SES bounds \\
-    ACS 2024 tracts & Complete & Pickup-neighborhood SES proxy \\
-    NYC HVFHV & Pilot extract & Time-coarsening and out-of-domain stress test; no pair truth \\
-    Locked synthetic market & Complete & Candidate recall, hidden-edge ranking, coverage audit \\
-    \bottomrule
-  \end{tabularx}
-  \vspace{2pt}
-  \parbox{0.97\columnwidth}{\footnotesize\emph{Note.} Red TBD entries require
-  complete-day or full-month data and must be replaced by measured results
-  before submission.}
-\end{table}
-
-\subsection{Frozen data-management protocol}
-
-The production downloader issues a server-side count for each complete-day
-query, retrieves every authorized row in deterministic identifier order,
-paginates until that count is met, writes through an atomic temporary file,
-and records query text, retrieval time, row count, and SHA-256 digest. A schema
-audit then checks identifier uniqueness, exact date boundaries, boolean-field
-consistency, pooled-chain codes, coordinate ranges, and tract suppression. We
-do not combine a partial download with a complete day. The raw response,
-processed node table, and machine-readable audit ledger remain separately
-versioned.
-
-Days, not edges, are the train/test unit. Candidate construction is performed
-independently inside each date and split, preventing an edge or rounded-time
-duplicate from leaking across evaluation sets. ACS joins occur only after the
-physical candidate graph is frozen, and SES never enters candidate support or
-weak-MIL fitting. The primary SES analysis is complete-case at pickup tract;
-prespecified alternatives use community-area aggregates and an explicit
-suppressed-location stratum. Every model result is paired with the eligible
-denominator, candidate-supported denominator, degree distribution, exact-cover
-infeasibility rate, and candidate-threshold configuration.
-
-\subsection{NYC temporal-coarsening stress test}
-
-New York City TLC high-volume for-hire-vehicle records provide a distinct
-measurement environment with second-level request, pickup, and drop-off times
-but only coarse taxi zones. A completed schema pilot contains 2,000 deliberately
-stratified records: 500 legacy rows from 2019--2020 and 1,500 modern rows from
-February 2021 and January 2023. Every modern pilot row has nonmissing request,
-pickup, drop-off, and zone fields. The audit flags 0.8\% negative waits in one
-2021 stratum and four of 250 matched 2023 records without a shared-request flag.
-Because the extract is outcome-stratified, it cannot estimate match rates.
-The planned full-month test will round timestamps to 5, 15, and 30 minutes and
-measure graph inflation and node calibration. It cannot validate true pairs
-because NYC also suppresses rider, vehicle, and shared-group identifiers.
+not causal estimates. Complete-day rows, not this prefix, are required for the
+candidate graph and policy contrasts. Appendix~\ref{sec:aux-validation} records
+the raw feasibility cells, frozen extraction protocol, data status, and an NYC
+temporal-coarsening stress test.
 
 \section{Weakly Supervised Structured Inference}
 \label{sec:method}
 
-\subsection{Observed nodes and latent groups}
+\subsection{Target: exposure over latent pairings}
 
-Let $V=\{1,\ldots,n\}$ index authorized trips in a complete market-day
-slice. Trip $i$ has released features $x_i$, node match label
+The target is a statistic of feasible pairings, not a reconstructed social
+network. Let $V=\{1,\ldots,n\}$ index authorized trips in a complete
+market-day slice. Trip $i$ has released features $x_i$, node match label
 $y_i\in\{0,1\}$, released service-chain size $k_i$, pickup-neighborhood log
-income $Z_i$, and predeclared income bin $B_i$. The latent object is a set $M$
-of mutually non-conflicting pairs. For the primary pair analysis, we retain
+income $Z_i$, and predeclared income bin $B_i$. The suppressed object is a set
+$M$ of mutually non-conflicting pairs. For the primary pair analysis, we retain
 $V_1=\{i:y_i=1,k_i=2\}$ with valid geography and require every retained node
 to appear exactly once. If $m=|V_1|/2$, the target statistics are
 \begin{equation}
- H(M)=m^{-1}\!\sum_{\{i,j\}\in M}\ind\{B_i=B_j\},\quad
- D(M)=m^{-1}\!\sum_{\{i,j\}\in M}|Z_i-Z_j|.
+\begin{aligned}
+ H(M)&=m^{-1}\!\sum_{\{i,j\}\in M}\ind\{B_i=B_j\},\\
+ D(M)&=m^{-1}\!\sum_{\{i,j\}\in M}|Z_i-Z_j|.
+\end{aligned}
  \label{eq:estimands}
 \end{equation}
-$H$ is a same-neighborhood-income-bin share, not degree-corrected network
-assortativity; $D$ is a continuous sensitivity outcome. Neither is observed
-because $M$ is suppressed.
+$H$ is the share of pairs from the same pickup-neighborhood income bin, not
+degree-corrected network assortativity; $D$ is a continuous sensitivity
+outcome. Both describe neighborhood-level opportunity exposure. Neither the
+pairing nor verified co-presence is observed.
 
-\subsection{Candidate construction}
+\subsection{Feasibility: candidate construction}
 
-We create an undirected candidate edge $(i,j)$ only within a calendar day and
-train/test split when start-time gap is at most 30 minutes, pickup and drop-off
-distances are at most 4 and 7 km, and OD-vector cosine is at least $-0.25$.
-A normalized spatiotemporal nearest-neighbor query proposes at most 96 records;
-physical cost ranks proposals, and a deterministic cap limits degree to 16.
-The resulting candidate set is $E_C$. The production-primary 22-column feature
-map $\phi_{ij}$ contains normalized time, OD, duration, mileage, direction,
-interval overlap, squares, exponentials, and predeclared interactions. A
-28-column diagnostic map adds six same-tract/same-area indicators and
-interactions. Neither endpoint match status, \texttt{trips\_pooled}, fare, nor
-ACS SES enters either map.
+A candidate edge says only that two records could have belonged to the same
+two-trip service chain; it is not an inferred co-rider link. We admit an
+undirected edge $(i,j)$ only within a calendar day and train/test split when the
+start-time gap is at most 30 minutes, pickup and drop-off distances are at most
+4 and 7 km, and OD-vector cosine is at least $-0.25$. A normalized
+spatiotemporal nearest-neighbor query proposes at most 96 records. Physical
+cost ranks these proposals, and a deterministic cap limits degree to 16. The
+surviving edges form $E_C$.
 
-Search and degree caps are computational restrictions that can delete the
-truth. We therefore report support, degree, and threshold sensitivity; true
-candidate recall is knowable only in synthetic validation.
+The production-primary feature map $\phi_{ij}$ has 22 columns covering time,
+OD, duration, mileage, direction, interval overlap, squares, exponentials, and
+predeclared interactions. A 28-column diagnostic map adds six
+same-tract/same-area indicators and interactions. Neither map uses endpoint
+match status, \texttt{trips\_pooled}, fare, or ACS SES. Search and degree caps
+can delete the true edge, so every result is conditional on $E_C$. We report
+support, degree, and threshold sensitivity; true-edge recall is observable only
+in synthetic validation.
 
-\subsection{Node-label weak supervision}
+\subsection{Likelihood: node-label weak supervision}
 
-The edge model assigns logit $a_{ij}=\phi_{ij}^{\top}\theta$ and activation
-score $q_{ij}=\sigma(a_{ij})$. This score is not a calibrated posterior that
-the endpoints shared a vehicle. No edge label is available. Instead, incident edges
-form a bag for node $i$ and induce a noisy-OR node probability
+The public label says whether a trip matched, not which incident edge was
+realized. We therefore learn edge compatibility only through a bag-level node
+likelihood. For candidate edge $(i,j)$, let
+$a_{ij}=\phi_{ij}^{\top}\theta$ and $q_{ij}=\sigma(a_{ij})$. Incident edges
+form a bag for node $i$ and induce the noisy-OR probability
 \begin{equation}
 \begin{aligned}
   \widehat p_i(\theta)
@@ -342,7 +301,7 @@ form a bag for node $i$ and induce a noisy-OR node probability
   &=1-\exp\!\left\{-\sum_{j:(i,j)\in E_C}
       \operatorname{softplus}(a_{ij})\right\}.
 \end{aligned}
-  \label{eq:noisyor}
+ \label{eq:noisyor}
 \end{equation}
 On candidate-supported training nodes $\mathcal T$, we estimate
 \begin{equation}
@@ -352,85 +311,513 @@ On candidate-supported training nodes $\mathcal T$, we estimate
  +\frac{\lambda}{2}\|\theta_{-0}\|_2^2,
  \label{eq:mil-objective}
 \end{equation}
-with $\lambda=10^{-3}$, unpenalized intercept, stable softplus evaluation,
-and L-BFGS-B optimization.
-The current implementation uses a linear model over a fixed nonlinear basis of
-time, OD, directional, overlap, and interaction features. A transparent rule
-combines the same physical dissimilarities with disclosed fixed weights; only
-its intercept and a nonnegative global scale are calibrated through
-Eq.~\eqref{eq:mil-objective}. Thus the comparator tests flexibility beyond an
-interpretable physical ordering, not performance against an edge-supervised
-oracle. Whole days, rather than edges, form the train/test split.
+with $\lambda=10^{-3}$, an unpenalized intercept, stable softplus evaluation,
+and L-BFGS-B optimization. The fitted $q_{ij}$ is a compatibility score inside
+this working likelihood. It is neither an observed edge label nor a calibrated
+posterior probability that two riders shared a vehicle.
 
-Equation~\eqref{eq:noisyor} supports a node prediction claim only. Two matched
-endpoints may belong to different service chains, so public-data pair accuracy
-is undefined. Synthetic truth is used exclusively after fitting to audit
-candidate recall and within-node edge ranks.
+The learned model is linear over the fixed nonlinear basis above. A transparent
+rule uses the same physical dissimilarities with disclosed fixed weights; only
+its intercept and nonnegative global scale are fitted by
+Eq.~\eqref{eq:mil-objective}. Whole days form the train/test split. The
+likelihood therefore supports node prediction only. Public-data pair accuracy
+is undefined; synthetic truth is used only after fitting to audit candidate
+recall and within-node edge ranks.
 
-\subsection{Set-packing opportunity-exposure bounds}
+\subsection{Optimization: exact-cover exposure bounds}
 
-For candidate edge $e$, let $z_e\in\{0,1\}$ indicate selection, $w_e\ge0$ be
-its compatibility score, and $g_e$ be an SES statistic such as
-$\ind\{B_i=B_j\}$ or $|Z_i-Z_j|$. With required matched nodes $V_1$,
-the feasible pair packings are
+The scientific output is the range of $H$ or $D$ over all exact-cover pairings
+consistent with the declared graph, not the model's highest-scoring pairing.
+For candidate edge $e$, let $z_e\in\{0,1\}$ indicate selection, let $w_e\ge0$
+equal the fitted $q_e$ (or the comparator's rule score), and let $g_e$ be an SES statistic such as
+$\ind\{B_i=B_j\}$ or $|Z_i-Z_j|$. The admissible exact covers are
 \begin{equation}
 \begin{aligned}
   \mathcal M(E_C)=\{z\in\{0,1\}^{|E_C|}:\;&
   \sum_{e\ni i}z_e=1\quad \forall i\in V_1,\\[-2pt]
   &z_e=0\quad\text{if }e\not\subseteq V_1\}.
 \end{aligned}
-  \label{eq:matching}
+ \label{eq:matching}
 \end{equation}
-Because every feasible solution selects $|V_1|/2$ edges, the untrimmed
-admissible interval is
+Every feasible solution selects $|V_1|/2$ edges, so the untrimmed admissible
+interval is
 \begin{equation}
   \left[\frac{2}{|V_1|}\min_{z\in\mathcal M(E_C)}\sum_e g_ez_e,
         \frac{2}{|V_1|}\max_{z\in\mathcal M(E_C)}\sum_e g_ez_e\right].
-  \label{eq:bounds}
+ \label{eq:bounds}
 \end{equation}
-For sensitivity, let $W^*=\max_{z\in\mathcal M(E_C)}\sum_e w_ez_e$. A
-$\rho$-retention set adds $\sum_e w_ez_e\ge \rho W^*$. This can tighten the
-interval but is model-based and may lose coverage; it is not a confidence
-interval. All programs are solved as binary linear programs with HiGHS and
-reported only after a global optimality certificate.
+
+AI enters only as a declared sensitivity restriction. Let
+$W^*=\max_{z\in\mathcal M(E_C)}\sum_e w_ez_e$ and define
+\begin{equation}
+ \mathcal M_\rho(E_C)=
+ \left\{z\in\mathcal M(E_C):\sum_e w_ez_e\ge\rho W^*\right\}.
+ \label{eq:rho-set}
+\end{equation}
+Replacing $\mathcal M(E_C)$ by $\mathcal M_\rho(E_C)$ in
+Eq.~\eqref{eq:bounds} yields a score-restricted interval. Here $\rho$ is an
+analyst-chosen sensitivity parameter, not a confidence level, and the resulting
+interval is not a confidence interval. All programs are binary linear programs
+solved with HiGHS and reported only with a global optimality certificate.
 
 \begin{proposition}[Conditional sharpness and coverage]
 \label{prop:coverage}
-If $\mathcal M(E_C)$ is nonempty and both programs in
-Eq.~\eqref{eq:bounds} are solved globally, their endpoints are attained and
-sharp over the declared candidate graph. If the suppressed true pairing
-$z^\dagger$ lies in $\mathcal M(E_C)$, the untrimmed interval contains its
-target value. A $\rho$-restricted interval has the same guarantee only if
+If $\mathcal M(E_C)$ is nonempty and both extrema are solved globally,
+Eq.~\eqref{eq:bounds} is sharp over the declared candidate graph. If the
+suppressed true pairing $z^\dagger$ belongs to $\mathcal M(E_C)$, the untrimmed
+interval contains its target value. The same membership-based guarantee holds
+for a score-restricted interval exactly when
+$z^\dagger\in\mathcal M_\rho(E_C)$, equivalently
 $\sum_e w_ez_e^\dagger\ge\rho W^*$.
 \end{proposition}
 
-The proof is immediate from the one-to-one correspondence between feasible
-binary incidence vectors and exact-cover pairings; it is given with the full
-pseudocode in the appendix. Because larger $\rho$ values form nested subsets,
-their widths weakly decrease, but Proposition~\ref{prop:coverage} shows why
-narrowing alone gives no coverage guarantee.
+Both feasible sets are finite, so certified extrema are attained and bracket
+every member. Moreover,
+$\mathcal M_{\rho_2}(E_C)\subseteq\mathcal M_{\rho_1}(E_C)$ for
+$\rho_2\ge\rho_1$: increasing $\rho$ can narrow the interval, but it can also
+discard the true pairing. Failure of the score floor removes the structural
+coverage guarantee; it need not numerically exclude the same scalar target.
+The appendix gives the formal proof.
 
-\section{Validation Results}
+\subsection{Interpretation and audit logic}
+
+The construction compares two nested admissible sets. Conditional on the
+exact-cover cohort and field consistency, $\mathcal M(E_C)$ additionally
+requires the physical screen to contain every retained true pair. It does not
+assume that a learned score ranks that pair highly. The restricted set
+$\mathcal M_\rho(E_C)$ adds one claim: an
+admissible pairing must retain at least a declared fraction of the best total
+compatibility score. Reporting both sets makes the source of sharpening
+visible. If the raw interval is wide, the public observation operator leaves
+substantial structural ambiguity. If only the score-restricted interval is
+narrow, the apparent information comes from the model and must survive a
+known-truth coverage audit.
+
+Exact-cover optimization is essential because edge decisions are coupled. A
+high-scoring edge consumes both endpoints, changes which other edges remain
+available, and changes the composition of a complete pairing.
+Thresholding edges independently, clustering by proximity, or taking the
+maximum-score pairing would answer a different question: which single graph an
+algorithm prefers. Our min/max programs instead ask which exposure values
+remain possible after every retained matched node is assigned exactly once.
+They can return a wide range or infeasibility, and either outcome is part of the
+scientific result.
+
+The validation targets the sequence of claims created by this construction.
+Candidate recall tests whether truth enters $E_C$. Held-out Brier loss tests
+whether edge scores aggregate to calibrated node matchability. Hidden-edge
+ranking tests whether good node prediction orders the unobserved relation in a
+known-truth market. Finally, true-pairing eligibility tests whether the score
+floor preserves the member whose target generated the synthetic data. Only the
+first and last checks support structural coverage; node prediction alone does
+not. In Chicago, where pair truth is unavailable, we can report node
+calibration, support, feasibility, and sensitivity across declared graphs, but
+we cannot turn those diagnostics into empirical pair accuracy.
+
+These intervals also differ from sampling confidence intervals. The admissible
+range conditions on one released market slice and varies the suppressed
+relation. Sampling uncertainty instead varies market slices or dates. The
+complete analysis will recompute structural endpoints inside date-block
+resamples and will display the untrimmed range, the family indexed by $\rho$,
+and sampling uncertainty separately. No choice of $\rho$ is calibrated to have
+90\% or 95\% frequentist coverage.
+
+\section{Identification Conditions and Falsification}
+\label{sec:identification}
+
+Proposition~\ref{prop:coverage} is deliberately conditional. It does not turn
+privacy-coarsened records into observed relationships; it states what follows
+after the candidate graph, exact-cover cohort, and optional score floor are
+declared. Table~\ref{tab:identification} makes those conditions operational and
+preassigns the interpretation of their failure. This prevents a favorable
+point estimate or narrow interval from overruling a failed measurement check.
+
+\begin{table*}[t]
+  \caption{Identification conditions, diagnostics, and retained claims.}
+  \label{tab:identification}
+  \small
+  \centering
+  \begin{tabularx}{0.96\textwidth}{@{}p{0.19\textwidth}p{0.34\textwidth}X@{}}
+    \toprule
+    Condition & Evidence reported & Interpretation if the condition fails \\
+    \midrule
+    Candidate completeness & Known-truth recall; node support, degree, component size, and threshold grid in Chicago & Untrimmed range is conditional only; no structural coverage claim \\
+    Exact-cover consistency & Parity, feasibility, solver certificate, and enumeration agreement on small graphs & Cell is infeasible; do not drop nodes or substitute a best-score graph \\
+    Score alignment & Out-of-day node calibration plus hidden-edge rank and true-pairing eligibility in simulation & Learned restriction is diagnostic; rule and untrimmed ranges remain primary \\
+    Contextual target validity & ACS release/join rates, suppression strata, continuous-gap and area-level alternatives & Claim is limited to the observed neighborhood-context subpopulation \\
+    Policy measurement stability & Charge first stage, pre-trends, support continuity, and sign stability across declared graphs & Report measurement shift, descriptive association, or unidentified direction \\
+    \bottomrule
+  \end{tabularx}
+\end{table*}
+
+Candidate completeness is the strongest structural requirement and the least
+directly testable in Chicago. Search windows and degree caps make computation
+possible, but either can delete a true pair. High node support is therefore not
+proof of high true-edge recall: a node can have many physically plausible
+neighbors while its actual service-chain partner is absent. We use known-truth
+markets to measure recall and use Chicago support, component structure, and
+threshold sensitivity to reveal fragile regions. The resulting raw range is
+sharp over $E_C$, not over every relationship that could exist under a looser
+physical model.
+
+Exact-cover feasibility provides a different diagnostic. An infeasible
+component can reflect an overly narrow candidate rule, inconsistent public
+chain-size fields, or eligibility decisions that remove a required counterpart.
+It is not repaired by matching the largest feasible subset, because doing so
+changes both the population and the exposure denominator. Production results
+therefore report infeasibility by date and socioeconomic support stratum. Any
+revised candidate graph is run as a separately declared sensitivity analysis,
+not chosen because its exposure estimate is more precise.
+
+Score alignment is an additional assumption, not a consequence of feasibility.
+The noisy-OR likelihood rewards node-level prediction after aggregating all
+incident edges. It can succeed by learning candidate degree, market density, or
+a geographic shortcut while ordering the true partner poorly. This is why the
+validation reports Brier loss, hidden-edge rank, and true-pairing eligibility as
+distinct outcomes. If a score restriction fails the known-truth audit, a narrow
+range is evidence about the model's preference, not stronger identification.
+
+Finally, $H$ and $D$ inherit the meaning of their contextual labels. They
+compare released pickup-neighborhood income, not rider resources or preferences.
+A high same-bin share may reflect residential sorting, trip geography, platform
+assignment, or chance within a constrained feasible set. Without persons,
+repeated ties, or beliefs, it cannot establish preference homophily or an echo
+chamber. The urban contribution is narrower: it asks whether the algorithmically
+mediated opportunity set is compatible with more or less cross-neighborhood
+exposure under explicit observation and model restrictions.
+
+\section{Validation: Sharpening and False Precision}
 \label{sec:results}
-
-\subsection{Locked end-to-end benchmark}
 
 Before the first held-out run, we fixed a two-day Chicago-coordinate generator
 with 80 hidden pairs and 80 unmatched authorized trips per day, 15-minute time
 rounding, model defaults, and score retentions $\rho\in\{0.90,0.95\}$. Pair IDs
-and synthetic income bins were written to separate truth files and never read
-by model fitting. The first day trains the model and the second is evaluated
-once.
+and synthetic income bins were stored in separate truth files and never read by
+candidate construction, model fitting, or score-restricted optimization. Day
+one is used for fitting; day two is evaluated once.
 
-The candidate graph retains 80/80 hidden holdout pairs. On all 240 supported
-holdout nodes, the transparent rule obtains Brier loss 0.06048 and the
-22-feature primary weak-MIL score 0.00595, a 90.2\% improvement. Its hidden
-true-edge MRR is 0.941 and top-1 rate 90.0\%, versus 0.781 and 67.5\% for the
-rule. By contrast, the 28-feature diagnostic score is slightly better at its
-trained node task but much worse at edge ranking because tract equality is a
-shortcut in this generator.
+\paragraph{Candidate support comes first.}
+The holdout graph retains all 80 hidden pairs. This check is logically prior to
+prediction: if a true pair were absent, even the untrimmed interval would lose
+the coverage guarantee in Proposition~\ref{prop:coverage}. Across a separate
+20-replicate implementation check, candidate recall and untrimmed scalar coverage are
+100\% at 1-, 5-, 15-, and 30-minute rounding; Appendix~\ref{sec:aux-validation}
+reports the full coarsening table.
 
-\begin{table}[t]
+\paragraph{Node calibration does not imply edge recovery.}
+On 240 candidate-supported holdout nodes, the rule has Brier loss 0.06048,
+compared with 0.00595 for the 22-feature primary score and 0.00513 for the
+28-feature diagnostic score. Both learned scores therefore look excellent on
+the objective they were trained to predict. Hidden-edge ranks separate them.
+The primary score raises mean reciprocal rank from 0.781 to 0.941 and top-1
+accuracy from 67.5\% to 90.0\%. The diagnostic score instead falls to 0.775 and
+64.4\%. Better node prediction is not evidence of better pair recovery; no
+edge label enters training.
+
+\noindent\textbf{Eligibility and containment, not width alone, audit sharpening.}\par\noindent
+The hidden same-income-bin share is 0.5625. Physical admissibility alone gives
+$[0.050,0.775]$. Score retention narrows this set, but
+Table~\ref{tab:bounds-results} shows that width cannot be read without coverage.
+The primary score covers the hidden value and retains the complete hidden
+pairing at both score floors. The diagnostic $\rho=0.95$ region is only 0.162 wide but
+lies above the hidden value and excludes the hidden pairing. Even scalar
+containment is a weak check: the rule's $\rho=0.95$ interval happens to contain 0.5625
+although the complete hidden pairing fails its score floor.
+
+\begin{table*}[t]
+  \caption{Locked holdout: narrowing, scalar containment, and structural eligibility.}
+  \label{tab:bounds-results}
+  \small
+  \centering
+  \begin{tabular}{@{}lrrrrr@{}}
+    \toprule
+    Admissible set & Interval & Width & Reduction & Contains value & True pairing eligible \\
+    \midrule
+    Untrimmed candidate graph & $[0.050,\,0.775]$ & 0.725 & --- & Yes & Yes \\
+    Rule, $\rho=0.90$ & $[0.338,\,0.775]$ & 0.438 & 39.7\% & Yes & Yes \\
+    Primary AI, $\rho=0.90$ & $[0.288,\,0.763]$ & 0.475 & 34.5\% & Yes & Yes \\
+    Rule, $\rho=0.95$ & $[0.438,\,0.750]$ & 0.312 & 56.9\% & Yes & No \\
+    Primary AI, $\rho=0.95$ & $[0.388,\,0.688]$ & 0.300 & 58.6\% & Yes & Yes \\
+    Diagnostic AI, $\rho=0.90$ & $[0.525,\,0.775]$ & 0.250 & 65.5\% & Yes & Yes \\
+    Diagnostic AI, $\rho=0.95$ & $[0.613,\,0.775]$ & 0.162 & 77.6\% & \textbf{No} & No \\
+    \bottomrule
+  \end{tabular}
+  \vspace{2pt}
+  \parbox{0.94\textwidth}{\footnotesize\emph{Note.} Hidden target $=0.5625$.
+  Reduction is relative to the untrimmed range. ``Eligible'' means that the
+  complete hidden pairing satisfies the score floor in
+  Proposition~\ref{prop:coverage}; numerical containment of its scalar target
+  is weaker. These are sensitivity regions, not confidence intervals.}
+\end{table*}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.96\textwidth]{figures/benchmark_summary_revised.pdf}
+  \caption{The locked benchmark separates three claims. Candidate recall is
+  80/80 before scoring. Both learned models improve held-out node Brier loss,
+  but only the geography-equality-free primary model improves hidden-edge
+  ranking. The shortcut-rich diagnostic model produces the narrowest $\rho=0.95$
+  region and excludes hidden truth. The dashed line and hidden pairs are never
+  supplied to fitting.}
+  \Description{Three panels report held-out node Brier loss, hidden-edge rank
+  metrics, and score-retained intervals around a hidden same-income-bin share.
+  The diagnostic model predicts nodes well but its narrowest interval lies
+  above truth.}
+  \label{fig:pilot}
+\end{figure*}
+
+\paragraph{Geography equality manufactures precision.}
+The diagnostic map adds six same-tract and same-area columns without changing a
+single candidate edge: both models optimize over the same 2,640-edge graph.
+Among the 560 candidates incident to matched holdout nodes, pickup- and
+drop-off-tract equality coincide exactly with the synthetic same-income-bin
+target, while area equality is constant. The diagnostic model can therefore
+improve its node objective while sorting pairings by a proxy for the evaluation
+outcome. Removing those columns worsens node Brier only from 0.00513 to 0.00595,
+improves edge ranking, and restores coverage. This is feature-induced false
+precision, not proof that the primary map is proxy-free: continuous coordinates
+may still encode socioeconomic geography.
+
+At $\rho=0.90$, the primary interval is slightly wider than the rule interval
+(0.475 versus 0.438); at $\rho=0.95$ it is slightly narrower (0.300 versus
+0.312) and uniquely retains the hidden pairing. The pilot validates the
+coverage audit and the possibility of safe sharpening. It does not establish
+that AI uniformly tightens a transparent rule.
+
+\paragraph{The prefix extract is a negative software check.}
+The incomplete Chicago prefix graph contains 151 edges and supports only 246 of
+3,048 authorized nodes (8.1\%). On 93 supported holdout nodes, weak MIL has
+Brier loss 0.15777 versus 0.15525 for the rule. Under approximately independent
+prefix retention, a two-trip chain's other component is absent with probability
+255/256. We therefore neither tune the graph nor run exact-cover bounds on this
+extract. Complete-day Chicago support, calibration, exposure ranges, and policy
+contrasts remain reserved for the predeclared extraction.
+
+\section{Complete-Day Policy Design}
+\label{sec:policy}
+
+Chicago changed its congestion-zone surcharge on January 6, 2026. We estimate
+an intention-to-treat contrast comparing post-policy trips in the covered zone
+during active hours with the corresponding spatial and temporal controls.
+Outcomes are authorization among eligible trips and successful pooling among
+all eligible trips. The surcharge can change both the size and composition of
+the shared pool; market thickness is therefore a mechanism, not an excluded
+instrument. Event-time leads and the charge discontinuity must validate timing
+and pre-trends before causal language is used.
+
+The complete-day analysis distinguishes a volume response from a composition
+response. Authorization/all trips measures entry into the eligible shared pool;
+matched/all trips measures successful pooling without conditioning on that
+post-policy choice. Candidate support and exact-cover feasibility are then
+audited on the same spatial and temporal cells used for exposure. A discontinuity
+in supported composition at the policy boundary would be a measurement change,
+not evidence of mixing. The design therefore requires stable support and
+parallel pre-trends in addition to a visible surcharge first stage.
+
+For opportunity exposure, regressing estimated daily lower endpoints does not
+generally produce a lower bound on a policy coefficient. Let $\mathcal F_c$
+denote the admissible pairings in market-time block $c$ and let $a_c$ be the
+fixed weights of the policy contrast. We propagate latent-edge ambiguity
+through the contrast itself:
+\begin{equation}
+\begin{aligned}
+ \underline\theta&=\min_{M_c\in\mathcal F_c\ \forall c}
+     \sum_c a_c H(M_c),\\
+ \overline\theta&=\max_{M_c\in\mathcal F_c\ \forall c}
+     \sum_c a_c H(M_c).
+\end{aligned}
+\label{eq:effect-bounds}
+\end{equation}
+Date-block resampling layers sampling uncertainty on this structural range
+while holding the candidate rule fixed.
+
+Equation~\eqref{eq:effect-bounds} prevents an invalid shortcut. The lower
+endpoint on each date can be produced by a different latent pairing, and the
+weights $a_c$ can be positive or negative. Regressing a sequence of daily lower
+endpoints therefore need not minimize the policy contrast. Optimizing the
+contrast jointly over all block-specific pairings preserves the declared
+admissible set. If this joint range crosses zero, the direction of the exposure
+effect is not identified even when one point reconstruction has a stable sign.
+
+The analysis has three falsifiable hypotheses. \textbf{H1 (thickness)} predicts
+a positive ITT on authorization/all and matched/all. \textbf{H2 (opportunity
+exposure)} is two-sided: the policy range in Eq.~\eqref{eq:effect-bounds} may
+move toward cross-neighborhood exposure or toward geographically segmented
+pooling. Its result is the sign of the full range, not the sign of one imputed
+network. \textbf{H3 (AI value)} is a complete-day gate: relative to the rule at
+the same score floor, the learned score must improve held-out node Brier loss by
+at least 10\% and reduce interval width by at least 25\% without changing the
+conclusion across the declared candidate grid. The synthetic benchmark audits
+this gate and its failure mode; it does not claim that H3 has been met. Failure
+of H3 leaves the rule and untrimmed ranges primary and does not invalidate H1.
+
+\section{Discussion}
+
+The urban object here is neither residential segregation nor a realized social
+network. It is the set of cross-neighborhood service-chain opportunities that
+could have generated the public records. This object matters because a pooling
+algorithm can alter who is combinatorially available to whom before any durable
+tie or attitudinal change occurs. A thicker market may widen that set across
+neighborhoods, or it may add feasible pairs inside geographically segmented
+submarkets. The direction is an empirical property of the admissible exposure
+range, not a consequence of higher match volume.
+
+The methodological distinction is the treatment of privacy suppression as a known
+observation operator on relations. Conventional node prediction leaves the
+scientific outcome undefined; point linkage replaces missingness with one
+untestable graph. Here physical restrictions define a score-free set, and weak
+supervision can only remove members through an explicit sensitivity rule. This
+turns an otherwise hidden modeling choice into an auditable comparison between
+the untrimmed and restricted ranges. The same pattern applies whenever public
+data preserve object-level outcomes but suppress groups, assignments, or
+encounters.
+
+The locked failure is as important as the locked gain. Geography equality
+improves the trained node objective and produces a much narrower interval, yet
+at $\rho=0.95$ it removes the true pairing and the true target. Thus predictive
+fit cannot certify relational identification. The useful AI contribution is
+conditional sharpening with visible coverage cost: candidate support, node
+calibration, hidden-edge ranking where truth exists, and structural eligibility
+must be read together. Without complete-day Chicago data, this remains a method
+and audit result rather than a finding about homophily or urban mixing.
+
+\subsection{Implications for urban AI and market design}
+
+The AI4Sciences role is not to replace a hidden graph with a more elaborate
+prediction. It is to state how a learned restriction changes a scientific
+identified set. The observation operator, physical candidate rule, node
+likelihood, score floor, and exposure objective are separate objects; each can
+be inspected or varied without silently redefining the others. This modularity
+creates a falsifiable AI contribution. A model adds information only when its
+restricted range is narrower, its predictive diagnostics improve out of day,
+and known-truth audits do not show that the narrowing comes from excluding the
+data-generating relation. Otherwise the scientifically relevant output is the
+score-free range or a declaration of non-identification.
+
+This framing also separates two operations questions that are often collapsed.
+Market thickness concerns how many requests are available and whether more of
+them match. Opportunity composition concerns which feasible assignments
+account for those outcomes. A policy can raise authorization and successful
+pooling while leaving a wide exposure range, or while shifting every admissible
+pairing toward more same-neighborhood opportunities. Conversely, match volume
+may change little while the composition of feasible pairs changes. The policy
+ITT therefore applies to both entry and assignment opportunity; thickness is a
+measured mechanism, not an exclusion restriction that isolates dispatch.
+
+The method produces an evidence hierarchy for the eventual Chicago analysis.
+A one-signed untrimmed policy range would be the strongest result available
+from the declared candidate graph because it does not depend on learned edge
+weights. A one-signed restricted range paired with an untrimmed range that
+crosses zero would be conditional evidence: the conclusion follows only for
+pairings sufficiently compatible with the stated score and $\rho$. Agreement
+between the rule and primary model would show robustness to two score maps, not
+truth of either map. Disagreement, loss of true-pairing eligibility in
+simulation, or sign changes across candidate graphs would downgrade the claim
+to model sensitivity. These categories are fixed before the policy outcome is
+observed.
+
+There is also a practical distinction between auditing and optimization. The
+reported interval can reveal that a platform's public outcomes are compatible
+with sharply segmented or broadly mixed opportunities. It does not identify
+the proprietary objective, and it does not recommend forcing cross-neighborhood
+pairs. An operational intervention would also have to account for detour,
+waiting, reliability, price, driver burden, and rider choice---quantities absent
+from the released table. The admissible-set analysis is therefore an input to
+oversight, not a standalone welfare objective.
+
+\subsection{Transfer and scope}
+
+The same structure appears when administrative data preserve item-level
+outcomes but suppress teams, referral chains, shipments, or shared resources.
+Transfer requires a domain-specific feasibility screen and group constraint;
+the ride-pooling thresholds are not portable. The general lesson is narrower:
+when the missing scientific object is relational, validation should test
+candidate support and downstream set coverage, not only node prediction. A
+learned score may sharpen the answer, but the score-free feasible set must
+remain visible as the reference against which that sharpening is judged.
+
+\section{Limitations and Ethical Considerations}
+\label{sec:ethics}
+
+This study uses public, privacy-coarsened administrative records and aggregate
+census statistics; it recruits no participants and performs no intervention.
+The applicable institutional determination will be obtained and disclosed
+before submission. Neighborhood income is not rider income, a candidate edge
+is not verified co-presence, and \texttt{trips\_pooled} can join components of
+one service chain that were never simultaneously occupied. Without a stable
+rider identifier, the data cannot measure durable homophily, repeated exposure,
+belief reinforcement, or an echo chamber. Non-random geographic suppression,
+timestamp rounding, and ACS join failure can also change the analyzed
+subpopulation and are reported by treatment cell.
+
+Publishing one reconstructed graph could expose identities or stigmatize
+neighborhoods. Released artifacts therefore contain aggregate intervals,
+synthetic examples, and code, but no row-level inferred social graph. Score
+restrictions can under-cover, so the untrimmed range and sensitivity grid remain
+visible. The bounds are an auditing device, not a license to infer sensitive
+attributes or optimize mixing at the expense of wait, detour, surveillance, or
+disparate service burdens. If the effect range overlaps zero or changes sign
+across declared graphs, the conclusion is non-identification.
+
+\section{Generative AI Usage}
+\label{sec:genai}
+
+Generative AI tools (OpenAI ChatGPT and Codex; exact model identifiers and
+access dates to be completed at submission) were used to assist code
+scaffolding and debugging, literature-search organization, prose drafting, and
+formatting. All research questions,
+estimands, model restrictions, analyses, source verification, and claims remain
+the responsibility of the authors. AI-generated code was executed against
+deterministic tests and known-truth simulations; numerical results in the paper
+are produced by saved scripts rather than generated text. No confidential
+participant data or proprietary platform records were supplied to a generative
+AI system for this draft. Generative AI did not recruit or interact with
+participants, label empirical observations, or appear as an author. The final
+disclosure will enumerate every material use across the full research process.
+
+\section{Conclusion}
+
+The missing object in privacy-coarsened pooling records is the relation, not
+another trip feature. \methodname{} therefore reports an admissible exposure
+interval rather than one reconstructed graph: physical constraints define the
+exact-cover set, weak supervision supplies an optional score restriction, and
+optimization carries the surviving ambiguity into the estimand. The locked
+benchmark shows why AI is a tightening device rather than a discovery device.
+A geography-equality-free score can narrow the range while retaining the hidden
+pairing, whereas a shortcut-rich score looks sharper and excludes truth. The
+complete-day Chicago intervals and policy sign remain reserved. This pilot is
+evidence for the audit, not evidence that ride pooling changes urban social
+mixing.
+
+\clearpage
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{references}
+
+\appendix
+\raggedbottom
+\section{Reproducibility Appendix}
+
+The artifact contains the complete candidate builder, weak noisy-OR model,
+MILP bound solver, locked synthetic generator, design lock, unit tests, and
+machine-readable outputs. The current implementation uses NumPy, pandas,
+SciPy/HiGHS, scikit-learn, and Matplotlib. Seven exact-cover tests cover exact
+matching, infeasibility, score restriction, SES gaps, unmatched-node exclusion,
+synthetic candidate recall, and agreement between the MILP and an exhaustive
+small-graph fallback.
+
+The complete-day extraction requests every authorized row for two comparable
+weekdays, checks
+server-side counts, writes atomically, hashes files, and audits duplicate IDs,
+window boundaries, match/pooling consistency, and spatial missingness. The
+current execution environment blocked both supported City API routes; no row
+count or partial complete-day file is reported in this draft.
+
+\section{Auxiliary Diagnostics and Frozen Empirical Protocol}
+\label{sec:aux-validation}
+
+\subsection{Known-truth diagnostics}
+
+\begin{table}[h]
   \caption{Locked synthetic holdout: node and edge diagnostics.}
   \label{tab:node-edge}
   \small
@@ -455,74 +842,22 @@ shortcut in this generator.
   retains all 28 columns.}
 \end{table}
 
-The hidden same-income-bin share is 0.5625 and the untrimmed interval is
-$[0.050,0.775]$. The primary score yields $[0.288,0.763]$ at $\rho=0.90$ and
-$[0.388,0.688]$ at $\rho=0.95$, reducing width by 34.5\% and 58.6\%; both
-retain the complete hidden packing and cover truth. The diagnostic map appears
-much sharper, but its 95\% region $[0.613,0.775]$ excludes both. The contrast
-in Figure~\ref{fig:pilot} reveals feature-induced rather than scientifically
-earned precision.
+Across 20 independent small-market replications, candidate recall and
+untrimmed coverage equal 100\% for 1-, 5-, 15-, and 30-minute rounding. The
+edge/true-edge ratio rises from 1.04 to 2.11 and mean raw width from 0.003 to
+0.150 as time is coarsened. Under the deliberately well-specified
+$\rho=0.95$ rule restriction, mean width at 15 minutes falls to 0.020 and at
+30 minutes to 0.027 with 100\% scalar coverage. This is an implementation
+check, not evidence that the Chicago candidate model is correctly specified.
 
-\begin{table*}[t]
-  \caption{Locked holdout: same-income-bin sensitivity regions.}
-  \label{tab:bounds-results}
-  \small
-  \centering
-  \begin{tabular}{@{}lrrrrr@{}}
-    \toprule
-    Admissible set & Interval & Width & Reduction & Contains value & True packing eligible \\
-    \midrule
-    Untrimmed candidate graph & $[0.050,\,0.775]$ & 0.725 & --- & Yes & Yes \\
-    Rule, $\rho=0.90$ & $[0.338,\,0.775]$ & 0.438 & 39.7\% & Yes & Yes \\
-    Primary AI, $\rho=0.90$ & $[0.288,\,0.763]$ & 0.475 & 34.5\% & Yes & Yes \\
-    Rule, $\rho=0.95$ & $[0.438,\,0.750]$ & 0.312 & 56.9\% & Yes & No \\
-    Primary AI, $\rho=0.95$ & $[0.388,\,0.688]$ & 0.300 & 58.6\% & Yes & Yes \\
-    Diagnostic AI, $\rho=0.90$ & $[0.525,\,0.775]$ & 0.250 & 65.5\% & Yes & Yes \\
-    Diagnostic AI, $\rho=0.95$ & $[0.613,\,0.775]$ & 0.162 & 77.6\% & \textbf{No} & No \\
-    \bottomrule
-  \end{tabular}
-  \vspace{2pt}
-  \parbox{0.94\textwidth}{\footnotesize\emph{Note.} Hidden target $=0.5625$.
-  ``Eligible'' means the complete hidden pairing itself satisfies the score
-  floor, the condition in Proposition~\ref{prop:coverage}. Numerical inclusion
-  of the scalar target is weaker. These are sensitivity regions, not
-  confidence intervals. Primary AI removes geography-equality features;
-  diagnostic AI retains them.}
-\end{table*}
-
-\begin{figure*}[t]
-  \centering
-  \includegraphics[width=0.96\textwidth]{figures/benchmark_summary_revised.png}
-  \caption{Locked known-truth integration benchmark. Primary AI removes six
-  geography-equality columns; diagnostic AI retains them. Lower Brier is
-  better. The dashed line is hidden truth, never supplied to model fitting.
-  Diagnostic AI looks sharper but its 95\% interval misses truth.}
-  \Description{Three panels compare the transparent rule, primary weak-MIL,
-  and diagnostic weak-MIL. Both AI variants lower node Brier loss; primary AI
-  improves true-edge ranking; and the diagnostic 95 percent score-retained
-  interval lies above hidden truth while the primary intervals cover.}
-  \label{fig:pilot}
-\end{figure*}
-
-\subsection{Coarsening and solver coverage}
-
-Across 20 independent small-market replications, candidate recall and raw-bound
-coverage are 100\% for released time bins of 1, 5, 15, and 30 minutes. The
-candidate-edge/true-edge ratio rises from 1.04 to 2.11 and the mean raw bound
-width from 0.003 to 0.150 as timestamps are coarsened. Under the deliberately
-well-specified 95\% rule-score restriction, mean width at 15 minutes falls from
-0.073 to 0.020 and at 30 minutes from 0.150 to 0.027, with 100\% coverage in
-this implementation check. These results validate the optimization logic, not
-the realism of the Chicago candidate model.
-
-\begin{table}[t]
+\begin{table}[h]
   \caption{Candidate/solver check over 20 replicates.}
   \label{tab:coarsening}
   \small
   \centering
   \begin{tabular}{@{}rrrrr@{}}
     \toprule
-    Bin & Edge / & Raw & 95\% & Width \\
+    Bin & Edge / & Raw & $\rho=.95$ & Width \\
     (min) & truth & width & width & reduction \\
     \midrule
     1  & 1.038 & 0.003 & 0.003 & 0.0\% \\
@@ -533,198 +868,121 @@ the realism of the Chicago candidate model.
   \end{tabular}
   \vspace{2pt}
   \parbox{0.97\columnwidth}{\footnotesize\emph{Note.} Candidate recall,
-  untrimmed coverage, and 95\%-score coverage equal 100\% in every row.}
+  untrimmed scalar coverage, and score-restricted scalar coverage equal 100\%
+  in every row.}
 \end{table}
 
-\subsection{Prefix-only mechanics check}
+\subsection{Data status and raw feasibility cells}
 
-For completeness, we ran the pipeline on the structurally incomplete Chicago
-prefix graph. It creates only 151 candidate edges and supports 246 of 3,048
-authorized nodes (8.1\%). On the last-14-day holdout, just 93 supported nodes
-remain: the transparent rule has Brier score 0.15525 and weak MIL 0.15777, so
-the AI is 1.6\% worse. This is a useful negative software check, not an estimate
-of Chicago performance. Under approximately independent prefix retention, the
-other component of a two-trip chain is absent with probability 255/256; poor
-support is therefore generated by the observation design rather than evidence
-that physical matching constraints fail. We do not run exact-cover exposure
-bounds on this graph or tune the candidate rule to improve these numbers.
+\begin{table}[h]
+  \caption{Data layers and current scientific use.}
+  \label{tab:data}
+  \small
+  \begin{tabularx}{\columnwidth}{p{0.25\columnwidth}p{0.20\columnwidth}X}
+    \toprule
+    Layer & Status & Scientific use \\
+    \midrule
+    Chicago prefix sample & Complete & Schema, missingness, aggregate feasibility only \\
+    Chicago complete days & Reserved & Candidate graph, node calibration, SES bounds \\
+    ACS 2024 tracts & Complete & Pickup-neighborhood SES proxy \\
+    NYC HVFHV & Pilot extract & Coarsening stress test; no pair truth \\
+    Locked synthetic market & Complete & Recall, ranking, coverage audit \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
-\subsection{Required Chicago results}
+\begin{table}[h]
+  \caption{Raw policy-window feasibility signals (not causal).}
+  \label{tab:raw-policy}
+  \small
+  \centering
+  \resizebox{\columnwidth}{!}{%
+  \begin{tabular}{@{}llrrrr@{}}
+    \toprule
+    Cell & Period & $N$ & Authorized & Matched/all & Add'l charges \\
+    \midrule
+    Target & Pre  & 3,797  & 5.95\% & 4.61\% & \$5.69 \\
+    Target & Post & 4,047  & 8.08\% & 6.89\% & \$6.31 \\
+    Comparison & Pre  & 10,975 & 5.53\% & 3.54\% & \$6.86 \\
+    Comparison & Post & 11,369 & 5.82\% & 3.97\% & \$6.85 \\
+    \bottomrule
+  \end{tabular}}
+  \vspace{2pt}
+  \parbox{0.97\columnwidth}{\footnotesize\emph{Note.} Four-week windows around
+  January 6, 2026; approximate feasibility-stage zone; no uncertainty or causal
+  adjustment.}
+\end{table}
 
-The empirical paper will not replace the following cells with prefix-sample
-estimates. They require complete authorized-trip days and a pre-declared
-candidate-sensitivity grid.
-
-\begin{table}[t]
-  \caption{Pre-declared complete-day empirical gates.}
+\begin{table}[h]
+  \caption{Predeclared complete-day empirical gates.}
   \label{tab:gates}
   \small
-  \begin{tabular}{p{0.46\columnwidth}p{0.22\columnwidth}p{0.18\columnwidth}}
+  \begin{tabular}{p{0.46\columnwidth}p{0.25\columnwidth}p{0.15\columnwidth}}
     \toprule
     Gate & Threshold & Result \\
     \midrule
-    Held-out Brier improvement vs. rule & $\ge10\%$ & \todoemp \\
-    Candidate-supported matched nodes & report, no target & \todoemp \\
-    AI interval-width reduction & $\ge25\%$ & \todoemp \\
-    Exact-cover feasibility & $\ge95\%$ analysis cells & \todoemp \\
-    Sign stability across candidate grid & same conclusion & \todoemp \\
-    Post-policy observation window & $\ge8$ months & \todoemp \\
+    Held-out Brier improvement vs. rule & $\ge10\%$ & Reserved \\
+    Candidate-supported matched nodes & report, no target & Reserved \\
+    AI width reduction vs. rule at same $\rho$ & $\ge25\%$ & Reserved \\
+    Exact-cover feasibility & $\ge95\%$ of cells & Reserved \\
+    Sign stability across candidate grid & same conclusion & Reserved \\
+    Post-policy observation window & $\ge8$ months & Reserved \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\section{Robustness and Failure Protocol}
-\label{sec:robustness}
+The production downloader requests a server-side count for each complete day,
+retrieves every authorized row in deterministic identifier order, writes
+atomically, and records the query, retrieval time, row count, and SHA-256
+digest. Audits cover identifiers, date boundaries, boolean consistency,
+service-chain codes, coordinates, and tract suppression. Partial downloads are
+never combined with complete days. Days, not edges, form train/test units; ACS
+joins occur after candidate support is frozen, and SES never enters candidate
+construction or score fitting. Every result carries its eligible and supported
+denominators, degree distribution, infeasibility rate, and configuration.
 
-\paragraph{Candidate support.}
-Real data cannot reveal candidate recall, so support diagnostics must carry
-more weight than a conventional hyperparameter sweep. For every date and
-treatment cell we report authorized-node support, matched-node support,
-candidate degree quantiles, component sizes, and the share of pair-eligible
-components admitting an exact cover. The same summaries are stratified by
-pickup-income bin and tract-suppression status. Large support shifts at the
-policy boundary would contaminate the exposure contrast even if node Brier
-loss improved. We therefore run the candidate grid declared above without
-using $H$ to choose a preferred graph. The untrimmed range remains the primary
-structural result because it relies on physical admissibility but not on a
-learned score.
+The NYC pilot contains 2,000 outcome-stratified HVFHV records with precise
+times and taxi-zone geography. It supports schema and future 5-, 15-, and
+30-minute coarsening checks but cannot estimate match rates or validate pairs:
+NYC also suppresses the rider, vehicle, and shared-group identifiers.
 
-\paragraph{Geography-proxy ablation.}
-The locked 28-column score includes same-tract and same-area indicators. An
-edge audit shows that pickup- and drop-off-tract equality coincide exactly
-with the same-income-bin target on all 560 held-out matched-node candidates;
-area equality is constant. Removing the six equality columns leaves the 2,640
-edge candidate graph unchanged. The resulting 22-feature model retains a
-90.2\% node-Brier gain, raises true-edge MRR from 0.781 for the rule to 0.941,
-and covers truth at both score floors while narrowing the raw interval by
-34.5\% and 58.6\%. The full map's extra sharpness is therefore circular in
-this generator and is diagnostic only.
+\subsection{Policy and failure protocol}
 
-This completed ablation does not eliminate every proxy: synthetic income bins
-also generate fixed coordinate offsets, so continuous OD distances carry SES
-information. The production analysis additionally fits a
-continuous-geometry-only score and permutes ACS attributes across tracts after
-model fitting. If the AI width advantage or policy sign exists only under
-geographic proxies, we report geographic sharpening rather than a substantive
-AI contribution.
-
-\paragraph{Bag-size confounding and calibration.}
-Under noisy-OR, node probability increases mechanically with incident-edge
-count. A model could therefore predict match status from market density while
-ranking all incident edges poorly---exactly the distinction suggested by the
-locked benchmark. We compare against training prevalence, candidate degree
-alone, and the transparent physical rule; report calibration and Brier loss by
-degree quintile; and refit with degree-stratified intercepts. Max-pooling and a
-degree-normalized log-sum-exp aggregator are secondary ablations. Only the
-predeclared noisy-OR fit determines the main score, and any aggregator selected
-after viewing Chicago exposure is exploratory.
-
-\paragraph{Optimization and statistical checks.}
-The MILP test suite verifies exact matching, infeasibility, unmatched-node
-exclusion, SES-gap objectives, score floors, permutation invariance, and
-agreement with exhaustive enumeration on small graphs. A time-limit incumbent
-is never labeled an endpoint. Known-truth simulations cross timestamp
-coarsening, route overlap, SES assortativity, and candidate misspecification;
-both scalar containment and eligibility of the complete hidden pairing are
-recorded. Policy uncertainty is recomputed inside date-block resamples instead
-of bootstrapping a single imputed network.
-
-\paragraph{Predeclared failure outcomes.}
-The paper retains negative and non-identification results. We stop structural
-estimation for any partial day, surface infeasible cells, report AI failure when
-the real held-out Brier gate is missed, and retain the untrimmed range when
-score restrictions are unstable. If candidate-supported composition changes
-discontinuously, pre-trends fail, or the policy-effect range crosses zero under
-reasonable declared rules, the conclusion is respectively measurement shift,
-descriptive association, or unidentified exposure direction. None is replaced
-by a maximum-score matching.
-
-\section{Policy Estimation Plan}
-\label{sec:policy}
-
-Let $Post_t$ indicate trips after January 6, $Zone_i$ the released pickup or
-path proxy for the newly covered congestion zone, and $Active_t$ the policy's
-active hours. For outcome $Y_{ict}$ in spatial cell $c$ and date/time cell $t$,
-the baseline intention-to-treat specification is
+Let $Post_t$ indicate trips after January 6, $Zone_i$ the released spatial
+proxy for the covered zone, and $Active_t$ the policy's active hours. The
+frozen trip-level specification is
 \begin{equation}
   Y_{ict}=\alpha_c+\delta_t+
   \beta(Post_t\times Zone_i\times Active_t)+
-  \Gamma'X_{ict}+\varepsilon_{ict},
+  \Gamma'X_{ict}+\varepsilon_{ict}.
   \label{eq:ddd}
 \end{equation}
-augmented by event-time coefficients, zone-specific trends, and weekday/weekend
-dose contrasts. We first validate treatment timing through discontinuities in
-\texttt{additional\_charges}. Outcomes are authorization/all eligible trips
-and matched/all eligible trips. Inference clusters at spatial and calendar
-levels where supported by the final cell construction.
+Event-time coefficients, zone-specific trends, and weekday/weekend dose
+contrasts accompany Eq.~\eqref{eq:ddd}. Zone polygons and a boundary ambiguity
+band are fixed before outcomes are estimated. Diagnostics include lead
+equivalence tests, placebo dates, alternative spatial cells, holiday and venue
+exclusions, and the surcharge discontinuity in
+\texttt{additional\_charges}. Date-block resampling or a predeclared
+small-cluster correction is chosen after auditing independent cells.
 
-The current public table ends June 30, 2026. Production estimation waits until
-at least September 6 so that eight post-policy months are observable. Before
-estimating outcomes, we will digitize the official pre- and post-2026 zone
-polygons, flag trips whose released pickup or drop-off touches the zone, and
-declare an ambiguity band for spatial units intersected by a boundary. The
-institutional first stage is the full distribution of
-\texttt{additional\_charges} by date, geography, pooled status, day of week,
-and hour. Specification choices are locked from pre-policy support rather than
-post-policy outcomes.
+The candidate grid varies the 30-minute start window to 15 and 45 minutes,
+pickup radii 4 km to 2 and 6, drop-off radii 7 km to 4 and 10, degree cap 16 to
+8 and 32, and $\rho\in\{0,0.80,0.90,0.95\}$. No graph is selected after
+observing exposure. Candidate support, component sizes, degree, exact-cover
+feasibility, calibration by degree, and geographic suppression are reported by
+date and treatment cell. Continuous-geometry and ACS-permutation ablations test
+remaining proxies. Known-truth simulations cross coarsening, route overlap,
+assortativity, and candidate misspecification; both scalar containment and true
+pairing eligibility are recorded. A time-limit incumbent is never an endpoint.
 
-Diagnostics include joint and equivalence tests of event-time leads, placebo
-dates, exclusion of holidays, airports, and special venues, alternative
-ambiguity bands, tract- and community-area cells, and the
-weekday/weekend dose contrast implied by the surcharge schedule. We will use a
-date-block bootstrap or a predeclared small-cluster correction after auditing
-the number of independent calendar and spatial cells. Failure of pre-trend or
-overlap diagnostics converts the policy analysis to a descriptive interrupted
-series rather than a causal result.
+Predeclared failures remain results. A partial day stops structural estimation;
+an infeasible cell stays infeasible; a missed Brier/width gate leaves the rule
+and untrimmed ranges primary; unstable candidate support is a measurement shift;
+failed pre-trends imply descriptive association; and a policy-effect range that
+crosses zero implies an unidentified direction. None is replaced by a
+maximum-score pairing.
 
-For exposure, regressing day-level lower endpoints does not generally produce
-a lower bound on a policy coefficient. Let $\mathcal F_c$ be the feasible
-pairings in market-time block $c$ and $a_c$ the fixed linear weights induced by
-the event-study contrast. We propagate latent-edge ambiguity directly:
-\begin{equation}
-\begin{aligned}
- \underline\theta&=\min_{M_c\in\mathcal F_c\ \forall c}
-     \sum_c a_c H(M_c),\\
- \overline\theta&=\max_{M_c\in\mathcal F_c\ \forall c}
-     \sum_c a_c H(M_c).
-\end{aligned}
-\label{eq:effect-bounds}
-\end{equation}
-Date-block resampling will layer sampling uncertainty on this structural
-range, holding the candidate rule fixed.
-
-The policy is not an instrument that changes only market thickness: it also
-changes selection into the shared pool. We therefore interpret $\beta$ as the
-policy ITT. Thickness and origin composition are mechanisms, evaluated through
-mediation-style decompositions and sensitivity analysis rather than exclusion
-restrictions. The event study must pass pre-trend equivalence checks before any
-causal language is used.
-
-\subsection{Falsifiable scientific hypotheses}
-
-The confirmatory analysis separates three questions. \textbf{H1 (market
-thickness)} predicts a positive policy ITT on authorization/all trips and
-matched/all trips. \textbf{H2 (opportunity exposure)} is deliberately
-two-sided: a thicker pool may lower $H$ by connecting more dissimilar origin
-neighborhoods, or raise it if added requests form geographically segmented
-local submarkets. The scientific result is the sign of
-$[\underline\theta,\overline\theta]$ in Eq.~\eqref{eq:effect-bounds}, not the
-sign from one reconstructed network. \textbf{H3 (AI value)} requires the
-learned score to improve held-out node Brier loss by at least 10\% and reduce
-the primary $\rho=0.90$ interval width by at least 25\% relative to the
-transparent rule, without reversing the substantive conclusion across the
-candidate grid. Failing H3 leaves the transparent bound as the primary result;
-it does not invalidate H1 or the untrimmed version of H2.
-
-The proposed sensitivity grid varies the 30-minute start window to 15 and 45
-minutes; pickup radii 4 km to 2 and 6; drop-off radii 7 km to 4 and 10; degree
-cap 16 to 8 and 32; and $\rho\in\{0,0.80,0.90,0.95\}$. We report one-at-a-time
-changes and prespecified joint corners rather than choosing a graph after
-observing exposure. The primary candidate rule is frozen before policy
-estimation. An infeasible exact cover remains an infeasibility result, not a
-license to discard inconvenient nodes.
-
-\begin{table}[t]
+\begin{table}[h]
   \caption{Evidence-to-claim ladder for the completed paper.}
   \label{tab:claim-ladder}
   \scriptsize
@@ -732,127 +990,34 @@ license to discard inconvenient nodes.
     \toprule
     Claim & Required evidence and boundary \\
     \midrule
-    Policy thickened pooling & ITT on authorization/all and matched/all with acceptable pre-trends; not an instrument affecting only thickness. \\
-    AI predicts matchability & Out-of-day node calibration beats the rule; does not recover actual co-rider edges. \\
-    Candidate exposure range & Certified extrema with support, infeasibility, and threshold audits; conditional on the declared graph. \\
-    AI-sharpened range & Score-indexed interval plus known-truth audits and explicit $\rho$; not a confidence interval. \\
-    Policy changed exposure & Structural range has one sign across candidate choices, with block sampling uncertainty; not dispatch causality or realized contact. \\
-    Echo chamber & Not testable: no claim about repeated ties, beliefs, or reinforcement. \\
+    Policy thickened pooling & ITT on authorization/all and matched/all with acceptable pre-trends; not a thickness-only instrument. \\
+    AI predicts matchability & Out-of-day node calibration beats the rule; does not recover co-rider edges. \\
+    Candidate exposure range & Certified extrema with support and infeasibility audits; conditional on the graph. \\
+    AI-sharpened range & Score-indexed range, known-truth audit, and explicit $\rho$; not a confidence interval. \\
+    Policy changed exposure & One-signed structural range across declared candidates; not dispatch causality or realized contact. \\
+    Echo chamber & Not testable: no repeated ties, beliefs, or reinforcement. \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-\subsection{Mechanism accounting}
-
-We report four layers without treating them as a causal mediation chain:
-(i) authorization changes by pickup-income bin; (ii) matched/all changes by the
-same bins; (iii) untrimmed physical-compatibility ranges; and (iv)
-score-restricted ranges. Reweighting post-policy origin, hour, and OD-distance
-cells to their pre-policy distribution provides a composition-standardized
-descriptive check. The contrast between untrimmed and score-restricted results
-measures sensitivity to the compatibility model, not the hidden platform
-objective. Provider identity, rejected requests, quoted prices, vehicles, and
-dispatch scores are absent; therefore the public data cannot separate rider
-selection, supply response, and proprietary assignment decisions.
-
-\section{Limitations and Ethical Considerations}
-\label{sec:ethics}
-
-This study uses public, privacy-coarsened administrative records and aggregate
-census statistics; it recruits no participants and performs no intervention.
-The applicable institutional determination on human-subjects review remains
-to be obtained and disclosed before submission. Public availability does not
-eliminate ethical obligations. First, origins are neighborhood
-proxies and must not be used to infer a rider's income, race, or identity.
-Second, candidate edges are relational hypotheses. Publishing trip IDs or a
-single reconstructed graph could encourage re-identification or stigmatize
-neighborhoods; released artifacts therefore contain aggregate intervals,
-synthetic examples, and code, but no row-level inferred social graph. A
-small-cell suppression threshold will be fixed before release. Third,
-\texttt{trips\_pooled} describes a service
-chain and does not guarantee simultaneous occupancy. Fourth, no stable rider ID
-exists, so the data cannot measure repeated exposure, belief reinforcement, or
-an echo chamber. Fifth, model-based score restrictions can under-cover, as the
-locked 95\% result demonstrates. We report untrimmed bounds and a full
-sensitivity grid alongside any tighter interval.
-
-The City release also suppresses geography non-randomly and rounds time. ACS
-joins cover neighborhoods, not people, and tract missingness can alter the
-analyzed subpopulation. We will report missingness by treatment cell, use
-community-area alternatives, and avoid individual-level fairness claims.
-
-The method can also be misused. A platform could optimize inferred mixing in a
-way that raises wait, detour, surveillance, or disparate service burdens, or
-use contextual SES predictions for discriminatory targeting. We present the
-bounds as an auditing device, not a license to infer sensitive attributes or
-force interaction. Any policy interpretation must jointly report service
-quality, geographic coverage, suppression, and distributional burdens. If the
-effect interval overlaps zero or changes sign across reasonable candidate
-rules, the scientific conclusion is non-identification.
-
-\section{Generative AI Usage}
-\label{sec:genai}
-
-Generative AI tools (OpenAI ChatGPT and Codex; exact model identifiers and
-access dates to be completed at submission) were used to assist code
-scaffolding and debugging, literature-search organization, prose drafting, and
-formatting. All research questions,
-estimands, model restrictions, analyses, source verification, and claims remain
-the responsibility of the authors. AI-generated code was executed against
-deterministic tests and known-truth simulations; numerical results in the paper
-are produced by saved scripts rather than generated text. No confidential
-participant data or proprietary platform records were supplied to a generative
-AI system for this draft. Generative AI did not recruit or interact with
-participants, label empirical observations, or appear as an author. The final
-disclosure will enumerate every material use across the full research process.
-
-\section{Conclusion}
-
-Privacy protection should not force urban AI research to choose between
-ignoring relational outcomes and pretending that an imputed network is
-observed. \methodname turns coarsened pooling records into a transparent
-admissible-set analysis: weak supervision scores compatibility, set packing
-enforces structural consistency, and optimization propagates ambiguity to an
-opportunity-exposure estimand. The locked benchmark shows both the promise and
-the danger of this approach. A proxy-audited AI score tightens the interval and
-retains truth in the locked test, whereas a shortcut-rich score looks sharper
-and confidently excludes truth. The next empirical step is therefore not
-another synthetic benchmark; it is the pre-declared
-complete-day Chicago analysis in Table~\ref{tab:gates}. Until those gates are
-met, the method is a validated pilot rather than evidence that ride pooling
-changes urban social mixing.
-
-\clearpage
-\bibliographystyle{ACM-Reference-Format}
-\bibliography{references}
-
-\appendix
-\section{Reproducibility Appendix}
-
-The artifact contains the complete candidate builder, weak noisy-OR model,
-MILP bound solver, locked synthetic generator, design lock, unit tests, and
-machine-readable outputs. The current implementation uses NumPy, pandas,
-SciPy/HiGHS, scikit-learn, and Matplotlib. Seven set-packing tests cover exact
-matching, infeasibility, score restriction, SES gaps, unmatched-node exclusion,
-synthetic candidate recall, and agreement between the MILP and an exhaustive
-small-graph fallback.
-
-The complete-day extraction requests every authorized row for two comparable
-weekdays, checks
-server-side counts, writes atomically, hashes files, and audits duplicate IDs,
-window boundaries, match/pooling consistency, and spatial missingness. The
-current execution environment blocked both supported City API routes; no row
-count or partial complete-day file is reported in this draft.
+Mechanism reporting separates authorization by origin-income bin, matched/all
+by the same bins, the untrimmed physical range, and score-restricted ranges.
+Composition reweighting is descriptive. Without rejected requests, vehicles,
+provider identity, or dispatch scores, the public data cannot separate rider
+selection, supply response, and proprietary assignment.
 
 \section{Proof of Proposition~\ref{prop:coverage}}
 
-The feasible vectors in Eq.~\eqref{eq:matching} and exact-cover pairings on the
-declared graph are in one-to-one correspondence. Because this set is finite,
-certified global minimization and maximization attain sharp endpoints. If
-$z^\dagger$ is feasible, its value lies between them; after adding the score
-floor this holds exactly when $\sum_e w_ez_e^\dagger\ge\rho W^*$. Finally,
-$\rho_2\ge\rho_1$ implies set inclusion, so lower endpoints weakly rise and
-upper endpoints weakly fall, while membership of $z^\dagger$ need not persist.
+The feasible binary vectors in $\mathcal M(E_C)$ are in one-to-one
+correspondence with exact-cover pairings on the declared graph. This set is
+finite, so certified minimization and maximization attain sharp endpoints and
+bracket every feasible $z^\dagger$. The same argument applies to
+$\mathcal M_\rho(E_C)$; the true pairing remains a member exactly when
+$\sum_e w_ez_e^\dagger\ge\rho W^*$. Finally,
+$\rho_2\ge\rho_1$ implies
+$\mathcal M_{\rho_2}(E_C)\subseteq\mathcal M_{\rho_1}(E_C)$, which proves the
+nested-endpoint claim without implying that truth remains feasible or that
+scalar containment fails whenever membership does.
 
 \section{Implementation Pseudocode}
 
@@ -885,4 +1050,5 @@ upper endpoints weakly fall, while membership of $z^\dagger$ need not persist.
   pair count, and retain certificates/configuration.
 \end{enumerate}
 
+\vspace{-12pt}
 \end{document}

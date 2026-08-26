@@ -1,4 +1,4 @@
-# Thicker but Narrower?
+# Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records
 
 Working paper and reproducible, human-experiment-free pilot for the KDD 2027
 AI for Sciences Track.
@@ -11,13 +11,14 @@ AI for Sciences Track.
 ## Research question
 
 Public ride-pooling records expose trip-level match outcomes but suppress the
-service-chain identifier. `BoundPool` treats the missing relational structure
-as a partially identified object: it builds a physically admissible candidate
-graph, learns edge hazards from node-level labels, and optimizes
-neighborhood-level opportunity-exposure statistics over feasible exact-cover
-packings.
+service-chain identifier. `BoundPool` treats the suppressed grouping as a
+structured, partially identified relation. It declares physically admissible
+candidate pairs, learns model-indexed compatibility scores from node-level
+labels, and computes the minimum and maximum neighborhood-level
+opportunity-exposure statistic over all feasible exact-cover pairings. It does
+not reconstruct a preferred co-rider graph.
 
-The paper studies **compatibility-weighted opportunity exposure**, not observed
+The paper studies **admissible-set opportunity exposure**, not observed
 co-rider identity, individual income, co-presence, attitude change, or an echo
 chamber.
 
@@ -31,15 +32,16 @@ the weak-MIL score. On the locked held-out day it:
 - raises hidden-edge mean reciprocal rank from 0.781 to 0.941 and ranks the
   hidden edge first for 90.0% of matched endpoints;
 - retains all 80 hidden true pairs in the candidate graph;
-- narrows the untrimmed same-income-bin range by 34.5% at a 90% score floor and
-  by 58.6% at a 95% score floor, while covering the hidden truth at both floors.
+- narrows the untrimmed same-income-bin range by 34.5% at `rho=0.90` and by
+  58.6% at `rho=0.95`, while retaining the hidden pairing at both floors.
 
 The original 28-feature model is retained only as a diagnostic. In the locked
 generator, tract equality mechanically encodes the same-income target; its
-apparently sharper 95% interval excludes truth. Continuous coordinates still
+apparently sharper `rho=0.95` interval excludes truth. Continuous coordinates still
 carry residual proxy information after the six-feature ablation, so all
 score-restricted bounds remain model-dependent sensitivity regions. The
-untrimmed candidate-graph interval is the primary score-free result.
+untrimmed interval over every physically supported exact-cover pairing is the
+primary score-free result.
 
 All benchmark records are synthetic and explicitly labeled. These numbers are
 not estimates about Chicago passengers.
@@ -49,8 +51,11 @@ not estimates about Chicago passengers.
 - `paper/main.tex` — eight-page ACM main paper followed by references and an
   optional reproducibility appendix.
 - `paper/Thicker_But_Narrower_Draft.pdf` — compiled review-format draft.
-- `code/ai_pilot/` — candidate construction, weak-MIL model, exact-cover
-  bounds, known-truth benchmark, and geography-equality ablation.
+- `paper/figures/benchmark_summary_revised.svg` — editable vector source for
+  Figure 1; the PDF twin is embedded in the manuscript.
+- `code/ai_pilot/` — candidate construction, weak-MIL compatibility scoring,
+  exact-cover admissible-set bounds, known-truth benchmark, and
+  geography-equality ablation.
 - `docs/literature/om_econ_update_2026-08-25.md` — adversarial OM/Econ
   positioning audit, six added references, and monthly search watch terms.
 - `SUBMISSION_CHECKLIST.md` — direct mapping to the supplied AI4Sciences CFP.
@@ -75,8 +80,8 @@ python code/ai_pilot/integration/ablations/no_geography_equality_20260825/run_ab
 ```
 
 The ablation reuses the committed design lock, public-like synthetic records,
-and candidate graph. Hidden pair truth is read only after fitting for
-evaluation.
+and physically admissible candidate relation. Hidden pair truth is read only
+after fitting for evaluation.
 
 ## Build and check the paper
 
@@ -99,8 +104,8 @@ and `Generative AI Usage` sections are both inside the main-paper page limit.
 
 ## Claim boundary
 
-Cells marked `TBD` are empirical gates, not cosmetic placeholders. They must be
-replaced with measured complete-day results or the corresponding claims must
-be removed. The Chicago prefix extract is used only for schema and pipeline
+Complete-day result cells are explicitly marked `Reserved`; they must be
+replaced with measured results or the corresponding claims must be removed.
+The Chicago prefix extract is used only for schema and pipeline
 mechanics because identifier-prefix sampling destroys most latent service
 chains.

@@ -1,6 +1,7 @@
 {
   "created_at_utc": "2026-08-26T06:25:21+00:00",
-  "artifact": "privacy-coarsened urban pooling AI pilot",
+  "artifact": "Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records",
+  "method": "weakly supervised compatibility scoring followed by min/max exposure optimization over all physically supported exact-cover pairings; no preferred co-rider graph is reconstructed",
   "human_experiment": false,
   "empirical_status": "complete-day City extraction blocked in this workspace; real prefix data used only for a non-substantive mechanics check",
   "primary_locked_benchmark": {
@@ -29,7 +30,7 @@
     "relative_brier_improvement": 0.9151616950603814,
     "ai_95_covers_truth": false
   },
-  "score_bound_warning": "The primary ablation removes exact geography equalities but continuous coordinates still proxy the synthetic SES bin. Score-restricted bounds are model-dependent sensitivity regions; the untrimmed graph is the score-free reference.",
+  "score_bound_warning": "The primary ablation removes exact geography equalities but continuous coordinates still proxy the synthetic SES bin. Score-restricted bounds are model-dependent sensitivity regions; the untrimmed exact-cover admissible interval is the score-free reference.",
   "solver_validation": [
     {
       "time_bin_minutes": 1,
@@ -118,8 +119,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3081,
-      "sha256": "889b1f4dcb1deadeecf211671512d37040f041b01fd9e4a4421e707836eefbc9"
+      "bytes": 3261,
+      "sha256": "3de80765e4074f9e79155f0843cea2055c32a6e2db3f7522dec8401673af249c"
     },
     {
       "path": "bounds/README.md",
@@ -193,8 +194,8 @@
     },
     {
       "path": "integration/ablations/no_geography_equality_20260825/make_revised_benchmark_figure.py",
-      "bytes": 14525,
-      "sha256": "2e2a8fb0533e68d8c5095be0e469b85dd70d7233660e6beba4f743918484f96e"
+      "bytes": 14276,
+      "sha256": "acd0ca1aee42362d429fd373999bb33a01f0fcec5bb81b250319560c28efd262"
     },
     {
       "path": "integration/ablations/no_geography_equality_20260825/results/ABLATION_REPORT.md",

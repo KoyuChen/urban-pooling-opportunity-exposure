@@ -1,4 +1,4 @@
-# Privacy-coarsened urban pooling AI pilot
+# Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records — AI pilot
 
 This folder contains a fully offline, human-experiment-free pilot for learning
 and bounding latent ride-pooling compatibility structure when the public data
@@ -9,13 +9,15 @@ release omits group identifiers.
 1. `data_pipeline/` requests complete Chicago authorized-trip days and refuses
    partial downloads.  Complete slices are mandatory because the earlier
    one-prefix sample almost always omits the other trip in a pooled chain.
-2. `model/` builds a sparse time–OD candidate graph and learns edge hazards
+2. `model/` builds a sparse time–OD candidate graph and learns compatibility scores
    from node-level `shared_trip_match` labels with a noisy-OR multiple-instance
    likelihood.  It compares against a disclosed-rule baseline on held-out
    days and never creates public-data pair labels.
-3. `bounds/` uses binary set-packing to minimize and maximize SES pairing
-   statistics over exact feasible pair coverings.  A score-retention option
-   gives a clearly labeled model-based sensitivity region.
+3. `bounds/` uses binary exact-cover optimization to minimize and maximize SES
+   pairing statistics over the declared admissible set of feasible pairings.
+   It does not select a reconstructed co-rider graph as the scientific result.
+   A score-retention option gives a clearly labeled model-based sensitivity
+   region.
 4. `integration/` is a known-truth end-to-end benchmark. It keeps latent pair
    IDs outside training, includes unmatched authorized trips, and checks both
    weak-supervision prediction and exposure-bound coverage. The production
@@ -47,7 +49,7 @@ python code/ai_pilot/model/run_weak_edge_pilot.py \
   --feature-set no_geography_equality \
   --output-dir /tmp/boundpool-complete-days
 
-# 3. Validate the packing solver
+# 3. Validate the exact-cover solver
 python code/ai_pilot/bounds/synthetic_validation.py \
   --output-dir /tmp/boundpool-solver-check
 
