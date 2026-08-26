@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this research artifact, please cite the working paper."
+title: "Thicker but Narrower? Weakly Supervised Bounds on Opportunity Exposure in Urban Ride-Pooling Markets"
+type: software
+authors:
+  - family-names: Chen
+    given-names: Keyu
+version: 0.1.0
+date-released: 2026-08-25

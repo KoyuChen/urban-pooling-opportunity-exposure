@@ -1,0 +1,29 @@
+name: build-paper
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  latex:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile ACM paper
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: paper
+          latexmk_use_xelatex: false
+          args: -pdf -interaction=nonstopmode -halt-on-error
+      - name: Check eight-page main-paper boundary
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          cp paper/main.pdf paper/Thicker_But_Narrower_Draft.pdf
+          ./scripts/check_submission_pdf.sh paper/Thicker_But_Narrower_Draft.pdf
+      - name: Upload compiled draft
+        uses: actions/upload-artifact@v4
+        with:
+          name: thicker-but-narrower-draft
+          path: paper/Thicker_But_Narrower_Draft.pdf

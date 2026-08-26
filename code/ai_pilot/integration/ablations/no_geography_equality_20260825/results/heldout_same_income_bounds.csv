@@ -1,0 +1,6 @@
+scenario,score_column,score_retention,feasible,lower,upper,width,truth_same_income_bin_share,covers_truth,truth_graph_complete,truth_score_ratio_to_optimum,truth_score_eligible,candidate_edge_count,required_node_count,selected_edge_count,width_reduction_vs_untrimmed
+untrimmed_candidate_graph,p_ai_edge,,True,0.05,0.775,0.725,0.5625,True,True,0.996499864506001,True,560,160,80,0.0
+transparent_rule_retention_0.90,p_rule_edge,0.9,True,0.3375,0.775,0.4375,0.5625,True,True,0.945106782707113,True,560,160,80,0.396551724137931
+weak_mil_ai_retention_0.90,p_ai_edge,0.9,True,0.2875,0.7625,0.475,0.5625,True,True,0.996499864506001,True,560,160,80,0.3448275862068966
+transparent_rule_retention_0.95,p_rule_edge,0.95,True,0.4375,0.75,0.3125,0.5625,True,True,0.945106782707113,False,560,160,80,0.5689655172413793
+weak_mil_ai_retention_0.95,p_ai_edge,0.95,True,0.3875,0.6875,0.3,0.5625,True,True,0.996499864506001,True,560,160,80,0.5862068965517241

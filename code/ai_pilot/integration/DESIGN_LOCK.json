@@ -1,0 +1,50 @@
+{
+  "status": "locked before the first held-out benchmark run",
+  "purpose": "Known-truth integration test only; not an empirical Chicago estimate",
+  "seed": 260825,
+  "days": [
+    "2026-01-20",
+    "2026-01-27"
+  ],
+  "held_out_day": "2026-01-27",
+  "synthetic_market_per_day": {
+    "route_waves": 20,
+    "hidden_true_pairs_per_wave": 4,
+    "unmatched_authorized_trips_per_wave": 4,
+    "same_income_bin_pair_probability": 0.68,
+    "timestamp_coarsening_minutes": 15
+  },
+  "candidate_and_model": {
+    "max_start_delta_min": 30.0,
+    "max_pickup_km": 4.0,
+    "max_dropoff_km": 7.0,
+    "min_direction_cosine": -0.25,
+    "max_candidates_per_node": 16,
+    "neighbor_search_k": 96,
+    "ai_l2": 0.001,
+    "rule_l2": 0.00001,
+    "max_iter": 150
+  },
+  "set_packing": {
+    "metric": "same_bin",
+    "score_retentions": [
+      0.9,
+      0.95
+    ],
+    "backend": "scipy",
+    "time_limit_seconds": 60
+  },
+  "evaluation": {
+    "primary_node_subset": "test_supported",
+    "primary_node_metric": "Brier score",
+    "node_brier_relative_improvement_gate": 0.1,
+    "true_edge_candidate_recall_gate": 0.95,
+    "ranking_units": "held-out matched endpoints whose hidden true edge is in the candidate graph"
+  },
+  "anti_leakage": [
+    "The weak-MIL model reads only the two synthetic public-record CSVs.",
+    "Hidden pair identifiers and synthetic income bins are stored separately and never passed to model fitting.",
+    "The second day is held out by date; candidate construction never connects days.",
+    "No parameter is selected using held-out metrics."
+  ]
+}

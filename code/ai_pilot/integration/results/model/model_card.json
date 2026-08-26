@@ -1,0 +1,123 @@
+{
+  "interpretation": {
+    "estimand": "node-level probability that an authorized trip is reported as matched",
+    "edge_output": "time/OD compatibility score for a candidate pair",
+    "edge_ground_truth_available": false,
+    "forbidden_claim": "A high-scoring edge is not evidence that the two trips shared a vehicle.",
+    "downstream_use": "candidate weighting for set-packing and partial-identification bounds"
+  },
+  "input_audit": {
+    "input_files": [
+      "/workspace/scratch/f9f9fd8a4e38/urban_pooling_data/ai_pilot/integration/results/synthetic_data/synthetic_chicago_authorized_2026-01-20.csv",
+      "/workspace/scratch/f9f9fd8a4e38/urban_pooling_data/ai_pilot/integration/results/synthetic_data/synthetic_chicago_authorized_2026-01-27.csv"
+    ],
+    "input_rows_by_file": {
+      "/workspace/scratch/f9f9fd8a4e38/urban_pooling_data/ai_pilot/integration/results/synthetic_data/synthetic_chicago_authorized_2026-01-20.csv": 240,
+      "/workspace/scratch/f9f9fd8a4e38/urban_pooling_data/ai_pilot/integration/results/synthetic_data/synthetic_chicago_authorized_2026-01-27.csv": 240
+    },
+    "rows_before_authorized_filter": 480,
+    "authorized_rows_after_cleaning": 480,
+    "invalid_start_rows_dropped": 0,
+    "duplicate_trip_ids_dropped": 0,
+    "candidate_eligible_rows": 480,
+    "candidate_eligible_rate": 1.0,
+    "match_rate": 0.6666666666666666,
+    "days": [
+      "2026-01-20",
+      "2026-01-27"
+    ]
+  },
+  "split": {
+    "strategy": "explicit held-out dates",
+    "held_out": [
+      "2026-01-27"
+    ],
+    "rows_by_split": {
+      "train": 240,
+      "test": 240
+    },
+    "match_rate_by_split": {
+      "test": 0.6666666666666666,
+      "train": 0.6666666666666666
+    }
+  },
+  "candidate_config": {
+    "max_start_delta_min": 30.0,
+    "max_pickup_km": 4.0,
+    "max_dropoff_km": 7.0,
+    "min_direction_cosine": -0.25,
+    "max_candidates_per_node": 16,
+    "neighbor_search_k": 96
+  },
+  "candidate_audit": {
+    "reference_latitude": 41.878847500000006,
+    "proposed_unique_edges_before_degree_cap": 2640,
+    "accepted_edges": 2640,
+    "max_observed_degree": 11,
+    "supported_nodes": 480,
+    "supported_node_rate": 1.0,
+    "supported_rate_among_coordinate_eligible": 1.0,
+    "supported_match_node_rate": 1.0,
+    "supported_rate_among_coordinate_eligible_match_nodes": 1.0,
+    "degree_quantiles_supported": {
+      "0.0": 11.0,
+      "0.25": 11.0,
+      "0.5": 11.0,
+      "0.75": 11.0,
+      "1.0": 11.0
+    }
+  },
+  "candidate_limitations": [
+    "Rounded times and public centroids create ties; the degree/search caps can omit a true counterpart.",
+    "Candidate recall cannot be measured without a pooled-group identifier.",
+    "Threshold and cap sensitivity must accompany downstream exposure bounds."
+  ],
+  "training": {
+    "train_prevalence": 0.6666666666666666,
+    "rule_model": {
+      "success": true,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "iterations": 13,
+      "function_evaluations": 15,
+      "objective": 0.1503621302424992
+    },
+    "weak_mil_ai_model": {
+      "success": true,
+      "message": "CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL",
+      "iterations": 39,
+      "function_evaluations": 44,
+      "objective": 0.08458848110219633
+    },
+    "ai_l2": 0.001,
+    "rule_l2": 1e-05,
+    "feature_count": 28,
+    "node_labels_used": [
+      "shared_trip_match"
+    ],
+    "edge_labels_used": [],
+    "excluded_as_features": [
+      "shared_trip_match",
+      "shared_trip_authorized",
+      "trips_pooled",
+      "fare",
+      "trip_total"
+    ]
+  },
+  "evaluation": {
+    "primary_subset": "test_supported",
+    "primary_unit": "trip node",
+    "edge_accuracy_reported": false,
+    "test_supported_brier_relative_improvement_ai_vs_rule": 0.9151616950603803
+  },
+  "weak_diagnostics_not_edge_truth": {
+    "candidate_edges_with_two_match_positive_endpoints_rate": 0.42424242424242425,
+    "reason_not_truth": "Two matched nodes can belong to different pooled groups; the public data expose no group ID."
+  },
+  "outputs": {
+    "node_predictions": "node_predictions.csv",
+    "scored_candidate_edges": "scored_candidate_edges.csv.gz",
+    "metrics": "node_level_metrics.csv",
+    "calibration": "test_supported_calibration.csv",
+    "coefficients": "model_coefficients.csv"
+  }
+}
