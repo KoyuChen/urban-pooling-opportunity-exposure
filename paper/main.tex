@@ -81,7 +81,10 @@ vehicle miles: they define a technologically mediated set of potential
 cross-neighborhood encounters. The scientific question is therefore not only
 whether a thicker pooling market produces more matches, but whether the
 additional feasible matches broaden or narrow socioeconomic opportunity
-exposure.
+exposure. Market thickness can reduce aggregate matching through search
+frictions \citep{linetessine2020thickness}, and ride-sharing density economies
+can distribute service access unevenly across space \citep{ghili2026access}.
+Our outcome is a separate compositional margin under suppressed group links.
 
 That question is difficult precisely where public evidence is most available.
 The City of Chicago releases trip-level Transportation Network Provider (TNP)
@@ -856,21 +859,20 @@ upper endpoints weakly fall, while membership of $z^\dagger$ need not persist.
 \subsection{Degree-capped candidate graph}
 
 \begin{enumerate}[leftmargin=*,nosep]
-  \item Split by date and train/test assignment; project released centroids.
-  \item Build a normalized start-time/pickup-coordinate $k$-d tree.
-  \item Query at most 96 neighbors, apply hard filters, and retain 16 proposals.
-  \item Deduplicate by physical cost while enforcing degree at most 16.
-  \item Emit support/degree diagnostics; forbid cross-date or cross-split edges.
+  \item Split by date/train--test assignment, project centroids, and build the
+  normalized start-time/pickup-coordinate $k$-d tree.
+  \item Query 96 neighbors, apply hard filters, deduplicate by physical cost,
+  and retain at most 16 proposals per node.
+  \item Forbid cross-date/split edges and emit support and degree diagnostics.
 \end{enumerate}
 
 \subsection{Out-of-day weak edge scoring}
 
 \begin{enumerate}[leftmargin=*,nosep]
-  \item Construct compatibility features without labels, fares, or SES.
-  \item Fit the rule intercept/scale on supported training nodes.
-  \item Fit $\widehat\theta$ using the same node likelihood and no edge label.
-  \item Compute held-out node probabilities and calibration metrics.
-  \item Compute reciprocal rank and top-$k$ only in known-truth simulations.
+  \item Construct compatibility features without labels, fares, or SES, then
+  fit the rule intercept/scale on supported training nodes.
+  \item Fit $\widehat\theta$ with the node likelihood and no edge label.
+  \item Report held-out calibration; rank edges only in known-truth simulation.
 \end{enumerate}
 
 \subsection{Certified exposure range}
@@ -879,8 +881,8 @@ upper endpoints weakly fall, while membership of $z^\dagger$ need not persist.
   \item Verify graph integrity, finite scores, parity, and feasibility.
   \item Solve $W^*=\max_{z\in\mathcal M(E_C)}\sum_e w_ez_e$ to global
   optimality; add the score floor only for a declared $\rho$ analysis.
-  \item Solve both SES extrema; reject uncertified time-limit incumbents.
-  \item Normalize by pair count and retain certificates/configuration.
+  \item Solve both SES extrema, reject uncertified incumbents, normalize by
+  pair count, and retain certificates/configuration.
 \end{enumerate}
 
 \end{document}

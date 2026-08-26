@@ -51,6 +51,8 @@ not estimates about Chicago passengers.
 - `paper/Thicker_But_Narrower_Draft.pdf` — compiled review-format draft.
 - `code/ai_pilot/` — candidate construction, weak-MIL model, exact-cover
   bounds, known-truth benchmark, and geography-equality ablation.
+- `docs/literature/om_econ_update_2026-08-25.md` — adversarial OM/Econ
+  positioning audit, six added references, and monthly search watch terms.
 - `SUBMISSION_CHECKLIST.md` — direct mapping to the supplied AI4Sciences CFP.
 - `ARTIFACT_MANIFEST.md` — evidence status and file-level provenance.
 

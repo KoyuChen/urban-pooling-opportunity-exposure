@@ -12,17 +12,17 @@ groups and repeatedly solving a trip--vehicle assignment problem
 \citep{alonsomora2017ondemand}. Complementarily, Ozkan and Ward study forward-looking
 dynamic matching and establish large-market optimality guarantees for policies that
 account for spatially heterogeneous arrivals and patience
-\citep{ozkanward2020dynamic}. These papers solve a forward allocation problem on an
-observed request system. Our scientific problem is inverse: the public Chicago file
-retains node-level authorization and match outcomes but suppresses the co-rider group
-identifier. We therefore infer a sparse set of candidate edges from coarsened
-time and origin--destination constraints, learn their compatibility from node labels,
-and retain all set packings consistent with the public record. The target is not a
-single operational assignment but bounds on a latent, privacy-removed urban mixing
-quantity. This distinction matters because timestamp rounding can make many pairwise
-links individually plausible while rendering them jointly impossible. Graph
-feasibility and global matching constraints are therefore part of the estimand, not
-merely computational devices for accelerating a conventional matcher.
+\citep{ozkanward2020dynamic}. Market thickness is not mechanically beneficial:
+Li and Netessine show that search frictions can lower matching as an online
+market expands \citep{linetessine2020thickness}, while Ghili, Kumar, and Teng
+show that density economies in ride-sharing generate spatially unequal service
+access \citep{ghili2026access}. Those papers study forward allocation, aggregate
+matching, or access on observed request systems. Our inverse problem retains
+node-level authorization and match outcomes but suppresses co-rider groups. We
+learn compatibility from node labels, retain all globally feasible set packings,
+and bound the composition of opportunity exposure rather than equating thickness
+with matching or access. Global constraints are part of the estimand because
+rounded records can be pairwise plausible yet jointly impossible.
 
 \paragraph{Efficiency, fairness, and the Chicago evidence.}
 Algorithmic fairness work has modified ride-pooling objectives to balance service and
@@ -36,9 +36,14 @@ driver-income fairness objective nor a claim that two inferred riders actually
 interacted.
 
 Several papers use the same Chicago administrative source and are consequently the
-closest empirical benchmarks. Taiebat, Amini, and Xu predict whether riders request
-sharing and whether authorized trips are successfully matched, finding that travel
-impedance variables dominate their trip-level machine-learning models
+closest empirical benchmarks. At the community level, Soria and Stathopoulos
+analyze 127 million trips and find that disadvantage is positively associated
+with pooled demand and negatively associated with solo demand
+\citep{soria2021sociospatial}. This establishes the socioeconomic geography of
+pooling demand, but not the composition of privacy-suppressed co-rider pairs.
+Taiebat, Amini, and Xu predict whether riders request sharing and whether
+authorized trips are successfully matched, finding that travel impedance
+variables dominate their trip-level machine-learning models
 \citep{taiebat2022sharing}. Mucci and Erhardt use travel-time, cost, and choice models
 to distinguish the decision to request a shared ride from the subsequent match
 outcome \citep{mucci2024understanding}; their published corrigendum cautions against
@@ -65,9 +70,22 @@ socioeconomically assortative? Because the latent groups are not observed, that
 question must be answered with lower and upper bounds rather than with an imputed
 network treated as truth.
 
+\paragraph{Uncertain linkage.}
+Sadinle models record linkage as a globally constrained bipartite matching
+rather than independent pair classifications and quantifies uncertainty over
+admissible links \citep{sadinle2017linkage}. Our setting has one event file, no
+observed co-rider edge or cross-file identity, and weak labels on nodes rather
+than labeled record pairs. We therefore score candidate edges, impose physical
+and exact-cover constraints, and optimize a downstream exposure functional over
+the surviving groupings. The contribution is structured partial linkage for a
+scientific estimand, not another point-imputation rule.
+
 \paragraph{Urban mobility and experienced segregation.}
-This estimand is motivated by a literature showing that residential segregation and
-experienced segregation are not interchangeable. Wang et al. use geolocated mobility
+Conventional carpooling already has a direct economics precedent: Charles and
+Kline relate commute carpool participation to cross-racial relational costs
+\citep{charleskline2006carpooling}. Algorithmic pooling differs because we observe
+neither stable persons nor voluntary tie formation. More broadly, residential
+and experienced segregation are not interchangeable. Wang et al. use geolocated mobility
 to show that residents of Black and Hispanic neighborhoods in large U.S. cities visit
 a systematically different composition of neighborhoods even when travel radius and
 spread are similar \citep{wang2018isolation}. Moro et al. combine mobile-device visits,
@@ -90,7 +108,10 @@ contain neither persistent persons nor verified co-presence, and ACS median hous
 income is a neighborhood attribute rather than rider income. We therefore use the
 terms \emph{compatibility assortativity}, \emph{opportunity exposure}, and
 \emph{mobility silo}; we do not claim realized social contact, durable homophily, or
-an echo chamber. Methodologically, our bridge between the two literatures is a
+an echo chamber. Chetty et al.'s decomposition of cross-class connectedness into
+exposure and friending conditional on exposure makes this boundary explicit
+\citep{chetty2022socialcapital2}: a feasible co-ride is at most an opportunity for
+co-presence, not evidence of friendship or preference. Methodologically, our bridge is a
 privacy-coarsened latent graph: weak supervision maps node-level match labels to
 edge scores, exact-cover constraints enforce feasible pair structure, and optimization carries
 the remaining structural uncertainty into sharp or sensitivity-indexed exposure
