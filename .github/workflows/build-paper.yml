@@ -3,6 +3,7 @@ name: build-paper
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   latex:
