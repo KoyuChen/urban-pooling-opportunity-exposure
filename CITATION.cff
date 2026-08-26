@@ -1,9 +1,9 @@
 cff-version: 1.2.0
 message: "If you use this research artifact, please cite the working paper."
-title: "Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records"
+title: "Learning-Augmented Aggregate Bounds over Hidden Matchings and Privacy-Coarsened Attributes"
 type: software
 authors:
   - family-names: Chen
     given-names: Keyu
-version: 0.1.0
-date-released: 2026-08-25
+version: 0.2.0
+date-released: 2026-08-26

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-pdf_path="${1:-paper/Thicker_But_Narrower_Draft.pdf}"
+pdf_path="${1:-paper/KDD_Research_Working_Draft.pdf}"
 
 for command_name in pdfinfo pdftotext; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
@@ -17,26 +17,33 @@ fi
 
 page_count="$(pdfinfo "$pdf_path" | awk '/^Pages:/ {print $2}')"
 page_size="$(pdfinfo "$pdf_path" | awk -F': +' '/^Page size:/ {print $2}')"
-page_nine="$(pdftotext -f 9 -l 9 "$pdf_path" - 2>/dev/null || true)"
-main_text="$(pdftotext -f 1 -l 8 "$pdf_path" -)"
-
-if [[ "$page_count" -lt 9 ]]; then
-  printf 'Expected at least 9 total pages; found %s.\n' "$page_count" >&2
+references_page=""
+for page in $(seq 1 "$page_count"); do
+  page_text="$(pdftotext -f "$page" -l "$page" "$pdf_path" - 2>/dev/null || true)"
+  if grep -q '^REFERENCES$' <<<"$page_text"; then
+    references_page="$page"
+    break
+  fi
+done
+if [[ -z "$references_page" ]]; then
+  printf 'References heading not found.\n' >&2
   exit 1
 fi
-if ! grep -q 'REFERENCES' <<<"$page_nine"; then
-  printf 'References do not begin on page 9.\n' >&2
+if [[ "$references_page" -gt 9 ]]; then
+  printf 'Main content exceeds eight pages; references begin on page %s.\n' "$references_page" >&2
   exit 1
 fi
+main_end_page=$((references_page - 1))
+main_text="$(pdftotext -f 1 -l "$main_end_page" "$pdf_path" -)"
 if ! grep -q 'LIMITATIONS AND ETHICAL' <<<"$main_text"; then
   printf 'Mandatory limitations/ethics section is missing from pages 1-8.\n' >&2
   exit 1
 fi
 if ! grep -q 'GENERATIVE AI USAGE' <<<"$main_text"; then
-  printf 'Mandatory generative-AI section is missing from pages 1-8.\n' >&2
+  printf 'Generative-AI disclosure is missing from main content.\n' >&2
   exit 1
 fi
 
 printf 'PASS: %s pages; %s\n' "$page_count" "$page_size"
-printf 'PASS: main content is pages 1-8; references begin on page 9.\n'
-printf 'PASS: both mandatory disclosure sections occur within pages 1-8.\n'
+printf 'PASS: main content ends on page %s; references begin on page %s.\n' "$main_end_page" "$references_page"
+printf 'PASS: limitations/ethics and generative-AI disclosure occur in main content.\n'

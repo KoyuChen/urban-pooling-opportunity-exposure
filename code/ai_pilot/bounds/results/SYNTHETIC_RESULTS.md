@@ -18,7 +18,7 @@ score; it is a sensitivity region, not a confidence interval.
 - Raw set-packing bounds should cover truth whenever every latent pair remains
   in the candidate graph. This is the implementation's primary coverage check.
 - Coarser public time bins admit more alternative pairings and should widen the
-  raw identified interval.
+  raw graph-conditional endpoint range.
 - Score restriction can shorten intervals, but coverage is an empirical model
   diagnostic. It must not be described as data-identified without assumptions.
 - The maximum-score matching is a point reconstruction for diagnostics only.

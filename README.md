@@ -1,111 +1,144 @@
-# Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records
+# Hidden Relations under Privacy Coarsening
 
-Working paper and reproducible, human-experiment-free pilot for the KDD 2027
-AI for Sciences Track.
+KDD Research-oriented working repository for certified aggregate inference when
+a public release suppresses relation keys and coarsens endpoint attributes.
+Chicago ride pooling is the flagship application; it is not treated as a
+substitute for general method validation.
 
-> **Status:** ACM-formatted research draft, not a submission-ready empirical
-> paper. The method and known-truth validation are complete. The complete-day
-> Chicago estimates, policy analysis, and institutional human-subjects
-> determination remain required before submission.
+> **Status:** research build, not submission ready. The exact small-graph
+> audit, joint matching--label reference solver, matching-level conformal
+> calibration, and controlled benchmark are implemented. A verified 2025/2026
+> Chicago observation operator, a production-scale certified decomposition,
+> independent external relation-truth validation, and complete-day Chicago
+> evidence remain hard gates.
 
-## Research question
+## Method target
 
-Public ride-pooling records expose trip-level match outcomes but suppress the
-service-chain identifier. `BoundPool` treats the suppressed grouping as a
-structured, partially identified relation. It declares physically admissible
-candidate pairs, learns model-indexed compatibility scores from node-level
-labels, and computes the minimum and maximum neighborhood-level
-opportunity-exposure statistic over all feasible exact-cover pairings. It does
-not reconstruct a preferred co-rider graph.
+The release may preserve one row per transaction but remove the key joining
+rows into events. Fine endpoint attributes may also be suppressed through
+global privacy counts. We therefore optimize a query over **joint feasible
+worlds** consisting of:
 
-The paper studies **admissible-set opportunity exposure**, not observed
-co-rider identity, individual income, co-presence, attitude change, or an echo
-chamber.
+1. a hidden matching that covers every core record once and may use optional
+   boundary-buffer records;
+2. one latent endpoint attribute from each record's declared support;
+3. global count and release constraints imposed by the verified observation
+   operator; and
+4. an optional, separately audited candidate-miss and learned-score
+   restriction.
 
-## Current pilot result
+The output is a pair of attained aggregate endpoints and their witness worlds,
+not one asserted relation graph. The scalar interval between the endpoints is
+the convex hull of attainable values and need not itself be fully attainable.
 
-The primary synthetic benchmark removes six geography-equality features from
-the weak-MIL score. On the locked held-out day it:
+## Learning layer
 
-- improves candidate-supported node Brier loss by 90.2% over the transparent
-  rule (0.06048 to 0.00595);
-- raises hidden-edge mean reciprocal rank from 0.781 to 0.941 and ranks the
-  hidden edge first for 90.0% of matched endpoints;
-- retains all 80 hidden true pairs in the candidate graph;
-- narrows the untrimmed same-income-bin range by 34.5% at `rho=0.90` and by
-  58.6% at `rho=0.95`, while retaining the hidden pairing at both floors.
+An edge scorer is a tightening device, not an identified partner probability.
+For a feasible matching (M), the implementation uses normalized score regret
 
-The original 28-feature model is retained only as a diagnostic. In the locked
-generator, tract equality mechanically encodes the same-income target; its
-apparently sharper `rho=0.95` interval excludes truth. Continuous coordinates still
-carry residual proxy information after the six-feature ablation, so all
-score-restricted bounds remain model-dependent sensitivity regions. The
-untrimmed interval over every physically supported exact-cover pairing is the
-primary score-free result.
+\[
+R_s(M)=\frac{S_{\max}-S(M)}{S_{\max}-S_{\min}},
+\]
 
-All benchmark records are synthetic and explicitly labeled. These numbers are
-not estimates about Chicago passengers.
+which is invariant to positive affine score transformations. A split-conformal
+order statistic calibrated on independent markets with observed true
+matchings yields market-level finite-sample inclusion under exchangeability
+and candidate support. Synthetic calibration does not transfer to Chicago;
+without independent Chicago-like partner truth, learned restrictions remain
+sensitivity analyses.
+
+## Current controlled benchmark
+
+The deterministic benchmark separates source, calibration, and held-out test
+markets. Source scorers are directly supervised by true edges; no node-label
+learner is evaluated. Source homophily has generating probability 95%, while
+calibration and test use 55%. This deliberately shifts a query-leaking
+diagnostic that sees the same-SES edge contribution defining the downstream
+statistic.
+
+Across 120 held-out test markets at nominal 90% matching-set coverage:
+
+| Scorer | Calibrated true-matching retention | Downstream coverage | Mean width reduction | Arbitrary tight-radius retention | Arbitrary downstream coverage | Arbitrary width reduction |
+|---|---:|---:|---:|---:|---:|---:|
+| Target-free | 95.8% | 100% | 3.8% | 30.0% | 83.3% | 70.6% |
+| Query-leaking diagnostic | 97.5% | 100% | 7.6% | 15.0% | 24.2% | 95.8% |
+
+The query-leaking stress model appears much sharper at the illustrative radius
+0.05 precisely because it removes truth. Calibration exposes the cost:
+coverage returns, but most apparent precision disappears. These are
+single-seed, six-pair synthetic implementation results. They are not Chicago
+estimates, a weak-supervision validation, a coupled-attribute benchmark, or
+evidence that exchangeability holds in another domain.
+
+## Chicago claim boundary
+
+For a boundary-complete, internally consistent cohort with
+`Shared Trip Match = true` and `Trips Pooled = 2`, the public field reports
+realized co-presence while partner identity remains hidden. The eventual
+application targets the neighborhood-context composition of those customer
+transactions. It does not identify rider income, race, preference, durable
+ties, platform opportunity, or an echo chamber.
+
+The committed prefix sample is useful only for schema and pipeline checks. Its
+identifier sampling omits almost every hidden counterpart, so no Chicago
+matching, composition, or policy estimate is computed from it.
 
 ## Repository map
 
-- `paper/main.tex` — eight-page ACM main paper followed by references and an
-  optional reproducibility appendix.
-- `paper/Thicker_But_Narrower_Draft.pdf` — compiled review-format draft.
-- `paper/figures/benchmark_summary_revised.svg` — editable vector source for
-  Figure 1; the PDF twin is embedded in the manuscript.
-- `code/ai_pilot/` — candidate construction, weak-MIL compatibility scoring,
-  exact-cover admissible-set bounds, known-truth benchmark, and
-  geography-equality ablation.
-- `docs/literature/om_econ_update_2026-08-25.md` — adversarial OM/Econ
-  positioning audit, six added references, and monthly search watch terms.
-- `SUBMISSION_CHECKLIST.md` — direct mapping to the supplied AI4Sciences CFP.
-- `ARTIFACT_MANIFEST.md` — evidence status and file-level provenance.
+- `KDD_RESEARCH_PIVOT.md` — formal target, claim removals, work packages, and
+  KDD go/no-go rule.
+- `adversarial_review/` — restart-from-zero identification, novelty,
+  empirical-gate, and venue audit.
+- `paper/main.tex` — anonymous ACM Research-track working manuscript.
+- `code/ai_pilot/bounds/joint_label_matching.py` — exact small-world and
+  numerical joint matching--label endpoints with core/buffer/context roles.
+- `code/ai_pilot/bounds/structured_matching_bounds.py` — audited fixed-graph
+  endpoint baseline.
+- `code/ai_pilot/bounds/conformal_matching.py` — matching-level split-conformal
+  calibration.
+- `code/ai_pilot/benchmarks/conformal_set_benchmark.py` — deterministic
+  source/calibration/test benchmark.
+- `code/ai_pilot/benchmarks/exact_conformal_frontier.py` — exhaustive
+  10,395-matchings-per-market audit and radius frontier.
+- `code/ai_pilot/benchmarks/joint_solver_audit.py` — 250-instance exact versus
+  numerical agreement audit.
+- `code/ai_pilot/integration/` — earlier weak-node-score pilot, retained as
+  failure analysis rather than headline evidence.
+- `SUBMISSION_CHECKLIST.md` — KDD Research format and scientific gates.
+- `ARTIFACT_MANIFEST.md` — file-level evidence provenance.
 
-## Reproduce the offline pilot
+## Reproduce the audited code
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 python -m pip install -r code/ai_pilot/requirements.txt
 
-python code/ai_pilot/model/smoke_test.py
+python adversarial_review/counterexamples.py
 python -m unittest discover -s code/ai_pilot/bounds/tests -v
-python code/ai_pilot/bounds/synthetic_validation.py \
-  --output-dir /tmp/boundpool-solver-check
-python code/ai_pilot/integration/run_integration_benchmark.py \
-  --output-dir /tmp/boundpool-integration
-python code/ai_pilot/integration/ablations/no_geography_equality_20260825/run_ablation.py \
-  --locked-result-dir code/ai_pilot/integration/results \
-  --output-dir /tmp/boundpool-no-geography-equality
+python code/ai_pilot/benchmarks/conformal_set_benchmark.py
+python code/ai_pilot/benchmarks/exact_conformal_frontier.py
+python code/ai_pilot/benchmarks/joint_solver_audit.py
+MPLCONFIGDIR=tmp/matplotlib \
+  python code/ai_pilot/benchmarks/plot_conformal_tradeoff.py
 ```
 
-The ablation reuses the committed design lock, public-like synthetic records,
-and physically admissible candidate relation. Hidden pair truth is read only
-after fitting for evaluation.
+The benchmark's hidden pair truth is used for source training, market-level
+calibration, and held-out evaluation according to the fixed three-way split.
+No benchmark result licenses a real-data coverage claim.
 
-## Build and check the paper
-
-A TeX Live installation containing `acmart`, BibTeX, and `latexmk` is required.
+## Build and inspect the paper
 
 ```bash
 ./scripts/build_paper.sh
-./scripts/check_submission_pdf.sh paper/Thicker_But_Narrower_Draft.pdf
+./scripts/check_submission_pdf.sh paper/KDD_Research_Working_Draft.pdf
 ```
 
-The source intentionally uses:
+The working source uses the double-blind Research-track form:
 
 ```tex
-\documentclass[sigconf,review]{acmart}
+\documentclass[sigconf,anonymous,review]{acmart}
 ```
 
-The current PDF has eight pages of main content. References and the optional
-appendix begin on page 9. The required `Limitations and Ethical Considerations`
-and `Generative AI Usage` sections are both inside the main-paper page limit.
-
-## Claim boundary
-
-Complete-day result cells are explicitly marked `Reserved`; they must be
-replaced with measured results or the corresponding claims must be removed.
-The Chicago prefix extract is used only for schema and pipeline
-mechanics because identifier-prefix sampling destroys most latent service
-chains.
+The first KDD 2027 cycle has passed. The project targets the next official
+Research-track cycle; this repository does not assume an unpublished deadline.

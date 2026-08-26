@@ -1,70 +1,41 @@
-\section{Related Work and Positioning}
-\label{sec:related_work}
+\section{Related Work}
+\label{sec:related}
 
-\paragraph{Forward allocation is not our estimand.}
-Shareability and dynamic-pooling models begin with observed requests and ask
-how a platform should allocate them. Santi et al. connect pairwise feasibility
-to maximum matching \citep{santi2014shareability}; Alonso-Mora et al. enumerate
-feasible groups for online trip--vehicle assignment
-\citep{alonsomora2017ondemand}; and Ozkan and Ward study forward-looking
-matching with heterogeneous arrivals and patience
-\citep{ozkanward2020dynamic}. Related operations work shows that market
-thickness can reduce matching under search frictions
-\citep{linetessine2020thickness} and that ride-sharing density economies can
-produce spatially unequal access \citep{ghili2026access}. We do not propose
-another allocation policy or assume that thickness improves matching. We solve
-the inverse problem created when request outcomes remain public but the
-realized grouping is suppressed.
+\paragraph{Uncertain linkage and aggregate queries.}
+Globally compatible record linkages and downstream uncertainty are established
+objects. Sadinle models bipartite linkage as a constrained matching
+\citep{sadinle2017linkage}; Hua and Pei evaluate aggregate queries over
+compatible probabilistic linkages \citep{hua2012aggregate}; and Turkcapar and
+Krishnan compute extremal aggregate answers over candidate-constrained
+two-table linkages \citep{turkcapar2023aggregate}. Attribute-annotated uncertain
+databases propagate value bounds through relational queries
+\citep{feng2021audb}. Our target difference is conditional and narrower: a
+within-file nonbipartite relation and endpoint attributes are simultaneously
+hidden, while global release counts can couple their completions. When
+attribute supports are independent, our problem collapses to ordinary weighted
+matching; that case is a baseline, not a novelty claim.
 
-\paragraph{Node prediction is not our contribution.}
-Fair ride-pooling objectives redistribute service or driver income in an
-observed matching problem \citep{raman2021fairness}. Chicago studies establish
-that pooling demand and match outcomes vary systematically across trips and
-neighborhoods. Soria and Stathopoulos relate disadvantage to pooled and solo
-demand in 127 million trips \citep{soria2021sociospatial}; Taiebat, Amini, and
-Xu predict sharing requests and successful matching
-\citep{taiebat2022sharing}; Mucci and Erhardt separate the sharing request from
-the subsequent match outcome \citep{mucci2024understanding}; and Sebti and
-Chen combine spatiotemporal clustering with match classifiers
-\citep{sebtichen2026hidden}. These papers establish that node behavior is
-predictable. A node classifier by itself is not a contribution here. Our
-contribution begins when those outcomes must be reconciled with a globally
-feasible but unobserved pairing and their uncertainty carried into exposure.
+\paragraph{Weak supervision and calibrated restrictions.}
+Multiple-instance learning recovers instance-level structure from bag labels
+only through modeling assumptions \citep{maron1998mil}. In our application,
+node match outcomes do not nonparametrically identify partner-edge rankings,
+and multiplying node-level noisy-OR terms is not a coherent joint distribution
+over overlapping matchings. We therefore treat any edge model as a scorer.
+Split conformal calibration supplies finite-sample marginal coverage for a
+set-valued prediction rule under exchangeability \citep{lei2018conformal}. We
+apply the rank argument to complete market-level feasible worlds and then
+propagate the resulting inclusion event to multiple downstream aggregate
+queries. Candidate-graph support remains a separate condition.
 
-\paragraph{Policy volume effects are not exposure effects.}
-Chicago's differentiated transportation-network-company tax already has a
-causal literature. Abkarian, Hegde, and Mahmassani report a shift toward shared
-trips after the January 2020 differential against a declining baseline
-\citep{abkarian2023taxing}; Zheng et al. find lower overall ridership, growth
-in shared trips, decline in solo trips, and spatial heterogeneity
-\citep{zheng2023congestion}. Those results concern counts and shares. Our
-planned intention-to-treat analysis asks whether a policy-induced change in
-the authorized pool changes the admissible composition of cross-neighborhood
-opportunities. Because the groups are suppressed, that outcome must be
-optimized over feasible pairings rather than computed from a preferred graph.
-
-\paragraph{Opportunity exposure is not social contact.}
-Carpooling has been related to cross-racial relational costs
-\citep{charleskline2006carpooling}, while mobility studies distinguish
-residential location from the composition of visited places
-\citep{wang2018isolation,moro2021mobility}. Later work constructs
-person-to-person exposure networks \citep{nilforoshan2023mobility}, documents
-an efficiency--mixing tension in local consumption
-\citep{abbiasov2024fifteen}, and shows that replacing self-reported income
-with home-neighborhood income can mechanically lower measured mixing
-\citep{fan2026hidden}. Chetty et al. separate exposure from tie formation
-conditional on exposure \citep{chetty2022socialcapital2}. Chicago's public TNP
-data contain neither stable persons nor verified co-presence, and ACS income
-is a neighborhood attribute rather than rider income. We therefore estimate
-admissible-set opportunity exposure, not realized contact, preference
-homophily, or an echo chamber.
-
-\paragraph{Point linkage is not our output.}
-Sadinle treats record linkage as globally constrained bipartite matching and
-quantifies uncertainty over admissible links \citep{sadinle2017linkage}. Our
-setting has one event file, no observed co-rider edge, and weak labels on nodes
-rather than labeled record pairs. Physical constraints define the untrimmed
-feasible set; weak supervision supplies only a declared score restriction; and
-optimization propagates the surviving ambiguity into the downstream exposure
-functional. AI is useful only when it tightens that set without defeating
-known-truth coverage, not because it produces a point-imputed graph.
+\paragraph{Ride pooling and contextual composition.}
+Shareability networks and dynamic assignment solve a forward allocation
+problem with observed requests \citep{santi2014shareability,alonsomora2017ondemand}.
+Chicago work predicts sharing and matching outcomes
+\citep{taiebat2022sharing,mucci2024understanding}, relates pooled demand to
+neighborhood disadvantage \citep{soria2021sociospatial}, and constructs proxy
+groups by spatiotemporal clustering \citep{sebtichen2026hidden}. Our flagship
+application asks an inverse measurement question: among a precisely defined
+set of realized two-transaction matches, which neighborhood-context
+compositions remain compatible with the suppressed partner key and the
+verified release operator? It does not infer rider socioeconomic status,
+preferences, durable ties, or an echo chamber.

@@ -43,7 +43,7 @@ class SetPackingBoundsTests(unittest.TestCase):
         self.assertAlmostEqual(result.upper, 1.0)
         self.assertAlmostEqual(result.width, 1.0)
 
-    def test_score_retention_shrinks_identified_set(self):
+    def test_score_retention_shrinks_admissible_set(self):
         result = solve_bounds(
             self.nodes,
             self.edges,
@@ -118,6 +118,20 @@ class SetPackingBoundsTests(unittest.TestCase):
         result = solve_bounds(self.nodes.iloc[:3], self.edges.iloc[[0, 2]], match_all=True)
         self.assertFalse(result.feasible)
         self.assertIn("even", result.warning)
+
+    def test_enumeration_limit_is_not_reported_as_infeasibility(self):
+        result = solve_bounds(
+            self.nodes,
+            self.edges,
+            matched_col="matched",
+            backend="fallback",
+            fallback_max_states=0,
+        )
+        self.assertFalse(result.feasible)
+        self.assertEqual(result.score_solution.status, "limit_reached")
+        self.assertEqual(result.lower_solution.status, "limit_reached")
+        self.assertIn("unresolved", result.warning)
+        self.assertNotIn("no feasible packing", result.warning.lower())
 
     def test_synthetic_candidate_builder_retains_truth(self):
         nodes = generate_market(12, n_pairs=10)

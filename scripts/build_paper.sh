@@ -14,13 +14,17 @@ rsync -a \
   --exclude build \
   --exclude build_acm \
   --exclude '/Thicker_But_Narrower_Draft.pdf' \
+  --exclude '/KDD_Research_Working_Draft.pdf' \
   "$paper_dir/" "$build_dir/"
 
 (
   cd "$build_dir"
-  latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+  TEXMFHOME="$repo_root/texmf" \
+  TEXMFVAR="$repo_root/texmf-var" \
+  TEXMFCONFIG="$repo_root/texmf-config" \
+    latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 )
 
-cp "$build_dir/main.pdf" "$paper_dir/Thicker_But_Narrower_Draft.pdf"
+cp "$build_dir/main.pdf" "$paper_dir/KDD_Research_Working_Draft.pdf"
 cp "$build_dir/main.log" "$paper_dir/latex-build.log"
-printf 'Built %s\n' "$paper_dir/Thicker_But_Narrower_Draft.pdf"
+printf 'Built %s\n' "$paper_dir/KDD_Research_Working_Draft.pdf"

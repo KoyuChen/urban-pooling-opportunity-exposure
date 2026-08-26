@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Sharp outcome bounds over feasible pair packings.
+"""Attained outcome endpoints over feasible pair packings.
 
-The public Chicago TNP data expose trip-level match indicators but not a shared
-ride identifier.  This module therefore treats candidate co-rider pairs as a
-graph and optimizes an exposure statistic over every feasible matching.  It
-does *not* claim that any selected edge is an observed co-rider relationship.
+The public Chicago TNP data expose trip-level match indicators, but do not
+publish partner, provider, vehicle, or group identifiers. This module therefore
+treats candidate partner pairs as a graph and optimizes a contextual statistic
+over every feasible matching. A selected edge is an admissible latent partner,
+not an observed partner link.
 
 The main backend is :func:`scipy.optimize.milp`.  A deterministic exhaustive
 fallback is included for small graphs so tests and toy examples do not depend
@@ -538,10 +539,12 @@ def solve_bounds(
     perfect matching over all nodes.  Set ``match_all=False`` and supply
     ``target_edges`` for a fixed-size matching over optional nodes.
 
-    ``score_retention`` restricts the identified set to packings whose total
+    ``score_retention`` restricts the admissible set to packings whose total
     edge score is at least that fraction of the maximum-score feasible packing.
     Scores must therefore be nonnegative.  A value of 0.95 is often a useful
-    sensitivity analysis, not a data-identified confidence region.
+    sensitivity analysis, not a data-identified confidence region.  The raw
+    fraction is score-origin dependent and must not be compared across score
+    maps as if it had a common coverage interpretation.
     """
 
     if score_retention is not None and not (0 <= score_retention <= 1):
@@ -629,7 +632,21 @@ def solve_bounds(
         fallback_max_states=fallback_max_states,
     )
     if not score_solution.feasible:
-        empty = _empty_solution("infeasible", score_solution.backend, score_solution.message)
+        empty = _empty_solution(
+            score_solution.status,
+            score_solution.backend,
+            score_solution.message,
+        )
+        if score_solution.status == "infeasible":
+            warning = (
+                "The solver certified that the candidate graph has no feasible "
+                "packing under the requested node constraints."
+            )
+        else:
+            warning = (
+                "The score optimization did not certify an optimum; the graph's "
+                "feasibility is unresolved."
+            )
         return PackingBounds(
             False,
             metric,
@@ -646,7 +663,7 @@ def solve_bounds(
             score_solution,
             empty,
             empty,
-            "Candidate graph has no feasible packing under the requested node constraints.",
+            warning,
         )
 
     score_optimum = float(score_solution.total_score or 0.0)
@@ -689,7 +706,17 @@ def solve_bounds(
     lower = lower_solution.objective_mean if feasible else None
     upper = upper_solution.objective_mean if feasible else None
     if not feasible:
-        warning = "Outcome optimization failed despite a feasible score packing."
+        statuses = {lower_solution.status, upper_solution.status}
+        if statuses == {"infeasible"}:
+            warning = (
+                "The score-restricted outcome programs were certified infeasible "
+                "despite an unrestricted feasible score packing."
+            )
+        else:
+            warning = (
+                "At least one outcome program did not certify an optimum; no "
+                "endpoint is reported for the unresolved program."
+            )
     return PackingBounds(
         feasible=feasible,
         metric=metric,

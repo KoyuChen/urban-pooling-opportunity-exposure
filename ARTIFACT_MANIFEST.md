@@ -1,51 +1,60 @@
-# Artifact manifest — Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records
+# Artifact manifest — Learning-Augmented Aggregate Bounds over Hidden Matchings
 
-This manifest separates completed evidence from planned evidence so that a
-working draft cannot be mistaken for a completed Chicago study.
+This manifest separates current KDD Research evidence, legacy pilot provenance,
+and open submission gates. No synthetic or prefix-sample result is presented as
+a Chicago estimate.
 
-## Completed and committed
+## Current KDD Research artifacts
 
-| Artifact | Status | Scientific role |
+| Artifact | Status | Licensed scientific role |
 |---|---|---|
-| ACM review-format paper | Complete draft | Eight main pages; references and appendix follow |
-| Chicago 53,241-row prefix audit | Complete, mechanics only | Schema, missingness, ACS join, and candidate-support audit |
-| Candidate builder | Complete | Declared temporal, spatial, directional, and degree constraints |
-| Weak-MIL edge scorer | Complete | Learns from node match labels; never receives pair labels |
-| Exact-cover admissible-set solver | Complete | Computes minimum and maximum exposure statistics over every feasible exact pairing |
-| Twenty-replicate solver validation | Complete | Known-truth coverage under time coarsening |
-| Locked end-to-end synthetic benchmark | Complete | Node calibration, hidden-edge ranking, and bound coverage |
-| Geography-equality ablation | Complete | Detects target leakage and defines the 22-feature primary score |
-| Figure 1 vector outputs | Complete | Editable SVG plus Type-42-font PDF generated from locked benchmark outputs |
+| Anonymous ACM manuscript | Working draft | Theory, reference implementation, calibrated-set result, and explicit evidence gates |
+| Joint matching--label solver | Implemented | Exact small-world and numerical endpoints for one label/cell, core/buffer/context roles, count bounds, compatibility, Gamma, and score floors |
+| Joint solver unit suite | 46/46 passing overall | Declared-input behavior; not an external observation-operator validation |
+| Seeded solver agreement audit | 250/250 statuses agree | Exact fallback versus numerical HiGHS; endpoints agree on all 185 feasible instances |
+| Matching-level conformal module | Implemented | Positive-affine-invariant regret and finite-sample market-level radius |
+| Deterministic conformal benchmark | Implemented | Directly edge-supervised calibration stress test on six-pair synthetic markets |
+| Exact conformal frontier | 10,395 matchings/market | Reproduces all radii and headline metrics without MILP; 44 radius/scorer rows |
+| Query-leaking diagnostic | Stress test only | Uses the exact same-SES edge contribution; demonstrates circular false precision under shift |
+| Exact/adversarial checks | Implemented | Node nonidentification, incoherent marginal products, score-origin instability, discrete ranges, and count coupling |
+| Vector trade-off figure | Generated from exact frontier CSV | Editable SVG and Type-42 PDF; no manually entered results |
 
-The final PDF is `paper/Thicker_But_Narrower_Draft.pdf`. The primary ablation
-report is
-`code/ai_pilot/integration/ablations/no_geography_equality_20260825/results/ABLATION_REPORT.md`;
-the accompanying leakage analysis is `CIRCULARITY_AUDIT.md` in the same folder.
+The current compiled paper is `paper/KDD_Research_Working_Draft.pdf`. The
+joint reference solver is `code/ai_pilot/bounds/joint_label_matching.py`; its
+tests are in `code/ai_pilot/bounds/tests/test_joint_label_matching.py`. The
+calibration benchmark and generated outputs are under
+`code/ai_pilot/benchmarks/`.
 
-## Not completed
+## Theory versus implementation boundary
 
-| Required item | Current label |
+The paired pickup/drop-off suppression NP-completeness theorem is proved for
+an explicit abstract operator. The reference solver currently models one
+categorical label and one release-cell membership per row; it does not yet
+compile that two-endpoint operator. The bounded-treewidth result is a generic
+tractability parameterization, not an implemented production decomposition.
+
+## Legacy pilot provenance
+
+The earlier weak-node-score pipeline, two-day synthetic validation,
+geography-equality ablation, and `paper/Thicker_But_Narrower_Draft.pdf` remain
+in the repository to document the failed AI4Sciences route. They are not the
+headline KDD evidence. In particular, that Weak-MIL scorer receives node match
+labels, whereas the current conformal benchmark directly supervises source
+edge scores with synthetic pair truth. These are different experiments and
+must not be conflated.
+
+## Open gates
+
+| Required item | Current status |
 |---|---|
-| Complete-day Chicago authorized-trip extraction | `Reserved` |
-| Candidate-support rate on complete days | `Reserved` |
-| Complete-day held-out calibration | `Reserved` |
-| Complete-day structural exposure bounds | `Reserved` |
-| Chicago policy estimates and robustness suite | `Reserved` |
-| Institutional human-subjects/ethics determination | Required before submission |
+| Version-specific 2025/2026 Chicago observation operator | Unverified |
+| Two-endpoint operator compiler and production certified decomposition | Not implemented |
+| Necessary-condition candidate supergraph and omission audit | Not completed |
+| Independent non-Chicago relation-truth benchmark | Not completed |
+| Multi-seed/size/sparsity/coarsening benchmark sweeps | Not completed |
+| Complete-day, boundary-safe Chicago extraction and privacy cells | Not completed |
+| Institutional and data-terms determination | Required before nonpublic-data use |
 
-No row-level prefix mechanics predictions are distributed in this repository.
-The synthetic records and their hidden truth files are distributed because
-they contain no human observations.
-
-## Primary versus diagnostic model
-
-The primary weak-MIL model uses 22 edge features and excludes all community-
-area and census-tract equality indicators and their interactions. The
-28-feature model remains committed solely to reproduce the circularity audit.
-Its tighter interval is not used as scientific evidence.
-
-The six-feature removal does not eliminate all proxy risk: deterministic
-coordinate offsets in the locked generator can still encode the synthetic SES
-bin. Consequently, score-restricted bounds are sensitivity regions. The
-untrimmed interval over all physically supported exact-cover pairings remains
-the score-free primary bound; no preferred co-rider graph is reconstructed.
+No row-level imputed partner link, trip identifier, or extremal fine-geography
+assignment is distributed. Synthetic hidden truth is distributed because it
+contains no human observations.

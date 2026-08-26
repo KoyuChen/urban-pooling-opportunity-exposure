@@ -1,49 +1,84 @@
-# KDD 2027 AI for Sciences formatting and content checklist
+# KDD 2027 Research Track checklist
 
-This checklist implements the requirements in the supplied CFP snapshot. The
-conference submission site remains authoritative if its instructions change.
+The live KDD website and submission form remain authoritative. This checklist
+records the current Research-track pivot and must be revalidated before
+submission.
 
 ## Format
 
-- [x] English full paper.
-- [x] ACM `acmart` review layout with
-  `\documentclass[sigconf,review]{acmart}`.
-- [x] Single-blind author and affiliation shown.
-- [x] Main paper limited to eight pages.
-- [x] References begin after the eight-page main paper.
-- [x] Optional reproducibility appendix follows the references.
-- [x] Double-column letter-size PDF.
-- [x] No overfull boxes, missing citations, or undefined references in the
-  verified local build.
+- [x] Full paper in English.
+- [x] ACM `acmart` review layout.
+- [x] Double-blind source uses
+  `\documentclass[sigconf,anonymous,review]{acmart}`.
+- [x] Author names, affiliations, acknowledgments, repository URLs, and other
+  direct identifiers removed from the review PDF.
+- [x] Main content occupies pages 1--7; references begin on page 8 and the
+  appendix on page 9.
+- [x] No overfull boxes, missing citations, undefined references, Type-3
+  fonts, clipped objects, or unreadable figures in the final visual audit.
+- [ ] Live template, dates, artifact policy, disclosure requirements, and
+  supplementary-material rules rechecked immediately before submission.
 
-## Mandatory main-paper sections
+## Research-track fit
 
-- [x] `Limitations and Ethical Considerations` appears on page 8.
-- [x] `Generative AI Usage` appears on page 8.
+- [x] General object is aggregate inference over hidden relations and
+  privacy-coarsened attributes, not one Chicago analysis.
+- [x] Chicago is framed as a flagship application.
+- [x] Point linkage, node classification, ordinary exact cover, and generic
+  MILP are explicitly treated as baselines rather than novelty.
+- [x] Learning is an optional, coverage-audited restriction rather than a
+  claim that the hidden graph has been recovered.
+- [x] Paired-suppression feasibility boundary has a complete adversarially
+  audited NP-completeness proof, with operator and compatibility limits stated.
+- [ ] Scalable certified algorithm goes beyond the reference MILP and is
+  evaluated on production-scale graphs.
+- [ ] At least one non-Chicago benchmark with independently observed relation
+  truth is included.
 
-## Track fit
+## Method correctness gates
 
-- [x] Urban transportation system as the scientific domain.
-- [x] Domain-specific public TNP and ACS data design.
-- [x] AI component is structural inference under a privacy observation
-  process, not a generic downstream classifier.
-- [x] Interdisciplinary estimand links machine learning, operations research,
-  urban mobility, and socioeconomic opportunity.
-- [x] Human-experiment-free design.
-- [x] Reproducibility appendix, code, design lock, solver tests, and known-truth
-  benchmark included.
+- [ ] Current 2025/2026 privacy operator is verified from version-specific
+  official documentation.
+- [ ] Core/buffer/context-only population is boundary complete.
+- [x] Joint matching--label reference solver enforces supplied global count
+  bounds and attribute-conditioned compatibility. (The current Chicago
+  operator is still unverified and is not compiled.)
+- [x] Independent-support degeneration agrees with weighted matching on exact
+  declared-input tests.
+- [x] Exact small-instance oracle agrees with the numerical reference solver
+  on the deterministic 250-instance audit.
+- [x] Every result distinguishes attained endpoints, their convex-hull range,
+  and any sampling uncertainty.
+- [ ] Candidate graph is a necessary-condition supergraph or its omissions are
+  separately quantified; support is never inferred from node degree alone.
+- [x] Controlled score calibration uses complete markets with observed true
+  relations, separated from scorer training. (No Chicago transfer is claimed.)
+- [x] Candidate-support and score-calibration errors are reported separately.
 
-## Evidence gates before submission
+## Experiment gates
 
-- [ ] Replace every red `TBD` in the paper with a measured complete-day result,
-  or delete the dependent claim.
-- [ ] Run the complete-day Chicago extraction and frozen audit protocol.
-- [ ] Pass or transparently fail the pre-declared calibration, support, bound-
-  reduction, and sign-stability gates.
-- [ ] Obtain and report the appropriate institutional ethics/human-subjects
-  determination despite using public administrative records and no recruited
-  participants.
-- [ ] Recheck the live CFP, official template version, dates, submission URL,
-  and any artifact-policy changes immediately before submission.
-- [ ] Confirm author list, affiliations, acknowledgments, conflicts, funding,
-  and disclosure text with all coauthors.
+- [x] Controlled source/calibration/test split is deterministic and
+  reproducible; its directly edge-supervised and query-leaking design is
+  disclosed.
+- [x] Proxy-shift diagnostic shows the coverage cost of arbitrary sharpening.
+- [ ] Controlled benchmark varies rounding, suppression, boundary edges,
+  candidate omissions, proxy leakage, and graph scale.
+- [ ] Ground-truth relational benchmark reports true-world retention, query
+  coverage, width, runtime, gaps, and certificate status.
+- [ ] Baselines include maximum-score point matching, complete cases,
+  independent supports, single imputation, linkage-range queries, DBSCAN proxy
+  grouping, and score-free coupled endpoints.
+- [ ] Full-day Chicago extraction and all-trip privacy cells pass the locked
+  audit protocol.
+- [ ] Chicago results are limited to customer-transaction neighborhood
+  context; no rider-level or social-network interpretation remains.
+
+## Submission decision
+
+- [ ] **GO only if:** operator verification, method theorem, scalable certified
+  algorithm, independent matching-level calibration, multi-benchmark evidence,
+  and complete Chicago application all pass.
+- [ ] If the method gates fail but the Chicago evidence is complete and
+  material, remove KDD branding and use the transportation fallback.
+- [ ] If prefix/incomplete data, unverified suppression rules, or node fit are
+  still carrying the central claim, do not submit.
