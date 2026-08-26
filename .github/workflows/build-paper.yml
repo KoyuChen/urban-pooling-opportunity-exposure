@@ -16,14 +16,14 @@ jobs:
           working_directory: paper
           latexmk_use_xelatex: false
           args: -pdf -interaction=nonstopmode -halt-on-error
-      - name: Check eight-page main-paper boundary
+      - name: Check KDD main-paper boundary
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils
-          cp paper/main.pdf paper/Thicker_But_Narrower_Draft.pdf
-          ./scripts/check_submission_pdf.sh paper/Thicker_But_Narrower_Draft.pdf
+          cp paper/main.pdf paper/KDD_Research_Working_Draft.pdf
+          ./scripts/check_submission_pdf.sh paper/KDD_Research_Working_Draft.pdf
       - name: Upload compiled draft
         uses: actions/upload-artifact@v4
         with:
-          name: admissible-sets-draft
-          path: paper/Thicker_But_Narrower_Draft.pdf
+          name: kdd-research-working-draft
+          path: paper/KDD_Research_Working_Draft.pdf
