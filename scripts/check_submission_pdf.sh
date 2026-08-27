@@ -20,7 +20,10 @@ page_size="$(pdfinfo "$pdf_path" | awk -F': +' '/^Page size:/ {print $2}')"
 references_page=""
 for page in $(seq 1 "$page_count"); do
   page_text="$(pdftotext -f "$page" -l "$page" "$pdf_path" - 2>/dev/null || true)"
-  if grep -q '^REFERENCES$' <<<"$page_text"; then
+  # TeX Live and Poppler versions disagree about heading case and may leave
+  # horizontal whitespace or a carriage return around an otherwise identical
+  # section heading.  Match the complete normalized line, not a substring.
+  if grep -Eiq '^[[:space:]]*REFERENCES[[:space:]]*$' <<<"$page_text"; then
     references_page="$page"
     break
   fi

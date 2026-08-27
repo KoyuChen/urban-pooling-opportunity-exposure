@@ -528,6 +528,10 @@ def run(output_dir: Path, reference_json: Path) -> dict:
     }
     audit_path.write_text(json.dumps(audit, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     if not all_passed:
+        # GitHub runners do not retain RUNNER_TEMP after a failed job.  Emit the
+        # bounded synthetic verification record so cross-platform numerical
+        # drift can be diagnosed without weakening any audit gate.
+        print(json.dumps({"exact_audit_failure": audit["verification"]}, sort_keys=True))
         raise RuntimeError(f"exact audit failed; inspect {audit_path}")
     return audit
 

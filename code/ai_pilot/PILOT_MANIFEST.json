@@ -1,5 +1,5 @@
 {
-  "created_at_utc": "2026-08-27T08:54:09+00:00",
+  "created_at_utc": "2026-08-27T11:13:51+00:00",
   "artifact": "privacy-coarsened urban pooling AI pilot",
   "human_experiment": false,
   "empirical_status": "complete-day City extraction blocked in this workspace; real prefix data used only for a non-substantive mechanics check",
@@ -133,8 +133,8 @@
     },
     {
       "path": "benchmarks/exact_conformal_frontier.py",
-      "bytes": 21444,
-      "sha256": "067cfc4daa0aa975eca65432a39ef70cc1474c3b1830b97a68edb95948ceafb8"
+      "bytes": 21758,
+      "sha256": "99a3fb9d5076315145ee75ed7e49acc3a493764b5645ba615731cfeb1f409fe5"
     },
     {
       "path": "benchmarks/joint_solver_audit.py",
