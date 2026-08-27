@@ -38,11 +38,20 @@ if [[ "$references_page" -gt 9 ]]; then
 fi
 main_end_page=$((references_page - 1))
 main_text="$(pdftotext -f 1 -l "$main_end_page" "$pdf_path" -)"
-if ! grep -q 'LIMITATIONS AND ETHICAL' <<<"$main_text"; then
+# Normalize extraction-only layout differences: runner TeX/Poppler versions
+# may wrap a section title between words even though the rendered PDF is the
+# same.  The checks remain confined to text extracted from the main pages.
+main_text_normalized="$(
+  printf '%s' "$main_text" |
+    tr '\r\n\f\t' '    ' |
+    tr '[:lower:]' '[:upper:]' |
+    tr -s '[:space:]' ' '
+)"
+if ! grep -Fq 'LIMITATIONS AND ETHICAL' <<<"$main_text_normalized"; then
   printf 'Mandatory limitations/ethics section is missing from pages 1-8.\n' >&2
   exit 1
 fi
-if ! grep -q 'GENERATIVE AI USAGE' <<<"$main_text"; then
+if ! grep -Fq 'GENERATIVE AI USAGE' <<<"$main_text_normalized"; then
   printf 'Generative-AI disclosure is missing from main content.\n' >&2
   exit 1
 fi
