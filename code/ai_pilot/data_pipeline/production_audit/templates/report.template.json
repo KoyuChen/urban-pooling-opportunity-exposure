@@ -1,0 +1,76 @@
+{
+  "report_version": "chicago-k2-production-audit-report/v1",
+  "generated_at_utc": "1970-01-01T00:00:00+00:00",
+  "audit_contract_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "dataset": {
+    "dataset_id": "6dvr-xwnh",
+    "snapshot_revision_fingerprint_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "input_checks": {
+    "actual_input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "expected_input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "input_hash_basis": "canonical_json_rows_v1",
+    "input_sha256_pinned": true,
+    "input_sha256_matches": false,
+    "null_start_scope": "not_verified",
+    "server_target_like_null_start_row_count": null,
+    "actual_included_target_like_null_start_row_count": 0,
+    "null_start_count_evidence_sha256": null,
+    "null_start_scope_status": "NOT_VERIFIED",
+    "completeness_status": "FAIL"
+  },
+  "row_roles": {},
+  "identifier_audit": {},
+  "literal_field_audit": {},
+  "operator_consistency_audit": {},
+  "candidate_graphs": {
+    "logical_necessary": {
+      "rules": [
+        "both_endpoints_have_literal_match_true_and_integer_trips_pooled_2",
+        "at_least_one_endpoint_has_core_role",
+        "possible_closed_interval_overlap_after_timestamp_rounding"
+      ],
+      "rules_explicitly_not_used": [
+        "pickup_centroid_radius",
+        "dropoff_centroid_radius",
+        "route_direction_cosine",
+        "greedy_per_node_degree_cap",
+        "authorization_equality_or_authorized_true_screen"
+      ],
+      "statistics": {},
+      "cover_feasibility": {},
+      "materialization_status": "REPLACE_AT_RUNTIME",
+      "partner_coverage_claim": "NOT_ESTIMATED_FROM_PUBLIC_ROWS"
+    },
+    "heuristic_sensitivity": {
+      "classification": "ANALYST_HEURISTIC_NOT_A_NECESSARY_SUPERGRAPH",
+      "partner_coverage_claim": "NONE"
+    }
+  },
+  "run_closure_audit": {
+    "public_hidden_run_closure": {
+      "status": "NOT_IDENTIFIED_FROM_PUBLIC_ROWS",
+      "reason": "Shared Trip ID is absent from public rows."
+    },
+    "boundary_extraction_support": {
+      "status": "NOT_EVALUATED_NO_DECLARED_DURATION_BOUND",
+      "duration_bound_minutes": null,
+      "duration_bound_basis": "none",
+      "duration_bound_evidence": {
+        "authority": "none",
+        "effective_scope": "none",
+        "artifact_sha256": null
+      },
+      "duration_evidence_validation": "STRUCTURE_AND_DIGEST_ONLY_NOT_SEMANTIC"
+    },
+    "declared_graph_cover_status": "REPLACE_AT_RUNTIME",
+    "production_status": "REPLACE_AT_RUNTIME",
+    "interpretation": "No public-row true-partner or hidden-run-closure claim."
+  },
+  "redaction": {
+    "raw_trip_identifiers_emitted": false,
+    "edge_endpoint_identifiers_emitted": false,
+    "row_level_data_emitted": false,
+    "report_contains_aggregate_counts_and_hashes_only": true
+  }
+}

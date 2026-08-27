@@ -5,6 +5,7 @@ import json
 import sys
 import tempfile
 import unittest
+from dataclasses import asdict
 from pathlib import Path
 
 
@@ -142,6 +143,85 @@ class UciRlcpAdapterTest(unittest.TestCase):
                 compile_csvs(
                     [source], public_output=public, truth_output=truth, key=KEY
                 )
+
+    def test_compile_breaks_source_label_order_and_is_input_order_invariant(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            ordered = [
+                row(str(index), str(index + 1000), index < 20, cmp_plz=str(index % 2))
+                for index in range(40)
+            ]
+            first = root / "first.csv"
+            second = root / "second.csv"
+            write_block(first, ordered)
+            write_block(second, list(reversed(ordered)))
+
+            public_a = root / "public_a.jsonl"
+            truth_a = root / "truth_a.jsonl"
+            public_b = root / "public_b.jsonl"
+            truth_b = root / "truth_b.jsonl"
+            summary_a = compile_csvs(
+                [first], public_output=public_a, truth_output=truth_a, key=KEY
+            )
+            summary_b = compile_csvs(
+                [second], public_output=public_b, truth_output=truth_b, key=KEY
+            )
+
+            self.assertEqual(public_a.read_bytes(), public_b.read_bytes())
+            self.assertEqual(truth_a.read_bytes(), truth_b.read_bytes())
+            public_rows = [json.loads(line) for line in public_a.read_text().splitlines()]
+            truth_rows = [json.loads(line) for line in truth_a.read_text().splitlines()]
+            self.assertEqual(
+                [item["edge_id"] for item in public_rows],
+                sorted(item["edge_id"] for item in public_rows),
+            )
+            self.assertEqual(summary_a.source_order_label_transitions, 1)
+            self.assertGreater(summary_a.compiled_order_label_transitions, 1)
+            self.assertEqual(summary_a.compiled_order_label_transitions,
+                             summary_b.compiled_order_label_transitions)
+            self.assertNotIn("id_key_fingerprint", asdict(summary_a))
+            self.assertFalse(summary_a.key_fingerprint_stored)
+            self.assertEqual(summary_a.node_pseudonym_collisions, 0)
+            self.assertEqual(
+                [item["edge_id"] for item in truth_rows],
+                [item["edge_id"] for item in public_rows],
+            )
+
+    def test_compile_failure_cleanup_is_exception_safe(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "bad.csv"
+            public = root / "public.jsonl"
+            truth = root / "truth.jsonl"
+            write_block(
+                source,
+                [row("a", "b", True), row("c", "d", False, cmp_sex="0.5")],
+            )
+            with self.assertRaisesRegex(AdapterError, "not binary"):
+                compile_csvs(
+                    [source], public_output=public, truth_output=truth, key=KEY
+                )
+            self.assertFalse(public.exists())
+            self.assertFalse(truth.exists())
+
+    def test_duplicate_source_pair_cleanup_is_exception_safe(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "duplicate.csv"
+            public = root / "public.jsonl"
+            truth = root / "truth.jsonl"
+            write_block(
+                source,
+                [row("a", "b", True), row("b", "a", True)],
+            )
+            with self.assertRaisesRegex(
+                AdapterError, "duplicate source edge|edge-pseudonym collision"
+            ):
+                compile_csvs(
+                    [source], public_output=public, truth_output=truth, key=KEY
+                )
+            self.assertFalse(public.exists())
+            self.assertFalse(truth.exists())
 
 
 if __name__ == "__main__":

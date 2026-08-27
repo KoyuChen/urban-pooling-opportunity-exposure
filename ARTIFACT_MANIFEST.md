@@ -11,9 +11,10 @@ a Chicago estimate.
 | Anonymous ACM manuscript | Working draft | Theory, reference implementation, calibrated-set result, and explicit evidence gates |
 | Joint matching--label solver | Implemented | Exact small-world and numerical endpoints for one label/cell, core/buffer/context roles, count bounds, compatibility, Gamma, and score floors |
 | Exact temporal-frontier solver | Implemented | Sparse active record/factor states, exact rational endpoints, Gamma, score floors, and complete witnesses |
+| Exact incidence-component convolution | Implemented and independently audited | Splits only the joint record--release-factor incidence graph and exactly convolves global Gamma/score/query resources; standard algorithm engineering, not standalone novelty |
 | Explicit-DNF release compiler | Implemented and independently audited | Provenance-bearing LOW/HIGH clauses, exact projection/restoration, lifted edge maps, support expansion, and lifecycle certificates |
 | Certified score relaxation | Implemented | Outward query endpoints with score slack at most eta times the core count; not a query FPTAS |
-| Declared-input unit suites | 96/96 passing | Bounds/compiler, snapshot contract, external adapter, and capacity-harness behavior; not external operator validation |
+| Declared-input unit suites | 150 discovered; 150/150 with pinned UCI cache, 149 executed plus one expected cache skip in hosted CI | 87 bounds, 14 Chicago-adapter, 23 production-audit, 22 external, and four runtime-profile tests; not external operator validation |
 | Temporal frontier benchmark | 34/34 locked cases pass | 32 exhaustive, 24 analytic, 16 resolved HiGHS, and one outward-relaxation agreement |
 | Seeded solver agreement audit | 250/250 statuses agree | Exact fallback versus numerical HiGHS; endpoints agree on all 185 feasible instances |
 | Matching-level conformal module | Implemented | Positive-affine-invariant regret and finite-sample market-level radius |
@@ -23,7 +24,10 @@ a Chicago estimate.
 | Exact/adversarial checks | Implemented | Node nonidentification, incoherent marginal products, score-origin instability, discrete ranges, and count coupling |
 | Vector trade-off figure | Generated from exact frontier CSV | Editable SVG and Type-42 PDF; no manually entered results |
 | Bounded runtime profile | 22/23 resolved; one explicit timeout | Synthetic capacity diagnostics across six axes; no production speed claim |
-| UCI block-1 relation audit | Executed on pinned official cache | Real adjudicated topology; relation is not a matching; dyad range is truth-conditioned and numerical |
+| Component-frontier audit | 160/160 same-kernel and 192/192 independent-oracle agreements | Exact endpoints, shared-factor counterexample, 682 decomposed witness replays, and an operational profile; no universal speedup claim |
+| Chicago declared release adapter | 14/14 tests | Fail-closed compiler handoff under declared contracts; no live extraction, City implementation, latent-label, or candidate-edge coverage claim |
+| Chicago `K=2` production audit | 23/23 tests on synthetic contracts | Literal field, scope, boundary, logical/heuristic graph, and cover-status checks; partner recall and hidden-run closure remain unidentified |
+| UCI all-ten relation audit | Executed on ten pinned official inner caches | Real adjudicated topology is not a matching; truth-conditioned upper dyad endpoint exact, lower/full frontier unresolved |
 | FEBRL4 method-fit audit | Executed; 6-pair exact and 20-pair numerical | External synthetic complete-matching mechanics; not realism or calibrated learning |
 
 The current compiled paper is `paper/KDD_Research_Working_Draft.pdf`. The
@@ -64,10 +68,10 @@ must not be conflated.
 | Required item | Current status |
 |---|---|
 | Version-specific high-level Chicago rule | Documented by current-linked City sources; implementation/null causes unvalidated |
-| Explicit-DNF LOW/HIGH release compiler | Implemented for declared count-factor predicates; Chicago null-cause/applicability adapter open |
+| Explicit-DNF LOW/HIGH release compiler | Generic compiler and declared-input Chicago handoff implemented; City transformation semantics, real blank causes, and live extraction unvalidated |
 | Full-day temporal order and distributions of live width, factors, score | Not measured |
 | Necessary-condition candidate supergraph and omission audit | Not completed |
-| External non-Chicago relation-truth benchmark | Block-1 UCI boundary and FEBRL4 method fit complete; these are not iid calibration markets; all-ten-block UCI scan open |
+| External non-Chicago relation-truth benchmark | All-ten UCI topology, exact upper dyad endpoint, and FEBRL4 method fit complete; lower/full UCI frontier, blocking recall, and natural independent calibration markets remain open |
 | Multi-seed/size/sparsity/coarsening benchmark sweeps | Not completed |
 | Complete-day, boundary-safe Chicago extraction and privacy cells | Not completed |
 | Institutional and data-terms determination | Required before nonpublic-data use |

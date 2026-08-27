@@ -8,6 +8,112 @@
   "archive_display_name": "donation.zip",
   "archive_size_mb_as_reported": 53.8,
   "archive_sha256": null,
+  "outer_archive_retained_by_recordlinkage_loader": false,
+  "observed_cached_block_manifest_note": "Pinned inner ZIP/member snapshot observed after recordlinkage==0.16 extracted the official UCI donation.zip; UCI does not publish these hashes as checksums and the outer ZIP bytes were not retained.",
+  "observed_cached_ancillary_manifest": [
+    {
+      "file": "documentation",
+      "bytes": 4516,
+      "sha256": "5f235e19c9f1544578d867819e7416e1ec54dcd793af475b982590b5f81a8682"
+    },
+    {
+      "file": "frequencies.csv",
+      "bytes": 272,
+      "sha256": "4acabc8ebd821489c707eebcd047476861f96d39db6d6feb7ae4650722a811b2"
+    }
+  ],
+  "observed_cached_block_manifest": [
+    {
+      "block": 1,
+      "zip_sha256": "a3d79e066fb08a066c89bb4034007434a16ea6fc883b9331216a0cb31de66548",
+      "zip_bytes": 5643935,
+      "member": "block_1.csv",
+      "member_bytes": 26248574,
+      "member_crc32": "47ff3929",
+      "member_sha256": "4ffc703ee62341c98542a16c6bc3cbe9810cb8b10fff2af1269d24672ebec231"
+    },
+    {
+      "block": 2,
+      "zip_sha256": "e61dc9235869b5c5b9be7147e05008f8f08b47c610a8e0fec200181a7414f1b9",
+      "zip_bytes": 5642577,
+      "member": "block_2.csv",
+      "member_bytes": 26241784,
+      "member_crc32": "91d1ce17",
+      "member_sha256": "d417b24c8657008720fa6af2f6037aaa9e9bde366201e240432d04591c3cefa9"
+    },
+    {
+      "block": 3,
+      "zip_sha256": "014dc6b55aa175b4d95148fa52cc1175826c6c92d83e71bfec896f1c2a2238dd",
+      "zip_bytes": 5644247,
+      "member": "block_3.csv",
+      "member_bytes": 26253247,
+      "member_crc32": "9ea68cbe",
+      "member_sha256": "4ae7bc27f53132acf23fcef55307f1101ebd96bdf3299bc87599ab014dd3ca9c"
+    },
+    {
+      "block": 4,
+      "zip_sha256": "768acbdf2fcd3323ea611e00d6f990f40c57d3fc860cbe50761f56cb279fb8cf",
+      "zip_bytes": 5644264,
+      "member": "block_4.csv",
+      "member_bytes": 26247471,
+      "member_crc32": "662bb477",
+      "member_sha256": "349890cc7573ff325eae147a59047b68a135f40ff328a7c656ba93acf1d49791"
+    },
+    {
+      "block": 5,
+      "zip_sha256": "009c6bc30c2d68e655bb0b6bf763afcbc165eeebf26a4de2a1923d95493e72f7",
+      "zip_bytes": 5645826,
+      "member": "block_5.csv",
+      "member_bytes": 26249424,
+      "member_crc32": "a2af71e0",
+      "member_sha256": "84091f7075e2cd220d034829a7bc2488ac4a887c2cb33e8df53990e036f6fcde"
+    },
+    {
+      "block": 6,
+      "zip_sha256": "07fedf942db36bedf195b2ad160e0b6660b18e843be693007d5470e2affc086c",
+      "zip_bytes": 5645291,
+      "member": "block_6.csv",
+      "member_bytes": 26256126,
+      "member_crc32": "011087e4",
+      "member_sha256": "134dcdfe9be5bd2d651f1f01360d7f8f9fdcfe318d8b422fda6cdc02ff229f2a"
+    },
+    {
+      "block": 7,
+      "zip_sha256": "749013be5370307dfb2689ceae480ee492b9dd01406a81ac5c0d1f6e9acf3035",
+      "zip_bytes": 5645235,
+      "member": "block_7.csv",
+      "member_bytes": 26261911,
+      "member_crc32": "27d7c566",
+      "member_sha256": "efa29316fed74cdda211a09398ec50a3da9cd61e38be4b3ec493af96f71d96ff"
+    },
+    {
+      "block": 8,
+      "zip_sha256": "6881523fba4997ac84216e929b29165ec8ba7535d1e4ba9038da767b90d0b9c2",
+      "zip_bytes": 5646395,
+      "member": "block_8.csv",
+      "member_bytes": 26253911,
+      "member_crc32": "bc34d0c4",
+      "member_sha256": "053e8014cb594a977f994281ae9bcc34b4c4b10b6e31762c60000be4a7fe4ba0"
+    },
+    {
+      "block": 9,
+      "zip_sha256": "eff8368bdff4baf01194b23cd56c7f7515ebcff948e902ddff2854925196e442",
+      "zip_bytes": 5643134,
+      "member": "block_9.csv",
+      "member_bytes": 26254012,
+      "member_crc32": "bd2566a3",
+      "member_sha256": "9daa2f504254bfba782dd92cba93b21be3882f7794653481a093ffa63a9c155f"
+    },
+    {
+      "block": 10,
+      "zip_sha256": "0662cc43552394c06b1d682c5e4813a0340e4e4265593a98bd52fd94b06c7724",
+      "zip_bytes": 5643837,
+      "member": "block_10.csv",
+      "member_bytes": 26255957,
+      "member_crc32": "0866395c",
+      "member_sha256": "3dfbbfad6c1b0d4388e641d09caa274b41a08dd97f6fe45cdcfe9ebdbf40407c"
+    }
+  ],
   "license": "CC BY 4.0",
   "source_record_count_as_reported": 100000,
   "candidate_pair_count_as_reported": 5749132,

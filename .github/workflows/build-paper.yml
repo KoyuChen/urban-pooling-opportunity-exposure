@@ -24,6 +24,8 @@ jobs:
         run: |
           python -m unittest discover -s code/ai_pilot/bounds/tests -v
           python -m unittest discover -s code/ai_pilot/data_pipeline/tests -v
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests -v
           python -m unittest discover -s code/ai_pilot/external_benchmarks/tests -v
           python -m unittest discover \
             -s code/ai_pilot/benchmarks/runtime_profile -p 'test_*.py' -v
@@ -37,6 +39,11 @@ jobs:
           python code/ai_pilot/benchmarks/exact_conformal_frontier.py \
             --output-dir "$RUNNER_TEMP/exact-conformal" \
             --reference-json code/ai_pilot/benchmarks/results/conformal_matching/conformal_matching_benchmark.json
+          python code/ai_pilot/benchmarks/component_frontier_benchmark.py \
+            --output-dir "$RUNNER_TEMP/component-frontier"
+          python -c 'import json,sys; key="canonical_evidence_sha256"; generated=json.load(open(sys.argv[1], encoding="utf-8"))[key]; committed=json.load(open(sys.argv[2], encoding="utf-8"))[key]; assert generated == committed, (generated, committed)' \
+            "$RUNNER_TEMP/component-frontier/component_frontier_benchmark.json" \
+            code/ai_pilot/benchmarks/results/component_frontier/component_frontier_benchmark.json
       - name: Run bounded capacity smoke profile
         run: |
           python code/ai_pilot/benchmarks/runtime_profile/temporal_frontier_profile.py \

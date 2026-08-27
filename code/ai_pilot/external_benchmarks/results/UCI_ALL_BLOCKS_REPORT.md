@@ -1,11 +1,10 @@
-# External relation-truth benchmark result
+# UCI Krebsregister all-ten-block audit
 
-Generated for the frozen observed run on 2026-08-27. No source records,
-registry IDs, FEBRL IDs, pair labels, truth edges, or raw endpoint edge lists
-are stored. Aggregate witness replay counts and a SHA-256 digest are disclosed.
-Observed runtimes are printed by the runner but excluded from this artifact.
-Topology/count aggregation is deterministic; a time-limit status may depend on
-hardware and scheduling.
+Generated for the frozen observed run on 2026-08-27. This artifact stores no
+registry identifier, source row, pair label, truth edge, or raw endpoint edge
+list. It discloses only aggregate witness replay counts and a SHA-256 digest.
+Topology/count aggregation is deterministic; the recorded time-limit status
+may depend on hardware and scheduling.
 
 ## Snapshot and exact reconciliation
 
@@ -54,35 +53,3 @@ The dyad frontier status is **UNRESOLVED**. Lower endpoint: **UNRESOLVED**; uppe
 - The dyad frontier is a truth-conditioned matching sensitivity, not a prevalence estimate or calibrated confidence set.
 - Blocks are neither independent observations nor empirical markets.
 - The audit does not validate blocking recall, latent node attributes, or transfer to Chicago.
-
-
-## FEBRL4: external synthetic positive method-fit test
-
-FEBRL4 has 5,000 originals,
-5,000 duplicates, and a complete one-to-one
-truth. All 5,000
-source ID pairs directly encode their partner number, so source IDs and returned
-links are isolated before public candidate, score, or query construction.
-Market membership is truth-conditioned and disclosed.
-
-- `dataset4a.csv` SHA-256: `07c7cb3f0a8d88180e80317f2a60499dee4e8324a44c38059f4e7fed0a8b4488`
-- `dataset4b.csv` SHA-256: `2eed76c99fa2237be3ec013a123427926d4158abcb3a8f65874d6c7f1358cf2c`
-
-| Market | True pairs | Complete candidate edges | True same-known-decade share | Score-free frontier | Uncalibrated score-optimum frontier | Point true-edge recovery | Exhaustive oracle |
-|---|---:|---:|---:|---:|---:|---:|:---:|
-| small_exact | 6 | 36 | 0.833333 | [0.000000, 0.833333] | [0.833333, 0.833333] | 1.000000 | yes |
-| medium_numerical | 20 | 400 | 0.800000 | [0.000000, 0.850000] | [0.800000, 0.800000] | 1.000000 | no |
-
-The score uses only coarsened Soundex/length/initial fields and excludes the
-birth-decade query. The score-optimum column is a sensitivity analysis, not a
-confidence set. The six-pair result exhausts all 720 bipartite matchings and
-agrees with the numerical solver; the 20-pair result is numerical.
-
-## Claim boundary
-
-- UCI validates all-ten real adjudicated relation topology and a conditional
-  dyad sensitivity; it does not validate blocking recall or independent markets.
-- FEBRL4 validates a clean complete-matching path, but it is synthetic and its
-  two markets are constructed using truth.
-- Neither benchmark calibrates a learned restriction, validates latent node
-  attributes, or licenses transfer to Chicago.

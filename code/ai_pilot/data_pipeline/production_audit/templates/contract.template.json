@@ -1,0 +1,70 @@
+{
+  "contract_version": "chicago-k2-production-audit/v1",
+  "audit_name": "replace-with-pinned-snapshot-name",
+  "input": {
+    "dataset_id": "6dvr-xwnh",
+    "snapshot_revision_fingerprint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "expected_row_count": null,
+    "expected_input_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "input_hash_basis": "canonical_json_rows_v1",
+    "server_count_verified": false,
+    "snapshot_stable_during_extraction": false,
+    "selection_scope": "all_public_rows_in_released_start_window_plus_null_start_evidence",
+    "null_start_scope": "not_verified",
+    "server_target_like_null_start_row_count": null,
+    "null_start_count_evidence_sha256": null,
+    "raw_identifiers_in_report": false
+  },
+  "window": {
+    "core_start_local": "2026-01-13T00:00:00",
+    "core_end_local": "2026-01-14T00:00:00",
+    "extraction_start_local": "2026-01-12T00:00:00",
+    "extraction_end_local": "2026-01-15T00:00:00",
+    "core_anchor": "released_trip_start_timestamp"
+  },
+  "timestamp_release": {
+    "rounding_minutes": 15,
+    "interpretation": "nearest_with_closed_outer_interval"
+  },
+  "run_closure": {
+    "maximum_transaction_duration_minutes": null,
+    "duration_bound_basis": "none",
+    "duration_bound_evidence": {
+      "authority": "none",
+      "effective_scope": "none",
+      "artifact_sha256": null
+    },
+    "public_shared_trip_id_available": false
+  },
+  "candidate_graph": {
+    "logical_rules": [
+      "both_endpoints_have_literal_match_true_and_integer_trips_pooled_2",
+      "at_least_one_endpoint_has_core_role",
+      "possible_closed_interval_overlap_after_timestamp_rounding"
+    ],
+    "missing_timestamp_policy": "retain_indeterminate",
+    "max_materialized_logical_edges": 5000000,
+    "exact_fallback_max_core_nodes": 28,
+    "exact_fallback_max_edges": 10000,
+    "feasibility_time_limit_seconds": 60,
+    "heuristics": {
+      "pickup_radius_km": null,
+      "dropoff_radius_km": null,
+      "direction_cosine_min": null,
+      "per_node_degree_cap": null,
+      "missing_spatial_policy": "retain"
+    }
+  },
+  "columns": {
+    "trip_id": "trip_id",
+    "trip_start_timestamp": "trip_start_timestamp",
+    "trip_end_timestamp": "trip_end_timestamp",
+    "shared_trip_authorized": "shared_trip_authorized",
+    "shared_trip_match": "shared_trip_match",
+    "trips_pooled": "trips_pooled",
+    "pickup_latitude": "pickup_centroid_latitude",
+    "pickup_longitude": "pickup_centroid_longitude",
+    "dropoff_latitude": "dropoff_centroid_latitude",
+    "dropoff_longitude": "dropoff_centroid_longitude"
+  }
+}

@@ -73,3 +73,30 @@ The existing `chicago/raw/tnp_policy_window_prefix_00.csv` can be used only for
 schema/unit-test smoke tests and aggregate-rate checks. It must **not** be
 relabeled as a complete-day candidate graph: sampling by one two-character
 trip-ID prefix omits almost every possible co-rider counterpart.
+
+## Declared release adapter
+
+`chicago_release_adapter.py` now provides an offline, declared-input handoff to
+the generic release compiler. It pins the declared contributor universe and
+tract support by hash, keeps pickup/start and dropoff/end factors separate,
+counts every supplied core/buffer/context trip, and does not invert an
+unaudited blank to `LOW`. Outside-city, source-missing, other-null, and
+unknown-null causes remain explicit.
+
+The supported handoff now rejects source-node, role, and ordered-support drift,
+rogue nodes, and any source-preloaded Chicago count map or constraint. Factor
+identities carry the release-context namespace. Privacy evidence requires a
+row-bound artifact digest and a pinned independent-authority contract, and its
+state distinguishes paired-threshold evidence, specifically known LOW
+endpoints, and privacy-only evidence that licenses no LOW inference. Label
+supports are separately hashed and require a separate independent-authority
+contract for completeness; any unverified support remains explicitly
+`analyst_declared_conditional` and cannot license a complete label-support
+claim. Even verified label support says nothing about candidate-edge coverage.
+
+This closes an interface and counterexample gap only. It does not access the
+City API, determine the cause of any real blank, validate the City's production
+transformation, choose the correct tract vintage, or prove that a supplied
+universe contains every contributing trip. Its diagnostics therefore retain
+`city_implementation_validated = False` and
+`live_extraction_performed = False`.

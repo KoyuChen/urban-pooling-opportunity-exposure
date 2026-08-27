@@ -366,9 +366,14 @@ in `adversarial_review/counterexamples.py` demonstrates this only under the
 explicit strong converse (missing means at least one assigned endpoint bucket
 is low); it does not claim that the converse governs the current release.
 
-The explicit-DNF LOW/HIGH release compiler and its exact projection/replay
-tests are now established in the artifact. A Chicago-specific applicability
-adapter is not. It still requires:
+The explicit-DNF LOW/HIGH compiler and a fail-closed Chicago declared-input
+handoff are now established in the artifact. The wrapper validates exact node,
+role, ordered-support, contributor-universe, evidence, namespace, and factor
+contracts and rejects preloaded Chicago constraints. Its
+`label_support_outer_claim_licensed` flag concerns only supplied per-record
+latent-label supports; it never licenses candidate-edge coverage. These are
+interface guarantees, not City semantic validation. A production result still
+requires:
 
 1. validation of implementation partitions, late-row recomputation, DST
    handling, tract vintage, and one-way-versus-converse null causes;
@@ -422,6 +427,8 @@ suppression-aware Chicago endpoint is licensed.
 
 Independent reconstruction and adversarial cross-audit are complete for the
 declared-input method. Current City documentation confirms the high-level
-threshold-and-paired-end rule; implementation/null-cause validation,
-snapshot-stable production data, the full external scan, and scientific
-validation remain external gates rather than completed results.
+threshold-and-paired-end rule, the all-ten UCI topology scan is complete, and
+the declared Chicago handoff and production harness fail closed. City
+implementation/null-cause validation, snapshot-stable production data,
+candidate coverage, the UCI lower/full frontier, natural calibration markets,
+and scientific validation remain external gates rather than completed results.

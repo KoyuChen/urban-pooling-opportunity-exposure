@@ -126,16 +126,31 @@ hidden inside one claimed confidence level.
   score/query/compatibility lifting, factor-lifecycle audit, support-expansion
   accounting, and restored clause witnesses. It validates declared semantics,
   not the external truth of an operator citation.
+- Exact decomposition over the joint record--release-factor incidence graph,
+  followed by Pareto convolution of the global Gamma, score, and query
+  resources. Its 160 same-kernel and 192 independent-oracle checks are
+  complete. This is standard constraint-decomposition/knapsack-style
+  algorithm engineering, not a standalone novelty claim or universal speedup.
+- A fail-closed Chicago compiler handoff that validates node, role, ordered
+  support, contributor universe, evidence, factor namespace, and immutable
+  contract digests. Its label-support license never covers candidate edges and
+  it does not validate City implementation semantics or a live extraction.
+- A synthetic-tested Chicago `K=2` production-audit harness for literal match
+  and pooled-size fields, core/buffer/context roles, cross-midnight timestamp
+  envelopes, pinned all-row scopes, and separate logical versus heuristic
+  graphs. Public rows still do not identify partner recall or run closure.
 - A bounded 23-case operational profile across record count, candidate degree,
   factor overlap, solver label support (standing in for compiled support), score
   floor, and Gamma. It reports one
   timeout rather than converting it to infeasibility and makes no production
   speed claim.
-- An executed UCI Krebsregister block-1 topology audit and a paired FEBRL4
-  method-fit benchmark. UCI's real adjudicated relation is not a matching; the
-  matching reduction is explicitly truth-conditioned. The full ten-block scan
-  remains open, and neither test establishes UCI blocking recall, exchangeable
-  calibration markets, or Chicago transfer.
+- An all-ten-block UCI Krebsregister topology audit and a paired FEBRL4
+  method-fit benchmark. The 5,749,132 UCI candidate pairs are overlapping edge
+  partitions, and the 20,931 positive pairs form an entity relation rather than
+  a matching. On the disclosed 10,297-dyad truth-conditioned reduction, the
+  postal-agreement upper endpoint is exactly `9924/10297`; the lower endpoint
+  exceeded 120 seconds and remains unresolved. Neither test establishes UCI
+  blocking recall, natural calibration markets, or Chicago transfer.
 - A deterministic three-way source/calibration/test benchmark with directly
   edge-supervised target-free and deliberately query-leaking scorers under a
   homophily shift.
@@ -181,12 +196,12 @@ matching-set calibration implementation on one synthetic design.
 
 | Work package | Deliverable | KDD gate |
 |---|---|---|
-| Observation operator | Current-linked documentation now pins the high-level rule; implementation, null cause, all contributing rows, and boundary-safe extraction remain | No Chicago aggregate claim before implementation validation |
+| Observation operator | Declared adapter and production-audit interfaces implemented; City transformation semantics, null causes, all contributing rows, and live boundary-safe extraction remain unvalidated | No Chicago aggregate claim before implementation validation |
 | Coupled method | Joint matching--attribute feasible-world solver; independent-support reduction; correctness proof | Must exceed an application-specific MILP description |
-| Complexity and algorithm | Exact frontier, weak-hardness boundary, score relaxation, and explicit-DNF LOW/HIGH release compiler implemented; full-day order/profile remain | Required before a production scalability claim |
+| Complexity and algorithm | Exact frontier, weak-hardness boundary, score relaxation, explicit-DNF compiler, and standard exact incidence-component convolution implemented; full-day order/profile remain | Required before a production scalability claim |
 | Learning | Matching-level calibration on independent markets with observed relation truth | Required for any calibrated AI-sharpening claim |
 | Candidate support | Necessary-condition supergraph, omitted-edge stress tests, and calibrated or externally audited support | Raw endpoints remain graph-conditional otherwise |
-| Benchmarks | Controlled family, real UCI block-1 topology boundary, and FEBRL4 method-fit audit complete; all-ten-block UCI result remains | Required for generality |
+| Benchmarks | Controlled family, all-ten UCI topology, exact UCI upper endpoint, and FEBRL4 method-fit audit complete; UCI lower/full frontier, natural market units, and blocking recall remain | Required for generality |
 | Chicago | Full-day, boundary-complete (K=2) cohort; all-trip privacy cells; production certificates | Required as flagship evidence, not as a substitute for method validation |
 | Baselines | Point matching, complete cases, independent supports, single imputation, linkage-range queries, DBSCAN proxy grouping, score-free coupled bounds | Required for empirical credibility |
 

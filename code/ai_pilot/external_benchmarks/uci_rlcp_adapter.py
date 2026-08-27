@@ -21,7 +21,9 @@ import hashlib
 import hmac
 import json
 import os
+import sqlite3
 import sys
+import tempfile
 from collections import Counter
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -65,7 +67,13 @@ class CompileSummary:
     emitted_rows: int
     emitted_matches: int
     dropped_rows_outside_filter: int
-    id_key_fingerprint: str
+    source_order_label_transitions: int
+    compiled_order_label_transitions: int
+    output_order: str = "ascending_hmac_edge_id"
+    pseudonymization: str = "HMAC-SHA256 with 96-bit public truncation"
+    key_fingerprint_stored: bool = False
+    node_pseudonym_collisions: int = 0
+    edge_pseudonym_collisions_or_duplicate_pairs: int = 0
     public_schema: str = "uci_rlcp_public_coarsened_v1"
     truth_schema: str = "uci_rlcp_pair_truth_v1"
 
@@ -192,6 +200,12 @@ def iter_patterns(path: Path) -> Iterator[PairPattern]:
 def _pseudonym(kind: str, value: str, key: bytes) -> str:
     digest = hmac.new(key, f"{kind}\0{value}".encode("utf-8"), hashlib.sha256).hexdigest()
     return f"{kind}_{digest[:24]}"
+
+
+def _full_pseudonym_digest(kind: str, value: str, key: bytes) -> str:
+    return hmac.new(
+        key, f"{kind}\0{value}".encode("utf-8"), hashlib.sha256
+    ).hexdigest()
 
 
 def _edge_identity(left: str, right: str, key: bytes) -> tuple[str, str, str]:
@@ -338,37 +352,177 @@ def compile_csvs(
     key: bytes,
     allowed_nodes: frozenset[str] | None = None,
 ) -> CompileSummary:
-    """Stream extracted blocks into strictly separated public/truth JSONL."""
+    """Compile label-order-safe public/truth JSONL with exception-safe cleanup.
+
+    The UCI source blocks are label-sorted.  Streaming them unchanged would
+    reveal truth through public row position even if ``is_match`` lived in a
+    separate file.  Rows are therefore staged in a private SQLite database and
+    emitted in ascending HMAC edge-ID order, which depends on the uncommitted
+    key and canonical pair identity but not on the label.  Temporary output
+    files are installed only after the full parse, collision audit, sort, and
+    serialization succeed. The paired installation is not claimed crash-atomic
+    against process kill or power loss.
+    """
 
     if len(key) < 16:
         raise AdapterError("the HMAC key must contain at least 16 bytes")
     if public_output.resolve() == truth_output.resolve():
         raise AdapterError("public and truth output paths must differ")
+    if public_output.exists() or truth_output.exists():
+        existing = public_output if public_output.exists() else truth_output
+        raise AdapterError(f"refusing to overwrite existing output: {existing}")
+    public_output.parent.mkdir(parents=True, exist_ok=True)
+    truth_output.parent.mkdir(parents=True, exist_ok=True)
+
+    public_temp_handle = tempfile.NamedTemporaryFile(
+        prefix=f".{public_output.name}.",
+        suffix=".tmp",
+        dir=public_output.parent,
+        delete=False,
+    )
+    truth_temp_handle = tempfile.NamedTemporaryFile(
+        prefix=f".{truth_output.name}.",
+        suffix=".tmp",
+        dir=truth_output.parent,
+        delete=False,
+    )
+    public_temp = Path(public_temp_handle.name)
+    truth_temp = Path(truth_temp_handle.name)
+    public_temp_handle.close()
+    truth_temp_handle.close()
+
     source_rows = emitted_rows = emitted_matches = dropped = 0
-    with _open_new(public_output) as public_handle, _open_new(truth_output) as truth_handle:
-        for path in paths:
-            for pattern in iter_patterns(path):
-                source_rows += 1
-                if allowed_nodes is not None and not {
-                    pattern.left,
-                    pattern.right,
-                }.issubset(allowed_nodes):
-                    dropped += 1
-                    continue
-                public_handle.write(
-                    json.dumps(public_observation(pattern, key), sort_keys=True) + "\n"
+    source_transitions = compiled_transitions = 0
+    prior_source_label: bool | None = None
+    node_digests: dict[str, str] = {}
+    node_collisions = 0
+    installed: list[Path] = []
+    try:
+        with tempfile.TemporaryDirectory(prefix="uci-rlcp-compile-") as directory:
+            database = Path(directory) / "rows.sqlite3"
+            connection = sqlite3.connect(database)
+            try:
+                connection.execute("PRAGMA journal_mode=OFF")
+                connection.execute("PRAGMA synchronous=OFF")
+                connection.execute("PRAGMA temp_store=FILE")
+                connection.execute(
+                    "CREATE TABLE compiled ("
+                    "edge_id TEXT PRIMARY KEY, "
+                    "public_json TEXT NOT NULL, "
+                    "truth_json TEXT NOT NULL, "
+                    "is_match INTEGER NOT NULL) WITHOUT ROWID"
                 )
-                truth_handle.write(
-                    json.dumps(truth_observation(pattern, key), sort_keys=True) + "\n"
-                )
-                emitted_rows += 1
-                emitted_matches += int(pattern.is_match)
+                buffer: list[tuple[str, str, str, int]] = []
+
+                def flush() -> None:
+                    if not buffer:
+                        return
+                    try:
+                        connection.executemany(
+                            "INSERT INTO compiled VALUES (?, ?, ?, ?)", buffer
+                        )
+                    except sqlite3.IntegrityError as exc:
+                        raise AdapterError(
+                            "duplicate source edge or 96-bit edge-pseudonym collision"
+                        ) from exc
+                    buffer.clear()
+
+                for path in paths:
+                    for pattern in iter_patterns(path):
+                        source_rows += 1
+                        if prior_source_label is not None:
+                            source_transitions += int(
+                                pattern.is_match != prior_source_label
+                            )
+                        prior_source_label = pattern.is_match
+                        if allowed_nodes is not None and not {
+                            pattern.left,
+                            pattern.right,
+                        }.issubset(allowed_nodes):
+                            dropped += 1
+                            continue
+
+                        for value in (pattern.left, pattern.right):
+                            full_digest = _full_pseudonym_digest("r", value, key)
+                            short = f"r_{full_digest[:24]}"
+                            prior = node_digests.setdefault(short, full_digest)
+                            if prior != full_digest:
+                                node_collisions += 1
+                                raise AdapterError(
+                                    "96-bit node-pseudonym collision detected"
+                                )
+
+                        public = public_observation(pattern, key)
+                        truth = truth_observation(pattern, key)
+                        if public["edge_id"] != truth["edge_id"]:
+                            raise AdapterError("public/truth edge pseudonyms disagree")
+                        buffer.append(
+                            (
+                                public["edge_id"],
+                                json.dumps(public, sort_keys=True),
+                                json.dumps(truth, sort_keys=True),
+                                int(pattern.is_match),
+                            )
+                        )
+                        emitted_rows += 1
+                        emitted_matches += int(pattern.is_match)
+                        if len(buffer) >= 10_000:
+                            flush()
+                flush()
+                connection.commit()
+
+                prior_compiled_label: bool | None = None
+                with public_temp.open(
+                    "w", encoding="utf-8", newline="\n"
+                ) as public_handle, truth_temp.open(
+                    "w", encoding="utf-8", newline="\n"
+                ) as truth_handle:
+                    cursor = connection.execute(
+                        "SELECT public_json, truth_json, is_match "
+                        "FROM compiled ORDER BY edge_id"
+                    )
+                    emitted_from_database = 0
+                    for public_json, truth_json, is_match in cursor:
+                        label = bool(is_match)
+                        if prior_compiled_label is not None:
+                            compiled_transitions += int(
+                                label != prior_compiled_label
+                            )
+                        prior_compiled_label = label
+                        public_handle.write(public_json + "\n")
+                        truth_handle.write(truth_json + "\n")
+                        emitted_from_database += 1
+                    if emitted_from_database != emitted_rows:
+                        raise AdapterError("staged row count changed during compilation")
+                    public_handle.flush()
+                    truth_handle.flush()
+                    os.fsync(public_handle.fileno())
+                    os.fsync(truth_handle.fileno())
+            finally:
+                connection.close()
+
+        # The temporary files live beside their destinations. Hard-linking is
+        # atomic and refuses to overwrite a path created by another process.
+        os.link(public_temp, public_output)
+        installed.append(public_output)
+        os.link(truth_temp, truth_output)
+        installed.append(truth_output)
+    except Exception:
+        for path in installed:
+            path.unlink(missing_ok=True)
+        raise
+    finally:
+        public_temp.unlink(missing_ok=True)
+        truth_temp.unlink(missing_ok=True)
+
     return CompileSummary(
         source_rows=source_rows,
         emitted_rows=emitted_rows,
         emitted_matches=emitted_matches,
         dropped_rows_outside_filter=dropped,
-        id_key_fingerprint=hashlib.sha256(key).hexdigest(),
+        source_order_label_transitions=source_transitions,
+        compiled_order_label_transitions=compiled_transitions,
+        node_pseudonym_collisions=node_collisions,
     )
 
 
@@ -439,6 +593,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 print(rendered, end="")
             return 0
         key = _key_from_env(args.id_key_env)
+        if args.manifest_output.exists():
+            raise AdapterError(
+                f"refusing to overwrite existing output: {args.manifest_output}"
+            )
         relation_profile = None
         allowed_nodes = None
         if args.truth_dyads_only:
@@ -455,8 +613,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             "dataset_metadata": load_metadata(),
             "relation_profile": relation_profile,
         }
-        with _open_new(args.manifest_output) as handle:
-            handle.write(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+        try:
+            with _open_new(args.manifest_output) as handle:
+                handle.write(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+        except Exception:
+            # compile_csvs created these paths in this invocation and refused
+            # any pre-existing output, so cleanup cannot remove caller data.
+            args.public_output.unlink(missing_ok=True)
+            args.truth_output.unlink(missing_ok=True)
+            raise
         return 0
     except (AdapterError, OSError, json.JSONDecodeError) as exc:
         print(f"error: {exc}", file=sys.stderr)

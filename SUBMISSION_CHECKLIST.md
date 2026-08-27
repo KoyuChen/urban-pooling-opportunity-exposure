@@ -34,13 +34,23 @@ submission.
   declared bounded-frontier instances and returns replayable witnesses.
 - [x] Explicit-DNF LOW/HIGH release compiler returns exact projected/restored
   witnesses and independently audited lifecycle metadata.
+- [x] Joint record--release-factor components are solved and convolved exactly;
+  candidate-graph-only splitting is rejected by a locked shared-factor
+  counterexample. This is treated as standard algorithm engineering.
+- [x] A declared-input Chicago adapter fails closed on node, role, support,
+  evidence, factor, and namespace drift without claiming live City validation.
+- [x] The synthetic `K=2` production harness separates logical temporal
+  candidates from heuristic screens and audits cross-midnight buffers.
 - [x] Bounded synthetic capacity profile reports width, factors, frontier,
   runtime, memory, and unresolved cases across six structural axes.
 - [ ] Run-closed full-day temporal order and measured resource profile establish
   production scalability.
-- [x] UCI block 1 supplies real adjudicated relation topology; FEBRL4 supplies
-  an external synthetic one-to-one method-fit test.
-- [ ] Full ten-block UCI scan completes the predeclared external-data contract.
+- [x] All ten UCI blocks supply reconciled real adjudicated relation topology;
+  FEBRL4 supplies an external synthetic one-to-one method-fit test.
+- [x] The all-ten audit reports the exact truth-conditioned UCI upper endpoint
+  without treating the block files as independent markets.
+- [ ] The truth-conditioned UCI lower/full frontier and a natural independent
+  market or calibration unit are resolved.
 
 ## Method correctness gates
 
@@ -58,6 +68,8 @@ submission.
   on the deterministic 250-instance audit.
 - [x] Temporal frontier agrees with every applicable exact, analytic, and
   resolved numerical comparator in the locked 34-case benchmark.
+- [x] Incidence-component convolution agrees with 160 same-kernel and 192
+  independent exhaustive-oracle configurations and replays attained witnesses.
 - [x] Certified score relaxation is checked for exact-set containment,
   score slack, and sufficient a-posteriori endpoint certificates.
 - [x] Conformal normalization is frozen across the Gamma path and uses the same
@@ -80,10 +92,11 @@ submission.
   score encoding, Gamma, and graph scale with exact references.
 - [ ] Application-facing benchmark additionally varies verified suppression
   rules, boundary edges, candidate omissions, and operator misspecification.
-- [x] Executed external audit reports relation topology, eligibility boundary,
-  query truth, width, runtime, hashes, leakage controls, and exact/numerical
-  status for UCI block 1 and FEBRL4.
-- [ ] Full-corpus UCI benchmark and a natural market sampling unit remain.
+- [x] Executed all-ten UCI audit reports relation topology, eligibility
+  boundary, query truth, hashes, leakage controls, exact upper status, and
+  unresolved lower status; FEBRL4 reports its separate method-fit checks.
+- [ ] A complete external dyad frontier, blocking-recall evidence, and a
+  natural market sampling unit remain.
 - [ ] Baselines include maximum-score point matching, complete cases,
   independent supports, single imputation, linkage-range queries, DBSCAN proxy
   grouping, and score-free coupled endpoints.

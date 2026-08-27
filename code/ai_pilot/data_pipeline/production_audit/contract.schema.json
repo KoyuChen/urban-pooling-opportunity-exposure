@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/chicago-k2-production-audit-contract-v1.schema.json",
+  "title": "Chicago K=2 production audit contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "audit_name",
+    "input",
+    "window",
+    "timestamp_release",
+    "run_closure",
+    "candidate_graph",
+    "columns"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "chicago-k2-production-audit/v1"
+    },
+    "audit_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_id",
+        "snapshot_revision_fingerprint_sha256",
+        "expected_row_count",
+        "expected_input_sha256",
+        "input_hash_basis",
+        "server_count_verified",
+        "snapshot_stable_during_extraction",
+        "selection_scope",
+        "null_start_scope",
+        "server_target_like_null_start_row_count",
+        "null_start_count_evidence_sha256",
+        "raw_identifiers_in_report"
+      ],
+      "properties": {
+        "dataset_id": {"const": "6dvr-xwnh"},
+        "snapshot_revision_fingerprint_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_row_count": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "expected_input_sha256": {"$ref": "#/$defs/sha256"},
+        "input_hash_basis": {"const": "canonical_json_rows_v1"},
+        "server_count_verified": {"type": "boolean"},
+        "snapshot_stable_during_extraction": {"type": "boolean"},
+        "selection_scope": {
+          "enum": [
+            "all_public_rows_in_released_start_window_plus_null_start_evidence",
+            "all_public_rows_in_extraction_window",
+            "authorized_only",
+            "custom"
+          ]
+        },
+        "null_start_scope": {
+          "enum": [
+            "not_verified",
+            "server_verified_zero_literal_match_true_k2_null_start_rows",
+            "all_literal_match_true_k2_null_start_rows_included"
+          ]
+        },
+        "server_target_like_null_start_row_count": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "null_start_count_evidence_sha256": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "raw_identifiers_in_report": {"const": false}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"null_start_scope": {"const": "not_verified"}}
+          },
+          "then": {
+            "properties": {
+              "server_target_like_null_start_row_count": {"type": "null"},
+              "null_start_count_evidence_sha256": {"type": "null"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "null_start_scope": {
+                "const": "server_verified_zero_literal_match_true_k2_null_start_rows"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "server_target_like_null_start_row_count": {"const": 0},
+              "null_start_count_evidence_sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "null_start_scope": {
+                "const": "all_literal_match_true_k2_null_start_rows_included"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "server_target_like_null_start_row_count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "null_start_count_evidence_sha256": {"$ref": "#/$defs/sha256"}
+            }
+          }
+        }
+      ]
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "core_start_local",
+        "core_end_local",
+        "extraction_start_local",
+        "extraction_end_local",
+        "core_anchor"
+      ],
+      "properties": {
+        "core_start_local": {"$ref": "#/$defs/localDateTime"},
+        "core_end_local": {"$ref": "#/$defs/localDateTime"},
+        "extraction_start_local": {"$ref": "#/$defs/localDateTime"},
+        "extraction_end_local": {"$ref": "#/$defs/localDateTime"},
+        "core_anchor": {"const": "released_trip_start_timestamp"}
+      }
+    },
+    "timestamp_release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rounding_minutes", "interpretation"],
+      "properties": {
+        "rounding_minutes": {
+          "const": 15
+        },
+        "interpretation": {
+          "const": "nearest_with_closed_outer_interval"
+        }
+      }
+    },
+    "run_closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maximum_transaction_duration_minutes",
+        "duration_bound_basis",
+        "duration_bound_evidence",
+        "public_shared_trip_id_available"
+      ],
+      "properties": {
+        "maximum_transaction_duration_minutes": {
+          "type": ["number", "null"],
+          "exclusiveMinimum": 0
+        },
+        "duration_bound_basis": {
+          "enum": [
+            "none",
+            "operator_verified",
+            "externally_validated",
+            "analyst_assumption"
+          ]
+        },
+        "duration_bound_evidence": {
+          "$ref": "#/$defs/durationEvidence"
+        },
+        "public_shared_trip_id_available": {"const": false}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "maximum_transaction_duration_minutes": {"type": "null"}
+            }
+          },
+          "then": {
+            "properties": {
+              "duration_bound_basis": {"const": "none"},
+              "duration_bound_evidence": {
+                "properties": {
+                  "authority": {"const": "none"},
+                  "effective_scope": {"const": "none"},
+                  "artifact_sha256": {"type": "null"}
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "duration_bound_basis": {
+                "enum": [
+                  "operator_verified",
+                  "externally_validated",
+                  "analyst_assumption"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "duration_bound_basis": {"const": "operator_verified"}
+            }
+          },
+          "then": {
+            "properties": {
+              "duration_bound_evidence": {
+                "properties": {
+                  "authority": {
+                    "const": "city_of_chicago_or_dataset_operator"
+                  },
+                  "effective_scope": {
+                    "const": "all_transactions_in_dataset_revision"
+                  },
+                  "artifact_sha256": {"$ref": "#/$defs/sha256"}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "duration_bound_basis": {"const": "externally_validated"}
+            }
+          },
+          "then": {
+            "properties": {
+              "duration_bound_evidence": {
+                "properties": {
+                  "authority": {"const": "independent_external_authority"},
+                  "effective_scope": {
+                    "const": "declared_external_target_population"
+                  },
+                  "artifact_sha256": {"$ref": "#/$defs/sha256"}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "duration_bound_basis": {"const": "analyst_assumption"}
+            }
+          },
+          "then": {
+            "properties": {
+              "duration_bound_evidence": {
+                "properties": {
+                  "authority": {"const": "analyst"},
+                  "effective_scope": {"const": "sensitivity_only"},
+                  "artifact_sha256": {"$ref": "#/$defs/sha256"}
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "candidate_graph": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "logical_rules",
+        "missing_timestamp_policy",
+        "max_materialized_logical_edges",
+        "exact_fallback_max_core_nodes",
+        "exact_fallback_max_edges",
+        "feasibility_time_limit_seconds",
+        "heuristics"
+      ],
+      "properties": {
+        "logical_rules": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "prefixItems": [
+            {
+              "const": "both_endpoints_have_literal_match_true_and_integer_trips_pooled_2"
+            },
+            {"const": "at_least_one_endpoint_has_core_role"},
+            {
+              "const": "possible_closed_interval_overlap_after_timestamp_rounding"
+            }
+          ]
+        },
+        "missing_timestamp_policy": {"const": "retain_indeterminate"},
+        "max_materialized_logical_edges": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exact_fallback_max_core_nodes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "exact_fallback_max_edges": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "feasibility_time_limit_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "heuristics": {
+          "$ref": "#/$defs/heuristics"
+        }
+      }
+    },
+    "columns": {
+      "$ref": "#/$defs/columns"
+    }
+  },
+  "$defs": {
+    "localDateTime": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]+)?$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "durationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "effective_scope", "artifact_sha256"],
+      "properties": {
+        "authority": {
+          "enum": [
+            "none",
+            "city_of_chicago_or_dataset_operator",
+            "independent_external_authority",
+            "analyst"
+          ]
+        },
+        "effective_scope": {
+          "enum": [
+            "none",
+            "all_transactions_in_dataset_revision",
+            "declared_external_target_population",
+            "sensitivity_only"
+          ]
+        },
+        "artifact_sha256": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "nullableNonnegative": {
+      "type": ["number", "null"],
+      "minimum": 0
+    },
+    "heuristics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pickup_radius_km",
+        "dropoff_radius_km",
+        "direction_cosine_min",
+        "per_node_degree_cap",
+        "missing_spatial_policy"
+      ],
+      "properties": {
+        "pickup_radius_km": {"$ref": "#/$defs/nullableNonnegative"},
+        "dropoff_radius_km": {"$ref": "#/$defs/nullableNonnegative"},
+        "direction_cosine_min": {
+          "type": ["number", "null"],
+          "minimum": -1,
+          "maximum": 1
+        },
+        "per_node_degree_cap": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "missing_spatial_policy": {"enum": ["retain", "drop"]}
+      }
+    },
+    "columns": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trip_id",
+        "trip_start_timestamp",
+        "trip_end_timestamp",
+        "shared_trip_authorized",
+        "shared_trip_match",
+        "trips_pooled",
+        "pickup_latitude",
+        "pickup_longitude",
+        "dropoff_latitude",
+        "dropoff_longitude"
+      ],
+      "properties": {
+        "trip_id": {"type": "string", "minLength": 1},
+        "trip_start_timestamp": {"type": "string", "minLength": 1},
+        "trip_end_timestamp": {"type": "string", "minLength": 1},
+        "shared_trip_authorized": {"type": "string", "minLength": 1},
+        "shared_trip_match": {"type": "string", "minLength": 1},
+        "trips_pooled": {"type": "string", "minLength": 1},
+        "pickup_latitude": {"type": "string", "minLength": 1},
+        "pickup_longitude": {"type": "string", "minLength": 1},
+        "dropoff_latitude": {"type": "string", "minLength": 1},
+        "dropoff_longitude": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

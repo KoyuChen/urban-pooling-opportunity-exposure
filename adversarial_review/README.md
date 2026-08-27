@@ -15,13 +15,14 @@ missing Chicago evidence into a scientific result.
   algorithm with witness recovery, a pathwidth-two weak-hardness boundary, and
   a certified outward score relaxation for a declared release-coupled world
   model.
-- New completed evidence: explicit-DNF LOW/HIGH release compilation, current
-  documentary support for the high-level Chicago rule, a bounded 23-case
-  capacity profile, a real UCI block-1 topology audit, and a FEBRL4 method-fit
-  audit.
-- Remaining blockers: no City implementation/null-cause validation, run-closed
-  complete-day width/runtime profile, all-ten-block UCI result, candidate
-  coverage, or Chicago endpoint estimate.
+- New completed evidence: explicit-DNF compilation, exact joint-incidence
+  component convolution, declared-input Chicago handoff, a synthetic-tested
+  `K=2` production-audit harness, a bounded capacity profile, all-ten UCI
+  topology with an exact upper endpoint, and a FEBRL4 method-fit audit.
+- Remaining blockers: no City implementation/null-cause validation, stabilized
+  run-closed complete-day width/runtime profile, UCI lower/full dyad frontier,
+  natural external calibration markets, candidate coverage, or Chicago
+  endpoint estimate.
 
 ## Required artifacts
 
@@ -51,6 +52,10 @@ missing Chicago evidence into a scientific result.
 - `../code/ai_pilot/bounds/path_frontier_dp.py` implements the exact temporal
   frontier and outward score certificate with exact rational arithmetic and
   replayed endpoint witnesses.
+- `../code/ai_pilot/bounds/component_frontier.py` decomposes only the joint
+  record--factor incidence graph and exactly convolves global Gamma, score, and
+  query resources; it is standard algorithm engineering rather than a novelty
+  claim.
 - `../code/ai_pilot/bounds/release_operator_compiler.py` implements explicit
   DNF LOW/HIGH compilation, support accounting, lifecycle audit, and exact
   projected/restored witnesses.
@@ -62,6 +67,9 @@ missing Chicago evidence into a scientific result.
   calibration and the exact optimizer.
 - `../code/ai_pilot/benchmarks/runtime_profile/` records the bounded operational
   profile without promoting timeout to infeasibility.
+- `../code/ai_pilot/data_pipeline/chicago_release_adapter.py` and
+  `production_audit/` implement fail-closed declared-input and synthetic
+  production contracts without claiming City semantic truth or partner recall.
 - `../code/ai_pilot/external_benchmarks/` records UCI/FEBRL topology, leakage,
   endpoint, hash, and exact-versus-numerical evidence without raw external rows.
 
@@ -71,11 +79,16 @@ Run the local audit checks with:
 python adversarial_review/counterexamples.py
 python -m unittest discover -s code/ai_pilot/bounds/tests -v
 python -m unittest discover -s code/ai_pilot/data_pipeline/tests -v
+python -m unittest discover -s code/ai_pilot/data_pipeline/production_audit/tests -v
 python -m unittest discover -s code/ai_pilot/external_benchmarks/tests -v
+python code/ai_pilot/benchmarks/component_frontier_benchmark.py
 ```
 
-The current declared-input suites contain 96 passing tests. Small-graph exhaustive solutions
-are the exact audit oracle; SciPy/HiGHS results are treated as numerical.
+The current suites discover 150 tests: 149 are cache independent and one uses
+the pinned official UCI cache. With that cache present, 150/150 pass; hosted CI
+records the one expected skip. Small-graph exhaustive solutions and the pinned
+Blossom backend provide exact audit oracles; SciPy/HiGHS results remain
+numerical.
 
 ## Decision
 

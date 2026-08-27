@@ -25,6 +25,7 @@ from run_external_relation_truth_benchmark import (  # noqa: E402
     _exact_bipartite_frontier,
     _febrl_query,
     _febrl_score,
+    _reproduction_command,
     coarsen_febrl_row,
 )
 
@@ -77,6 +78,23 @@ class ExternalRelationTruthBenchmarkTest(unittest.TestCase):
         self.assertEqual(result["score_optimal_matching_count"], 2)
         self.assertEqual(result["score_optimal_lower"], 0.0)
         self.assertEqual(result["score_optimal_upper"], 1.0)
+
+    def test_reproduction_command_reflects_frontier_mode_and_fresh_outputs(self) -> None:
+        skipped = _reproduction_command(
+            skip_uci_frontier=True,
+            uci_frontier_time_limit_seconds=None,
+        )
+        self.assertIn("--skip-uci-frontier", skipped)
+        self.assertNotIn("--uci-frontier-time-limit-seconds", skipped)
+        self.assertIn("--output-json /tmp/", skipped)
+        self.assertIn("--output-report /tmp/", skipped)
+
+        solved = _reproduction_command(
+            skip_uci_frontier=False,
+            uci_frontier_time_limit_seconds=37.5,
+        )
+        self.assertIn("--uci-frontier-time-limit-seconds 37.5", solved)
+        self.assertNotIn("--skip-uci-frontier", solved)
 
 
 if __name__ == "__main__":

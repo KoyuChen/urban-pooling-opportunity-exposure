@@ -70,9 +70,11 @@ coarsening description to the 2025-- release. Safely compiling that document
 means visible fine geography can require both applicable endpoint cells HIGH,
 whereas a blank tract must remain unconstrained unless an independent null
 cause is known. All trips contributing to the endpoint cells, including
-context-only rows, must enter the factors. A production Chicago adapter still
-needs null-cause supports, run closure, cell-partition and tract-vintage audits,
-and validation against a pinned release snapshot.
+context-only rows, must enter the factors. A fail-closed declared-input Chicago
+adapter now enforces node, role, support, evidence, namespace, and factor
+handoff contracts. It does not validate City transformation code, a live
+snapshot, blank causes, run closure, latent-label coverage, or candidate-edge
+coverage; those remain production gates.
 
 ## Optimization
 
@@ -101,6 +103,15 @@ without independent calibration.
 SciPy/HiGHS MILP is the default production backend and returns numerically
 qualified optima. A deterministic exhaustive fallback handles small graphs,
 returns exact declared-input optima, and is covered by tests.
+
+`component_frontier.py` safely splits only connected components of the joint
+record--release-factor incidence graph. It solves local exact frontiers and
+convolves their nondominated global Gamma, score, and query records. A shared
+factor therefore merges otherwise disconnected candidate subgraphs. This is
+standard constraint decomposition plus knapsack-style Pareto convolution, not
+a new identification result or universal speedup. Locked same-kernel and
+independent exhaustive-oracle batteries verify exact endpoint and witness
+agreement.
 
 ## Run
 

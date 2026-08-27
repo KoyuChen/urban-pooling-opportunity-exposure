@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/chicago-k2-production-audit-report-v1.schema.json",
+  "title": "Chicago K=2 production audit aggregate report",
+  "type": "object",
+  "required": [
+    "report_version",
+    "generated_at_utc",
+    "audit_contract_sha256",
+    "dataset",
+    "input_checks",
+    "row_roles",
+    "identifier_audit",
+    "literal_field_audit",
+    "operator_consistency_audit",
+    "candidate_graphs",
+    "run_closure_audit",
+    "redaction"
+  ],
+  "properties": {
+    "report_version": {
+      "const": "chicago-k2-production-audit-report/v1"
+    },
+    "generated_at_utc": {"type": "string"},
+    "audit_contract_sha256": {"$ref": "#/$defs/sha256"},
+    "dataset": {
+      "type": "object",
+      "required": ["dataset_id", "snapshot_revision_fingerprint_sha256"],
+      "properties": {
+        "dataset_id": {"const": "6dvr-xwnh"},
+        "snapshot_revision_fingerprint_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "input_checks": {
+      "type": "object",
+      "required": [
+        "actual_input_sha256",
+        "expected_input_sha256",
+        "input_hash_basis",
+        "input_sha256_pinned",
+        "input_sha256_matches",
+        "null_start_scope",
+        "server_target_like_null_start_row_count",
+        "actual_included_target_like_null_start_row_count",
+        "null_start_count_evidence_sha256",
+        "null_start_scope_status",
+        "completeness_status"
+      ],
+      "properties": {
+        "actual_input_sha256": {"$ref": "#/$defs/sha256"},
+        "expected_input_sha256": {"$ref": "#/$defs/sha256"},
+        "input_hash_basis": {"const": "canonical_json_rows_v1"},
+        "input_sha256_pinned": {"const": true},
+        "input_sha256_matches": {"type": "boolean"},
+        "null_start_scope": {
+          "enum": [
+            "not_verified",
+            "server_verified_zero_literal_match_true_k2_null_start_rows",
+            "all_literal_match_true_k2_null_start_rows_included"
+          ]
+        },
+        "server_target_like_null_start_row_count": {
+          "type": ["integer", "null"],
+          "minimum": 0
+        },
+        "actual_included_target_like_null_start_row_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "null_start_count_evidence_sha256": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        },
+        "null_start_scope_status": {
+          "enum": ["PASS", "NOT_VERIFIED", "SERVER_INPUT_COUNT_MISMATCH"]
+        },
+        "completeness_status": {"enum": ["PASS", "FAIL"]}
+      }
+    },
+    "row_roles": {"type": "object"},
+    "identifier_audit": {"type": "object"},
+    "literal_field_audit": {"type": "object"},
+    "operator_consistency_audit": {"type": "object"},
+    "candidate_graphs": {
+      "type": "object",
+      "required": ["logical_necessary", "heuristic_sensitivity"],
+      "properties": {
+        "logical_necessary": {
+          "type": "object",
+          "required": [
+            "rules",
+            "rules_explicitly_not_used",
+            "statistics",
+            "cover_feasibility",
+            "materialization_status",
+            "partner_coverage_claim"
+          ],
+          "properties": {
+            "partner_coverage_claim": {
+              "const": "NOT_ESTIMATED_FROM_PUBLIC_ROWS"
+            }
+          }
+        },
+        "heuristic_sensitivity": {
+          "type": "object",
+          "required": ["classification", "partner_coverage_claim"],
+          "properties": {
+            "classification": {
+              "const": "ANALYST_HEURISTIC_NOT_A_NECESSARY_SUPERGRAPH"
+            },
+            "partner_coverage_claim": {"const": "NONE"}
+          }
+        }
+      }
+    },
+    "run_closure_audit": {
+      "type": "object",
+      "required": [
+        "public_hidden_run_closure",
+        "boundary_extraction_support",
+        "declared_graph_cover_status",
+        "production_status",
+        "interpretation"
+      ],
+      "properties": {
+        "public_hidden_run_closure": {
+          "type": "object",
+          "required": ["status", "reason"],
+          "properties": {
+            "status": {"const": "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"}
+          }
+        },
+        "boundary_extraction_support": {
+          "type": "object",
+          "required": ["status", "duration_bound_basis", "duration_bound_evidence"],
+          "properties": {
+            "status": {"type": "string"},
+            "duration_bound_basis": {
+              "enum": [
+                "none",
+                "operator_verified",
+                "externally_validated",
+                "analyst_assumption"
+              ]
+            },
+            "duration_bound_evidence": {"$ref": "#/$defs/durationEvidence"}
+          }
+        }
+      }
+    },
+    "redaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_trip_identifiers_emitted",
+        "edge_endpoint_identifiers_emitted",
+        "row_level_data_emitted",
+        "report_contains_aggregate_counts_and_hashes_only"
+      ],
+      "properties": {
+        "raw_trip_identifiers_emitted": {"const": false},
+        "edge_endpoint_identifiers_emitted": {"const": false},
+        "row_level_data_emitted": {"const": false},
+        "report_contains_aggregate_counts_and_hashes_only": {"const": true}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{64}$"
+    },
+    "durationEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority", "effective_scope", "artifact_sha256"],
+      "properties": {
+        "authority": {
+          "enum": [
+            "none",
+            "city_of_chicago_or_dataset_operator",
+            "independent_external_authority",
+            "analyst"
+          ]
+        },
+        "effective_scope": {
+          "enum": [
+            "none",
+            "all_transactions_in_dataset_revision",
+            "declared_external_target_population",
+            "sensitivity_only"
+          ]
+        },
+        "artifact_sha256": {
+          "oneOf": [
+            {"$ref": "#/$defs/sha256"},
+            {"type": "null"}
+          ]
+        }
+      }
+    }
+  }
+}

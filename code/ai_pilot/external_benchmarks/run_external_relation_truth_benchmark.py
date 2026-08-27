@@ -3,19 +3,20 @@
 
 The executable has two deliberately distinct layers:
 
-* UCI Krebsregister block 1 is a real, manually adjudicated boundary test.  Its
-  positive relation is audited as supplied and is not forced into a matching.
-  A separate truth-conditioned dyad reduction supports one score-free postal
-  agreement frontier, conditional on UCI's already-blocked candidate graph.
+* All ten UCI Krebsregister blocks form one real, manually adjudicated boundary
+  test.  Their positive relation is audited globally and is not forced into a
+  matching.  A separate truth-conditioned dyad reduction supports one
+  score-free postal-agreement sensitivity analysis, conditional on UCI's
+  already-blocked candidate graph.
 * FEBRL4 is an external synthetic method-fit test with a complete one-to-one
   bipartite truth.  Two deterministic truth-conditioned markets use complete
   bipartite candidate graphs, coarsened public fields, no learned scorer, and
   a birth-decade agreement query.  Original/link-bearing IDs are excluded from
   candidate generation, scores, and the query.
 
-No network operation is implemented.  UCI block 1 must already exist as an
-official cached ZIP, and FEBRL4 must be bundled in ``recordlinkage==0.16``.
-Only aggregate JSON/Markdown reports are written.
+No network operation is implemented.  All ten pinned cached UCI inner ZIPs
+must exist, and FEBRL4 must be bundled in ``recordlinkage==0.16``. Only
+aggregate JSON/Markdown reports are written.
 """
 
 from __future__ import annotations
@@ -52,6 +53,10 @@ if str(BOUNDS_DIR) not in sys.path:
     sys.path.insert(0, str(BOUNDS_DIR))
 
 from structured_matching_bounds import solve_linear_endpoints  # noqa: E402
+from uci_all_blocks_audit import (  # noqa: E402
+    audit_all_ten_blocks,
+    render_report as render_uci_report,
+)
 
 
 AUDIT_DATE = "2026-08-27"
@@ -791,10 +796,7 @@ def _format_float(value: float) -> str:
 
 
 def render_report(result: dict) -> str:
-    uci = result["uci_krebsregister_block_1"]
-    relation = uci["adjudicated_positive_relation"]
-    dyad = uci["truth_conditioned_dyad_reduction"]
-    task = uci["coherent_aggregate_task"]
+    uci = result["uci_krebsregister_all_ten_blocks"]
     febrl = result["febrl4"]
     market_lines = []
     for market in febrl["markets"]:
@@ -818,43 +820,21 @@ def render_report(result: dict) -> str:
                 exact=exact,
             )
         )
+    uci_section = render_uci_report(uci)
+    uci_body_marker = "## Snapshot and exact reconciliation"
+    if uci_body_marker not in uci_section:
+        raise BenchmarkError("UCI report is missing its snapshot section")
+    uci_body = uci_body_marker + uci_section.split(uci_body_marker, 1)[1]
     return f"""# External relation-truth benchmark result
 
-Generated deterministically on {result['audit_date']}. No source records,
-registry IDs, FEBRL IDs, pair labels, or endpoint witnesses are stored here.
-The observed end-to-end runtime was {result['runtime_seconds']['total']:.3f}
-seconds ({result['runtime_seconds']['uci']:.3f} UCI,
-{result['runtime_seconds']['febrl4']:.3f} FEBRL4) in the recorded environment.
+Generated for the frozen observed run on {result['audit_date']}. No source records,
+registry IDs, FEBRL IDs, pair labels, truth edges, or raw endpoint edge lists
+are stored. Aggregate witness replay counts and a SHA-256 digest are disclosed.
+Observed runtimes are printed by the runner but excluded from this artifact.
+Topology/count aggregation is deterministic; a time-limit status may depend on
+hardware and scheduling.
 
-## UCI Krebsregister block 1: real adjudicated boundary test
-
-- Input hash: `{uci['source']['cached_zip_sha256']}` ({uci['source']['cached_zip_bytes']:,} bytes).
-- Candidate table: {uci['candidate_graph']['rows']:,} unique pairs over
-  {uci['candidate_graph']['nodes']:,} records; {uci['candidate_graph']['connected_components']:,}
-  components, including one {uci['candidate_graph']['largest_component_nodes']:,}-record component.
-- Adjudicated positives: {relation['positive_edges']:,} edges over
-  {relation['positive_nodes']:,} records. The relation is **not a matching**:
-  {relation['nodes_with_degree_above_one']:,} records have positive degree above one,
-  maximum degree is {relation['maximum_positive_degree']}, and positive components
-  reach {relation['largest_component_nodes']} records.
-- Conditional eligibility is {relation['candidate_true_edge_eligibility']:.1%} only because labels
-  are attached to rows already selected by UCI's blocking. This says nothing
-  about true pairs omitted before release.
-
-The matching reduction is explicitly truth-conditioned. It starts from
-{dyad['two_record_positive_components']:,} two-record positive components,
-drops {dyad['dyads_dropped_for_missing_true_postal_comparison']} whose true edge
-lacks the predeclared query value, and retains {dyad['retained_truth_dyads']:,}
-truth dyads plus {dyad['retained_negative_edges']:,} negative alternative edges.
-The induced candidate graph has {dyad['ambiguous_components']:,} ambiguous
-components; its deterministic source/calibration/test partition has no record
-or edge overlap, but those components are not claimed iid.
-
-The coherent matching-only query is the share of selected links with exact
-postal-code agreement. The score-free numerical frontier is
-**[{_format_float(task['lower'])}, {_format_float(task['upper'])}]**; adjudicated
-truth is **{_format_float(task['truth'])}** and lies at the upper endpoint.
-`{task['solver_status']}` is a numerical HiGHS result, not an exact certificate.
+{uci_body}
 
 ## FEBRL4: external synthetic positive method-fit test
 
@@ -879,8 +859,8 @@ agrees with the numerical solver; the 20-pair result is numerical.
 
 ## Claim boundary
 
-- UCI validates real adjudicated relation topology and a conditional dyad
-  frontier; it does not validate UCI blocking recall or independent markets.
+- UCI validates all-ten real adjudicated relation topology and a conditional
+  dyad sensitivity; it does not validate blocking recall or independent markets.
 - FEBRL4 validates a clean complete-matching path, but it is synthetic and its
   two markets are constructed using truth.
 - Neither benchmark calibrates a learned restriction, validates latent node
@@ -890,8 +870,19 @@ agrees with the numerical solver; the 20-pair result is numerical.
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    default_uci = Path(get_data_home()) / "krebsregister" / "block_1.zip"
-    parser.add_argument("--uci-block-zip", type=Path, default=default_uci)
+    default_uci = Path(get_data_home()) / "krebsregister"
+    parser.add_argument("--uci-block-dir", type=Path, default=default_uci)
+    parser.add_argument(
+        "--skip-uci-frontier",
+        action="store_true",
+        help="complete all-ten topology while recording the dyad frontier as NOT_RUN",
+    )
+    parser.add_argument(
+        "--uci-frontier-time-limit-seconds",
+        type=float,
+        default=120.0,
+        help="per-endpoint verified Blossom limit",
+    )
     parser.add_argument(
         "--output-json", type=Path, default=HERE / "results" / "benchmark_results.json"
     )
@@ -901,26 +892,55 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _reproduction_command(
+    *, skip_uci_frontier: bool, uci_frontier_time_limit_seconds: float | None
+) -> str:
+    if skip_uci_frontier:
+        frontier_args = " --skip-uci-frontier"
+    elif uci_frontier_time_limit_seconds is not None:
+        frontier_args = (
+            " --uci-frontier-time-limit-seconds "
+            f"{uci_frontier_time_limit_seconds:g}"
+        )
+    else:
+        frontier_args = ""
+    return (
+        "python code/ai_pilot/external_benchmarks/"
+        "run_external_relation_truth_benchmark.py --uci-block-dir "
+        "/secure/uci_rlcp"
+        + frontier_args
+        + " --output-json /tmp/external_relation_truth_results.json"
+        + " --output-report /tmp/EXTERNAL_RELATION_TRUTH_REPORT.md"
+    )
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     if args.output_json.exists() or args.output_report.exists():
         raise BenchmarkError("refusing to overwrite an existing benchmark result")
     total_start = time.perf_counter()
     uci_start = time.perf_counter()
-    uci_result = audit_uci_block(args.uci_block_zip)
+    uci_result = audit_all_ten_blocks(
+        args.uci_block_dir,
+        solve_frontier=not args.skip_uci_frontier,
+        frontier_time_limit_seconds=args.uci_frontier_time_limit_seconds,
+    )
     uci_seconds = time.perf_counter() - uci_start
     febrl_start = time.perf_counter()
     febrl_result = audit_febrl4()
     febrl_seconds = time.perf_counter() - febrl_start
     total_seconds = time.perf_counter() - total_start
     result = {
-        "schema": "external_relation_truth_benchmark_v1",
+        "schema": "external_relation_truth_benchmark_v2",
         "audit_date": AUDIT_DATE,
         "seed": SEED,
-        "reproduction_command": (
-            "python code/ai_pilot/external_benchmarks/"
-            "run_external_relation_truth_benchmark.py --uci-block-zip "
-            "/secure/uci_rlcp/block_1.zip"
+        "reproduction_command": _reproduction_command(
+            skip_uci_frontier=args.skip_uci_frontier,
+            uci_frontier_time_limit_seconds=(
+                None
+                if args.skip_uci_frontier
+                else args.uci_frontier_time_limit_seconds
+            ),
         ),
         "environment": {
             "python": sys.version.split()[0],
@@ -929,12 +949,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "scipy": scipy.__version__,
             "recordlinkage": recordlinkage.__version__,
         },
-        "runtime_seconds": {
-            "uci": round(uci_seconds, 6),
-            "febrl4": round(febrl_seconds, 6),
-            "total": round(total_seconds, 6),
-        },
-        "uci_krebsregister_block_1": uci_result,
+        "uci_krebsregister_all_ten_blocks": uci_result,
         "febrl4": febrl_result,
     }
     args.output_json.parent.mkdir(parents=True, exist_ok=True)
@@ -943,7 +958,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     args.output_report.write_text(render_report(result), encoding="utf-8")
-    print(json.dumps({"json": str(args.output_json), "report": str(args.output_report)}))
+    print(
+        json.dumps(
+            {
+                "json": str(args.output_json),
+                "report": str(args.output_report),
+                "observed_runtime_seconds_not_stored": {
+                    "uci": round(uci_seconds, 3),
+                    "febrl4": round(febrl_seconds, 3),
+                    "total": round(total_seconds, 3),
+                },
+            },
+            sort_keys=True,
+        )
+    )
     return 0
 
 

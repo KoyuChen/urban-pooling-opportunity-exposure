@@ -6,9 +6,11 @@
 
 **KDD Research development: CONDITIONAL GO.** The post-audit working draft now
 contains a nontrivial reference algorithm, a weak-hardness boundary, and a
-certified score relaxation, plus an audited DNF compiler and partial external
-boundary evidence. KDD Research is therefore the primary target if run-closed
-production compilation, the full external scan, and multi-scale validation pass. KDD AI for Sciences
+certified score relaxation, plus an audited DNF compiler, standard exact
+component engineering, and all-ten external topology evidence. KDD Research is
+therefore the primary target if run-closed production compilation, a complete
+external frontier or justified bounds, natural-market evidence, and
+multi-scale validation pass. KDD AI for Sciences
 remains a no-go without a completed domain-science finding. *Data Science for
 Transportation* is the fallback if the method does not generalize but a
 complete, material Chicago measurement result survives.
@@ -17,7 +19,7 @@ complete, material Chicago measurement result survives.
 
 | Venue | Current fit | Why | Audit team's minimum credible gate—not an official venue rule |
 |---|---|---|---|
-| KDD Research | **Conditional primary target** | The current increment is a release-coupled exact temporal frontier with witnesses, a pathwidth-two weak-hardness boundary, certified outward score containment, and an executable DNF compiler; conformal prediction is prior safety machinery | Run-closed complete-day width/runtime evidence; all-ten-block UCI audit; size/sparsity/operator sweeps; generic MILP and linkage/query baselines; Chicago implementation validation. See the [official Research CFP](https://kdd2027.kdd.org/research-track-call-for-papers/). |
+| KDD Research | **Conditional primary target** | The current increment is a release-coupled exact temporal frontier with witnesses, a pathwidth-two weak-hardness boundary, certified outward score containment, and an executable DNF compiler; conformal prediction and component convolution are prior safety/engineering machinery | Run-closed complete-day width/runtime evidence; UCI lower/full frontier or valid bounds plus natural markets; size/sparsity/operator sweeps; generic MILP and linkage/query baselines; Chicago implementation validation. See the [official Research CFP](https://kdd2027.kdd.org/research-track-call-for-papers/). |
 | KDD AI for Sciences | **No-go** | No completed urban-science discovery, no independently validated essential AI contribution, and no complete real-data result | Domain-science advancement enabled by AI, rigorous comprehensive validation, and domain-expert collaboration. The [official AI4Sciences CFP](https://kdd2027.kdd.org/ai4sciences-track-call-for-papers/) explicitly directs methodology papers toward Research. |
 | Data Science for Transportation | **Conditional fallback** | The journal's stated scope includes transportation methodological advances, high-quality applications, and privacy questions; it becomes the better fit if the contribution is a complete Chicago measurement result rather than a general algorithm | Complete all-trip and chain-complete data; mechanism-conditional contextual bounds; exact small-instance or numerically qualified production endpoints; comparison with complete cases, community aggregation, independent-label bounds, single imputation, and Sebti–Chen; reproducible workflow; material transport/equity finding. See [aims and scope](https://link.springer.com/journal/42421/aims-and-scope). |
 | Transportation Research Part C | **Conditional fallback** | The coupled formulation and reference algorithm now exist; fit still depends on transport-specific production evidence and material implications | Verified release operator; production-scale certificates; proxy-grouping baseline; full Chicago result. See the [official journal page](https://www.sciencedirect.com/journal/transportation-research-part-c-emerging-technologies). |
@@ -27,13 +29,15 @@ complete, material Chicago measurement result survives.
 
 ## Why the current paper cannot yet be submitted honestly
 
-1. The explicit-DNF LOW/HIGH release compiler is complete, but no City-specific null-cause and
-   applicability adapter has been validated against production rows.
+1. The explicit-DNF compiler and fail-closed declared Chicago handoff are
+   complete, but City null causes, transformation semantics, and live
+   production rows remain unvalidated.
 2. No run-closed complete-day instance reports live width, active-factor width, frontier
    size, memory, runtime, or fallback behavior.
-3. UCI block 1 validates real relation topology and FEBRL4 validates synthetic
-   matching mechanics, but the full UCI scan, blocking recall, and external
-   score calibration remain absent.
+3. All ten UCI blocks validate real nonmatching relation topology and an exact
+   upper dyad endpoint, while FEBRL4 validates small synthetic matching
+   mechanics; the UCI lower/full frontier, blocking recall, natural market
+   units, and external score calibration remain absent.
 4. The controlled benchmark is one seed and one market size with direct edge
    supervision; it is not evidence for node weak supervision or Chicago.
 5. Candidate-omission sensitivity is a declared Gamma budget, not an empirical
@@ -109,9 +113,10 @@ complete, material Chicago measurement result survives.
 
 ## Recommended path
 
-Prioritize the KDD Research method route: adapt the audited compiler to the
-verified City applicability states, measure the temporal frontier on run-closed
-complete snapshots, finish the full UCI audit, and compare against generic MILP
+Prioritize the KDD Research method route: validate the audited Chicago handoff
+against actual City applicability states, measure the temporal frontier on
+run-closed complete snapshots, resolve or honestly bound the remaining UCI
+lower endpoint, add natural market evidence, and compare against generic MILP
 and uncertain-linkage baselines. Keep Chicago as the gated flagship application. If those generality
 gates fail but the complete Chicago analysis is scientifically material, pivot
 to *Data Science for Transportation* without retaining broad algorithm claims.

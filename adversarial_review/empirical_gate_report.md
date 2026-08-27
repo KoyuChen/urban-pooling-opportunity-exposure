@@ -4,7 +4,7 @@
 
 - Chicago scientific and policy claims: **FAIL / not run**.
 - KDD method artifact at reference-instance scale: **CONDITIONAL PASS**.
-- Immediate submission: **FAIL** until production and full-corpus external gates pass.
+- Immediate submission: **FAIL** until production, full external-frontier, and natural-market gates pass.
 
 The frozen artifact is reproducible as a software pilot. It does not yet pass
 the gates needed for a Chicago structural estimate, an AI validation claim, or
@@ -81,9 +81,11 @@ values additionally have no invariant cross-score meaning.
 
 ## 2a. Post-audit repair verification
 
-The current declared-input suites contain 96 passing deterministic tests. In addition
-to the generic signed-endpoint, missing-support, FWL, numerical-status, and
-Gamma repairs, it now tests an exact temporal-frontier solver that jointly
+The current suites discover 150 tests: 149 are cache independent and one uses
+the pinned official UCI cache. With that cache present all 150 pass; hosted CI
+records the one expected skip. In addition to the generic signed-endpoint,
+missing-support, FWL, numerical-status, and Gamma repairs, they test an exact
+temporal-frontier solver that jointly
 tracks core/buffer matching, compiled latent labels, active capped-count release
 automata, an omitted-edge budget, and an exact rational score floor. It also
 tests fixed-reference score normalization and exact edge-by-edge scorer
@@ -104,18 +106,28 @@ The explicit-DNF LOW/HIGH release compiler additionally passes exact
 projection/restoration and lifecycle tests; an independent 1,000-instance
 randomized lifecycle-parity probe found no mismatch. A bounded 23-case capacity
 profile resolves 22 cases and retains one degree-five timeout as unresolved.
+The exact component layer agrees in 160/160 same-kernel and 192/192 independent
+exhaustive-oracle configurations, replays 682 decomposed endpoint witnesses,
+and rejects candidate-graph-only splitting with a shared-factor counterexample
+(false upper 1 versus correct upper 11). The Chicago adapter and synthetic
+production harness contribute 14 and 23 fail-closed contract tests,
+respectively.
 These checks verify declared finite-instance behavior only. They do not
 establish a truth-containing Chicago graph, City implementation fidelity, a
 production temporal order, or transfer of synthetic calibration.
 
-The external audit executes two deliberately different roles. UCI
-Krebsregister block 1 is real adjudicated relation truth, but its 2,093
-positive edges are not a matching: 152 records have positive degree above one.
-A truth-conditioned dyad subset yields a numerical postal-agreement frontier
-`[0.918151, 0.954900]` containing truth at the upper endpoint. FEBRL4 supplies
-external synthetic one-to-one mechanics; six-pair exhaustive and 20-pair
-numerical score-free frontiers both contain truth. The full ten-block UCI scan,
-blocking recall, and natural exchangeable markets remain open.
+The external audit executes two deliberately different roles. The all-ten UCI
+Krebsregister audit reconciles 5,749,132 unique candidate pairs and 20,931
+positives. Its adjudicated entity relation is not a matching: 8,675 records
+have positive degree above one. The ten files are overlapping edge partitions,
+not markets. A disclosed truth-conditioned reduction retains 10,297 global
+dyads and 249,048 induced candidate edges. Its postal truth is
+`9922/10297`; verified Blossom gives the exact upper endpoint `9924/10297`,
+but the lower endpoint exceeds the predeclared 120-second limit and remains
+unresolved. No complete frontier, width, or containment claim is reported.
+FEBRL4 supplies external synthetic one-to-one mechanics; six-pair exhaustive
+and 20-pair numerical score-free frontiers both contain truth. UCI blocking
+recall and natural exchangeable markets remain open.
 
 ## 3. Real-data evidence
 
@@ -138,7 +150,7 @@ endpoint range, or validate edge scores.
 
 No complete-day Chicago matching output, missing-context bound, production
 runtime, or policy coefficient is present. External relation truth is now
-present only in the UCI block-1/FEBRL roles described above; it does not supply
+present only in the all-ten-UCI/FEBRL roles described above; it does not supply
 Chicago partner truth.
 
 ## 4. Gate matrix
@@ -148,7 +160,7 @@ Chicago partner truth.
 | Field semantics | Target agrees with official definitions | **Pass in method draft** | Hidden object is partner identity within conditionally run-closed realized K=2 co-presence |
 | Chain-complete node population | Boundary-buffered rows contain both members of every included run | **Fail** | No valid exact-cover population yet |
 | Candidate outer support | Every true edge satisfies necessary public-data constraints | **Fail** | Current min/max is graph-conditional sensitivity only |
-| Candidate recall validation | Independent real or realistic pair truth | **Partial** | UCI supplies real topology but not blocking recall; FEBRL4 is synthetic |
+| Candidate recall validation | Independent real or realistic pair truth | **Partial** | All-ten UCI supplies real topology but not blocking recall; FEBRL4 is synthetic |
 | Exact-cover solver correctness | Exhaustive agreement on small instances | **Pass** | Small-instance optimization logic is supported |
 | Endpoint terminology | Distinguish attained endpoints from exact attainable set | **Pass in current method draft** | Paper states attained endpoints and denies scalar interpolation |
 | Missing context | Exact-cover all target nodes before handling suppression | **Method pass / Chicago fail** | Generic DNF/count coupling exists; production null causes and rows are absent |
@@ -156,7 +168,7 @@ Chicago partner truth.
 | Score ambiguity radius | Invariant definition plus calibration | **Pass conditionally in method/code** | Fixed-reference matching regret is exact and nested; Chicago calibration markets are absent |
 | Independent score validation | Untouched markets and edge truth | **Fail** | AI can only be presented as optional sensitivity scoring |
 | Temporal algorithm correctness | Exact endpoints/witnesses and explicit complexity boundary | **Pass on declared small instances** | Reference implementation and weak-hardness boundary are supported |
-| Production computation | Complete-day compiler, runtime, memory, frontier size, and fallback policy | **Partial** | Generic compiler and bounded profile pass; real schedule width is untested |
+| Production computation | Complete-day compiler, runtime, memory, frontier size, and fallback policy | **Partial** | Generic compiler, exact component engineering, declared Chicago handoff, synthetic production harness, and bounded profile pass; real schedule width is untested |
 | All-trip policy denominator | Download contains all completed TNP trips | **Fail** | Current authorized-only downloader cannot estimate `/all` rates |
 | Policy treatment encoding | Pickup or drop-off, day-of-week schedule, correct zone transition | **Fail** | Current proposed treatment requires repair |
 | Global coefficient propagation | Optimize the actual signed linear contrast over one global matching | **Fail, theorem available** | Day/block endpoint regressions are invalid |
@@ -187,7 +199,7 @@ The following are necessary before any substantive empirical claim:
 
 - Exact temporal method artifact: **PASS on declared finite instances**.
 - Generic release compiler: **PASS for explicit DNF inputs; external semantics not certified**.
-- External validation: **PARTIAL PASS** (UCI block 1 boundary; FEBRL4 method fit; full UCI open).
+- External validation: **PARTIAL PASS** (all-ten UCI topology and exact upper endpoint; lower/full frontier, blocking recall, and natural markets open; FEBRL4 method fit).
 - Certified outward score relaxation: **PASS as a bicriteria certificate; not a query FPTAS**.
 - Software pilot: **PASS with documented counterexamples**.
 - Synthetic scientific validation: **FAIL**.
@@ -195,8 +207,9 @@ The following are necessary before any substantive empirical claim:
 - AI sharpening claim for Chicago: **FAIL / uncalibrated**.
 - Policy effect: **FAIL / not run and current estimand invalid**.
 - KDD Research development: **CONDITIONAL GO**; run-closed production
-  compilation, the full external scan, multi-size validation, and Chicago
-  implementation verification remain indispensable.
+  compilation, a complete external frontier and natural market units,
+  multi-size validation, and Chicago implementation verification remain
+  indispensable.
 
 ## Status
 

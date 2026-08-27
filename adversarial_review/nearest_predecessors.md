@@ -25,9 +25,11 @@ claim that generic frontier dynamic programming, bounded-width CSP, budgeted
 matching, or matching-level conformal prediction is new. Their remaining
 increment is the particular compiled state, correctness invariant, witness
 recovery, and audited release-coupled endpoint interface. The explicit-DNF
-compiler and temporal-locality certificate are enabling components, not
-standalone novelty claims. Current documentation supports Chicago's high-level
-rule; implementation/null causes and production schedules remain unverified.
+compiler, temporal-locality certificate, and exact incidence-component plus
+knapsack/Pareto convolution layer are enabling components, not standalone
+novelty claims. Current documentation supports Chicago's high-level rule and a
+declared-input wrapper now fails closed; implementation/null causes, live rows,
+candidate coverage, and production schedules remain unverified.
 
 ## Citation-grade comparison matrix
 
@@ -138,11 +140,14 @@ A defensible current methodological claim is:
 
 The reference implementation, exact small-instance oracle, weak-hardness
 construction, and outward-containment audit now support that algorithmic claim
-conditionally. The explicit-DNF LOW/HIGH release compiler, bounded capacity profile, UCI block-1
-boundary audit, and FEBRL4 method-fit test are now implemented. They do not yet
-support a Chicago scientific or production-scale claim. Before submission, the
-project must still (i) validate City implementation/null causes and construct a
-run-closed temporal order from real data, (ii) benchmark runtime/frontier size
-on complete snapshots, (iii) finish the all-ten-block UCI audit and candidate
-eligibility evidence, and (iv) compare against generic MILP, independent-label
-envelopes, single imputation, and proxy grouping under the same world set.
+conditionally. The explicit-DNF compiler, exact component engineering, bounded
+capacity profile, all-ten UCI topology/exact-upper audit, Chicago declared
+handoff and synthetic production harness, and FEBRL4 method-fit test are now
+implemented. They do not yet support a Chicago scientific or production-scale
+claim. Before submission, the project must still (i) validate City
+implementation/null causes and construct a run-closed temporal order from real
+data, (ii) benchmark runtime/frontier size on complete snapshots, (iii) resolve
+or correctly bound the external lower frontier and obtain candidate-eligibility
+and natural-market evidence, and (iv) compare against generic MILP,
+independent-label envelopes, single imputation, and proxy grouping under the
+same world set.

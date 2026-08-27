@@ -50,15 +50,15 @@ even on disjoint four-cycles of pathwidth two. A downward score quantization
 gives certified outward query endpoints while relaxing the original score by
 at most $\eta|C|$; it is a bicriteria certificate, not a query FPTAS. We use
 matching-level split conformal prediction as a known safety layer, with one
-score normalization frozen across the entire candidate-omission path. A
-locked benchmark matches every applicable exhaustive or analytic reference,
-exposes order-dependent width, and shows the pseudo-polynomial score
-frontier; it makes no production-speed claim.
-Chicago ride pooling is a gated flagship application: realized co-presence is
-released, while partner identity and fine geography are hidden. Current City
-documentation supports a threshold-and-paired-end coarsening rule, but
-complete-day estimates remain conditional on run closure, implementation
-validation, and release-snapshot stability.
+score normalization frozen across the entire candidate-omission path. Locked
+exact and independent-oracle audits verify the declared finite-input
+semantics. A standard incidence-component layer splits only the joint
+record--factor graph and exactly convolves the global omission, score, and
+query resources; it is an engineering optimization, not a novelty claim or a
+universal speedup. Chicago remains a gated flagship application. A fail-closed
+adapter and a cross-midnight $K=2$ production audit enforce declared handoff
+contracts, but public rows do not identify partner recall or run closure, and
+no complete-day estimate is reported.
 \end{abstract}
 
 \ccsdesc[500]{Computing methodologies~Machine learning}
@@ -110,22 +110,15 @@ application bounds neighborhood-context composition among those customer
 transactions. It does not infer rider socioeconomic status, preferences,
 durable ties, or all shared runs.
 
-This working version reports three completed results and artifacts. First, it defines
-joint feasible-world query semantics and identifies the exact collapse to
-weighted matching. Second, it develops and implements a score-aware temporal
-frontier algorithm for core--buffer matching, compiled labels, active release
-counts, and a global budget for omitted candidate edges; it proves endpoint and
-witness recovery, the pseudo-polynomial score boundary, and a certified
-outward score relaxation. A provenance-bearing compiler maps explicit DNF
-release implications to replayable states without changing their projected
-world set. Third, we supply independently implemented exhaustive checks, a bounded capacity
-profile, and external real/synthetic relation-truth stress tests. The real
-relation is deliberately reported as nonmatching rather than forced into the
-model. Explicit-DNF label duplication and the vertex-separation identity are
-audit and implementation devices, not knowledge-compilation novelties.
-Matching-level conformal calibration is an adopted safety layer, not a novelty
-claim. The full external corpus, a boundary-complete Chicago run, and
-production-scale schedules remain explicit KDD submission gates.
+This version completes four bounded artifacts: joint feasible-world semantics
+and the independent-support matching collapse; a score-aware temporal frontier
+with witnesses, weak hardness, and certified outward relaxation; a
+provenance-bearing DNF compiler plus exact joint-incidence convolution; and
+locked exhaustive, all-ten UCI, and fail-closed Chicago interface audits. The
+component split, DNF duplication, vertex-separation identity, and conformal
+calibration are engineering or safety devices, not novelty claims. Complete
+Chicago snapshots, verified operator semantics, partner-support evidence, and
+production-scale endpoints remain submission gates.
 
 \begin{figure*}[t]
 \centering
@@ -548,19 +541,37 @@ supergraph-edge budgets. Exact optima, numerical optima, exact or structural
 infeasibility, numerical infeasibility, and unresolved runs are reported as
 distinct states; a timeout is unresolved rather than a separate certificate.
 
-The separate temporal implementation accepts tuple-valued compiled labels,
-multiple label-dependent count contributions and release requirements, and
-label-pair-specific scores and queries. It constructs sparse active-factor
-coordinates from a supplied forget order, uses exact rational arithmetic, and
-independently replays each endpoint witness. The high-level compiler implements
-Lemma~\ref{lem:capped}, records support expansion, validates node/edge/factor
-lifecycles, and restores the selected DNF clause from a projected witness. Its
-mandatory audit reference does not verify an external operator, and no
-Chicago-specific null-cause adapter is claimed. The Python reference stores
-complete partial witnesses rather than memory-optimal predecessor pointers;
-Eq.~\eqref{eq:statebound} is its key-count bound, not a production runtime
-claim. General MILP remains the fallback when the measured temporal frontier
-is too wide.
+The temporal implementation accepts compiled tuple labels, label-dependent
+factor contributions and requirements, and label-pair-specific scores and
+queries. It uses exact rational arithmetic and independently replays every
+endpoint witness. The high-level compiler implements
+Lemma~\ref{lem:capped}. A committed Chicago wrapper additionally validates
+exact node, role, and ordered-support equality, rejects undeclared or preloaded
+Chicago factors, freezes its handoff, and replays a content-addressed contract
+before compilation. These checks certify the interface under declared inputs;
+they do not validate the City's implementation, a live extraction,
+latent-label coverage, or candidate-edge coverage. General MILP remains a
+numerical fallback when an exact frontier exceeds its declared limit.
+
+\begin{proposition}[Exact incidence-component convolution]
+\label{prop:components}
+Form an incidence graph whose vertices are records and declared count/release
+factors. Candidate edges join their endpoint records, and a record joins a
+factor whenever any supported label can contribute to or require that factor.
+For its connected components, convolving the local nondominated omission,
+globally shifted score, and additive-query frontiers returns the same exact
+feasibility status and attained endpoints as the monolithic temporal solver,
+unless a declared local or convolution frontier limit is exceeded.
+\end{proposition}
+
+Every structural constraint is local by construction, so restriction and union
+give a bijection between global worlds and tuples of component worlds. The
+three remaining resources are additive, making separate min/max dominance
+safe; unioned endpoint witnesses are replayed against the unsplit problem.
+Candidate-graph components alone are unsafe because a shared factor can couple
+otherwise disconnected records. This is standard exact decomposition followed
+by pseudo-polynomial knapsack-style convolution, not a new identification or
+complexity result.
 
 \begin{table}[t]
 \caption{Algorithmic boundary of the declared world model.}
@@ -575,7 +586,8 @@ Independent supports & Two edge-envelope matchings & Lemma~\ref{lem:collapse} \\
 Fixed labels plus score floor & Mandatory core cover with a budget & Related standard problem: NP-hard; PTAS/EPTAS known \\
 Paired threshold coupling & Joint labels and matching & Theorem~\ref{thm:hardness} \\
 Temporal schedule $(w,\mathcal A_t)$ & Exact frontier DP & Theorem~\ref{thm:temporal} \\
-General compiled graph & MILP/decomposition & Certified gap required \\
+Joint incidence components & Local frontiers plus exact convolution & Proposition~\ref{prop:components} \\
+General connected instance & Temporal DP or numerical MILP & Width/limit/gap explicit \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -764,29 +776,59 @@ Score relaxation & $\eta=1/5$, $N=4$ & $[0,0]\subset[-5,0]$; deficit $2/5\le4/5$
 \end{tabularx}
 \end{table}
 
-The artifact has 96 passing unit tests and eight executable legacy
-counterexamples. The temporal suite includes 80 seeded brute-force instances;
-the relaxation suite adds random inclusion and witness checks. These results
-support software behavior for declared finite inputs, not candidate coverage,
-a production schedule, or the correctness of an external release operator.
+With the pinned cache, 150 tests pass: 87 bounds and frontier, 14 Chicago
+adapter, 23 production audit, four runtime profile, and 22 external benchmark
+tests. Eight executable legacy counterexamples also pass. The
+component layer agrees exactly in 160/160 same-kernel configurations and
+192/192 independent exhaustive-oracle configurations, with 682 decomposed
+endpoint-witness replays. A shared-factor counterexample shows that splitting
+candidate-graph components can report upper endpoint 1 when the correct
+joint-incidence upper endpoint is 11. These checks support software behavior
+for declared inputs, not external operator truth or candidate coverage.
 
-A bounded 23-case capacity profile varies all six state-bound axes. Twenty-two
-cases resolve under three seconds; the degree-five 14-record case remains an
-explicit timeout. Peak frontiers grow $64\to512$ with zero-to-three overlapping
-factors and $8\to1024$ with support one-to-four. These machine-specific
-diagnostics certify only the supplied heuristic orders, not production scale.
+A separate 23-case capacity profile resolves 22 cases under three seconds and
+retains one explicit timeout. The component profile reports frontier record
+counts rather than memory or universal speedups: a legal
+component-concatenated monolithic order remains exact, while only the supplied
+interleaved order exceeds its 10,000-record limit at 13 components.
 
 \subsection{External Relation-Truth Boundary}
 
-UCI Krebsregister block 1 has 574,913 candidate pairs and 2,093 adjudicated
-links \citep{uci210}, but its truth is not a matching: 152 records have degree
-above one. We preserve that failure. A disclosed truth-conditioned reduction
-of 1,796 dyads gives a numerical postal-agreement frontier
-$[0.918151,0.954900]$, with truth at the upper endpoint. Complementary FEBRL4
-tests \citep{recordlinkage016} cover truth on a six-pair exhaustive and a
-20-pair numerical complete-matching market. These tests establish topology
-boundaries and method fit, not UCI blocking recall, exchangeability, calibrated
-learning, or Chicago transfer.
+The all-ten-block UCI audit reconciles 5,749,132 unique candidate pairs and
+20,931 adjudicated positives over 99,788 observed records
+\citep{uci210}. The positive relation is not a matching: 8,675 records have
+positive degree above one, and its 12,925 entity components have size up to
+nine. The ten files are edge partitions rather than markets or folds; 82,846
+records occur in every block.
+
+An explicitly truth-conditioned reduction retains 10,297 global two-record
+positive components with observed true postal comparison. Their induced graph
+has 249,048 candidate edges and one component containing 93.94\% of retained
+dyads. The adjudicated postal-agreement value is
+$9922/10297=0.963582$. Verified integer-weight Blossom optimization attains the
+exact upper endpoint $9924/10297=0.963776$, but the lower endpoint exceeded
+the predeclared 120-second limit and remains \texttt{UNRESOLVED}. We therefore
+report neither a complete interval, width, nor containment claim. The
+construction validates neither UCI blocking recall, independent calibration
+markets, nor Chicago transfer. FEBRL4 remains a small matching-method-fit check
+\citep{recordlinkage016}.
+
+\begin{table*}[!t]
+  \caption{Fixed held-out synthetic markets: coverage cannot be read from width alone.}
+  \label{tab:conformal}
+  \small
+  \centering
+  \begin{tabular}{@{}lrrrrrrrr@{}}
+    \toprule
+    & \multicolumn{3}{c}{Calibrated restriction} && \multicolumn{3}{c}{Arbitrary radius $0.05$} & \\
+    \cmidrule{2-4}\cmidrule{6-8}
+    Scorer & Match cov. & Query cov. & Width red. && Match cov. & Query cov. & Width red. & Point MAE \\
+    \midrule
+    Target-free & 95.8\% & 100\% & 3.8\% && 30.0\% & 83.3\% & 70.6\% & 0.122 \\
+    Query-leaking diagnostic & 97.5\% & 100\% & 7.6\% && 15.0\% & 24.2\% & 95.8\% & 0.308 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
 
 \subsection{Matching-Set Calibration under Deliberate Query Leakage}
 
@@ -812,31 +854,6 @@ utilities but separately reaggregates the 44-point frontier: discrete counts
 agree exactly and serialized headlines within $3.33\times10^{-16}$. It scores
 each edge once; the all-core incidence convention in Eq.~\eqref{eq:corescore}
 doubles every matching score and leaves normalized-regret sets unchanged.
-
-\begin{table*}[t]
-  \caption{Fixed held-out synthetic markets: coverage cannot be read from width alone.}
-  \label{tab:conformal}
-  \small
-  \centering
-  \begin{tabular}{@{}lrrrrrrrr@{}}
-    \toprule
-    & \multicolumn{3}{c}{Calibrated restriction} && \multicolumn{3}{c}{Arbitrary radius $0.05$} & \\
-    \cmidrule{2-4}\cmidrule{6-8}
-    Scorer & Match cov. & Query cov. & Width red. && Match cov. & Query cov. & Width red. & Point MAE \\
-    \midrule
-    Target-free & 95.8\% & 100\% & 3.8\% && 30.0\% & 83.3\% & 70.6\% & 0.122 \\
-    Query-leaking diagnostic & 97.5\% & 100\% & 7.6\% && 15.0\% & 24.2\% & 95.8\% & 0.308 \\
-    \bottomrule
-  \end{tabular}
-  \vspace{2pt}
-  \parbox{0.94\textwidth}{\footnotesize The score-free range covers the query
-  in every test market and has mean width 0.661. Calibrated radii are 0.341
-  (target-free) and 0.504 (query-leaking). ``Match cov.'' tests whether the entire
-  hidden matching remains eligible; ``Query cov.'' is weaker because an
-  excluded matching's scalar value can still fall between the endpoints.
-  The observed 100\% values mean 120/120, not a strengthened theoretical
-  coverage level.}
-\end{table*}
 
 \paragraph{Result.}
 The query-leaking radius-0.05 stress point looks strongest if evaluated only by
@@ -867,37 +884,34 @@ records with match true and $K=2$ therefore induce a hidden nonbipartite
 transaction matching. This is neither a passenger count nor a claim that
 $K>2$ runs form co-presence cliques.
 
-The current base dataset metadata points to the City's privacy methodology as
-the approach used in this release. That note lists the current dataset and
-documents an at-most-two-unique-trip threshold for 15-minute tract cells with
-paired coarsening of both endpoints \citep{chicagoprivacy2026}. A companion
-clarification describes separate pickup/start and drop-off/end cells
-\citep{chicagoclarification2026}. We therefore compile the safe one-way
-implication: a published fine tract rules out a low-count applicable internal
-cell at either endpoint. We do \emph{not} infer LOW from a blank tract; the City
-also lists missing source geography and outside-city locations. Every trip
-contributing to a relevant cell, not only the matched cohort, must enter the
-count factors. Documentary support is not an audit of the City's code,
-provider partitioning, DST handling, or late-row recomputation.
+Current metadata documents an at-most-two-trip threshold with paired endpoint
+coarsening \citep{chicagoprivacy2026,chicagoclarification2026}. The committed
+adapter encodes only fail-closed implications. Visible fine geography emits
+applicable endpoint-marginal \textsf{HIGH} requirements. A blank emits
+\textsf{LOW} only under content-addressed, metadata-pinned evidence with an
+independent authority contract; otherwise it contributes no converse threshold
+claim. All supplied core, buffer, and context rows enter applicable count
+factors. The adapter verifies count-universe and support digests and rejects
+node, role, support, namespace, or preloaded-factor drift. Its support-coverage
+flag concerns only declared per-record latent labels and never candidate-edge
+coverage. Live extraction and City implementation validation remain false.
 
-The production analysis is still not licensed. The committed data are a
-deterministic two-character trip-ID-prefix sample, which omits a retained
-record's counterpart in approximately 255 out of 256 cases under
-independent prefix retention. Even an authorized-only complete day does not
-prove run closure: a partner can cross midnight or released flags can be
-inconsistent. The City may publish after generally 99\% or more expected data
-have arrived and later revise past periods \citep{chicagoupdates2026}; hence
-``complete day'' means complete only within a pinned snapshot and requires a
-later stabilization check.
+The committed $K=2$ production audit separately requires literal shared-match
+true, integer pooled size two, an all-row pinned snapshot, and core--buffer
+boundary handling. Authorization is not a necessary screen. Under the declared
+nearest-15-minute interpretation it retains pairs whose closed
+$\pm7.5$-minute occupancy envelopes can overlap, including equality and
+cross-midnight candidates. Missing or malformed times retain otherwise
+admissible edges while blocking production readiness. Spatial radii, direction
+rules, and degree caps appear only on a heuristic-sensitivity graph. Small
+covers are exact; larger HiGHS covers remain numerical and uncertified.
 
-The complete application requires all transactions contributing to each
-privacy cell, run-closed boundary buffers, a necessary-condition candidate
-supergraph, the correct tract vintage, and full solver status by component.
-Primary comparisons will include complete cases, community-area aggregation,
-independent attribute envelopes, one point imputation, spatiotemporal proxy
-grouping, score-free coupled endpoints, and calibrated restrictions only where
-independent partner truth supports them. No Chicago composition or January
-2026 policy sign is reported in this draft.
+These interfaces establish neither true-partner recall nor hidden-run closure
+from public rows. The prefix sample is not a closed relation sample and is
+excluded from estimation. A complete analysis still requires a stabilized
+all-row snapshot \citep{chicagoupdates2026}, independently reviewed operator
+and duration evidence, candidate-support validation, and certified component
+statuses. No Chicago composition or policy sign is reported.
 
 \section{Limitations and Ethical Considerations}
 
@@ -919,25 +933,20 @@ terms must be resolved before any nonpublic data are used.
 
 \section{Generative AI Usage}
 
-Generative AI assisted code drafting, adversarial counterexample search, and
-language editing. Every mathematical claim, experiment, citation, and code path
-remains subject to author verification. No generated text or synthetic output
-is treated as evidence about Chicago.
+Generative AI assisted drafting, counterexample search, and editing. All
+claims, experiments, citations, and code remain author-verified; no generated
+text or output is treated as Chicago evidence.
 
 \section{Conclusion}
 
-Privacy coarsening can hide a relation and its endpoint attributes at the same
-time. The appropriate output is then a query over feasible worlds, not a
-preferred reconstructed graph. Independent attribute supports reduce to
-weighted matching; active release factors create the coupled problem. The
-temporal-frontier algorithm gives exact endpoints when live structural width
-and the score resource are controlled, while the outward relaxation remains
-honest when the exact score frontier is too large. Matching-level conformal
-calibration is a known safety layer that can expose false precision, not the
-algorithmic contribution. The remaining work is decisive: verify and compile
-the City implementation against complete snapshots, construct and measure a
-run-closed full-day temporal order, scan the full external corpus, and run the
-Chicago application.
+Privacy coarsening can hide a relation and its endpoint attributes jointly, so
+we optimize feasible worlds rather than one reconstructed graph. The temporal
+frontier is exact under controlled structural width and score resource;
+standard incidence decomposition separates only genuine record--factor
+components. All-ten UCI closes the topology gate but reveals nonmatching truth
+and an unresolved lower endpoint. Chicago interfaces close contracts, not
+observation. Submission still requires verified City semantics, stabilized
+run-closed data, candidate support, and certified production endpoints.
 
 \clearpage
 \bibliographystyle{ACM-Reference-Format}
@@ -970,18 +979,43 @@ pair truth is read only in the source-training, calibration, or held-out-test
 stage declared by the benchmark split. The earlier two-day weak-node-score
 pilot is retained as failure-analysis provenance but is not a headline result.
 
-Current completed claims are limited to Propositions~\ref{prop:endpoints},
-\ref{prop:relax}, \ref{prop:nonidentification}, and \ref{prop:nested},
-Lemmas~\ref{lem:collapse} and \ref{lem:capped},
+Current completed claims comprise Propositions~\ref{prop:endpoints},
+\ref{prop:relax}, \ref{prop:components}, \ref{prop:nonidentification}, and
+\ref{prop:nested}; Lemmas~\ref{lem:collapse} and \ref{lem:capped}; and
 Theorems~\ref{thm:hardness}, \ref{thm:temporal},
-\ref{thm:scorehard}, and \ref{thm:conformal}, 96 passing declared-input unit
-tests, eight legacy counterexamples, the 34-case temporal benchmark, the
-seeded 250-instance MILP audit, and the controlled results in
-Table~\ref{tab:conformal}. The explicit-DNF LOW/HIGH release compiler, 23-case bounded
-capacity profile, UCI block-1 boundary audit, and FEBRL4 method-fit audit are
-also complete under their stated contracts. A Chicago null-cause adapter,
-run-closed full-day order, all-ten-block UCI scan, and complete-day Chicago
-estimates remain open gates.
+\ref{thm:scorehard}, and \ref{thm:conformal}. The artifact has 150 passing
+tests in the pinned cached environment, eight legacy counterexamples, the
+34-case temporal benchmark, the 250-instance MILP audit, 160 same-kernel and
+192 independent component-frontier checks, and the controlled calibration
+results in Table~\ref{tab:conformal}. The DNF compiler, Chicago safe adapter,
+$K=2$ production audit, bounded capacity profile, all-ten UCI topology audit,
+and FEBRL4 method-fit audit are complete only under their declared contracts.
+The UCI lower dyad endpoint, live City operator validation, full-day run
+closure, true-partner support, and complete-day Chicago estimates remain open.
+
+\section{Proof of Proposition~\ref{prop:components}}
+
+Let $H$ be the declared record--factor incidence graph. Every selectable edge,
+degree constraint, allowed label pair, support restriction, count bound, and
+release requirement lies within one connected component of $H$. Restricting a
+structurally feasible global world to the components is therefore well defined.
+Conversely, the union of arbitrary structurally feasible component worlds
+satisfies every structural constraint. Restriction and union are inverse, so
+they give a bijection between global structural worlds and tuples of component
+worlds.
+
+Omitted-edge use, the single globally shifted score, and the query are additive
+under this bijection. The global world is feasible exactly when the component
+omission uses sum to at most $\Gamma$ and their scores sum to the global floor.
+For minimization, a local record with no greater omission use, no smaller
+score, and no larger query can replace a dominated record under every
+continuation; reverse only the query inequality for maximization. Induction on
+the convolved components proves that Pareto pruning retains an optimizer for
+each endpoint. The global score shift is valid because fixed core incidence
+adds the same constant once per core in every feasible world. Retained local
+witnesses union to an attained global witness, which is replayed against the
+unsplit problem. A factor shared by records joins their components in $H$;
+hence the argument does not apply to candidate-graph components alone.
 
 \section{Full Proof of Theorem~\ref{thm:hardness}}
 \label{app:hardness}

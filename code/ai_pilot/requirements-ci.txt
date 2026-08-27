@@ -7,3 +7,4 @@ scikit-learn==1.8.0
 matplotlib==3.10.8
 recordlinkage==0.16
 jellyfish==1.2.1
+rustworkx==0.17.1
