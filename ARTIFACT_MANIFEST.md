@@ -55,10 +55,11 @@ performance claim.
 
 ## Legacy pilot provenance
 
-The earlier weak-node-score pipeline, two-day synthetic validation,
-geography-equality ablation, and `paper/Thicker_But_Narrower_Draft.pdf` remain
-in the repository to document the failed AI4Sciences route. They are not the
-headline KDD evidence. In particular, that Weak-MIL scorer receives node match
+The earlier weak-node-score pipeline, two-day synthetic validation, and
+geography-equality ablation remain in the repository to document the failed
+AI4Sciences route. The superseded `paper/Thicker_But_Narrower_Draft.pdf` is
+retained only in Git history, not in the active `paper/` directory. None of
+these artifacts is headline KDD evidence. In particular, the Weak-MIL scorer receives node match
 labels, whereas the current conformal benchmark directly supervises source
 edge scores with synthetic pair truth. These are different experiments and
 must not be conflated.

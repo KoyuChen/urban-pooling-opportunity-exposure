@@ -5,7 +5,7 @@
 - Audit restart date: 2026-08-26
 - Repository HEAD: `9867029b5d3e97fd1346cbd8d11a052ab7f69e53`
 - `paper/main.tex`: `c4ff40b4a0f24e66ab8577b0781d96d648d877c703c9603c9b1030085537ecd8`
-- `paper/Thicker_But_Narrower_Draft.pdf`: `4341b8bf719f77ecff82838fd4384d914eb661dc851419b3660a4600b31968d9`
+- Historical `paper/Thicker_But_Narrower_Draft.pdf` (retained in Git history only): `4341b8bf719f77ecff82838fd4384d914eb661dc851419b3660a4600b31968d9`
 - `code/ai_pilot/integration/DESIGN_LOCK.json`: `b32a2a97d7bb4196ee756bfde6aba6835a51a7f44dbd2485892674a793ee6b68`
 - `code/ai_pilot/integration/results/benchmark_results.json`: `863608a291373c09053bd076721a69a6b0719f3995fc7b1a39b3e90b85caeeee`
 - Worktree at restart: clean.

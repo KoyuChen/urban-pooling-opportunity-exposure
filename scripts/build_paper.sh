@@ -13,7 +13,6 @@ trap cleanup EXIT
 rsync -a \
   --exclude build \
   --exclude build_acm \
-  --exclude '/Thicker_But_Narrower_Draft.pdf' \
   --exclude '/KDD_Research_Working_Draft.pdf' \
   "$paper_dir/" "$build_dir/"
 
