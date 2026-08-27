@@ -1,0 +1,44 @@
+{
+  "dataset_id": 210,
+  "title": "Record Linkage Comparison Patterns",
+  "version_note": "UCI repository record accessed 2026-08-27; dataset donated 2011-03-09",
+  "official_page": "https://archive.ics.uci.edu/dataset/210/record%2Blinkage%2Bcomparison%2Bpatterns",
+  "doi": "10.24432/C51K6B",
+  "archive_url": "https://archive.ics.uci.edu/static/public/210/record+linkage+comparison+patterns.zip",
+  "archive_display_name": "donation.zip",
+  "archive_size_mb_as_reported": 53.8,
+  "archive_sha256": null,
+  "license": "CC BY 4.0",
+  "source_record_count_as_reported": 100000,
+  "candidate_pair_count_as_reported": 5749132,
+  "positive_pair_count_as_reported": 20931,
+  "block_count_as_reported": 10,
+  "required_columns": [
+    "id_1",
+    "id_2",
+    "cmp_fname_c1",
+    "cmp_fname_c2",
+    "cmp_lname_c1",
+    "cmp_lname_c2",
+    "cmp_sex",
+    "cmp_bd",
+    "cmp_bm",
+    "cmp_by",
+    "cmp_plz",
+    "is_match"
+  ],
+  "continuous_comparison_columns": [
+    "cmp_fname_c1",
+    "cmp_fname_c2",
+    "cmp_lname_c1",
+    "cmp_lname_c2"
+  ],
+  "binary_comparison_columns": [
+    "cmp_sex",
+    "cmp_bd",
+    "cmp_bm",
+    "cmp_by",
+    "cmp_plz"
+  ],
+  "accepted_missing_tokens": ["", "?", "NA", "NaN", "nan"]
+}

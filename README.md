@@ -6,11 +6,12 @@ Chicago ride pooling is the flagship application; it is not treated as a
 substitute for general method validation.
 
 > **Status:** research build, not submission ready. The exact temporal-frontier
-> solver, certified score relaxation, matching-level conformal safety layer,
-> and locked structural benchmark are implemented. A verified 2025/2026
-> Chicago observation operator, a production compiler and full-day width
-> profile, independent external relation-truth validation, and complete-day
-> Chicago evidence remain hard gates.
+> solver, explicit-DNF release compiler, certified score relaxation,
+> matching-level conformal safety layer, bounded capacity profile, and partial
+> external relation-truth audit are implemented. Current City documentation
+> supports the high-level suppression rule, but implementation validation, a
+> run-closed full-day schedule, the full UCI scan, and complete Chicago evidence
+> remain hard gates.
 
 ## Method target
 
@@ -83,6 +84,13 @@ For a rational granularity \(\eta\), the optional outward relaxation certifies
 It controls score slack, not query error, and is not described as a query
 FPTAS.
 
+`release_operator_compiler.py` accepts provenance-bearing explicit DNF clauses
+over LOW/HIGH count-factor outcomes. It creates one compiled label per
+substantive-label/clause pair, lifts every pair-dependent map, audits event and
+factor lifecycles, and restores the selected clause from a projected solver
+witness. Projection is exact, but the compiler is polynomial only in the
+explicit DNF and lifted output; it does not validate the cited external rule.
+
 ## Current controlled benchmark
 
 The deterministic benchmark separates source, calibration, and held-out test
@@ -106,6 +114,19 @@ single-seed, six-pair synthetic implementation results. They are not Chicago
 estimates, a weak-supervision validation, a coupled-attribute benchmark, or
 evidence that exchangeability holds in another domain.
 
+## External relation-truth boundary
+
+The executed UCI Krebsregister block-1 audit contains 574,913 candidate pairs
+and 2,093 adjudicated positives. Its truth is not a matching: 152 records have
+positive degree above one. A disclosed truth-conditioned dyad reduction keeps
+1,796 dyads and 741 alternatives; the numerical postal-agreement frontier is
+`[0.918151, 0.954900]`, with truth at the upper endpoint. FEBRL4 supplies a
+separate external synthetic one-to-one check: a six-pair exhaustive market and
+a 20-pair numerical market both cover truth. UCI does not validate blocking
+recall, and FEBRL4 does not validate realism. The component splits are not iid
+markets, and neither benchmark calibrates the conformal restriction; the
+all-ten-block UCI scan remains open.
+
 ## Chicago claim boundary
 
 For a boundary-complete, internally consistent cohort with
@@ -118,6 +139,14 @@ ties, platform opportunity, or an echo chamber.
 The committed prefix sample is useful only for schema and pipeline checks. Its
 identifier sampling omits almost every hidden counterpart, so no Chicago
 matching, composition, or policy estimate is computed from it.
+
+The current dataset metadata links the live release to the City's
+at-most-two-trip, 15-minute tract-cell threshold with paired endpoint
+coarsening. This licenses the one-way implication from visible fine geography
+to HIGH applicable endpoint cells. It does not license inferring LOW from a
+blank tract, because source missingness and outside-city locations are also
+documented. The City can append late provider reports, so a complete slice is
+complete only for its pinned public revision until a later stabilization check.
 
 ## Repository map
 
@@ -134,6 +163,8 @@ matching, composition, or policy estimate is computed from it.
   calibration.
 - `code/ai_pilot/bounds/path_frontier_dp.py` — exact sparse temporal frontier,
   witness replay, and certified outward score relaxation.
+- `code/ai_pilot/bounds/release_operator_compiler.py` — explicit-DNF release
+  compilation, lifecycle audit, and exact witness projection/restoration.
 - `code/ai_pilot/benchmarks/conformal_set_benchmark.py` — deterministic
   source/calibration/test benchmark.
 - `code/ai_pilot/benchmarks/exact_conformal_frontier.py` — exhaustive
@@ -142,6 +173,10 @@ matching, composition, or policy estimate is computed from it.
   numerical agreement audit.
 - `code/ai_pilot/benchmarks/path_frontier_benchmark.py` — locked 34-case
   structural, exhaustive, numerical, and relaxation benchmark.
+- `code/ai_pilot/benchmarks/runtime_profile/` — bounded operational profile
+  across record, degree, factor, label, score, and Gamma axes.
+- `code/ai_pilot/external_benchmarks/` — UCI real-topology audit and FEBRL4
+  external synthetic method-fit test; no raw external data are committed.
 - `code/ai_pilot/integration/` — earlier weak-node-score pilot, retained as
   failure analysis rather than headline evidence.
 - `SUBMISSION_CHECKLIST.md` — KDD Research format and scientific gates.
@@ -156,10 +191,14 @@ python -m pip install -r code/ai_pilot/requirements.txt
 
 python adversarial_review/counterexamples.py
 python -m unittest discover -s code/ai_pilot/bounds/tests -v
+python -m unittest discover -s code/ai_pilot/data_pipeline/tests -v
+python -m unittest discover -s code/ai_pilot/external_benchmarks/tests -v
 python code/ai_pilot/benchmarks/conformal_set_benchmark.py
 python code/ai_pilot/benchmarks/exact_conformal_frontier.py
 python code/ai_pilot/benchmarks/joint_solver_audit.py
 python code/ai_pilot/benchmarks/path_frontier_benchmark.py
+python code/ai_pilot/benchmarks/runtime_profile/temporal_frontier_profile.py \
+  --suite quick --case-timeout-seconds 3 --max-frontier-records 200000
 MPLCONFIGDIR=tmp/matplotlib \
   python code/ai_pilot/benchmarks/plot_conformal_tradeoff.py
 ```

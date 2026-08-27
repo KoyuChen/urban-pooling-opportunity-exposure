@@ -6,9 +6,9 @@
 
 **KDD Research development: CONDITIONAL GO.** The post-audit working draft now
 contains a nontrivial reference algorithm, a weak-hardness boundary, and a
-certified score relaxation beyond the elementary missing-bin/global-OLS
-repairs. KDD Research is therefore the primary target if production compilation,
-external relation truth, and multi-scale validation pass. KDD AI for Sciences
+certified score relaxation, plus an audited DNF compiler and partial external
+boundary evidence. KDD Research is therefore the primary target if run-closed
+production compilation, the full external scan, and multi-scale validation pass. KDD AI for Sciences
 remains a no-go without a completed domain-science finding. *Data Science for
 Transportation* is the fallback if the method does not generalize but a
 complete, material Chicago measurement result survives.
@@ -17,7 +17,7 @@ complete, material Chicago measurement result survives.
 
 | Venue | Current fit | Why | Audit team's minimum credible gate—not an official venue rule |
 |---|---|---|---|
-| KDD Research | **Conditional primary target** | The current increment is a release-compiled exact temporal frontier with witnesses, a pathwidth-two weak-hardness boundary, and certified outward score containment; conformal prediction is correctly treated as prior safety machinery | Production observation-operator compiler; complete-day width/runtime evidence; external or retained relation truth; size/sparsity/operator sweeps; generic MILP and linkage/query baselines; one non-Chicago benchmark. See the [official Research CFP](https://kdd2027.kdd.org/research-track-call-for-papers/). |
+| KDD Research | **Conditional primary target** | The current increment is a release-coupled exact temporal frontier with witnesses, a pathwidth-two weak-hardness boundary, certified outward score containment, and an executable DNF compiler; conformal prediction is prior safety machinery | Run-closed complete-day width/runtime evidence; all-ten-block UCI audit; size/sparsity/operator sweeps; generic MILP and linkage/query baselines; Chicago implementation validation. See the [official Research CFP](https://kdd2027.kdd.org/research-track-call-for-papers/). |
 | KDD AI for Sciences | **No-go** | No completed urban-science discovery, no independently validated essential AI contribution, and no complete real-data result | Domain-science advancement enabled by AI, rigorous comprehensive validation, and domain-expert collaboration. The [official AI4Sciences CFP](https://kdd2027.kdd.org/ai4sciences-track-call-for-papers/) explicitly directs methodology papers toward Research. |
 | Data Science for Transportation | **Conditional fallback** | The journal's stated scope includes transportation methodological advances, high-quality applications, and privacy questions; it becomes the better fit if the contribution is a complete Chicago measurement result rather than a general algorithm | Complete all-trip and chain-complete data; mechanism-conditional contextual bounds; exact small-instance or numerically qualified production endpoints; comparison with complete cases, community aggregation, independent-label bounds, single imputation, and Sebti–Chen; reproducible workflow; material transport/equity finding. See [aims and scope](https://link.springer.com/journal/42421/aims-and-scope). |
 | Transportation Research Part C | **Conditional fallback** | The coupled formulation and reference algorithm now exist; fit still depends on transport-specific production evidence and material implications | Verified release operator; production-scale certificates; proxy-grouping baseline; full Chicago result. See the [official journal page](https://www.sciencedirect.com/journal/transportation-research-part-c-emerging-technologies). |
@@ -27,18 +27,20 @@ complete, material Chicago measurement result survives.
 
 ## Why the current paper cannot yet be submitted honestly
 
-1. The reference implementation accepts a compiled temporal order, but the
-   high-level compiler from a verified public observation operator is absent.
-2. No complete-day instance reports live width, active-factor width, frontier
+1. The explicit-DNF LOW/HIGH release compiler is complete, but no City-specific null-cause and
+   applicability adapter has been validated against production rows.
+2. No run-closed complete-day instance reports live width, active-factor width, frontier
    size, memory, runtime, or fallback behavior.
-3. No external or retained-truth benchmark validates candidate eligibility or
-   score calibration outside the synthetic generator.
+3. UCI block 1 validates real relation topology and FEBRL4 validates synthetic
+   matching mechanics, but the full UCI scan, blocking recall, and external
+   score calibration remain absent.
 4. The controlled benchmark is one seed and one market size with direct edge
    supervision; it is not evidence for node weak supervision or Chicago.
 5. Candidate-omission sensitivity is a declared Gamma budget, not an empirical
    coverage estimate.
-6. The current Chicago suppression operator is unverified, the prefix sample
-   omits nearly every counterpart, and no scientific endpoint has been run.
+6. The high-level Chicago rule is currently documented, but transformation
+   implementation/null causes are unvalidated, the prefix sample omits nearly
+   every counterpart, and no scientific endpoint has been run.
 7. The Chicago policy downloader, estimand, and causal design remain invalid
    for an ITT claim and are correctly excluded from the method paper.
 
@@ -53,7 +55,8 @@ complete, material Chicago measurement result survives.
 
 ### Gate B: observation and candidate support
 
-- Verify the current 2025/2026 suppression and legal tax operators.
+- Validate the current suppression implementation/null causes and legal tax
+  operator; pin and later recheck the public release snapshot.
 - Download all trips for suppression/policy cells and boundary-buffered matched
   rows for linkage.
 - Build a necessary-condition coverage graph; treat spatial screens/caps as
@@ -106,9 +109,9 @@ complete, material Chicago measurement result survives.
 
 ## Recommended path
 
-Prioritize the KDD Research method route: implement the audited operator-to-order
-compiler, measure the temporal frontier on complete days, add a non-Chicago
-relation-truth benchmark, and compare against generic MILP and uncertain-linkage
-baselines. Keep Chicago as the gated flagship application. If those generality
+Prioritize the KDD Research method route: adapt the audited compiler to the
+verified City applicability states, measure the temporal frontier on run-closed
+complete snapshots, finish the full UCI audit, and compare against generic MILP
+and uncertain-linkage baselines. Keep Chicago as the gated flagship application. If those generality
 gates fail but the complete Chicago analysis is scientifically material, pivot
 to *Data Science for Transportation* without retaining broad algorithm claims.

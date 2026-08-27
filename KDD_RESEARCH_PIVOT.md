@@ -122,6 +122,20 @@ hidden inside one claimed confidence level.
   threshold-release operator, audited with the endpoint-independent and
   metric-compatibility limitations stated. The theorem is not asserted to be
   the current Chicago operator.
+- A provenance-bearing explicit-DNF release compiler with exact projection,
+  score/query/compatibility lifting, factor-lifecycle audit, support-expansion
+  accounting, and restored clause witnesses. It validates declared semantics,
+  not the external truth of an operator citation.
+- A bounded 23-case operational profile across record count, candidate degree,
+  factor overlap, solver label support (standing in for compiled support), score
+  floor, and Gamma. It reports one
+  timeout rather than converting it to infeasibility and makes no production
+  speed claim.
+- An executed UCI Krebsregister block-1 topology audit and a paired FEBRL4
+  method-fit benchmark. UCI's real adjudicated relation is not a matching; the
+  matching reduction is explicitly truth-conditioned. The full ten-block scan
+  remains open, and neither test establishes UCI blocking recall, exchangeable
+  calibration markets, or Chicago transfer.
 - A deterministic three-way source/calibration/test benchmark with directly
   edge-supervised target-free and deliberately query-leaking scorers under a
   homophily shift.
@@ -167,12 +181,12 @@ matching-set calibration implementation on one synthetic design.
 
 | Work package | Deliverable | KDD gate |
 |---|---|---|
-| Observation operator | Version-specific 2025/2026 documentation, all rows contributing to privacy cells, boundary-safe extraction | No Chicago aggregate claim before verification |
+| Observation operator | Current-linked documentation now pins the high-level rule; implementation, null cause, all contributing rows, and boundary-safe extraction remain | No Chicago aggregate claim before implementation validation |
 | Coupled method | Joint matching--attribute feasible-world solver; independent-support reduction; correctness proof | Must exceed an application-specific MILP description |
-| Complexity and algorithm | Exact temporal frontier, weak-hardness boundary, and score-slack relaxation implemented; production compiler/order and full-day width profile remain | Required before a production scalability claim |
+| Complexity and algorithm | Exact frontier, weak-hardness boundary, score relaxation, and explicit-DNF LOW/HIGH release compiler implemented; full-day order/profile remain | Required before a production scalability claim |
 | Learning | Matching-level calibration on independent markets with observed relation truth | Required for any calibrated AI-sharpening claim |
 | Candidate support | Necessary-condition supergraph, omitted-edge stress tests, and calibrated or externally audited support | Raw endpoints remain graph-conditional otherwise |
-| Benchmarks | Untouched controlled family plus at least one non-Chicago relational benchmark with hidden ground truth | Required for generality |
+| Benchmarks | Controlled family, real UCI block-1 topology boundary, and FEBRL4 method-fit audit complete; all-ten-block UCI result remains | Required for generality |
 | Chicago | Full-day, boundary-complete (K=2) cohort; all-trip privacy cells; production certificates | Required as flagship evidence, not as a substitute for method validation |
 | Baselines | Point matching, complete cases, independent supports, single imputation, linkage-range queries, DBSCAN proxy grouping, score-free coupled bounds | Required for empirical credibility |
 

@@ -1,0 +1,2 @@
+# External benchmark loader; the core repository supplies numpy/pandas/scipy.
+recordlinkage==0.16

@@ -9,7 +9,7 @@ submission.
 - [x] Full paper in English.
 - [x] ACM `acmart` review layout.
 - [x] Double-blind source uses
-  `\documentclass[sigconf,anonymous,review]{acmart}`.
+  `\documentclass[sigconf,anonymous,review,balance=false]{acmart}`.
 - [x] Author names, affiliations, acknowledgments, repository URLs, and other
   direct identifiers removed from the review PDF.
 - [x] Main content occupies pages 1--8; references begin on page 9 and the
@@ -32,19 +32,26 @@ submission.
   audited NP-completeness proof, with operator and compatibility limits stated.
 - [x] Exact temporal-frontier algorithm goes beyond the reference MILP on
   declared bounded-frontier instances and returns replayable witnesses.
-- [ ] Production compiler, full-day temporal order, and measured width/resource
-  profile establish scalability beyond the locked synthetic families.
-- [ ] At least one non-Chicago benchmark with independently observed relation
-  truth is included.
+- [x] Explicit-DNF LOW/HIGH release compiler returns exact projected/restored
+  witnesses and independently audited lifecycle metadata.
+- [x] Bounded synthetic capacity profile reports width, factors, frontier,
+  runtime, memory, and unresolved cases across six structural axes.
+- [ ] Run-closed full-day temporal order and measured resource profile establish
+  production scalability.
+- [x] UCI block 1 supplies real adjudicated relation topology; FEBRL4 supplies
+  an external synthetic one-to-one method-fit test.
+- [ ] Full ten-block UCI scan completes the predeclared external-data contract.
 
 ## Method correctness gates
 
-- [ ] Current 2025/2026 privacy operator is verified from version-specific
-  official documentation.
+- [x] Current base-release metadata and linked City privacy note document the
+  at-most-two-trip threshold and paired endpoint coarsening.
+- [ ] Transformation implementation, null causes, contributing partitions,
+  tract vintage, DST handling, and late-row recomputation are validated.
 - [ ] Core/buffer/context-only population is boundary complete.
 - [x] Joint matching--label reference solver enforces supplied global count
-  bounds and attribute-conditioned compatibility. (The current Chicago
-  operator is still unverified and is not compiled.)
+  bounds and attribute-conditioned compatibility; the DNF compiler consumes
+  documented one-way implications without treating blank tracts as LOW.
 - [x] Independent-support degeneration agrees with weighted matching on exact
   declared-input tests.
 - [x] Exact small-instance oracle agrees with the numerical reference solver
@@ -73,8 +80,10 @@ submission.
   score encoding, Gamma, and graph scale with exact references.
 - [ ] Application-facing benchmark additionally varies verified suppression
   rules, boundary edges, candidate omissions, and operator misspecification.
-- [ ] Ground-truth relational benchmark reports true-world retention, query
-  coverage, width, runtime, gaps, and certificate status.
+- [x] Executed external audit reports relation topology, eligibility boundary,
+  query truth, width, runtime, hashes, leakage controls, and exact/numerical
+  status for UCI block 1 and FEBRL4.
+- [ ] Full-corpus UCI benchmark and a natural market sampling unit remain.
 - [ ] Baselines include maximum-score point matching, complete cases,
   independent supports, single imputation, linkage-range queries, DBSCAN proxy
   grouping, and score-free coupled endpoints.

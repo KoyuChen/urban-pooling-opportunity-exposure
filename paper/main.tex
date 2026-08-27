@@ -1,4 +1,4 @@
-\documentclass[sigconf,anonymous,review]{acmart}
+\documentclass[sigconf,anonymous,review,balance=false]{acmart}
 
 \AtBeginDocument{\providecommand\BibTeX{{Bib\TeX}}}
 \setcopyright{none}
@@ -55,8 +55,10 @@ locked benchmark matches every applicable exhaustive or analytic reference,
 exposes order-dependent width, and shows the pseudo-polynomial score
 frontier; it makes no production-speed claim.
 Chicago ride pooling is a gated flagship application: realized co-presence is
-released, while partner identity and fine geography are hidden. Complete-day
-estimates remain conditional on verification of the current release operator.
+released, while partner identity and fine geography are hidden. Current City
+documentation supports a threshold-and-paired-end coarsening rule, but
+complete-day estimates remain conditional on run closure, implementation
+validation, and release-snapshot stability.
 \end{abstract}
 
 \ccsdesc[500]{Computing methodologies~Machine learning}
@@ -108,18 +110,22 @@ application bounds neighborhood-context composition among those customer
 transactions. It does not infer rider socioeconomic status, preferences,
 durable ties, or all shared runs.
 
-This working version makes three completed contributions. First, it defines
+This working version reports three completed results and artifacts. First, it defines
 joint feasible-world query semantics and identifies the exact collapse to
 weighted matching. Second, it develops and implements a score-aware temporal
 frontier algorithm for core--buffer matching, compiled labels, active release
 counts, and a global budget for omitted candidate edges; it proves endpoint and
 witness recovery, the pseudo-polynomial score boundary, and a certified
-outward score relaxation. Third, it supplies independent exhaustive checks and
-a locked structural benchmark separating record width, active-cell width, and
-score-resource growth. Matching-level conformal calibration is an
-adopted safety layer, not a novelty claim. A verified production compiler, a
-second relation-truth benchmark, and a complete Chicago run remain explicit
-KDD submission gates.
+outward score relaxation. A provenance-bearing compiler maps explicit DNF
+release implications to replayable states without changing their projected
+world set. Third, we supply independently implemented exhaustive checks, a bounded capacity
+profile, and external real/synthetic relation-truth stress tests. The real
+relation is deliberately reported as nonmatching rather than forced into the
+model. Explicit-DNF label duplication and the vertex-separation identity are
+audit and implementation devices, not knowledge-compilation novelties.
+Matching-level conformal calibration is an adopted safety layer, not a novelty
+claim. The full external corpus, a boundary-complete Chicago run, and
+production-scale schedules remain explicit KDD submission gates.
 
 \begin{figure*}[t]
 \centering
@@ -178,9 +184,11 @@ operator supplies rational count bounds
  \label{eq:counts}
 \end{equation}
 More specific threshold or paired-suppression logic can be compiled into the
-same feasible-world representation only after its scope and direction have
-been verified for the target release. We do not infer a converse suppression
-rule from missingness alone.
+same feasible-world representation from explicit LOW/HIGH release formulas.
+The compiler requires an operator identifier, an audit reference, and exact
+row-to-factor bindings; these are provenance inputs, not proof that the
+external mechanism is correct. We do not infer a converse suppression rule
+from missingness alone.
 
 \paragraph{Feasible worlds and queries.}
 A feasible world $F=(M,a)$ satisfies Eqs.~\eqref{eq:corebuffer}--\eqref{eq:counts},
@@ -346,38 +354,56 @@ endpoint-wise independent suppression and does not establish hardness for a
 metric-only edge rule. These boundaries must be checked, not blurred, in any
 application.
 
-\paragraph{Compiling threshold observations.}
+\paragraph{Compiling release formulas.}
 For a scalar release factor $f$, let
-$N_f(a)=\sum_i\chi_{if}(a_i)$ with $\chi_{if}\in\{0,1\}$.  Its temporal
+$N_f(a)=\sum_i\chi_{if}(a_i)$ with $\chi_{if}\in\{0,1\}$. Its temporal
 automaton stores a capped count $q_f$ and a requirement
-$\rho_f\in\{\varnothing,\mathsf{LOW},\mathsf{HIGH}\}$.  For a pure threshold
+$\rho_f\in\{\varnothing,\mathsf{LOW},\mathsf{HIGH}\}$. For a pure threshold
 $k$, $q_f=\min\{k,N_f^{\rm processed}\}$; closing the factor accepts
 $\mathsf{LOW}$ iff $q_f<k$ and $\mathsf{HIGH}$ iff $q_f=k$. Opposing nonempty
-requirements conflict. General lower/upper count constraints use the smallest
-cap retaining every decision boundary, including a distinct overflow state
-for a binding upper bound.
+requirements conflict. General lower/upper bounds use the smallest cap that
+retains every decision boundary, including a distinct overflow state for a
+binding upper bound.
 
-Under the abstract paired operator above, a visible row emits
-$\mathsf{HIGH}$ to both endpoint factors. A hidden row branches between a
-pickup-$\mathsf{LOW}$ and a drop-off-$\mathsf{LOW}$ witness. These branches are
-represented as duplicated compiled labels.
+For row $i$, substantive label $a$, and terminal factor predicates $T_f$, the
+implemented interface accepts an explicit DNF
+\begin{equation}
+ \Phi_i(a)=\bigvee_{j=1}^{c_i(a)}
+ \bigwedge_{(f,r)\in C_{iaj}}[T_f(N_f)=r],
+ \quad r\in\{\mathsf{LOW},\mathsf{HIGH}\}.
+ \label{eq:release-dnf}
+\end{equation}
+It replaces $a$ by one compiled copy $(a,j)$ per clause, copies all edge score,
+query, and compatibility maps, and emits the clause literals as factor
+requirements. The sole empty clause is canonical TRUE. Under the abstract
+paired operator, visible is one HIGH--HIGH clause and hidden is the two-clause
+LOW--or--LOW formula.
 
-\begin{lemma}[Threshold compiler]
+\begin{lemma}[Explicit-DNF release compiler]
 \label{lem:capped}
-Projecting accepting compiled paths onto substantive labels and matchings gives
-exactly the worlds satisfying the paired operator. Counts capped at the last
-decision boundary preserve feasibility and every label- and edge-additive
-query.
+The projection of feasible compiled worlds is exactly the release-augmented
+world set satisfying Eq.~\eqref{eq:release-dnf}. A projected world has one
+preimage for each combination of its satisfied clauses. Compilation preserves
+the node/edge topology, the record-bag width for the same forget order,
+score-floor feasibility, and every label- and edge-additive query; it changes label support from
+$|\mathcal A_i|$ to $\sum_{a\in\mathcal A_i}c_i(a)$ and may extend factor
+lifetimes and thereby increase active-factor width. Counts capped at their last
+decision boundary remain exact.
 \end{lemma}
 
 \begin{proof}
-In any feasible original world, each visible row has two high cells and each
-hidden row has at least one low cell; choosing one low endpoint supplies an
-accepting compiler witness. Conversely, an accepting path enforces those same
-conditions. A two-low row may have two witnesses, but projection removes the
-duplicate without changing extrema. Counts on the same side of their last
-decision boundary have identical future transitions, so saturation is exact.
+For completeness, choose one satisfied clause for every row and attach its
+index to the substantive label. For soundness, read the clause embedded in
+each compiled label; accepting factor automata satisfy every emitted literal.
+The lifted maps copy feasibility, score, and query values across clause
+witnesses, so projection preserves endpoints. Compilation changes no record,
+edge, or action identifier. Counts on the same side of their final decision
+boundary have identical future transitions, so saturation is lossless.
 \end{proof}
+
+The compiler is polynomial in the \emph{explicit} DNF and lifted output, not a
+succinct arbitrary Boolean formula; exponential expansion and LOW/HIGH middle
+regions are exposed interface limits.
 
 \paragraph{Temporal frontier.}
 A supplied forget order is compiled into node-introduction, edge-processing,
@@ -385,8 +411,9 @@ and node-forget actions. Every edge is processed while both endpoints are
 live; a record is forgotten only after all incident edges; and factor $f$ is
 implicitly opened before its first possible contributor or requirer and closed
 immediately after its last. Let $w$ be the maximum live-record count, $d$ the
-largest \emph{compiled} label support (including release-witness copies), and
-$\mathcal A_t$ the active factor set at action $t$. Factor $f$ retains counts
+largest \emph{compiled} label support (including release-witness copies),
+$B_t$ the live record bag, and $\mathcal A_t$ the active factor set at action
+$t$. Factor $f$ retains counts
 $0,\ldots,K_f$.
 
 For allowed label-pair scores $s_e(u,v)$, set
@@ -406,14 +433,17 @@ when the declared world set is empty; otherwise it returns both attained query
 endpoints and witness worlds, provided the declared frontier-record limit is
 not exceeded. Exceeding that operational limit raises an explicit frontier-limit
 exception and licenses no feasibility conclusion. Before dominance pruning, the number of
-live keys at any action is at most
+live keys at action $t$ are at most
 \begin{equation}
- (2d)^w(\Gamma+1)(b+1)
- \max_t\prod_{f\in\mathcal A_t}3(K_f+1).
- \label{eq:statebound}
+ \left(\prod_{i\in B_t}m_i d'_i\right)(\Gamma+1)(b+1)
+ \prod_{f\in\mathcal A_t}3(K_f+1),
+\label{eq:statebound}
 \end{equation}
-For a common pure threshold $k$ and at most $r$ active factors, the product is
-at most $[3(k+1)]^r$. Without a score floor the factor $(b+1)$ disappears.
+where $d'_i=\sum_{a\in\mathcal A_i}c_i(a)$, $m_i=2$ for matchable records and
+$m_i=1$ for context-only records. If $d'_i\le d$, $|B_t|\le w$, all active
+pure thresholds have cap $k$, and at most $r$ are active, this is at most
+$(2d)^w[3(k+1)]^r(\Gamma+1)(b+1)$. Without a score floor the factor $(b+1)$
+disappears.
 The work per transition is polynomial in the explicit state and input size.
 \end{theorem}
 
@@ -428,8 +458,21 @@ consulted again. Induction over actions therefore shows that the retained
 values are exactly the extrema among partial worlds inducing the key. Terminal
 paths have every core matched, every factor finalized, and score state $b$;
 they project onto precisely the feasible full worlds. Stored choices recover
-the two witnesses. Counting each coordinate gives Eq.~\eqref{eq:statebound}.
+the two witnesses. Counting each live label, matching bit, factor automaton,
+and global resource gives Eq.~\eqref{eq:statebound}.
 \end{proof}
+
+For a forget order $\pi=(v_1,\ldots,v_n)$, define the forward boundary
+$\partial^+_\pi(i)=\{v_j:j>i,\ \exists h\le i:\{v_h,v_j\}\in E\}$. The
+compiler's largest record bag is exactly
+$1+\max_i|\partial^+_\pi(i)|$, the reverse-order vertex-separation number plus
+one; minimizing over orders yields pathwidth \citep{kinnersley1992vertex}.
+Hence, if records are ordered by nondecreasing
+time and every candidate edge spans at most $\Delta$, then
+$w\le\max_t|\{i:t\le\tau_i\le t+\Delta\}|$. Active-factor width is likewise
+the maximum overlap of the compiler-audited factor lifecycle intervals. These
+are data-measurable certificates for a supplied order, not a claim that the
+order minimizes pathwidth.
 
 An exact algorithm polynomial in binary input length at fixed structural width
 would imply $P=NP$; our dynamic program pays a pseudo-polynomial score coordinate.
@@ -509,13 +552,15 @@ The separate temporal implementation accepts tuple-valued compiled labels,
 multiple label-dependent count contributions and release requirements, and
 label-pair-specific scores and queries. It constructs sparse active-factor
 coordinates from a supplied forget order, uses exact rational arithmetic, and
-independently replays each endpoint witness. The paired operator is executable
-through the duplicate-label representation in Lemma~\ref{lem:capped}, but no
-high-level compiler from a Chicago schema is claimed. The Python reference
-stores complete partial witnesses rather than memory-optimal predecessor
-pointers; Eq.~\eqref{eq:statebound} is its key-count bound, not a production
-runtime claim. General MILP remains the fallback when the measured temporal
-frontier is too wide.
+independently replays each endpoint witness. The high-level compiler implements
+Lemma~\ref{lem:capped}, records support expansion, validates node/edge/factor
+lifecycles, and restores the selected DNF clause from a projected witness. Its
+mandatory audit reference does not verify an external operator, and no
+Chicago-specific null-cause adapter is claimed. The Python reference stores
+complete partial witnesses rather than memory-optimal predecessor pointers;
+Eq.~\eqref{eq:statebound} is its key-count bound, not a production runtime
+claim. General MILP remains the fallback when the measured temporal frontier
+is too wide.
 
 \begin{table}[t]
 \caption{Algorithmic boundary of the declared world model.}
@@ -719,11 +764,29 @@ Score relaxation & $\eta=1/5$, $N=4$ & $[0,0]\subset[-5,0]$; deficit $2/5\le4/5$
 \end{tabularx}
 \end{table}
 
-The artifact has 72 passing unit tests and eight executable legacy
+The artifact has 96 passing unit tests and eight executable legacy
 counterexamples. The temporal suite includes 80 seeded brute-force instances;
 the relaxation suite adds random inclusion and witness checks. These results
 support software behavior for declared finite inputs, not candidate coverage,
 a production schedule, or the correctness of an external release operator.
+
+A bounded 23-case capacity profile varies all six state-bound axes. Twenty-two
+cases resolve under three seconds; the degree-five 14-record case remains an
+explicit timeout. Peak frontiers grow $64\to512$ with zero-to-three overlapping
+factors and $8\to1024$ with support one-to-four. These machine-specific
+diagnostics certify only the supplied heuristic orders, not production scale.
+
+\subsection{External Relation-Truth Boundary}
+
+UCI Krebsregister block 1 has 574,913 candidate pairs and 2,093 adjudicated
+links \citep{uci210}, but its truth is not a matching: 152 records have degree
+above one. We preserve that failure. A disclosed truth-conditioned reduction
+of 1,796 dyads gives a numerical postal-agreement frontier
+$[0.918151,0.954900]$, with truth at the upper endpoint. Complementary FEBRL4
+tests \citep{recordlinkage016} cover truth on a six-pair exhaustive and a
+20-pair numerical complete-matching market. These tests establish topology
+boundaries and method fit, not UCI blocking recall, exchangeability, calibrated
+learning, or Chicago transfer.
 
 \subsection{Matching-Set Calibration under Deliberate Query Leakage}
 
@@ -775,22 +838,6 @@ doubles every matching score and leaves normalized-regret sets unchanged.
   coverage level.}
 \end{table*}
 
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.88\textwidth]{figures/conformal_tradeoff.pdf}
-\caption{The illustrative tight radius occupies the upper-left region: large
-width reduction but poor retention or coverage. Market-level calibration moves
-both scorers across the nominal 90\% line, but most apparent precision
-disappears. Thin paths show the exact-enumeration radius grid from 0 to 1;
-arrows connect the radius-0.05 stress point to the calibrated radius for the
-same scorer.}
-\Description{Two scatter plots compare range-width reduction against true
-matching retention and downstream-query coverage. Tight uncalibrated points
-have high width reduction and low coverage; calibrated points have high
-coverage and low width reduction.}
-\label{fig:tradeoff}
-\end{figure*}
-
 \paragraph{Result.}
 The query-leaking radius-0.05 stress point looks strongest if evaluated only by
 width: it removes 95.8\% of the score-free ambiguity. It retains 18/120 true
@@ -813,41 +860,38 @@ coarsening, and candidate-omission sweeps remain required evidence.
 
 Chicago's public Transportation Network Provider table reports whether each
 customer transaction shared a vehicle with a separately booked customer and
-reports the pooled chain size \citep{chicagodata2026}. It does not publish the
-partner or shared-trip identifier. Conditional on boundary completeness and
-reporting consistency, matched $K=2$ transactions therefore induce a hidden
-nonbipartite perfect matching. The application target is the
-neighborhood-context composition of these realized two-transaction matches.
+reports the pooled run size \citep{chicagodata2026,chicagomanual2026}. The
+provider-side Shared Trip ID groups the empty-to-empty vehicle run but is absent
+from the public schema. Conditional on run closure and reporting consistency,
+records with match true and $K=2$ therefore induce a hidden nonbipartite
+transaction matching. This is neither a passenger count nor a claim that
+$K>2$ runs form co-presence cliques.
 
-\begin{table}[t]
-\caption{Chicago observation-operator contract in this working draft.}
-\label{tab:chicago-contract}
-\small
-\begin{tabularx}{\columnwidth}{@{}p{0.30\columnwidth}X@{}}
-\toprule
-Status & Object and licensed use \\
-\midrule
-Released & Transaction-level shared-match flag and reported chain size \\
-Latent & Which two eligible transactions are partners; suppressed fine context \\
-Unverified & Current threshold logic, contributing-cell population, boundary support \\
-Prefix sample & Schema and mechanics checks only \\
-Full extraction & Mechanism-conditional contextual-composition endpoints, if all gates pass \\
-Never licensed & Person-level SES, preferences, durable ties, or inferred row-level links \\
-\bottomrule
-\end{tabularx}
-\end{table}
+The current base dataset metadata points to the City's privacy methodology as
+the approach used in this release. That note lists the current dataset and
+documents an at-most-two-unique-trip threshold for 15-minute tract cells with
+paired coarsening of both endpoints \citep{chicagoprivacy2026}. A companion
+clarification describes separate pickup/start and drop-off/end cells
+\citep{chicagoclarification2026}. We therefore compile the safe one-way
+implication: a published fine tract rules out a low-count applicable internal
+cell at either endpoint. We do \emph{not} infer LOW from a blank tract; the City
+also lists missing source geography and outside-city locations. Every trip
+contributing to a relevant cell, not only the matched cohort, must enter the
+count factors. Documentary support is not an audit of the City's code,
+provider partitioning, DST handling, or late-row recomputation.
 
-The production analysis is not yet licensed. The committed data are a
-deterministic two-character trip-ID-prefix sample. Conditional on retaining one
-member of a two-record relation, that design omits the counterpart with
-probability approximately $255/256$ under independent prefix retention. It is
-suitable for schema checks, not partner reconstruction or endpoint bounds.
-Moreover, the accessible historical tract-suppression clarification is tied to
-legacy datasets; its unchanged operation in the 2025/2026 release has not been
-verified. We therefore do not encode the historical rule as current fact.
+The production analysis is still not licensed. The committed data are a
+deterministic two-character trip-ID-prefix sample, which omits a retained
+record's counterpart in approximately 255 out of 256 cases under
+independent prefix retention. Even an authorized-only complete day does not
+prove run closure: a partner can cross midnight or released flags can be
+inconsistent. The City may publish after generally 99\% or more expected data
+have arrived and later revise past periods \citep{chicagoupdates2026}; hence
+``complete day'' means complete only within a pinned snapshot and requires a
+later stabilization check.
 
 The complete application requires all transactions contributing to each
-privacy cell, boundary-buffered matched rows, a necessary-condition candidate
+privacy cell, run-closed boundary buffers, a necessary-condition candidate
 supergraph, the correct tract vintage, and full solver status by component.
 Primary comparisons will include complete cases, community-area aggregation,
 independent attribute envelopes, one point imputation, spatiotemporal proxy
@@ -891,8 +935,9 @@ and the score resource are controlled, while the outward relaxation remains
 honest when the exact score frontier is too large. Matching-level conformal
 calibration is a known safety layer that can expose false precision, not the
 algorithmic contribution. The remaining work is decisive: verify and compile
-the current operator, construct and measure a full-day temporal order, validate
-on another ground-truth relation, and run the Chicago application.
+the City implementation against complete snapshots, construct and measure a
+run-closed full-day temporal order, scan the full external corpus, and run the
+Chicago application.
 
 \clearpage
 \bibliographystyle{ACM-Reference-Format}
@@ -900,6 +945,20 @@ on another ground-truth relation, and run the Chicago application.
 
 \clearpage
 \appendix
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.78\textwidth]{figures/conformal_tradeoff.pdf}
+\caption{Exact radius frontiers show that the tight stress point has large
+width reduction but poor retention/coverage; calibration crosses the nominal
+90\% line while removing most apparent precision. Arrows connect radius 0.05
+to the calibrated radius.}
+\Description{Two scatter plots compare range-width reduction against true
+matching retention and downstream-query coverage. Tight uncalibrated points
+have high width reduction and low coverage; calibrated points have high
+coverage and low width reduction.}
+\label{fig:tradeoff}
+\end{figure*}
 
 \section{Reproducibility and Claim Status}
 
@@ -915,12 +974,14 @@ Current completed claims are limited to Propositions~\ref{prop:endpoints},
 \ref{prop:relax}, \ref{prop:nonidentification}, and \ref{prop:nested},
 Lemmas~\ref{lem:collapse} and \ref{lem:capped},
 Theorems~\ref{thm:hardness}, \ref{thm:temporal},
-\ref{thm:scorehard}, and \ref{thm:conformal}, 72 passing declared-input unit
+\ref{thm:scorehard}, and \ref{thm:conformal}, 96 passing declared-input unit
 tests, eight legacy counterexamples, the 34-case temporal benchmark, the
 seeded 250-instance MILP audit, and the controlled results in
-Table~\ref{tab:conformal}. A production observation-operator compiler, a
-full-day order and width profile, a non-Chicago relation benchmark, and
-complete-day Chicago estimates remain open gates.
+Table~\ref{tab:conformal}. The explicit-DNF LOW/HIGH release compiler, 23-case bounded
+capacity profile, UCI block-1 boundary audit, and FEBRL4 method-fit audit are
+also complete under their stated contracts. A Chicago null-cause adapter,
+run-closed full-day order, all-ten-block UCI scan, and complete-day Chicago
+estimates remain open gates.
 
 \section{Full Proof of Theorem~\ref{thm:hardness}}
 \label{app:hardness}
@@ -990,9 +1051,9 @@ all core degrees one, all factors closed, omission count at most $\Gamma$, and
 capped score $b$; conversely every feasible full world traces such a path.
 Backtracking yields the two endpoint witnesses.
 
-There are at most $(2d)^w$ live label/bit assignments,
-$3(K_f+1)$ automaton states for active factor $f$, $\Gamma+1$ omission states,
-and $b+1$ capped-score states. Their product gives
+For live record $i$, there are $m_id'_i$ label/bit assignments;
+active factor $f$ has at most $3(K_f+1)$ automaton states, alongside
+$\Gamma+1$ omission and $b+1$ capped-score states. Their product gives
 Eq.~\eqref{eq:statebound}; each explicit transition performs polynomial work.
 The reference implementation copies complete partial witnesses for auditability,
 whereas a predecessor-pointer implementation attains the usual rolling-state

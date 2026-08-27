@@ -56,13 +56,23 @@ and complete endpoint witnesses. It rejects buffer--buffer and context edges.
 The exhaustive backend returns exact declared-input certificates; HiGHS
 results remain numerical.
 
-The legacy City clarification couples pickup-time/tract and dropoff-time/tract
-bucket assignments and suppresses both endpoints when either bucket is small.
-The NP-hardness theorem in the working paper formalizes one such paired
-operator, but the current code does **not** compile that two-endpoint operator.
-A production analysis still needs multiple label/cell factors, all rows
-contributing to both margins, and confirmation that the historical rule
-governs the target release.
+`release_operator_compiler.py` is the provenance-bearing interface between a
+separately audited release mechanism and `path_frontier_dp.py`. It accepts
+explicit disjunctive-normal-form LOW/HIGH clauses, expands each substantive
+label by its accepting-clause witnesses, lifts pair compatibility/score/query
+maps, audits node/edge/factor lifecycles, and restores the selected clause from
+an endpoint witness. A sole empty clause is canonical TRUE. The compiler is
+polynomial in the explicit DNF and lifted output; it makes no succinct-circuit
+claim and does not verify the external meaning of an `audit_reference`.
+
+The current City base-release metadata links a threshold-and-paired-end
+coarsening description to the 2025-- release. Safely compiling that document
+means visible fine geography can require both applicable endpoint cells HIGH,
+whereas a blank tract must remain unconstrained unless an independent null
+cause is known. All trips contributing to the endpoint cells, including
+context-only rows, must enter the factors. A production Chicago adapter still
+needs null-cause supports, run closure, cell-partition and tract-vintage audits,
+and validation against a pinned release snapshot.
 
 ## Optimization
 

@@ -1,0 +1,9 @@
+# Locked environment for the hash-sensitive benchmark and GitHub method audit.
+# The looser requirements.txt remains the supported development environment.
+numpy==2.3.5
+pandas==2.2.3
+scipy==1.17.0
+scikit-learn==1.8.0
+matplotlib==3.10.8
+recordlinkage==0.16
+jellyfish==1.2.1

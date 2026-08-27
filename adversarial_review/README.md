@@ -15,9 +15,13 @@ missing Chicago evidence into a scientific result.
   algorithm with witness recovery, a pathwidth-two weak-hardness boundary, and
   a certified outward score relaxation for a declared release-coupled world
   model.
-- Unchanged blockers: no production observation-operator compiler, verified
-  current Chicago suppression mechanism, complete-day width/runtime profile,
-  or external relation-truth benchmark.
+- New completed evidence: explicit-DNF LOW/HIGH release compilation, current
+  documentary support for the high-level Chicago rule, a bounded 23-case
+  capacity profile, a real UCI block-1 topology audit, and a FEBRL4 method-fit
+  audit.
+- Remaining blockers: no City implementation/null-cause validation, run-closed
+  complete-day width/runtime profile, all-ten-block UCI result, candidate
+  coverage, or Chicago endpoint estimate.
 
 ## Required artifacts
 
@@ -47,21 +51,30 @@ missing Chicago evidence into a scientific result.
 - `../code/ai_pilot/bounds/path_frontier_dp.py` implements the exact temporal
   frontier and outward score certificate with exact rational arithmetic and
   replayed endpoint witnesses.
+- `../code/ai_pilot/bounds/release_operator_compiler.py` implements explicit
+  DNF LOW/HIGH compilation, support accounting, lifecycle audit, and exact
+  projected/restored witnesses.
 - `../code/ai_pilot/benchmarks/path_frontier_benchmark.py` runs the locked
   34-case structural benchmark and records hashes, oracle agreements, state
   growth, and the relaxation inclusion check.
 - `../code/ai_pilot/bounds/conformal_matching.py` now freezes the score range
   across Gamma sensitivities and uses the same declared rational scorer in
   calibration and the exact optimizer.
+- `../code/ai_pilot/benchmarks/runtime_profile/` records the bounded operational
+  profile without promoting timeout to infeasibility.
+- `../code/ai_pilot/external_benchmarks/` records UCI/FEBRL topology, leakage,
+  endpoint, hash, and exact-versus-numerical evidence without raw external rows.
 
 Run the local audit checks with:
 
 ```bash
 python adversarial_review/counterexamples.py
 python -m unittest discover -s code/ai_pilot/bounds/tests -v
+python -m unittest discover -s code/ai_pilot/data_pipeline/tests -v
+python -m unittest discover -s code/ai_pilot/external_benchmarks/tests -v
 ```
 
-The current suite contains 72 passing tests. Small-graph exhaustive solutions
+The current declared-input suites contain 96 passing tests. Small-graph exhaustive solutions
 are the exact audit oracle; SciPy/HiGHS results are treated as numerical.
 
 ## Decision
@@ -74,11 +87,10 @@ are the exact audit oracle; SciPy/HiGHS results are treated as numerical.
 - Fallback if only a complete and material Chicago measurement result survives:
   **Data Science for Transportation**.
 
-The currently accessible 2019 City clarification, associated with legacy
-dataset IDs, describes separate pickup-time/tract and dropoff-time/tract
-buckets, with paired tract removal when either bucket is small. It does not
-establish an OD-tract-pair threshold, and its unchanged application to the
-2025/2026 dataset has not been verified. Accordingly, Chicago
-mechanism-specific claims remain a research route rather than a completed
-claim; the abstract paired-threshold compiler in the method paper is explicitly
-not asserted to be the current City operator.
+The current base-release metadata links the live 2025-- dataset to the City's
+at-most-two-trip threshold and paired endpoint-coarsening note. The companion
+clarification describes separate pickup/start and dropoff/end cells, not an
+OD-pair threshold. This is documentary verification of the high-level rule,
+not transformation-code validation. Blank tracts cannot be inverted to LOW,
+late reports can revise periods, and the generic compiler's audit reference is
+provenance rather than external-semantic certification.

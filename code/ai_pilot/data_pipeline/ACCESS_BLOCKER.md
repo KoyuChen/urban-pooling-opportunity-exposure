@@ -1,6 +1,6 @@
 # Complete-day download status
 
-Status checked: 2026-08-25/26 in the provided execution environment.
+Status checked: 2026-08-25--27 in the provided execution environment.
 
 ## Result
 
@@ -38,11 +38,26 @@ reach the City API. It:
 - uses a conservative 5,000-row page size;
 - tries SODA3 first and automatically falls back to SODA2;
 - verifies each file against a fresh server-side `count(*)`;
+- fingerprints the Socrata row revision and ordered schema before and after
+  extraction, and fails if either changes during the pull;
 - writes files atomically and refuses incomplete downloads;
 - produces per-day CSVs, a combined gzipped CSV, `manifest.json`,
   `quality_summary.json`, and `QUALITY_REPORT.md`;
 - audits duplicate trip IDs, requested-day boundaries, authorization and match
   flags, `trips_pooled` inconsistencies, and OD-location missingness.
+
+An unchanged extraction is complete only within that pinned public revision.
+The City's current change notice says publication may occur after generally
+99% or more expected records have arrived and that late submissions can revise
+past periods. A later stabilization re-fetch is therefore a separate gate.
+
+The authorized-only files are capacity/data-quality pilots, not a run-closed
+matching cohort. Current public rows include documented field inconsistencies,
+a true run can cross midnight, and an authorized-only restriction is not a
+necessary outer condition for every published matched row. Production matching
+must define core records from literal match/run fields, retrieve boundary
+buffers under necessary interval-overlap rules, and report every excluded or
+inconsistent record.
 
 Run from the project root:
 

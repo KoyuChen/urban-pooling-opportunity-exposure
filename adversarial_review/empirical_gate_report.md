@@ -4,7 +4,7 @@
 
 - Chicago scientific and policy claims: **FAIL / not run**.
 - KDD method artifact at reference-instance scale: **CONDITIONAL PASS**.
-- Immediate submission: **FAIL** until production and external-truth gates pass.
+- Immediate submission: **FAIL** until production and full-corpus external gates pass.
 
 The frozen artifact is reproducible as a software pilot. It does not yet pass
 the gates needed for a Chicago structural estimate, an AI validation claim, or
@@ -81,7 +81,7 @@ values additionally have no invariant cross-score meaning.
 
 ## 2a. Post-audit repair verification
 
-The current bounds suite contains 72 passing deterministic tests. In addition
+The current declared-input suites contain 96 passing deterministic tests. In addition
 to the generic signed-endpoint, missing-support, FWL, numerical-status, and
 Gamma repairs, it now tests an exact temporal-frontier solver that jointly
 tracks core/buffer matching, compiled latent labels, active capped-count release
@@ -100,9 +100,22 @@ The controlled matching-set benchmark still uses direct edge truth in synthetic
 source/calibration markets. Its primary evaluator uses exact decimal-rational
 membership over all 10,395 perfect matchings per market; a separate
 reconstruction reproduces its 44 radius/scorer frontier rows and headline counts.
+The explicit-DNF LOW/HIGH release compiler additionally passes exact
+projection/restoration and lifecycle tests; an independent 1,000-instance
+randomized lifecycle-parity probe found no mismatch. A bounded 23-case capacity
+profile resolves 22 cases and retains one degree-five timeout as unresolved.
 These checks verify declared finite-instance behavior only. They do not
-establish a truth-containing Chicago graph, the current privacy operator, a
+establish a truth-containing Chicago graph, City implementation fidelity, a
 production temporal order, or transfer of synthetic calibration.
+
+The external audit executes two deliberately different roles. UCI
+Krebsregister block 1 is real adjudicated relation truth, but its 2,093
+positive edges are not a matching: 152 records have positive degree above one.
+A truth-conditioned dyad subset yields a numerical postal-agreement frontier
+`[0.918151, 0.954900]` containing truth at the upper endpoint. FEBRL4 supplies
+external synthetic one-to-one mechanics; six-pair exhaustive and 20-pair
+numerical score-free frontiers both contain truth. The full ten-block UCI scan,
+blocking recall, and natural exchangeable markets remain open.
 
 ## 3. Real-data evidence
 
@@ -124,25 +137,26 @@ be used to calibrate a candidate graph, reconstruct partners, estimate an
 endpoint range, or validate edge scores.
 
 No complete-day Chicago matching output, missing-context bound, production
-runtime, policy coefficient, or edge-truth dataset is present in the frozen
-evidence.
+runtime, or policy coefficient is present. External relation truth is now
+present only in the UCI block-1/FEBRL roles described above; it does not supply
+Chicago partner truth.
 
 ## 4. Gate matrix
 
 | Gate | Required evidence | Current status | Consequence |
 |---|---|---|---|
-| Field semantics | Target agrees with official definitions | **Fail** | Reframe from opportunity/service-chain compatibility to hidden partner identity within realized (Y=1,K=2) co-presence |
+| Field semantics | Target agrees with official definitions | **Pass in method draft** | Hidden object is partner identity within conditionally run-closed realized K=2 co-presence |
 | Chain-complete node population | Boundary-buffered rows contain both members of every included run | **Fail** | No valid exact-cover population yet |
 | Candidate outer support | Every true edge satisfies necessary public-data constraints | **Fail** | Current min/max is graph-conditional sensitivity only |
-| Candidate recall validation | Independent real or realistic pair truth | **Fail** | Synthetic recall 1.0 is generator-specific |
+| Candidate recall validation | Independent real or realistic pair truth | **Partial** | UCI supplies real topology but not blocking recall; FEBRL4 is synthetic |
 | Exact-cover solver correctness | Exhaustive agreement on small instances | **Pass** | Small-instance optimization logic is supported |
 | Endpoint terminology | Distinguish attained endpoints from exact attainable set | **Pass in current method draft** | Paper states attained endpoints and denies scalar interpolation |
-| Missing context | Exact-cover all target nodes before handling SES suppression | **Fail** | Complete-case results can be entirely falsely paired |
+| Missing context | Exact-cover all target nodes before handling suppression | **Method pass / Chicago fail** | Generic DNF/count coupling exists; production null causes and rows are absent |
 | Node score objective | Coherent likelihood or explicit composite loss | **Fail** | No edge-probability claim |
 | Score ambiguity radius | Invariant definition plus calibration | **Pass conditionally in method/code** | Fixed-reference matching regret is exact and nested; Chicago calibration markets are absent |
 | Independent score validation | Untouched markets and edge truth | **Fail** | AI can only be presented as optional sensitivity scoring |
 | Temporal algorithm correctness | Exact endpoints/witnesses and explicit complexity boundary | **Pass on declared small instances** | Reference implementation and weak-hardness boundary are supported |
-| Production computation | Complete-day compiler, runtime, memory, frontier size, and fallback policy | **Fail** | Scalability and real schedule width are untested |
+| Production computation | Complete-day compiler, runtime, memory, frontier size, and fallback policy | **Partial** | Generic compiler and bounded profile pass; real schedule width is untested |
 | All-trip policy denominator | Download contains all completed TNP trips | **Fail** | Current authorized-only downloader cannot estimate `/all` rates |
 | Policy treatment encoding | Pickup or drop-off, day-of-week schedule, correct zone transition | **Fail** | Current proposed treatment requires repair |
 | Global coefficient propagation | Optimize the actual signed linear contrast over one global matching | **Fail, theorem available** | Day/block endpoint regressions are invalid |
@@ -171,22 +185,24 @@ The following are necessary before any substantive empirical claim:
 
 ## 6. Empirical disposition
 
-- Exact temporal method artifact: **PASS on declared small instances**.
+- Exact temporal method artifact: **PASS on declared finite instances**.
+- Generic release compiler: **PASS for explicit DNF inputs; external semantics not certified**.
+- External validation: **PARTIAL PASS** (UCI block 1 boundary; FEBRL4 method fit; full UCI open).
 - Certified outward score relaxation: **PASS as a bicriteria certificate; not a query FPTAS**.
 - Software pilot: **PASS with documented counterexamples**.
 - Synthetic scientific validation: **FAIL**.
 - Chicago structural estimate: **FAIL / not run**.
 - AI sharpening claim for Chicago: **FAIL / uncalibrated**.
 - Policy effect: **FAIL / not run and current estimand invalid**.
-- KDD Research development: **CONDITIONAL GO**; production compilation,
-  external relation truth, multi-size validation, and Chicago operator
-  verification remain indispensable.
+- KDD Research development: **CONDITIONAL GO**; run-closed production
+  compilation, the full external scan, multi-size validation, and Chicago
+  implementation verification remain indispensable.
 
 ## Status
 
-The frozen numerical outputs and the post-audit exact temporal implementation
-have been independently reproduced and audited as described above. The new
-algorithmic result changes the venue-development decision but not the Chicago
-evidence decision. Data completeness, candidate coverage, real-market score
-calibration, current suppression-rule continuity, production scalability, and
-every Chicago scientific or policy gate remain unresolved.
+The frozen numerical outputs and post-audit method implementation have been
+independently reproduced and audited as described above. Current-linked City
+documentation now supports the high-level suppression rule, while snapshot
+stability, implementation/null-cause fidelity, candidate coverage,
+real-market calibration, production scalability, and every Chicago scientific
+or policy result remain unresolved.

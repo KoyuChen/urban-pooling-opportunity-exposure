@@ -24,8 +24,10 @@ problem; and a certified outward score relaxation. These results are not a
 claim that generic frontier dynamic programming, bounded-width CSP, budgeted
 matching, or matching-level conformal prediction is new. Their remaining
 increment is the particular compiled state, correctness invariant, witness
-recovery, and audited release-coupled endpoint interface. Production schedule
-construction and the current Chicago release operator remain unverified.
+recovery, and audited release-coupled endpoint interface. The explicit-DNF
+compiler and temporal-locality certificate are enabling components, not
+standalone novelty claims. Current documentation supports Chicago's high-level
+rule; implementation/null causes and production schedules remain unverified.
 
 ## Citation-grade comparison matrix
 
@@ -56,19 +58,25 @@ construction and the current Chicago release operator remain unverified.
 | EPTAS for budgeted matching | Doron-Arad, Kulik & Shachnai, [doi:10.4230/LIPIcs.ICALP.2023.49](https://doi.org/10.4230/LIPIcs.ICALP.2023.49) | An EPTAS for budgeted matching and budgeted matroid intersection | The outward rounding result here is a bicriteria feasible-set certificate with query containment, not a generic approximation scheme for budgeted matching | Do not call the relaxation a PTAS/FPTAS or claim approximation novelty |
 | Structured conformal prediction with matching outputs | Cauchois et al., [JMLR 2024](https://jmlr.org/papers/v25/23-0253.html) | Conformal predictive inference under weak supervision, including perfect-matching structured outputs and matching-oracle implementations | This paper freezes one reference score range across a candidate-omission sensitivity path and uses calibration only as a safety layer for a release-coupled world optimizer | Matching-level conformalization is prior art; the optimizer, not conformal prediction, is the candidate increment |
 | Bounded-width CSP and bucket elimination | Freuder, [AAAI 1990](https://cdn.aaai.org/AAAI/1990/AAAI90-001.pdf); Dechter, [doi:10.1016/S0004-3702(99)00059-4](https://doi.org/10.1016/S0004-3702(99)00059-4) | Exact inference by elimination with complexity exponential in compiled induced width | The temporal algorithm exposes a release-specific live state and a pseudo-polynomial score coordinate; generic bounded-width inference itself is not new | State and prove only the compiled temporal specialization and its audit boundary |
+| Vertex separation and pathwidth | Kinnersley, [doi:10.1016/0020-0190(92)90234-M](https://doi.org/10.1016/0020-0190(92)90234-M) | Vertex-separation number equals pathwidth | Chronological candidate-window density gives a data-measurable bound for this compiler's supplied order | Useful production certificate, not a new graph-width theorem |
+| Boolean/OBDD knowledge compilation | Amarilli et al., [doi:10.1007/s00224-019-09930-2](https://doi.org/10.1007/s00224-019-09930-2); Sinz, [doi:10.1007/11564751_73](https://doi.org/10.1007/11564751_73) | Width-sensitive circuit-to-OBDD compilation and compact sequential cardinality counters | A schedule-aligned release monitor could avoid some DNF expansions, but compact formulas can still have exponential residual width | Explicit-DNF compilation is an auditable interface, not a general knowledge-compilation novelty |
 | Rainbow matching on low-width graphs | Le & Pfender, [doi:10.1016/j.tcs.2013.12.013](https://doi.org/10.1016/j.tcs.2013.12.013) | Global color constraints can remain hard even on path-like underlying graphs | Confirms that width must be measured after release/resource factors are compiled, not on the raw candidate graph | Blocks any raw-candidate-pathwidth tractability claim |
 | Chicago shared-trip tax effects | Zheng et al., [doi:10.1016/j.tra.2023.103639](https://doi.org/10.1016/j.tra.2023.103639); Abkarian et al., [doi:10.1177/03611981221098665](https://doi.org/10.1177/03611981221098665) | Chicago tax natural experiments, shared-trip shares/counts, spatial effects | A possible difference is hidden partner composition and a 2026 policy change, conditional on independent verification of the operative law, dates, zones, and endpoint treatment | Another volume DDD is not novel |
 
 ## Operator correction
 
-The currently accessible [2019 City clarification](https://data.cityofchicago.org/stories/s/Census-Tract-Rules-for-Taxi-and-TNP-Datasets-7-29-/28mt-8asw/),
-associated on the page with legacy dataset IDs,
+The current base-release metadata points to the City's
+[privacy methodology](https://data.cityofchicago.org/stories/s/82d7-i4i2) as
+the approach used in `6dvr-xwnh`; it documents the current at-most-two-trip
+threshold and paired endpoint coarsening. The companion
+[City clarification](https://data.cityofchicago.org/stories/s/28mt-8asw),
+whose footer lists legacy dataset IDs,
 defines separate pickup `(rounded start time, pickup tract)` and drop-off
 `(rounded end time, drop-off tract)` buckets. Both tract fields are removed if
 either assigned endpoint bucket contains fewer than three trips. It does not
-define an OD-tract-pair threshold. The page explicitly associates the rule
-with legacy dataset IDs, so continuity into the 2025/2026 release must be
-verified before it enters the feasible-world definition.
+define an OD-tract-pair threshold. Together these are documentary support for
+the current high-level rule, not independent validation of the transformation
+code or a converse explanation for every blank tract.
 
 If verified for the target release, this paired-removal rule creates subtler
 coupling than a capacity-two OD label:
@@ -130,10 +138,11 @@ A defensible current methodological claim is:
 
 The reference implementation, exact small-instance oracle, weak-hardness
 construction, and outward-containment audit now support that algorithmic claim
-conditionally. They do not yet support a Chicago scientific claim or
-production-scale claim. Before submission, the project must still (i) compile
-the verified 2025/2026 privacy operator and a boundary-safe temporal order from
-real data, (ii) benchmark runtime and frontier size on complete days, (iii)
-measure true-edge eligibility on an external or retained-truth benchmark, and
-(iv) compare against generic MILP, independent-label envelopes, single
-imputation, and proxy grouping under the same declared world set.
+conditionally. The explicit-DNF LOW/HIGH release compiler, bounded capacity profile, UCI block-1
+boundary audit, and FEBRL4 method-fit test are now implemented. They do not yet
+support a Chicago scientific or production-scale claim. Before submission, the
+project must still (i) validate City implementation/null causes and construct a
+run-closed temporal order from real data, (ii) benchmark runtime/frontier size
+on complete snapshots, (iii) finish the all-ten-block UCI audit and candidate
+eligibility evidence, and (iv) compare against generic MILP, independent-label
+envelopes, single imputation, and proxy grouping under the same world set.

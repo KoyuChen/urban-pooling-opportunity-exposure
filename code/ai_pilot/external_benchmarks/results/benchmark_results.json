@@ -1,0 +1,304 @@
+{
+  "audit_date": "2026-08-27",
+  "environment": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "python": "3.12.13",
+    "recordlinkage": "0.16",
+    "scipy": "1.17.0"
+  },
+  "febrl4": {
+    "analyst_created_observation_operator": {
+      "description": "Soundex names, capped three-character length bins, suburb/address initials, and birth decade; raw names, addresses, postcode, state, date, social-security field, and source IDs are not model inputs",
+      "fields": [
+        "given_soundex",
+        "surname_soundex",
+        "given_length_bin",
+        "surname_length_bin",
+        "suburb_initial",
+        "address_initial",
+        "birth_decade"
+      ],
+      "name": "febrl4_coarsened_v1"
+    },
+    "claim_boundary": [
+      "FEBRL4 is synthetic and validates method fit, not real-world external validity.",
+      "Market membership is truth-conditioned and is not an iid sampling design.",
+      "The score-optimum restriction is an uncalibrated sensitivity analysis.",
+      "The score-free frontier is the primary benchmark result."
+    ],
+    "leakage_audit": {
+      "candidate_uses_truth": false,
+      "market_membership_uses_truth": true,
+      "public_side_ids_are_independently_permuted": true,
+      "query_uses_truth": false,
+      "score_uses_truth": false,
+      "soc_sec_id_released": false,
+      "source_ids_are_prohibited_from_public_inputs": true,
+      "truth_links_whose_source_ids_directly_encode_partner_number": 5000
+    },
+    "markets": [
+      {
+        "candidate_rule": "complete bipartite cross-product; no truth or feature filter",
+        "candidate_true_edge_eligibility": 1.0,
+        "complete_bipartite_candidate_edges": 36,
+        "exact_enumeration": {
+          "enumerated_matchings": 720,
+          "score_free_lower": 0.0,
+          "score_free_upper": 0.8333333333333334,
+          "score_optimal_lower": 0.8333333333333334,
+          "score_optimal_matching_count": 1,
+          "score_optimal_upper": 0.8333333333333334,
+          "score_optimum": 93
+        },
+        "market": "small_exact",
+        "pair_count": 6,
+        "point_max_score_matching": {
+          "query": 0.8333333333333334,
+          "score": 93,
+          "true_edge_recovery": 1.0
+        },
+        "public_nodes": 12,
+        "query_definition": "share of selected links whose released, nonmissing birth decades agree; unknown is defined as non-agreement",
+        "query_feature": "birth_decade",
+        "query_in_score": false,
+        "score_features": [
+          "given_soundex",
+          "surname_soundex",
+          "given_length_bin",
+          "surname_length_bin",
+          "suburb_initial",
+          "address_initial"
+        ],
+        "score_free_frontier": {
+          "covers_truth": true,
+          "lower": 0.0,
+          "solver_status": "NUMERICALLY_OPTIMAL",
+          "upper": 0.8333333333333334,
+          "width": 0.8333333333333334
+        },
+        "source_ids_in_public_inputs": false,
+        "truth": {
+          "query": 0.8333333333333334,
+          "score": 93,
+          "score_optimal": true
+        },
+        "truth_conditioned_construction": true,
+        "uncalibrated_score_optimum_sensitivity": {
+          "covers_truth": true,
+          "lower": 0.8333333333333334,
+          "solver_status": "NUMERICALLY_OPTIMAL",
+          "truth_score_eligible": true,
+          "upper": 0.8333333333333334,
+          "warning": "not a confidence set; score floor was not calibrated",
+          "width": 0.0
+        }
+      },
+      {
+        "candidate_rule": "complete bipartite cross-product; no truth or feature filter",
+        "candidate_true_edge_eligibility": 1.0,
+        "complete_bipartite_candidate_edges": 400,
+        "exact_enumeration": null,
+        "market": "medium_numerical",
+        "pair_count": 20,
+        "point_max_score_matching": {
+          "query": 0.8,
+          "score": 344,
+          "true_edge_recovery": 1.0
+        },
+        "public_nodes": 40,
+        "query_definition": "share of selected links whose released, nonmissing birth decades agree; unknown is defined as non-agreement",
+        "query_feature": "birth_decade",
+        "query_in_score": false,
+        "score_features": [
+          "given_soundex",
+          "surname_soundex",
+          "given_length_bin",
+          "surname_length_bin",
+          "suburb_initial",
+          "address_initial"
+        ],
+        "score_free_frontier": {
+          "covers_truth": true,
+          "lower": 0.0,
+          "solver_status": "NUMERICALLY_OPTIMAL",
+          "upper": 0.85,
+          "width": 0.85
+        },
+        "source_ids_in_public_inputs": false,
+        "truth": {
+          "query": 0.8,
+          "score": 344,
+          "score_optimal": true
+        },
+        "truth_conditioned_construction": true,
+        "uncalibrated_score_optimum_sensitivity": {
+          "covers_truth": true,
+          "lower": 0.8,
+          "solver_status": "NUMERICALLY_OPTIMAL",
+          "truth_score_eligible": true,
+          "upper": 0.8,
+          "warning": "not a confidence set; score floor was not calibrated",
+          "width": 0.0
+        }
+      }
+    ],
+    "markets_are_disjoint": true,
+    "role": "external synthetic complete-matching method-fit benchmark",
+    "source": {
+      "bundled_file_sha256": {
+        "dataset4a.csv": "07c7cb3f0a8d88180e80317f2a60499dee4e8324a44c38059f4e7fed0a8b4488",
+        "dataset4b.csv": "2eed76c99fa2237be3ec013a123427926d4158abcb3a8f65874d6c7f1358cf2c"
+      },
+      "dataset": "FEBRL4 bundled with Python Record Linkage Toolkit",
+      "network_used_by_benchmark": false,
+      "recordlinkage_version": "0.16"
+    },
+    "topology": {
+      "is_complete_one_to_one_bipartite_matching": true,
+      "left_records": 5000,
+      "maximum_left_truth_degree": 1,
+      "maximum_right_truth_degree": 1,
+      "right_records": 5000,
+      "true_links": 5000,
+      "unique_left_truth_nodes": 5000,
+      "unique_right_truth_nodes": 5000
+    }
+  },
+  "reproduction_command": "python code/ai_pilot/external_benchmarks/run_external_relation_truth_benchmark.py --uci-block-zip /secure/uci_rlcp/block_1.zip",
+  "runtime_seconds": {
+    "febrl4": 0.089658,
+    "total": 1.393265,
+    "uci": 1.303605
+  },
+  "schema": "external_relation_truth_benchmark_v1",
+  "seed": 260827,
+  "uci_krebsregister_block_1": {
+    "adjudicated_positive_relation": {
+      "candidate_true_edge_eligibility": 1.0,
+      "component_size_histogram": {
+        "2": 1800,
+        "3": 122,
+        "4": 13,
+        "5": 2
+      },
+      "connected_components": 1937,
+      "eligibility_scope": "tautological within the supplied blocked pair table; UCI does not reveal true pairs omitted by its six blocking passes",
+      "is_matching": false,
+      "largest_component_nodes": 5,
+      "maximum_positive_degree": 3,
+      "node_degree_histogram": {
+        "1": 3876,
+        "2": 146,
+        "3": 6
+      },
+      "nodes_with_degree_above_one": 152,
+      "positive_edges": 2093,
+      "positive_nodes": 4028
+    },
+    "candidate_graph": {
+      "component_size_histogram": {
+        "2": 277,
+        "3": 37,
+        "4": 7,
+        "5": 1,
+        "94060": 1
+      },
+      "connected_components": 323,
+      "duplicate_undirected_pairs": 0,
+      "largest_component_nodes": 94060,
+      "nodes": 94758,
+      "rows": 574913,
+      "self_pairs": 0,
+      "unique_undirected_pairs": 574913
+    },
+    "claim_boundary": [
+      "The full adjudicated positive relation is a group/entity relation, not a matching.",
+      "The dyad benchmark is truth-conditioned and cannot estimate the prevalence of dyads.",
+      "Eligibility is conditional on UCI's supplied blocked graph; blocking recall is unobserved.",
+      "Component splits prevent overlap but do not create natural exchangeable markets.",
+      "The task validates a matching-only edge-additive frontier, not latent node attributes or Chicago transfer."
+    ],
+    "coherent_aggregate_task": {
+      "candidate_domain": "all UCI-supplied candidate edges induced by the retained records",
+      "covers_adjudicated_truth": true,
+      "lower": 0.9181514476614699,
+      "normalizer_truth_dyads": 1796,
+      "numerically_optimal_not_exact_certificate": true,
+      "population": "adjudicated two-record positive components in block 1 whose true edge has an observed postal-code comparison",
+      "query": "share of selected links with exact postal-code agreement",
+      "score_restriction": null,
+      "solver_status": "NUMERICALLY_OPTIMAL",
+      "truth": 0.9548997772828508,
+      "truth_at_upper_endpoint": true,
+      "upper": 0.9548997772828508,
+      "width": 0.03674832962138086
+    },
+    "role": "real adjudicated relation-topology boundary test",
+    "source": {
+      "block": 1,
+      "cached_zip_bytes": 5643935,
+      "cached_zip_sha256": "a3d79e066fb08a066c89bb4034007434a16ea6fc883b9331216a0cb31de66548",
+      "dataset": "UCI Record Linkage Comparison Patterns",
+      "dataset_id": 210,
+      "doi": "10.24432/C51K6B",
+      "network_used_by_benchmark": false
+    },
+    "truth_conditioned_dyad_reduction": {
+      "ambiguous_components": 205,
+      "candidate_components": 1192,
+      "candidate_true_edge_eligibility": 1.0,
+      "component_disjoint_split": {
+        "calibration": {
+          "ambiguous_components": 27,
+          "components": 217,
+          "edges": 495,
+          "nodes": 686,
+          "truth_edges": 343
+        },
+        "source": {
+          "ambiguous_components": 131,
+          "components": 712,
+          "edges": 1543,
+          "nodes": 2176,
+          "truth_edges": 1088
+        },
+        "test": {
+          "ambiguous_components": 47,
+          "components": 263,
+          "edges": 499,
+          "nodes": 730,
+          "truth_edges": 365
+        }
+      },
+      "component_size_histogram": {
+        "10": 13,
+        "12": 9,
+        "14": 4,
+        "16": 2,
+        "162": 1,
+        "18": 1,
+        "2": 987,
+        "20": 2,
+        "22": 3,
+        "28": 2,
+        "30": 1,
+        "4": 127,
+        "40": 2,
+        "48": 2,
+        "6": 26,
+        "8": 10
+      },
+      "construction_uses_truth": true,
+      "dyads_dropped_for_missing_true_postal_comparison": 4,
+      "largest_component_nodes": 162,
+      "nodes_in_ambiguous_components": 1618,
+      "retained_candidate_edges": 2537,
+      "retained_negative_edges": 741,
+      "retained_nodes": 3592,
+      "retained_truth_dyads": 1796,
+      "split_warning": "no record/edge overlap, but components are not asserted to be iid markets",
+      "two_record_positive_components": 1800
+    }
+  }
+}

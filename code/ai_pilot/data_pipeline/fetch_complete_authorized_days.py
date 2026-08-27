@@ -11,7 +11,10 @@ The script uses only the Python standard library, verifies every local row
 count against a fresh server-side ``count(*)``, writes files atomically, and
 creates a machine-readable manifest plus a concise quality report.  No Socrata
 token is required for these narrow pulls, though ``SOCRATA_APP_TOKEN`` is used
-when present.
+when present.  Because the City may append late reports to already published
+periods, the script also fingerprints the dataset revision and schema before
+and after extraction.  A revision change during the pull is a hard failure;
+an unchanged pull is complete only within that pinned public snapshot.
 """
 
 from __future__ import annotations
@@ -149,6 +152,70 @@ def query_url(
 def fetch_json(url: str) -> Any:
     with open_url(url) as response:
         return json.load(response)
+
+
+def dataset_snapshot(metadata: Any) -> dict[str, Any]:
+    """Return the revision fields needed to reproduce one public snapshot.
+
+    Volatile portal counters are deliberately excluded.  ``rowsUpdatedAt``
+    pins row publication, ``viewLastModified`` pins metadata changes, and the
+    ordered column signature detects a schema drift even if the portal omits a
+    revision field.  The fingerprint is evidence about the public Socrata
+    view, not proof that every provider report for the period has arrived.
+    """
+
+    if not isinstance(metadata, dict):
+        raise ValueError("dataset metadata must be a JSON object")
+    if metadata.get("id") != DATASET_ID:
+        raise ValueError(
+            f"dataset metadata id must be {DATASET_ID!r}, got "
+            f"{metadata.get('id')!r}"
+        )
+    raw_columns = metadata.get("columns")
+    if not isinstance(raw_columns, list) or not raw_columns:
+        raise ValueError("dataset metadata must contain a nonempty columns list")
+    columns = []
+    for fallback_position, column in enumerate(raw_columns):
+        if not isinstance(column, dict):
+            raise ValueError("dataset column metadata must be JSON objects")
+        field_name = column.get("fieldName")
+        data_type = column.get("dataTypeName")
+        if not isinstance(field_name, str) or not field_name:
+            raise ValueError("dataset column metadata lacks fieldName")
+        if not isinstance(data_type, str) or not data_type:
+            raise ValueError("dataset column metadata lacks dataTypeName")
+        position = column.get("position", fallback_position)
+        if isinstance(position, bool) or not isinstance(position, int):
+            raise ValueError("dataset column position must be an integer")
+        columns.append(
+            {
+                "position": position,
+                "field_name": field_name,
+                "data_type": data_type,
+            }
+        )
+    columns.sort(key=lambda item: (item["position"], item["field_name"]))
+    core = {
+        "dataset_id": metadata["id"],
+        "dataset_name": metadata.get("name"),
+        "rows_updated_at": metadata.get("rowsUpdatedAt"),
+        "view_last_modified": metadata.get("viewLastModified"),
+        "publication_date": metadata.get("publicationDate"),
+        "column_schema": columns,
+    }
+    encoded = json.dumps(
+        core, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    return {
+        **core,
+        "revision_fingerprint_sha256": hashlib.sha256(encoded).hexdigest(),
+    }
+
+
+def snapshots_match(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    """Whether two extracted metadata snapshots describe the same revision."""
+
+    return left == right
 
 
 def scalar_query(
@@ -463,6 +530,12 @@ def render_quality_report(
     failures = quality["hard_check_failures"]
     hard_check_text = "PASS" if not failures else "FAIL: " + "; ".join(failures)
     combined = manifest["combined_file"]
+    snapshot = manifest["source_snapshot_after"]
+    snapshot_status = (
+        "stable during extraction"
+        if manifest["snapshot_stable_during_extraction"]
+        else "CHANGED during extraction"
+    )
     report = f"""# Chicago complete-day data quality report
 
 Generated: {manifest['created_at_utc']}
@@ -478,6 +551,13 @@ Tuesdays, one before and one after the 2026-01-06 policy change.
 server-side `count(*)`. The combined gzip file contains
 **{combined['rows']:,} rows**.
 
+The public Socrata view was **{snapshot_status}**. Its pinned revision
+fingerprint is `{snapshot['revision_fingerprint_sha256']}`
+(`rowsUpdatedAt={snapshot['rows_updated_at']}`,
+`viewLastModified={snapshot['view_last_modified']}`). This certifies a complete
+slice of that one public revision, not that every provider report had arrived
+or that the same historical rows will remain unchanged after a later release.
+
 | Date | Authorized rows | Matched rows | Matched / authorized | Complete OD centroids | Complete OD tracts | Matched but pooled <2/missing |
 |---|---:|---:|---:|---:|---:|---:|
 {chr(10).join(day_rows)}
@@ -485,8 +565,11 @@ server-side `count(*)`. The combined gzip file contains
 ## Modeling implications
 
 - These are complete authorized-trip day slices, not a trip-ID-prefix sample;
-  therefore another authorized component trip is not mechanically excluded by
-  sampling when candidate pairings are constructed.
+  therefore another authorized same-day component is not mechanically excluded
+  by identifier sampling. This does not establish run closure: a partner can
+  cross the day boundary or have inconsistent released authorization/run
+  fields, so these files are a capacity pilot rather than a production outer
+  candidate set.
 - Released start/end timestamps are rounded to 15-minute bins. Candidate edges
   must therefore rely jointly on time, origin/destination compatibility, route
   direction, and detour constraints rather than treating equal timestamps as a
@@ -545,6 +628,9 @@ def main() -> None:
     raw_dir.mkdir(parents=True, exist_ok=True)
     derived_dir.mkdir(parents=True, exist_ok=True)
 
+    metadata_url = f"{DOMAIN}/api/views/{DATASET_ID}"
+    snapshot_before = dataset_snapshot(fetch_json(metadata_url))
+
     day_manifests = []
     day_audits = []
     day_paths: list[tuple[str, Path]] = []
@@ -589,13 +675,26 @@ def main() -> None:
     if combined_rows != sum(entry["downloaded_rows"] for entry in day_manifests):
         hard_check_failures.append("combined-file row mismatch")
 
+    snapshot_after = dataset_snapshot(fetch_json(metadata_url))
+    snapshot_stable = snapshots_match(snapshot_before, snapshot_after)
+    if not snapshot_stable:
+        hard_check_failures.append("dataset revision changed during extraction")
+
     created_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     manifest = {
         "created_at_utc": created_at,
         "dataset_id": DATASET_ID,
         "dataset_name": DATASET_NAME,
         "source_endpoint": f"{DOMAIN}/api/v3/views/{DATASET_ID}/query.csv",
-        "metadata_url": f"{DOMAIN}/api/views/{DATASET_ID}",
+        "metadata_url": metadata_url,
+        "source_snapshot_before": snapshot_before,
+        "source_snapshot_after": snapshot_after,
+        "snapshot_stable_during_extraction": snapshot_stable,
+        "snapshot_completeness_definition": (
+            "Every selected row present in one pinned public Socrata revision; "
+            "provider-report completeness and later historical stability require "
+            "a subsequent re-fetch."
+        ),
         "api_foundry_url": (
             f"https://dev.socrata.com/foundry/data.cityofchicago.org/{DATASET_ID}"
         ),
@@ -619,6 +718,8 @@ def main() -> None:
             "No shared-trip group ID, vehicle ID, provider ID, or stable rider ID.",
             "A complete authorized slice preserves candidate counterparts but does not reveal them.",
             "Spatial suppression is material, especially for census tracts.",
+            "The City may append late reports to published periods; this manifest "
+            "certifies only one stable extraction snapshot.",
             "The two dates are a computational pilot, not a causal estimation window.",
         ],
     }

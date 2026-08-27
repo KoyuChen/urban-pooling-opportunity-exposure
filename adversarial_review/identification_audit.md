@@ -64,6 +64,12 @@ overlap B and B can overlap C while A never overlaps C.
 The analysis unit is a customer transaction or booking, not necessarily one
 person. A booking may contain multiple passengers.
 
+The structural implication is conditional rather than a row-filter identity.
+The current release contains `Match=true` rows with authorization false or
+`Trips Pooled=1`, as well as null match flags. A production cohort must retain
+literal values, report contradictions, and verify run closure; it must not
+coerce null to false or assume that an authorized-only slice is an outer set.
+
 ## 2. Correct target and incorrect targets
 
 A coherent descriptive target is the neighborhood-context composition of
@@ -278,19 +284,25 @@ is at most a noisy first-stage diagnostic.
 
 The simple missing-bin repair treats each missing context independently. That
 is correct under independent supports but reduces to ordinary weighted perfect
-matching. A version-confirmed Chicago privacy operator could provide stronger,
-globally coupled restrictions.
+matching. A documented Chicago privacy operator can provide stronger, globally
+coupled restrictions, but documentary scope and implementation validation must
+remain distinct.
 
 [Mucci and Erhardt (2022)](https://doi.org/10.32866/001c.34191) establish that
 suppression is selective and consequential in the legacy Chicago data. Their
 description must not substitute for the City's operator definition. The
-currently accessible
-[2019 City clarification](https://data.cityofchicago.org/stories/s/Census-Tract-Rules-for-Taxi-and-TNP-Datasets-7-29-/28mt-8asw/)
+current base dataset metadata states that the City's
+[privacy methodology](https://data.cityofchicago.org/stories/s/82d7-i4i2)
+describes the approach used in `6dvr-xwnh`; that current-linked note lists the
+dataset and documents an at-most-two-trip threshold with paired endpoint
+coarsening. The companion
+[City clarification](https://data.cityofchicago.org/stories/s/28mt-8asw)
 states that pickup buckets are defined by pickup tract and rounded start time,
 while drop-off buckets are defined by drop-off tract and rounded end time. If
 either endpoint belongs to a bucket of fewer than three trips, both tract
-fields are removed. The page explicitly links legacy dataset IDs; application
-to the 2025/2026 release remains to be verified.
+fields are removed. The clarification's footer lists legacy dataset IDs, so it
+supports the endpoint-marginal interpretation of the current-linked overview
+but is not independent proof of the 2025/2026 transformation code.
 
 This operator is not an OD-tract-pair capacity rule. A suppressed row may have
 a pickup in a bucket of at least three if its drop-off bucket is small. A
@@ -298,8 +310,8 @@ visibly released pickup bucket may display only two rows if a third row sharing
 that pickup bucket was suppressed because of its drop-off. Thus visible counts
 alone do not reveal bucket totals.
 
-Suppose the endpoint-marginal rule is officially verified for the production
-window. Let \(x^P_{ip}\) and \(x^D_{id}\) assign row \(i\) to a pickup and a
+Under the documented endpoint-marginal rule, conditional on production
+implementation validation, let \(x^P_{ip}\) and \(x^D_{id}\) assign row \(i\) to a pickup and a
 drop-off tract consistent with its released community areas. Define latent
 bucket counts over *all* trips contributing to the privacy cells:
 
@@ -354,20 +366,23 @@ in `adversarial_review/counterexamples.py` demonstrates this only under the
 explicit strong converse (missing means at least one assigned endpoint bucket
 is low); it does not claim that the converse governs the current release.
 
-This route is not yet an established result in the artifact. It requires:
+The explicit-DNF LOW/HIGH release compiler and its exact projection/replay
+tests are now established in the artifact. A Chicago-specific applicability
+adapter is not. It still requires:
 
-1. official confirmation of the exact 2025/2026 privacy key, threshold, count
-   scope, and whether the rule is one-way or if-and-only-if;
+1. validation of implementation partitions, late-row recomputation, DST
+   handling, tract vintage, and one-way-versus-converse null causes;
 2. all trips contributing to every privacy cell, because authorized-only or
    prefix samples do not preserve the count constraint;
 3. separation of suppression, external geography, and ACS join failure;
 4. correct tract vintage and tract/community-area maps;
-5. complexity classification and certified production-scale algorithms;
+5. a run-closed temporal order and measured production frontier/resource
+   profile;
 6. privacy review ensuring that only aggregate endpoints—not latent tract
    assignments—are released.
 
-Until those conditions hold, this is a promising new approach family, not a
-claim available to the manuscript.
+Until those conditions hold, the compiler is a valid methods result but no
+suppression-aware Chicago endpoint is licensed.
 
 ## 10. Claim classification
 
@@ -406,6 +421,7 @@ claim available to the manuscript.
 ## Status
 
 Independent reconstruction and adversarial cross-audit are complete for the
-frozen evidence. The claim classifications above are the final disposition for
-this audit; current-operator confirmation, production data, and scientific
+declared-input method. Current City documentation confirms the high-level
+threshold-and-paired-end rule; implementation/null-cause validation,
+snapshot-stable production data, the full external scan, and scientific
 validation remain external gates rather than completed results.

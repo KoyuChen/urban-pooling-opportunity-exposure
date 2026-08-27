@@ -1,43 +1,42 @@
-# Admissible Sets for Opportunity Exposure in Privacy-Coarsened Ride-Pooling Records — AI pilot
+# KDD method build and legacy Chicago AI pilot
 
-This folder contains a fully offline, human-experiment-free pilot for learning
-and bounding latent ride-pooling compatibility structure when the public data
-release omits group identifiers.
+This folder contains both the current certified hidden-relation method and the
+earlier weak-node-score Chicago pilot. The two must not be conflated. Current
+KDD evidence lives in `bounds/`, `benchmarks/`, `external_benchmarks/`, and the
+snapshot-aware parts of `data_pipeline/`; `model/` and the original
+`integration/` runs are retained as failure-analysis provenance.
 
 ## What is implemented
 
-1. `data_pipeline/` requests complete Chicago authorized-trip days and refuses
-   partial downloads.  Complete slices are mandatory because the earlier
-   one-prefix sample almost always omits the other trip in a pooled chain.
-2. `model/` builds a sparse time–OD candidate graph and learns compatibility scores
-   from node-level `shared_trip_match` labels with a noisy-OR multiple-instance
-   likelihood.  It compares against a disclosed-rule baseline on held-out
-   days and never creates public-data pair labels.
-3. `bounds/` uses binary exact-cover optimization to minimize and maximize SES
-   pairing statistics over the declared admissible set of feasible pairings.
-   It does not select a reconstructed co-rider graph as the scientific result.
-   A score-retention option gives a clearly labeled model-based sensitivity
-   region.
-4. `integration/` is a known-truth end-to-end benchmark. It keeps latent pair
-   IDs outside training, includes unmatched authorized trips, and checks both
-   weak-supervision prediction and exposure-bound coverage. The production
-   specification is the 22-feature no-geography-equality ablation; the locked
-   28-feature run is retained only as a target-leakage diagnostic.
+1. `bounds/` provides exact and numerical joint matching--label endpoints, the
+   exact temporal frontier, explicit-DNF release compilation, certified score
+   relaxation, and matching-level calibration.
+2. `benchmarks/` provides exhaustive correctness checks, controlled conformal
+   stress tests, and a bounded operational profile. Timeout is unresolved, not
+   infeasibility.
+3. `external_benchmarks/` executes a real UCI relation-topology boundary audit
+   and a synthetic FEBRL4 complete-matching method-fit audit without committing
+   raw external rows or truth links.
+4. `data_pipeline/` fingerprints the public Socrata revision around extraction.
+   An authorized-day slice is complete only for that revision and is not, by
+   itself, a run-closed matching population.
+5. `model/` and `integration/` retain the earlier noisy-OR/weak-node-score
+   experiment. Node labels do not identify partner edges; those runs are not
+   the current learning claim.
 
-The methodological contract and allowed claims are in
-`METHOD_CONTRACT.md`.  The consolidated measured result is in
-`AI_PILOT_REPORT.md`.
+The current methodological contract is in the repository-level
+`KDD_RESEARCH_PIVOT.md`; legacy claims and diagnostics remain documented in
+`METHOD_CONTRACT.md` and `AI_PILOT_REPORT.md`.
 
 ## Current execution status
 
-The code and synthetic validation run in this workspace.  The City of Chicago
-API is blocked by the workspace's egress policy, so no complete-day file is
-fabricated or inferred.  `data_pipeline/ACCESS_BLOCKER.md` records the exact
-diagnostics and the one-command rerun.  The existing 1/256 real sample is used
-only for schema and mechanics checks; its output is explicitly labeled as
-non-substantive.
+The declared-input suites and external cached-data audit run in this workspace.
+The City API remains blocked to the local runtime, so no complete-day Chicago
+file is fabricated or inferred. `data_pipeline/ACCESS_BLOCKER.md` records the
+diagnostics, snapshot contract, and rerun command. The existing 1/256 real
+sample remains schema/mechanics evidence only.
 
-## Minimal rerun
+## Legacy rerun (not the KDD headline)
 
 ```bash
 # 1. In an environment that can reach data.cityofchicago.org
@@ -63,6 +62,7 @@ python code/ai_pilot/integration/ablations/no_geography_equality_20260825/run_ab
   --output-dir /tmp/boundpool-no-geography-equality
 ```
 
-Dependencies are limited to NumPy, pandas, SciPy, scikit-learn, and Matplotlib.
+Core dependencies are NumPy, pandas, SciPy, scikit-learn, Matplotlib, and the
+pinned Record Linkage Toolkit used by the external benchmark.
 No GPU, rider ID, vehicle ID, private platform data, human recruitment, or
 human-subject experiment is required.
