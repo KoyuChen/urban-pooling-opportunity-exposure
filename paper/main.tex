@@ -26,7 +26,7 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 
-\title{Learning-Augmented Aggregate Bounds over Hidden Matchings and Privacy-Coarsened Attributes}
+\title{Certified Temporal Frontiers for Aggregate Queries over Hidden Matchings and Privacy-Coarsened Attributes}
 
 \begin{document}
 
@@ -34,33 +34,35 @@
 Public releases often preserve one row per transaction while suppressing the
 key that joins rows into events and coarsening sensitive endpoint attributes.
 Downstream aggregate queries then depend jointly on a latent relation and the
-attributes attached to its endpoints. We represent the release by feasible
-worlds that jointly assign a nonbipartite matching and categorical endpoint
-attributes subject to core--buffer boundary rules, released supports, and
-global count constraints. We report attained query endpoints rather than one
-imputed graph. Independent attribute supports collapse to ordinary weighted
-matching, whereas feasibility under an explicit paired threshold-release
-operator is NP-complete even on a complete bipartite outer graph. Learning
-enters through an additive matching score whose
-positive-affine-invariant regret radius is calibrated on independent markets
-with observed relations. Under market-level exchangeability and candidate
-support, the restricted feasible-world set, and hence every downstream query
-range computed from it, contains the true world with finite-sample probability
-at least $1-\alpha$. In a fixed six-pair synthetic benchmark, an illustrative
-tight radius for a deliberately query-leaking scorer reduces range width by
-95.8\% but retains only 18/120 true matchings. Calibration retains 117/120 and
-covers the downstream statistic in 120/120, while width reduction falls to
-7.6\%; this is a calibration stress test, not evidence about another domain.
-We develop Chicago ride pooling as a flagship application in
-which realized co-presence is reported but partner identity and fine geography
-are suppressed. Complete-day Chicago estimates remain gated on verification
-of the current release operator and are not claimed in this working draft.
+attributes attached to its endpoints. We optimize a query over feasible worlds
+that jointly assign a nonbipartite core--buffer matching and categorical labels
+subject to released supports and threshold-count factors. Independent label
+supports collapse to weighted matching; coupled worlds need not. We develop an
+exact temporal-frontier dynamic program whose state retains only live labels,
+matching bits, active capped-count automata, an omitted-edge budget, and a
+capped integer score resource. It returns attained lower and upper endpoints
+with witness worlds. With $w$ live records, compiled support $d$, at most $r$
+active threshold factors of cap $k$, omission budget $\Gamma$, and integer
+score target $b$, the live-key bound is
+$(2d)^w[3(k+1)]^r(\Gamma+1)(b+1)$. The dependence on $b$ is substantive:
+the associated threshold decision problem is weakly NP-complete
+even on disjoint four-cycles of pathwidth two. A downward score quantization
+gives certified outward query endpoints while relaxing the original score by
+at most $\eta|C|$; it is a bicriteria certificate, not a query FPTAS. We use
+matching-level split conformal prediction as a known safety layer, with one
+score normalization frozen across the entire candidate-omission path. A
+locked benchmark matches every applicable exhaustive or analytic reference,
+exposes order-dependent width, and shows the pseudo-polynomial score
+frontier; it makes no production-speed claim.
+Chicago ride pooling is a gated flagship application: realized co-presence is
+released, while partner identity and fine geography are hidden. Complete-day
+estimates remain conditional on verification of the current release operator.
 \end{abstract}
 
 \ccsdesc[500]{Computing methodologies~Machine learning}
 \ccsdesc[300]{Information systems~Data provenance}
 \ccsdesc[300]{Theory of computation~Design and analysis of algorithms}
-\keywords{uncertain linkage, hidden matching, conformal prediction, privacy coarsening}
+\keywords{hidden matching, exact dynamic programming, aggregate bounds, privacy coarsening}
 \maketitle
 
 \section{Introduction}
@@ -107,14 +109,16 @@ transactions. It does not infer rider socioeconomic status, preferences,
 durable ties, or all shared runs.
 
 This working version makes three completed contributions. First, it defines
-joint feasible-world query semantics, identifies the collapse to weighted
-matching, and establishes an NP-complete coupled boundary under a precisely
-stated release operator. Second, it gives a matching-level split-conformal
-restriction whose finite-sample inclusion event propagates to all predeclared
-downstream queries. Third, it implements an exact small-instance oracle and a
-numerical joint matching--label program, supplies executable counterexamples,
-and freezes a proxy-shift benchmark. A production-scale certified algorithm,
-a second relation-truth benchmark, and a complete Chicago run remain explicit
+joint feasible-world query semantics and identifies the exact collapse to
+weighted matching. Second, it develops and implements a score-aware temporal
+frontier algorithm for core--buffer matching, compiled labels, active release
+counts, and a global budget for omitted candidate edges; it proves endpoint and
+witness recovery, the pseudo-polynomial score boundary, and a certified
+outward score relaxation. Third, it supplies independent exhaustive checks and
+a locked structural benchmark separating record width, active-cell width, and
+score-resource growth. Matching-level conformal calibration is an
+adopted safety layer, not a novelty claim. A verified production compiler, a
+second relation-truth benchmark, and a complete Chicago run remain explicit
 KDD submission gates.
 
 \begin{figure*}[t]
@@ -342,53 +346,142 @@ endpoint-wise independent suppression and does not establish hardness for a
 metric-only edge rule. These boundaries must be checked, not blurred, in any
 application.
 
-\paragraph{Threshold compilation.}
-The threshold structure also creates an exact algorithmic foothold. Suppose an
-operator and every other factor consult a release-cell count only through
-predicates $N_c<k$ and $N_c\ge k$; in particular, no constraint or query
-distinguishes counts above $k$.
+\paragraph{Compiling threshold observations.}
+For a scalar release factor $f$, let
+$N_f(a)=\sum_i\chi_{if}(a_i)$ with $\chi_{if}\in\{0,1\}$.  Its temporal
+automaton stores a capped count $q_f$ and a requirement
+$\rho_f\in\{\varnothing,\mathsf{LOW},\mathsf{HIGH}\}$.  For a pure threshold
+$k$, $q_f=\min\{k,N_f^{\rm processed}\}$; closing the factor accepts
+$\mathsf{LOW}$ iff $q_f<k$ and $\mathsf{HIGH}$ iff $q_f=k$. Opposing nonempty
+requirements conflict. General lower/upper count constraints use the smallest
+cap retaining every decision boundary, including a distinct overflow state
+for a binding upper bound.
 
-\begin{lemma}[Capped-count sufficiency]
+Under the abstract paired operator above, a visible row emits
+$\mathsf{HIGH}$ to both endpoint factors. A hidden row branches between a
+pickup-$\mathsf{LOW}$ and a drop-off-$\mathsf{LOW}$ witness. These branches are
+represented as duplicated compiled labels.
+
+\begin{lemma}[Threshold compiler]
 \label{lem:capped}
-Replacing every partial or final count $N_c$ by
-$\widetilde N_c=\min\{N_c,k\}$ preserves every release predicate, every
-feasible world, and the endpoints of every query that depends on selected
-relations and attributes but not on the count above $k$.
+Projecting accepting compiled paths onto substantive labels and matchings gives
+exactly the worlds satisfying the paired operator. Counts capped at the last
+decision boundary preserve feasibility and every label- and edge-additive
+query.
 \end{lemma}
 
 \begin{proof}
-The predicates distinguish exactly the states $0,\ldots,k-1$ from the single
-state $k$. The update
-$\widetilde N_c\leftarrow\min\{k,\widetilde N_c+1\}$ is therefore sufficient
-for every assignment sequence. It changes neither the matching nor any
-attribute label, so the query is unchanged.
+In any feasible original world, each visible row has two high cells and each
+hidden row has at least one low cell; choosing one low endpoint supplies an
+accepting compiler witness. Conversely, an accepting path enforces those same
+conditions. A two-low row may have two witnesses, but projection removes the
+duplicate without changing extrema. Counts on the same side of their last
+decision boundary have identical future transitions, so saturation is exact.
 \end{proof}
 
-Compile partner choices, attribute assignments, release factors, and capped
-count recursions into a finite factor graph. Let $\tau$ be the treewidth of its
-primal graph, $D$ the largest variable domain, and $|\mathcal T|$ the number of
-bags in a supplied tree decomposition.
+\paragraph{Temporal frontier.}
+A supplied forget order is compiled into node-introduction, edge-processing,
+and node-forget actions. Every edge is processed while both endpoints are
+live; a record is forgotten only after all incident edges; and factor $f$ is
+implicitly opened before its first possible contributor or requirer and closed
+immediately after its last. Let $w$ be the maximum live-record count, $d$ the
+largest \emph{compiled} label support (including release-witness copies), and
+$\mathcal A_t$ the active factor set at action $t$. Factor $f$ retains counts
+$0,\ldots,K_f$.
 
-\begin{theorem}[Exact bounded-width inference]
-\label{thm:treewidth}
-Given a width-$\tau$ tree decomposition, both endpoints of any rational
-factor-additive query can be computed, with extremal witness worlds, in
-$O(|\mathcal T|D^{\tau+1})$ time and $O(|\mathcal T|D^\tau)$ space, apart from
-polynomial arithmetic bit complexity.
+For allowed label-pair scores $s_e(u,v)$, set
+\[
+ a=\min\left\{0,\min_{e,(u,v)\in\mathcal P_e}s_e(u,v)\right\}.
+\]
+Every world has total selected core
+incidence $N=|C|$, so replacing $s_e$ by $s_e-a\ge0$ adds the same $-aN$ to
+every score. Clear rational denominators and cap the accumulated integer score
+at the transformed floor $b$.
+
+\begin{theorem}[Exact score-aware temporal-frontier endpoints]
+\label{thm:temporal}
+For a valid schedule, omission budget $\Gamma$, rational additive query, and
+score floor, the temporal-frontier dynamic program returns infeasible exactly
+when the declared world set is empty; otherwise it returns both attained query
+endpoints and witness worlds, provided the declared frontier-record limit is
+not exceeded. Exceeding that operational limit raises an explicit frontier-limit
+exception and licenses no feasibility conclusion. Before dominance pruning, the number of
+live keys at any action is at most
+\begin{equation}
+ (2d)^w(\Gamma+1)(b+1)
+ \max_t\prod_{f\in\mathcal A_t}3(K_f+1).
+ \label{eq:statebound}
+\end{equation}
+For a common pure threshold $k$ and at most $r$ active factors, the product is
+at most $[3(k+1)]^r$. Without a score floor the factor $(b+1)$ disappears.
+The work per transition is polynomial in the explicit state and input size.
 \end{theorem}
 
-\begin{proof}
-Assign each factor to a bag containing its scope. Min-sum and max-sum messages
-enumerate at most $D^{\tau+1}$ assignments per bag and retain the best value
-for each separator assignment. Induction from the leaves proves that each
-eliminated subtree is optimized conditional on its separator. Root optimization
-gives the endpoint; stored choices recover a witness world.
+\begin{proof}[Proof sketch]
+At action $t$, a key stores live labels, live matching bits, the
+$(q_f,\rho_f)$ automaton for each $f\in\mathcal A_t$, used omitted edges, and
+the score capped at $b$. For each key the program keeps separate exact minimum
+and maximum accumulated query values. These fields contain every processed
+quantity on which a future transition can depend. The running-intersection
+conditions ensure that forgotten labels and finalized factors can never be
+consulted again. Induction over actions therefore shows that the retained
+values are exactly the extrema among partial worlds inducing the key. Terminal
+paths have every core matched, every factor finalized, and score state $b$;
+they project onto precisely the feasible full worlds. Stored choices recover
+the two witnesses. Counting each coordinate gives Eq.~\eqref{eq:statebound}.
 \end{proof}
 
-Theorem~\ref{thm:treewidth} is a certified tractability parameterization, not a
-production claim. A KDD-ready system must compile the verified release
-operator, exploit temporal components, measure the resulting width, and report
-explicit primal/dual gaps when a component is too wide.
+An exact algorithm polynomial in binary input length at fixed structural width
+would imply $P=NP$; our dynamic program pays a pseudo-polynomial score coordinate.
+
+\begin{theorem}[Weak hardness at pathwidth two]
+\label{thm:scorehard}
+For nonnegative integer score and query contributions encoded in binary,
+deciding whether a perfect matching has score at least $B$ and additive query
+at most $B$ is weakly NP-complete even with singleton labels, no release
+factors, $\Gamma=0$, and a candidate graph that is a disjoint union of
+four-cycles.
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Reduce \textsc{Subset Sum}. For item $a_i$, a four-cycle has two perfect
+matchings, ``take'' and ``skip''. Give one take edge score $a_i$ per core
+incidence and query $2a_i$; all other contributions are zero. With both
+thresholds $2B$, a global matching is feasible exactly when the taken items
+sum to $B$. Each component, and their concatenation, has pathwidth two.
+Membership in NP is immediate. This is the model's pseudo-polynomial boundary,
+consistent with known budgeted-matching hardness and approximation results
+\citep{berger2011budgeted,doronarad2023eptas}.
+\end{proof}
+
+\paragraph{Certified score relaxation.}
+When $b$ is too large, choose rational $\eta>0$, set
+$r_e=\lfloor(s_e-a)/\eta\rfloor$, and impose
+\[
+ \widehat b=\max\{0,\lceil(B-Na)/\eta\rceil-N\}.
+\]
+\begin{proposition}[Outward score certificate]
+\label{prop:relax}
+If $\F_B$ is the exact score-floor set and $\widehat\F_\eta$ the rounded set,
+then
+\begin{equation}
+ \F_B\subseteq\widehat\F_\eta\subseteq\F_{B-\eta N}.
+ \label{eq:relaxation}
+\end{equation}
+Consequently, optimizing over $\widehat\F_\eta$ gives outward query endpoints.
+Each returned witness misses the original score floor by at most $\eta N$;
+if an endpoint witness satisfies the original floor, that endpoint is exact.
+\end{proposition}
+\begin{proof}
+Write $c_e=|e\cap C|$ for selected-edge core incidence and suppress the
+selected label-pair argument of $s_e$ and $r_e$. Fixed core incidence gives
+$\eta\sum c_er_e\le\sum c_e(s_e-a)
+<\eta(\sum c_er_e+N)$, which proves both inclusions after integer rounding.
+Set inclusion gives the endpoint order. If a relaxed extremal witness is also
+exact-feasible, the reverse endpoint inequality follows from that witness.
+\end{proof}
+Equation~\eqref{eq:relaxation} is a bicriteria score certificate, not a query
+FPTAS: a tiny score slack may cause an arbitrary query jump.
 
 \paragraph{Reference formulation.}
 The implemented coupled reference program uses binary edge variables $z_e$,
@@ -412,16 +505,17 @@ supergraph-edge budgets. Exact optima, numerical optima, exact or structural
 infeasibility, numerical infeasibility, and unresolved runs are reported as
 distinct states; a timeout is unresolved rather than a separate certificate.
 
-The implementation currently models one categorical label and one count-cell
-membership per record. The paired pickup/drop-off operator used in
-Theorem~\ref{thm:hardness} is a theory instance, not a compiled production
-operator. Multiple endpoint attributes require additional variables and count
-factors before that theorem can describe an executable application pipeline.
-
-This formulation is not itself the intended KDD algorithmic claim. A scalable
-certified decomposition must connect the release operator's factor structure
-to production graphs. Until that gate is passed, the program is a correctness
-baseline.
+The separate temporal implementation accepts tuple-valued compiled labels,
+multiple label-dependent count contributions and release requirements, and
+label-pair-specific scores and queries. It constructs sparse active-factor
+coordinates from a supplied forget order, uses exact rational arithmetic, and
+independently replays each endpoint witness. The paired operator is executable
+through the duplicate-label representation in Lemma~\ref{lem:capped}, but no
+high-level compiler from a Chicago schema is claimed. The Python reference
+stores complete partial witnesses rather than memory-optimal predecessor
+pointers; Eq.~\eqref{eq:statebound} is its key-count bound, not a production
+runtime claim. General MILP remains the fallback when the measured temporal
+frontier is too wide.
 
 \begin{table}[t]
 \caption{Algorithmic boundary of the declared world model.}
@@ -433,9 +527,10 @@ Regime & Endpoint computation & Status \\
 \midrule
 Fixed attributes & Weighted core-cover matching & Polynomial baseline \\
 Independent supports & Two edge-envelope matchings & Lemma~\ref{lem:collapse} \\
-Paired threshold coupling & Joint labels and matching & NP-complete \\
-Compiled width $\tau$ & Min/max factor-graph DP & $O(|\mathcal T|D^{\tau+1})$ \\
-General graph & MILP/decomposition & Gap required \\
+Fixed labels plus score floor & Mandatory core cover with a budget & Related standard problem: NP-hard; PTAS/EPTAS known \\
+Paired threshold coupling & Joint labels and matching & Theorem~\ref{thm:hardness} \\
+Temporal schedule $(w,\mathcal A_t)$ & Exact frontier DP & Theorem~\ref{thm:temporal} \\
+General compiled graph & MILP/decomposition & Certified gap required \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -448,7 +543,9 @@ General graph & MILP/decomposition & Gap required \\
 \toprule
 State & Source & Licensed statement \\
 \midrule
-\texttt{EXACT\_OPTIMAL} & Exhaustive oracle & Attained endpoint certified \\
+\texttt{EXACT\_OPTIMAL} & Exhaustive oracle or frontier DP & Attained endpoint certified \\
+\texttt{EXACT\_INFEASIBLE} & Frontier DP & Declared world set empty \\
+\texttt{OUTER\_OPTIMAL} & Rounded frontier DP & Outward endpoint; report score slack \\
 \texttt{NUMERICALLY\_OPTIMAL} & HiGHS incumbent & Numerical endpoint; retain gap \\
 \texttt{PROVEN\_INFEASIBLE} & Structural check or enumeration & Declared world set empty \\
 \begin{tabular}[t]{@{}l@{}}\texttt{NUMERICALLY\_}\\[-2pt]
@@ -491,144 +588,142 @@ labels.
 
 \subsection{Calibrating a Matching Set}
 
-Let $s_e$ be any scorer fixed before calibration. With optional buffer nodes,
-the score must use core incidence,
+Let $s_e$ be a matching-only scorer fixed and deterministically rationalized
+before calibration. With optional buffer nodes, use core incidence,
 \begin{equation}
  S_C(M)=\sum_{e\in M}|e\cap C|s_e.
  \label{eq:corescore}
 \end{equation}
 Because $\sum_{e\in M}|e\cap C|=|C|$, replacing $s_e$ by $as_e+b$ for $a>0$
 changes every feasible score by the same additive constant after scaling.
-Let $S^-_d$ and $S^+_d$ be the score extrema over the matching projection of
-market $d$'s full feasible-world set, including any attribute-conditioned
-compatibility, and define the true matching's normalized regret
+For market $d$, let $h_d(M)$ count selected edges in
+$E_d^{\rm super}\setminus E_d^{\rm base}$ and define
+\[
+ \F^0_{d,\Gamma}=\{F\in\F(O_d,G_d^{\rm super}):h_d(M(F))\le\Gamma\}.
+\]
+Before calibration, fix a reference budget $\bar\Gamma_d$ by the same rule in
+every market and compute once
+\[
+ S^-_{d,\star}=\min_{F\in\F^0_{d,\bar\Gamma_d}}S_C(M(F)),\qquad
+ S^+_{d,\star}=\max_{F\in\F^0_{d,\bar\Gamma_d}}S_C(M(F)).
+\]
+These extrema are frozen along the entire $\Gamma$ path. Define
 \begin{equation}
- R_d=\frac{S^+_d-S_C(M_d^\dagger)}{S^+_d-S^-_d},
+ R_{d,\star}(F)=
+ \frac{S^+_{d,\star}-S_C(M(F))}{S^+_{d,\star}-S^-_{d,\star}},
  \label{eq:regret}
 \end{equation}
-with $R_d=0$ for a constant score map. This replaces raw fractions of a
-score whose zero has no common meaning across models.
+with value zero for a constant reference score. Recomputing the normalizer at
+each $\Gamma$ can destroy nesting: a newly admitted high-score world can raise
+the floor enough to delete an old world.
 
-Use $m$ calibration markets, disjoint from scorer training, whose true
-matchings are observed. For target miscoverage $\alpha$, let
-$k_\alpha=\lceil(m+1)(1-\alpha)\rceil$ and let $\widehat\tau_\alpha$ be the
-$k_\alpha$th smallest calibration regret, using the support bound one if
-$k_\alpha=m+1$. In a new market retain feasible worlds satisfying
+For any $\tau\in[0,1]$ and $\Gamma\le\bar\Gamma_d$, define
 \begin{equation}
- S_C(M)\ge S^+-\widehat\tau_\alpha(S^+-S^-).
+ \F_{d,\tau,\Gamma}
+ =\left\{F\in\F^0_{d,\Gamma}:
+ S_C(M(F))\ge S^+_{d,\star}
+ -\tau(S^+_{d,\star}-S^-_{d,\star})\right\}.
  \label{eq:calset}
 \end{equation}
+Use $m$ calibration markets, disjoint from scorer training, whose true
+matchings are observed. For score miscoverage $\alpha_S$, let
+$k_S=\lceil(m+1)(1-\alpha_S)\rceil$ and let $\widehat\tau_{\alpha_S}$ be the
+$k_S$th smallest calibration regret, using the support bound one if
+$k_S=m+1$. Retain the set in Eq.~\eqref{eq:calset} at
+$\tau=\widehat\tau_{\alpha_S}$.
+Exact additive scores parse each component through its declared decimal
+spelling before rational termwise summation; the same score map is used for
+calibration and the endpoint solver. A
+label-dependent scorer would instead require calibration truth for the full
+world, not only its matching.
 
-Operationally, the procedure is:
-\begin{enumerate}[leftmargin=*,nosep,label=\textbf{\arabic*.}]
-\item train or otherwise fix $s_e$ using source data disjoint from calibration;
-\item for each calibration market solve $S^-$ and $S^+$ over the matching
-projection of its declared world set and evaluate the observed true matching;
-\item take the finite-sample order statistic of the resulting regrets;
-\item in a target market impose Eq.~\eqref{eq:calset}, then solve the lower and
-upper program for every predeclared query; and
-\item report the radius, candidate-support declaration, witnesses, and solver
-status together with the query range.
-\end{enumerate}
-The expensive object is still a structured optimization oracle. Calibration
-adds one scalar nesting rule; it does not turn edge scores into posterior
-probabilities.
-
-\begin{theorem}[Market-level calibrated query coverage]
+\begin{theorem}[Market-level score retention and query coverage]
 \label{thm:conformal}
-Suppose the scorer and set construction are fixed before calibration, the $m$
-calibration markets and one new market are exchangeable, and each true world
-belongs to its declared candidate and attribute domain. Then
+Suppose the scorer, observation operator, graph rule, reference budgets, and
+normalization are fixed before calibration. Suppose the augmented markets,
+including their true worlds, are exchangeable, every reference set is
+nonempty, and
+$F_d^\dagger\in\F^0_{d,\bar\Gamma_d}$ almost surely. Then
 \[
- \Pr\{F^\dagger_{m+1}\in\F_{\widehat\tau_\alpha}(O_{m+1},G_{m+1})\}
- \ge 1-\alpha.
+ \Pr\{R_{m+1,\star}(F^\dagger_{m+1})\le\widehat\tau_{\alpha_S}\}
+ \ge1-\alpha_S.
 \]
-On the same event, the endpoint range over this restricted set simultaneously
-covers the true value of every predeclared query.
+For a reported $\Gamma\le\bar\Gamma_{m+1}$, if
+$\Pr\{F^\dagger_{m+1}\notin\F^0_{m+1,\Gamma}\}\le\alpha_G$, then
+\[
+ \Pr\{F^\dagger_{m+1}\in
+ \F_{m+1,\widehat\tau_{\alpha_S},\Gamma}\}
+ \ge1-\alpha_S-\alpha_G.
+\]
+On this event, every query range optimized over that same set covers its true
+value.
 \end{theorem}
 
 \begin{proof}
-Exchangeability makes the new true world's regret rank uniform after random
-tie-breaking and conservative under deterministic ties. The probability that
-its rank exceeds $k_\alpha$ is at most $\alpha$ by the definition of
-$k_\alpha$. Equation~\eqref{eq:calset} is equivalent to regret at most
-$\widehat\tau_\alpha$. When the true world is retained, applying
-Proposition~\ref{prop:endpoints} to each query yields simultaneous coverage;
-no additional union bound over queries is required because they share the same
-world-inclusion event.
+Exchangeability gives the usual split-conformal rank bound. A union bound with
+the final-$\Gamma$ eligibility failure gives the second display; independence
+is unnecessary. Conditional on true-world retention,
+Proposition~\ref{prop:endpoints} covers all queries sharing that world set, so
+no union bound over queries is needed.
 \end{proof}
 
-The theorem is conditional on candidate support. Given a declared supergraph,
-we separately allow at most $\Gamma$ selected edges outside the baseline graph,
-\[
- \sum_{e\in E_{\rm super}\setminus E_{\rm base}}z_e\le\Gamma.
-\]
-If candidate and calibration failures are controlled separately at
-$\alpha_G$ and $\alpha_S$, their joint failure is at most
-$\alpha_G+\alpha_S$. A supplied supergraph or synthetic calibration alone does
-not establish either rate for Chicago.
-
-The two sensitivities form a nested audit rather than a single opaque knob.
-Let $\F_{\tau,\Gamma}$ retain worlds with normalized regret at most $\tau$ and
-at most $\Gamma$ selected supergraph-only edges.
+A supplied supergraph or synthetic calibration alone establishes neither rate
+for Chicago. With the frozen reference range, the two sensitivities do form a
+nested audit rather than one opaque knob.
 
 \begin{proposition}[Nested sensitivity paths]
 \label{prop:nested}
-If $\tau\le\tau'$ and $\Gamma\le\Gamma'$, then
-$\F_{\tau,\Gamma}\subseteq\F_{\tau',\Gamma'}$. Consequently, for the same
-query, the lower endpoint cannot increase and the upper endpoint cannot
-decrease when either budget is relaxed.
+If $\tau\le\tau'$ and $\Gamma\le\Gamma'\le\bar\Gamma_d$, then
+$\F_{d,\tau,\Gamma}\subseteq\F_{d,\tau',\Gamma'}$. Consequently, a query's
+lower endpoint cannot increase and its upper endpoint cannot decrease when
+either budget is relaxed.
 \end{proposition}
 
 \begin{proof}
-Every world satisfying the two tighter inequalities satisfies the two looser
-ones. Minimization over a superset can only decrease, and maximization can only
-increase.
+Both structural budgets and one fixed score halfspace are nested. Optimization
+over the resulting superset gives the endpoint monotonicity.
 \end{proof}
 
 Reporting the $(\tau,\Gamma)$ path exposes whether apparent precision comes
-from score exclusion or candidate exclusion. It also prevents a calibration
-claim about $\tau$ from being misread as evidence about graph support.
+from score or candidate exclusion; it does not turn either into graph-support
+evidence.
 
 \section{Controlled Evaluation}
 \label{sec:evaluation}
 
 \subsection{Structural and Solver Audit}
 
-The first evaluation asks whether the implemented world semantics exhibit the
-claimed interactions before any learned score is used. Table~\ref{tab:audit}
-records exact, deterministic cases. The four-record count example is the
-worked construction above; the label-conditioned case changes the selected
-partner when a global count fixes the core label. A separate seeded audit
-generates 250 complete four- or six-core instances with random supports,
-count bounds, compatibility tables, and $\Gamma$ budgets. Exhaustive and
-HiGHS feasibility statuses agree on all 250; endpoints agree on all 185
-feasible cases, while 65 are infeasible. The exhaustive side supplies the
-certificate; agreement does not make the floating-point side exact.
+The locked temporal benchmark contains 34 hashed cases. An implementation-
+independent rational enumerator agrees in 32/32 applicable cases, analytic
+answers agree in 24/24, and resolved HiGHS comparators agree numerically in
+16/16. Every endpoint witness is replayed from raw inputs. Table~\ref{tab:audit}
+isolates the structural parameters rather than presenting wall-clock speedups.
+A separate legacy audit of the general MILP backend still agrees with
+exhaustive statuses on 250/250 random instances and endpoints on all 185
+feasible instances; that agreement does not make floating-point MILP exact.
 
 \begin{table}[t]
-\caption{Exact declared-world checks in the joint reference implementation.}
+\caption{Locked temporal-frontier checks; timings are not headline evidence.}
 \label{tab:audit}
 \small
 \begin{tabularx}{\columnwidth}{@{}p{0.35\columnwidth}XX@{}}
 \toprule
-Intervention & Before & After \\
+Family & Controlled change & Certified outcome \\
 \midrule
-Global $\#A\le2$ & Independent $[0,1]$ & Coupled $[0,0.5]$ \\
-Label-conditioned edge & $c=A\Rightarrow cx$ & $c=B\Rightarrow cy$ \\
-$\Gamma$ relaxation & $\Gamma=0:[1,1]$ & $\Gamma=1:[0,1]$ \\
-Score restriction & Raw $[0,1]$ & Floor $[1,1]$ \\
-Core--buffer target & Two core incidences & Endpoint $1.0$ \\
+Local factors & Grouped vs. interleaved & active $r:1\to3$; same endpoints \\
+Degree-one graph & Adjacent vs. nested order & schedule width $1\to16$ \\
+Binary $C_4$ items & pathwidth 2, $b=2048$ & peak frontier 4098 \\
+$\Gamma$ path & $0\to8$ omitted edges & upper endpoint $0\to8$ \\
+Score relaxation & $\eta=1/5$, $N=4$ & $[0,0]\subset[-5,0]$; deficit $2/5\le4/5$ \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-The artifact currently has 46 passing unit tests and eight executable
-adversarial checks. These cover input validation, state-limit semantics,
-positive-affine score invariance, nonattainable interval interiors, signed
-objectives, and node-marginal nonidentification. They support software behavior
-for declared finite inputs, not the correctness of an external observation
-operator.
+The artifact has 72 passing unit tests and eight executable legacy
+counterexamples. The temporal suite includes 80 seeded brute-force instances;
+the relaxation suite adds random inclusion and witness checks. These results
+support software behavior for declared finite inputs, not candidate coverage,
+a production schedule, or the correctness of an external release operator.
 
 \subsection{Matching-Set Calibration under Deliberate Query Leakage}
 
@@ -647,9 +742,13 @@ that defines the downstream query. The source homophily generating probability
 is 95\%, while calibration and test use 55\%, deliberately shifting that
 circular feature. The nominal matching-set coverage is 90\%. Radius 0.05 is
 an illustrative stress point, not a selected or calibrated baseline. The
-committed program uses numerical HiGHS endpoints; independent exhaustive
-enumeration over all 10,395 perfect matchings per market reproduces the
-reported counts and widths.
+committed benchmark enumerates all 10,395 perfect matchings per market using
+termwise decimal-rational scores and exact floor membership. A second
+solver-free program shares the locked generator, scorers, and rationalization
+utilities but separately reaggregates the 44-point frontier: discrete counts
+agree exactly and serialized headlines within $3.33\times10^{-16}$. It scores
+each edge once; the all-core incidence convention in Eq.~\eqref{eq:corescore}
+doubles every matching score and leaves normalized-regret sets unchanged.
 
 \begin{table*}[t]
   \caption{Fixed held-out synthetic markets: coverage cannot be read from width alone.}
@@ -786,13 +885,14 @@ is treated as evidence about Chicago.
 Privacy coarsening can hide a relation and its endpoint attributes at the same
 time. The appropriate output is then a query over feasible worlds, not a
 preferred reconstructed graph. Independent attribute supports reduce to
-weighted matching; global release coupling creates the substantive new
-problem. Matching-level conformal calibration can prevent a learned scorer
-from receiving credit for false precision, but it may also reveal that little
-safe sharpening is available. The remaining work is decisive rather than
-cosmetic: verify the current operator, turn the bounded-width route into a
-production certified algorithm, validate on another ground-truth relation,
-and run the full Chicago application.
+weighted matching; active release factors create the coupled problem. The
+temporal-frontier algorithm gives exact endpoints when live structural width
+and the score resource are controlled, while the outward relaxation remains
+honest when the exact score frontier is too large. Matching-level conformal
+calibration is a known safety layer that can expose false precision, not the
+algorithmic contribution. The remaining work is decisive: verify and compile
+the current operator, construct and measure a full-day temporal order, validate
+on another ground-truth relation, and run the Chicago application.
 
 \clearpage
 \bibliographystyle{ACM-Reference-Format}
@@ -804,22 +904,23 @@ and run the full Chicago application.
 \section{Reproducibility and Claim Status}
 
 The artifact includes the complete benchmark generator, split-conformal
-calibrator, exact small-instance matching oracle, sparse numerical reference
-solver, fixed seeds, result tables, and executable adversarial examples. Hidden
+calibrator, exact temporal-frontier solver, small-instance matching oracle,
+sparse numerical reference solver, fixed seeds, result tables, and executable
+adversarial examples. Hidden
 pair truth is read only in the source-training, calibration, or held-out-test
 stage declared by the benchmark split. The earlier two-day weak-node-score
 pilot is retained as failure-analysis provenance but is not a headline result.
 
 Current completed claims are limited to Propositions~\ref{prop:endpoints},
-\ref{prop:nonidentification}, and \ref{prop:nested},
+\ref{prop:relax}, \ref{prop:nonidentification}, and \ref{prop:nested},
 Lemmas~\ref{lem:collapse} and \ref{lem:capped},
-Theorems~\ref{thm:hardness}, \ref{thm:treewidth}, and
-\ref{thm:conformal}, 46 passing declared-input unit tests, eight adversarial
-checks, the seeded 250-instance solver audit, and the controlled results in
-Table~\ref{tab:conformal}. The
-scalable decomposition, current Chicago observation
-operator, non-Chicago relation benchmark, and complete-day Chicago estimates
-remain open gates and cannot be inferred from the appendix.
+Theorems~\ref{thm:hardness}, \ref{thm:temporal},
+\ref{thm:scorehard}, and \ref{thm:conformal}, 72 passing declared-input unit
+tests, eight legacy counterexamples, the 34-case temporal benchmark, the
+seeded 250-instance MILP audit, and the controlled results in
+Table~\ref{tab:conformal}. A production observation-operator compiler, a
+full-day order and width profile, a non-Chicago relation benchmark, and
+complete-day Chicago estimates remain open gates.
 
 \section{Full Proof of Theorem~\ref{thm:hardness}}
 \label{app:hardness}
@@ -857,5 +958,72 @@ $k$, all targets remain suppressed, and every selected edge is compatible.
 For fixed $k$ the construction has $O(q)$ records, $O(q^2)$ support and outer-
 edge entries, and at most an $O(q^3)$ explicit compatibility table. The
 reduction is polynomial.
+
+\section{Proof Details for Theorem~\ref{thm:temporal}}
+
+Let $X_t$ be a live key after action $t$ and let $\mathcal W_t(X_t)$ be the
+partial compiled worlds that induce its live labels and matching bits, active
+capped counts and merged requirements, used omission budget, and capped score.
+They have already satisfied every forgotten-core degree constraint and every
+closed factor. For endpoint sense $\circ\in\{\min,\max\}$, the invariant is
+\[
+ V_t^\circ(X_t)=\mathop{\circ}_{F\in\mathcal W_t(X_t)}H_t(F),
+\]
+with the value attained by the stored partial witness.
+
+The empty layer satisfies the invariant. A node introduction enumerates every
+compiled label, increments precisely its active factor automata, merges its
+requirements, and rejects exactly conflicts or factor states with no feasible
+completion. An edge action enumerates skip and select; select is legal exactly
+when both matching bits are zero and the live labels form an allowed pair, and
+it updates the two global resources. A forget action checks a core's bit and
+removes data whose final incident edge and factor have already been processed.
+Closing a factor applies its terminal predicate and removes its automaton.
+Thus every transition is a legal extension and every legal extension is
+enumerated.
+
+By the schedule's running-intersection property, two partial worlds with the
+same key have identical future extensions and future additive contributions.
+Keeping only their attained minimum and maximum is therefore lossless.
+Induction proves the invariant at every layer. Terminal accepting paths have
+all core degrees one, all factors closed, omission count at most $\Gamma$, and
+capped score $b$; conversely every feasible full world traces such a path.
+Backtracking yields the two endpoint witnesses.
+
+There are at most $(2d)^w$ live label/bit assignments,
+$3(K_f+1)$ automaton states for active factor $f$, $\Gamma+1$ omission states,
+and $b+1$ capped-score states. Their product gives
+Eq.~\eqref{eq:statebound}; each explicit transition performs polynomial work.
+The reference implementation copies complete partial witnesses for auditability,
+whereas a predecessor-pointer implementation attains the usual rolling-state
+storage bound.
+
+\section{Full Proof of Theorem~\ref{thm:scorehard}}
+
+Membership in NP follows by checking a proposed perfect matching and its two
+integer sums. Reduce \textsc{Subset Sum} with positive integers
+$a_1,\ldots,a_m$ and target $B$. For each item create a cycle
+$u_i-v_i-x_i-y_i-u_i$ with all four vertices core. Its only perfect matchings
+are
+\[
+ M_i^{\rm take}=\{u_iv_i,x_iy_i\},\qquad
+ M_i^{\rm skip}=\{v_ix_i,y_iu_i\}.
+\]
+Assign $s_{u_iv_i}=a_i$ and zero score to the other three edges. Since the
+edge is core--core, taking contributes $2a_i$ to the core-incidence score.
+Give the same take edge query $2a_i$, with every other query zero. A global
+perfect matching independently chooses take or skip in each cycle and hence
+has score and query both equal to $2\sum_{i\in I}a_i$. Requiring score at least
+$2B$ and query at most $2B$ is therefore equivalent to
+$\sum_{i\in I}a_i=B$.
+
+Each cycle has the width-two path decomposition
+\[
+ \{u_i,v_i,y_i\},\qquad \{v_i,x_i,y_i\}.
+\]
+Decompositions of disjoint components can
+be concatenated without increasing width. The associated decision problem is
+pseudo-polynomially solvable by the score-frontier DP, so it is weakly
+NP-complete.
 
 \end{document}

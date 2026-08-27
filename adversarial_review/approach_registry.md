@@ -23,13 +23,13 @@ Prior conversational evaluations are not evidence for this audit. Entries below 
 | Observation operator and target population | The public row reveals realized co-presence at the node level but does not publish partner, provider, vehicle, or group identifiers | Field-to-claim map and minimal counterexamples | Complete | Current suppression-rule continuity and a production boundary-closure audit remain unverified |
 | Matching endpoint geometry | Min/max over a declared exact-cover graph gives attained endpoints, but generally not every scalar between them | Formal endpoint proposition and four-node counterexample | Complete; code terminology repaired | Manuscript terminology remains frozen pending a coherent empirical object |
 | Node weak supervision | Node marginals can train a compatibility score but do not identify latent edge probabilities or a joint matching distribution | Incidence-nullspace and joint-probability counterexamples | Complete | A coherent matching-aware likelihood or independent edge truth is absent |
-| Score-restricted ambiguity | A raw fractional score floor is sensitive to arbitrary score transformations | Transformation counterexamples and invariant alternative | Complete; positive-affine-invariant helper implemented | Normalized regret has no scientific calibration or cross-score coverage meaning |
+| Score-restricted ambiguity | A raw fractional score floor is sensitive to arbitrary score transformations | Transformation counterexamples and invariant alternative | Method repair complete for declared score maps: fixed-reference normalization, exact rational calibration, and directed rounding implemented | Chicago exchangeability, true-world membership, and scientific calibration remain unverified |
 | Missing-context identification | Requiring both endpoints to have ACS context changes the feasible matching population and may delete the true pairing | Missing-label completion formulation | Complete for independent supports; tested implementation added | Joint suppression coupling and production data remain absent |
 | Suppression-coupled geography | The currently accessible 2019 City clarification, associated with legacy dataset IDs, documents separate pickup-time/tract and dropoff-time/tract buckets and paired removal when either count is below three | Joint endpoint-assignment/matching formulation, complexity, and small exact tests | Conditionally formulated; operator continuity unverified | Whether the rule applies unchanged in 2025/2026 and whether it completely explains internal missingness |
 | Policy coefficient propagation | Daily endpoint regressions do not bound a regression coefficient; cross-block edges break factorization | Global edge-linear regression proposition | Complete algebraically; tested signed-objective implementation added | A coherent unconditional trip-level outcome, current legal encoding, and inference layer are absent |
 | Candidate-support uncertainty | Raw coverage is conditional on the true hidden edge surviving heuristic screens and the global degree cap | Candidate-deletion constructions and sensitivity sets | Complete conditionally; Gamma helper implemented | No defensible supergraph or empirical bound on omitted true edges exists |
 | Validation design | The generator embeds outcome-separating and SES-geographic structure; the current primary ablation was selected after inspecting the original diagnostic | Reproduction record and leakage audit | Complete; blocked as scientific validation | Independent realistic truth source or untouched generator family |
-| Novelty and venue positioning | Exact-cover range queries, linkage uncertainty, MIL/noisy-OR, budgeted matching, Chicago pooled-trip analyses, and urban exposure all have predecessors | Primary-source nearest-predecessor matrix | Complete | The suppression-coupled combination clears no venue bar until the current operator, theory, algorithm, and empirical materiality are established |
+| Novelty and venue positioning | Exact-cover range queries, linkage uncertainty, MIL/noisy-OR, budgeted matching, Chicago pooled-trip analyses, and urban exposure all have predecessors | Primary-source nearest-predecessor matrix | Conditional algorithmic increment survives: release-compiled temporal frontier, weak-hardness boundary, and outward score certificate | Production compiler, complete-day scaling, external truth, and operator verification remain submission gates |
 
 ## Blocked or superseded families
 
@@ -42,7 +42,7 @@ Prior conversational evaluations are not evidence for this audit. Entries below 
 | Independent missing-bin sets as a standalone novelty claim | Edgewise lower/upper costs reduce immediately to ordinary weighted perfect matching | Reopen only with empirically justified coupling constraints such as the actual suppression operator |
 | Chicago empirical or policy conclusion | No complete-day production run exists in the frozen evidence | Reopen only after complete-day ingestion, field audits, support diagnostics, and a predeclared policy analysis |
 
-## Post-audit implementation record
+## Historical pre-pivot implementation record
 
 - 30 deterministic unit tests pass.
 - The exhaustive fallback and SciPy/HiGHS agree on status and endpoints across
@@ -52,3 +52,18 @@ Prior conversational evaluations are not evidence for this audit. Entries below 
 - These tests establish small-instance implementation behavior only; they do
   not validate the candidate graph, the current City suppression operator, or
   any Chicago scientific conclusion.
+
+## KDD Research pivot record — 2026-08-27
+
+| Family | Central claim | Concrete derivation or counterexample | Required assumptions | Nearest prior work | Current status | Exact unresolved gap |
+|---|---|---|---|---|---|---|
+| Exact temporal frontier | A declared temporal schedule admits exact lower/upper query endpoints and witness worlds while jointly tracking matching, latent labels, active threshold-release factors, omitted-edge budget, and a rational score floor | Inductive live-state invariant; capped threshold automata; exact `Fraction` implementation; 80 seeded brute-force instances plus the locked benchmark | Valid compiled schedule; audited release implications; finite label supports; pair-additive query; constant core incidence for score shifting | Bounded-width CSP/bucket elimination; budgeted matching | Viable and implemented as a reference algorithm | No production observation-operator compiler or complete-day schedule/runtime evidence |
+| Score-aware complexity | The associated two-threshold decision problem under an additive score floor is weakly NP-complete at pathwidth two | SUBSET-SUM reduction using disjoint four-cycles; pseudo-polynomial score coordinate matches the weak-hardness boundary | Nonnegative binary-encoded integer score/query contributions; exact endpoint decision problem | Budgeted matching hardness and approximation | Viable; theorem independently checked | Must not be inflated into generic matching hardness or a “first” claim |
+| Certified outward score relaxation | Rounding shifted scores down yields an outer world set between the exact floor and a floor relaxed by at most `eta*N`; endpoints contain the exact endpoints | Two-sided score inequalities, original-score witness revaluation, and 40 seeded random inclusion/witness checks | Constant total core incidence `N`; rationalized fixed scorer; structural constraints unchanged | Budgeted matching approximation; resource rounding | Viable; bicriteria certificate implemented | It is not a query FPTAS; query width can jump under arbitrarily small score slack |
+| Fixed-reference conformal safety layer | Freezing one score range at a predeclared reference Gamma restores nested score-restricted sets and gives finite-sample retention only under full true-world exchangeability/membership | Four-cycle nestedness counterexample to per-Gamma renormalization; exact calibration-to-DP tests | Scorer/operator/graph/reference budget fixed before calibration; exchangeable augmented markets; true matching observed to score calibration; full true world belongs to the frozen reference set | Cauchois et al. structured/weak-supervision conformal prediction | Repairable method layer; code complete | No suitable Chicago calibration markets or verified candidate/release coverage |
+
+The new counts supersede neither the historical freeze nor its scientific
+blockers: the current bounds suite has 72 deterministic tests, including 80
+seeded exact-DP brute-force instances and 40 seeded relaxation checks, and the
+locked temporal benchmark has 34 cases. These committed checks validate the
+reference implementation on small declared worlds only.

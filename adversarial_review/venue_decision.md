@@ -2,54 +2,45 @@
 
 ## Decision
 
-**Current manuscript: NO-GO for submission.**
+**Immediate submission: NO-GO.**
 
-**Research program: CONDITIONAL GO**, with *Data Science for Transportation* as
-the first attainable target after a complete, suppression-aware Chicago study.
-*Transportation Research Part C* is a stretch only if the coupled
-suppression–geography–matching problem yields general theory and a scalable
-certified algorithm. *Transportation Research Part A* is an alternative only
-if the 2026 policy analysis passes its legal-treatment, support, pretrend, and
-uncertainty gates and produces a substantive policy conclusion.
-
-KDD Research, KDD AI for Sciences, and *Transportation Science* are not
-supported by the current evidence or by the elementary missing-bin/global-OLS
-repairs alone.
+**KDD Research development: CONDITIONAL GO.** The post-audit working draft now
+contains a nontrivial reference algorithm, a weak-hardness boundary, and a
+certified score relaxation beyond the elementary missing-bin/global-OLS
+repairs. KDD Research is therefore the primary target if production compilation,
+external relation truth, and multi-scale validation pass. KDD AI for Sciences
+remains a no-go without a completed domain-science finding. *Data Science for
+Transportation* is the fallback if the method does not generalize but a
+complete, material Chicago measurement result survives.
 
 ## Venue matrix
 
 | Venue | Current fit | Why | Audit team's minimum credible gate—not an official venue rule |
 |---|---|---|---|
-| KDD Research | **No-go** | Current ingredients reduce to known linkage-range queries, matching, and a composite node score; no new general learner or algorithm | General problem beyond Chicago; nontrivial complexity/algorithm result; candidate-miss robustness; scalable implementation; strong uncertain-query/linkage/matching baselines; preferably multiple domains. See the [official Research CFP](https://kdd2027.kdd.org/research-track-call-for-papers/). |
+| KDD Research | **Conditional primary target** | The current increment is a release-compiled exact temporal frontier with witnesses, a pathwidth-two weak-hardness boundary, and certified outward score containment; conformal prediction is correctly treated as prior safety machinery | Production observation-operator compiler; complete-day width/runtime evidence; external or retained relation truth; size/sparsity/operator sweeps; generic MILP and linkage/query baselines; one non-Chicago benchmark. See the [official Research CFP](https://kdd2027.kdd.org/research-track-call-for-papers/). |
 | KDD AI for Sciences | **No-go** | No completed urban-science discovery, no independently validated essential AI contribution, and no complete real-data result | Domain-science advancement enabled by AI, rigorous comprehensive validation, and domain-expert collaboration. The [official AI4Sciences CFP](https://kdd2027.kdd.org/ai4sciences-track-call-for-papers/) explicitly directs methodology papers toward Research. |
-| Data Science for Transportation | **Conditional primary target** | The journal's stated scope includes transportation methodological advances, high-quality applications, and privacy questions; the strongest residual contribution directly addresses privacy-biased Chicago measurement | Complete all-trip and chain-complete data; mechanism-conditional contextual bounds; exact small-instance or numerically qualified production endpoints; comparison with complete cases, community aggregation, independent-label bounds, single imputation, and Sebti–Chen; reproducible workflow; material transport/equity finding. See [aims and scope](https://link.springer.com/journal/42421/aims-and-scope). |
-| Transportation Research Part C | **Stretch** | Plausible only if the privacy-coarsened matching problem is generalized beyond a one-off MILP and the transport implications are material | Verified release operator; sharp coupled formulation; complexity result; exact/decomposition/approximation algorithm; production-scale certificates; proxy-grouping baseline; full Chicago result. See the [official journal page](https://www.sciencedirect.com/journal/transportation-research-part-c-emerging-technologies). |
+| Data Science for Transportation | **Conditional fallback** | The journal's stated scope includes transportation methodological advances, high-quality applications, and privacy questions; it becomes the better fit if the contribution is a complete Chicago measurement result rather than a general algorithm | Complete all-trip and chain-complete data; mechanism-conditional contextual bounds; exact small-instance or numerically qualified production endpoints; comparison with complete cases, community aggregation, independent-label bounds, single imputation, and Sebti–Chen; reproducible workflow; material transport/equity finding. See [aims and scope](https://link.springer.com/journal/42421/aims-and-scope). |
+| Transportation Research Part C | **Conditional fallback** | The coupled formulation and reference algorithm now exist; fit still depends on transport-specific production evidence and material implications | Verified release operator; production-scale certificates; proxy-grouping baseline; full Chicago result. See the [official journal page](https://www.sciencedirect.com/journal/transportation-research-part-c-emerging-technologies). |
 | Transportation Research Part A | **Policy alternative** | Method is supporting infrastructure, not the main contribution; fit depends on a credible 2026 policy result | Correct pickup-or-dropoff and old/new-zone treatment; all-trip denominators; legal timing audit; event-study pretrends; placebo and spillover tests; stable observation support; identified-set inference; comparison with prior Chicago tax studies. See the [official journal page](https://www.sciencedirect.com/journal/transportation-research-part-a-policy-and-practice). |
-| Transportation Science | **No-go** | Independent missing-bin bounds and fixed-design coefficient bounds are ordinary weighted matching; the score-floor problem resembles one-budget matching, but equivalence and inherited complexity have not been proved ([Berger et al.](https://doi.org/10.1007/s10107-009-0307-4)) | The audit would require major general theory, advanced methodology, or an exceptional actionable transportation result. This is an audit judgment informed by the journal's [editorial statement](https://pubsonline.informs.org/page/trsc/editorial-statement), not an official theorem checklist. |
+| Transportation Science | **No-go** | The new weak-hardness boundary and reference temporal algorithm are real but do not yet constitute the broad optimization theory, production evidence, or actionable transportation result expected here | The audit would require major general theory, advanced methodology, or an exceptional actionable transportation result. This is an audit judgment informed by the journal's [editorial statement](https://pubsonline.informs.org/page/trsc/editorial-statement), not an official theorem checklist. |
 | M&SOM / broad OM | **No-go** | No operational decision, equilibrium, platform intervention, or completed market-design result is identified | A new operational model or intervention with decision relevance and substantial empirical/theoretical results, not only measurement under hidden links |
 
-## Why the current paper cannot be submitted honestly
+## Why the current paper cannot yet be submitted honestly
 
-1. Its primary observational interpretation contradicts the official
-   `Shared Trip Match` definition.
-2. The current candidate graph is not a coverage graph and can delete true
-   co-present partners by day, distance, and degree rules.
-3. Complete-case geography can create feasible but wholly false pairings.
-4. The node objective is not a joint latent-edge likelihood and does not
-   identify edge rankings.
-5. The raw `rho` radius is scale-dependent and equal values are not comparable
-   across score maps.
-6. The optimization correctly gives attained extremal values, but the closed
-   interval between them is only the convex hull of the generally discrete
-   attainable set; calling that whole interval the exact attainable set is
-   wrong.
-7. The synthetic primary was selected after detecting circularity in the
-   original generator/specification and remains proxy-rich.
-8. The current downloader cannot estimate `/all` policy denominators.
-9. The declared policy block optimization is separable; current ITT language
-   is invalid.
-10. No complete-day Chicago structural estimate, production scalability
-    result, or policy estimate exists.
+1. The reference implementation accepts a compiled temporal order, but the
+   high-level compiler from a verified public observation operator is absent.
+2. No complete-day instance reports live width, active-factor width, frontier
+   size, memory, runtime, or fallback behavior.
+3. No external or retained-truth benchmark validates candidate eligibility or
+   score calibration outside the synthetic generator.
+4. The controlled benchmark is one seed and one market size with direct edge
+   supervision; it is not evidence for node weak supervision or Chicago.
+5. Candidate-omission sensitivity is a declared Gamma budget, not an empirical
+   coverage estimate.
+6. The current Chicago suppression operator is unverified, the prefix sample
+   omits nearly every counterpart, and no scientific endpoint has been run.
+7. The Chicago policy downloader, estimand, and causal design remain invalid
+   for an ITT claim and are correctly excluded from the method paper.
 
 ## Submission gates
 
@@ -115,7 +106,9 @@ repairs alone.
 
 ## Recommended path
 
-Prioritize the mechanism-conditional suppression-aware measurement paper and target *Data
-Science for Transportation*. Defer KDD and policy branding. Reopen TR-C only
-after the coupled formulation is provably nontrivial, computationally scalable,
-and materially changes the Chicago conclusions.
+Prioritize the KDD Research method route: implement the audited operator-to-order
+compiler, measure the temporal frontier on complete days, add a non-Chicago
+relation-truth benchmark, and compare against generic MILP and uncertain-linkage
+baselines. Keep Chicago as the gated flagship application. If those generality
+gates fail but the complete Chicago analysis is scientifically material, pivot
+to *Data Science for Transportation* without retaining broad algorithm claims.

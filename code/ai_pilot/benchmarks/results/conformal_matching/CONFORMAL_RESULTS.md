@@ -23,5 +23,10 @@ homophily probability is 95%, whereas the calibration
 and test probability is 55%. The radius 0.05 is an
 illustrative stress point, not a calibrated baseline. Results validate only
 the finite-sample matching-set calibration implementation on this fixed split.
+Every matching score parses each float edge score through its shortest decimal
+spelling before termwise Fraction summation; exact score floors determine
+membership without a tolerance. The benchmark counts each selected edge once,
+which differs from the paper's all-core incidence score by a constant factor of
+two and therefore leaves normalized regrets and admissible sets unchanged.
 They do not validate weak supervision, privacy-count coupling, candidate
 support, or exchangeability for Chicago.

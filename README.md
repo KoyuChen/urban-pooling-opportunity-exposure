@@ -1,16 +1,16 @@
-# Hidden Relations under Privacy Coarsening
+# Certified Temporal Frontiers for Hidden Relations
 
 KDD Research-oriented working repository for certified aggregate inference when
 a public release suppresses relation keys and coarsens endpoint attributes.
 Chicago ride pooling is the flagship application; it is not treated as a
 substitute for general method validation.
 
-> **Status:** research build, not submission ready. The exact small-graph
-> audit, joint matching--label reference solver, matching-level conformal
-> calibration, and controlled benchmark are implemented. A verified 2025/2026
-> Chicago observation operator, a production-scale certified decomposition,
-> independent external relation-truth validation, and complete-day Chicago
-> evidence remain hard gates.
+> **Status:** research build, not submission ready. The exact temporal-frontier
+> solver, certified score relaxation, matching-level conformal safety layer,
+> and locked structural benchmark are implemented. A verified 2025/2026
+> Chicago observation operator, a production compiler and full-day width
+> profile, independent external relation-truth validation, and complete-day
+> Chicago evidence remain hard gates.
 
 ## Method target
 
@@ -41,11 +41,47 @@ R_s(M)=\frac{S_{\max}-S(M)}{S_{\max}-S_{\min}},
 \]
 
 which is invariant to positive affine score transformations. A split-conformal
-order statistic calibrated on independent markets with observed true
-matchings yields market-level finite-sample inclusion under exchangeability
-and candidate support. Synthetic calibration does not transfer to Chicago;
-without independent Chicago-like partner truth, learned restrictions remain
-sensitivity analyses.
+order statistic is calibrated on independent markets with observed true
+matchings. Its retention guarantee requires exchangeable augmented markets and
+almost-sure membership of the true full world in the frozen reference set. At
+a smaller final `Gamma`, a separate full-world eligibility error `alpha_G`
+yields query coverage `1-alpha_S-alpha_G`. Synthetic calibration does not
+transfer to Chicago; without independent Chicago-like partner truth, learned
+restrictions remain sensitivity analyses.
+
+The score extrema used for normalization are computed once on a predeclared
+ambient candidate-omission budget and frozen across the complete `Gamma` path.
+All edge contributions are rationalized before summation, and the exact
+conformal floor is passed to the exact solver without another float round trip.
+Recomputing the score range at each `Gamma` can make otherwise nested
+restrictions non-nested.
+
+## Exact temporal-frontier algorithm
+
+Given a record forget order, the compiler processes every edge while both
+endpoints are live and opens each count factor only from its first possible
+contributor or requirement through its last. A state contains live compiled
+labels, matching bits, sparse active `(capped_count, LOW/HIGH)` factors, one
+global `Gamma` coordinate, and an integer score capped at the floor. For live
+record width `w`, compiled support `d`, at most `r` active threshold factors of
+cap `k`, omission budget `Gamma`, and score target `b`, the key bound is
+
+\[
+(2d)^w[3(k+1)]^r(\Gamma+1)(b+1).
+\]
+
+The solver returns exact attained endpoints and independently replayed witness
+worlds. The dependence on `b` is pseudo-polynomial: the two-resource endpoint
+decision is weakly NP-complete even on disjoint four-cycles of pathwidth two.
+For a rational granularity \(\eta\), the optional outward relaxation certifies
+
+\[
+\mathcal F_B\subseteq\widehat{\mathcal F}_\eta
+\subseteq\mathcal F_{B-\eta|C|}.
+\]
+
+It controls score slack, not query error, and is not described as a query
+FPTAS.
 
 ## Current controlled benchmark
 
@@ -96,12 +132,16 @@ matching, composition, or policy estimate is computed from it.
   endpoint baseline.
 - `code/ai_pilot/bounds/conformal_matching.py` — matching-level split-conformal
   calibration.
+- `code/ai_pilot/bounds/path_frontier_dp.py` — exact sparse temporal frontier,
+  witness replay, and certified outward score relaxation.
 - `code/ai_pilot/benchmarks/conformal_set_benchmark.py` — deterministic
   source/calibration/test benchmark.
 - `code/ai_pilot/benchmarks/exact_conformal_frontier.py` — exhaustive
   10,395-matchings-per-market audit and radius frontier.
 - `code/ai_pilot/benchmarks/joint_solver_audit.py` — 250-instance exact versus
   numerical agreement audit.
+- `code/ai_pilot/benchmarks/path_frontier_benchmark.py` — locked 34-case
+  structural, exhaustive, numerical, and relaxation benchmark.
 - `code/ai_pilot/integration/` — earlier weak-node-score pilot, retained as
   failure analysis rather than headline evidence.
 - `SUBMISSION_CHECKLIST.md` — KDD Research format and scientific gates.
@@ -119,6 +159,7 @@ python -m unittest discover -s code/ai_pilot/bounds/tests -v
 python code/ai_pilot/benchmarks/conformal_set_benchmark.py
 python code/ai_pilot/benchmarks/exact_conformal_frontier.py
 python code/ai_pilot/benchmarks/joint_solver_audit.py
+python code/ai_pilot/benchmarks/path_frontier_benchmark.py
 MPLCONFIGDIR=tmp/matplotlib \
   python code/ai_pilot/benchmarks/plot_conformal_tradeoff.py
 ```

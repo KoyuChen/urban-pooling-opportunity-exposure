@@ -6,9 +6,9 @@ The project now targets the **KDD Research Track** as a methods paper. Chicago
 is the flagship application, not the methodological object. The working claim
 is deliberately narrower than a submission claim:
 
-> Learn an optional compatibility restriction, calibrate it at the matching
-> level, and compute auditable aggregate endpoints over worlds that jointly
-> complete a hidden relation and privacy-coarsened endpoint attributes.
+> Compile privacy-coarsened hidden-relation worlds into a temporal frontier,
+> compute exact or outward-certified aggregate endpoints, and use learned
+> scores only through a separately calibrated safety layer.
 
 The current evidence is not yet sufficient for submission. This repository is
 the research build that must either pass the gates below or fall back to a
@@ -51,7 +51,7 @@ values; it need not consist entirely of attainable values.
 
 ## Learning-augmented restriction
 
-For any edge scorer fixed before calibration, let (S(M)) be its
+For any rationalized edge scorer fixed before calibration, let (S(M)) be its
 core-incidence-weighted additive score, and let (S_{\min},S_{\max}) be its
 extrema over a market's feasible matching domain. Define matching-level
 nonconformity
@@ -68,11 +68,20 @@ calibration markets with observed true matchings, use the
 \left\lceil(m+1)(1-\alpha)\right\rceil
 \]
 
-order statistic of (R_s(M^\dagger)). Under exchangeability, a score fixed
-before calibration, candidate support, and exact feasible-world semantics, the
-restricted set retains a new true matching with marginal probability at least
-(1-\alpha). Optimizing any downstream query over that set inherits the same
-coverage event.
+order statistic of (R_s(M^\dagger)). Calibration observes the true matching
+because the scorer is matching-only. Query coverage additionally assumes that
+the augmented markets, including their full true worlds, are exchangeable and
+that each true full world belongs almost surely to the frozen reference set.
+For a smaller final `Gamma`, a separate eligibility failure probability
+`alpha_G` gives coverage at least `1-alpha_S-alpha_G`; it is not absorbed into
+the score error. Optimizing any downstream query over the same retained world
+set inherits that one full-world membership event.
+
+The score range is computed once over a predeclared ambient `Gamma` budget and
+frozen along the entire candidate-omission path. Edge contributions are
+rationalized componentwise before exact summation, and the resulting rational
+floor is consumed directly by the exact solver. Recomputing the normalizer separately for each
+`Gamma` can break nestedness.
 
 This does **not** license transferring synthetic calibration to Chicago.
 Without independent Chicago-like partner truth, the Chicago score restriction
@@ -98,6 +107,17 @@ hidden inside one claimed confidence level.
 - Signed lower/upper objectives, independent missing-context envelopes,
   fixed-design FWL weights, and supplied-supergraph \(\Gamma\) sensitivity.
 - Matching-level normalized regret and finite-sample split-conformal radius.
+- An exact temporal-frontier solver with sparse active factor lifetimes,
+  threshold-capped LOW/HIGH automata, exact rational score/query arithmetic,
+  Gamma, and independently replayed endpoint witnesses.
+- A weak-NP-hardness boundary on disjoint pathwidth-two four-cycles, explaining
+  why exact score tracking is pseudo-polynomial even at constant graph width.
+- A certified bicriteria score relaxation satisfying
+  \(\mathcal F_B\subseteq\widehat{\mathcal F}_\eta
+  \subseteq\mathcal F_{B-\eta|C|}\); it is not a query FPTAS.
+- A locked 34-case frontier benchmark: 32 exhaustive agreements, 24 analytic
+  agreements, 16 resolved numerical agreements, and one certified relaxation
+  check.
 - A complete NP-completeness proof for an explicitly defined paired
   threshold-release operator, audited with the endpoint-independent and
   metric-compatibility limitations stated. The theorem is not asserted to be
@@ -105,9 +125,9 @@ hidden inside one claimed confidence level.
 - A deterministic three-way source/calibration/test benchmark with directly
   edge-supervised target-free and deliberately query-leaking scorers under a
   homophily shift.
-- An exhaustive frontier audit over all 10,395 perfect matchings per synthetic
-  test market; it reproduces the numerical benchmark and evaluates radii from
-  0 to 1.
+- A second solver-free frontier audit over all 10,395 perfect matchings per
+  synthetic test market; it shares the locked generator and score utilities,
+  separately reaggregates the results, and evaluates radii from 0 to 1.
 - Executable counterexamples showing why node marginals do not identify edge
   ranks, a product of noisy-OR marginals is not a coherent joint matching
   model, raw fractional score floors are scale dependent, and endpoint ranges
@@ -149,7 +169,7 @@ matching-set calibration implementation on one synthetic design.
 |---|---|---|
 | Observation operator | Version-specific 2025/2026 documentation, all rows contributing to privacy cells, boundary-safe extraction | No Chicago aggregate claim before verification |
 | Coupled method | Joint matching--attribute feasible-world solver; independent-support reduction; correctness proof | Must exceed an application-specific MILP description |
-| Complexity and algorithm | Audited paired-suppression NP-completeness boundary is complete; scalable certified decomposition or oracle-based algorithm remains | Required for the central Research-track contribution |
+| Complexity and algorithm | Exact temporal frontier, weak-hardness boundary, and score-slack relaxation implemented; production compiler/order and full-day width profile remain | Required before a production scalability claim |
 | Learning | Matching-level calibration on independent markets with observed relation truth | Required for any calibrated AI-sharpening claim |
 | Candidate support | Necessary-condition supergraph, omitted-edge stress tests, and calibrated or externally audited support | Raw endpoints remain graph-conditional otherwise |
 | Benchmarks | Untouched controlled family plus at least one non-Chicago relational benchmark with hidden ground truth | Required for generality |

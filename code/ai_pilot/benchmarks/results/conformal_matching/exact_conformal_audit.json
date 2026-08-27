@@ -5,7 +5,7 @@
       "calibration_coverage": 0.9183673469387755,
       "calibration_size": 49,
       "order_rank": 45,
-      "tau": 0.5037976580417014
+      "tau": 0.5037976580417015
     },
     "target_free": {
       "alpha": 0.1,
@@ -60,12 +60,15 @@
     ],
     "rows": 44
   },
-  "schema_version": 1,
+  "schema_version": 2,
   "semantics": {
-    "arithmetic": "exact combinatorial enumeration with IEEE-754 model scores",
+    "arithmetic": "termwise decimal-rational edge-score sums and integer query counts; float only at learned-score input and serialization",
+    "edge_row_order": "validated independently against node-row order",
     "endpoint_method": "direct exhaustive enumeration; no optimization solver",
     "feasible_set": "all perfect matchings of each generated complete 12-node graph",
-    "matching_coverage": "the hidden matching lies in the normalized-regret ball",
+    "matching_coverage": "the hidden matching satisfies the actual exact score floor",
+    "score_floor_membership": "exact Fraction comparison without tolerance",
+    "score_multiplicity": "one per selected edge; exactly half the all-core incidence score",
     "statistic_coverage": "the hidden same-SES fraction lies between attainable extrema"
   },
   "verification": {
@@ -79,7 +82,7 @@
           "arbitrary_width_reduction": 0.9579831932773109,
           "calibrated_matching_coverage": 0.975,
           "calibrated_statistic_coverage": 1.0,
-          "calibrated_tau": 0.5037976580417014,
+          "calibrated_tau": 0.5037976580417015,
           "calibrated_width": 0.6111111111111109,
           "calibrated_width_reduction": 0.07563025210084062,
           "point_mae": 0.30833333333333335,
@@ -97,10 +100,10 @@
           "arbitrary_width_reduction": 0.957983193277311,
           "calibrated_matching_coverage": 0.975,
           "calibrated_statistic_coverage": 1.0,
-          "calibrated_tau": 0.5037976580417013,
+          "calibrated_tau": 0.5037976580417015,
           "calibrated_width": 0.6111111111111112,
           "calibrated_width_reduction": 0.0756302521008404,
-          "point_mae": 0.3083333333333334,
+          "point_mae": 0.30833333333333335,
           "raw_coverage": 1.0,
           "raw_width": 0.6611111111111112,
           "scorer": "query_leaking",
@@ -118,7 +121,7 @@
           "calibrated_tau": 0.3406140452389434,
           "calibrated_width": 0.6361111111111113,
           "calibrated_width_reduction": 0.03781512605041981,
-          "point_mae": 0.12222222222222223,
+          "point_mae": 0.1222222222222222,
           "raw_coverage": 1.0,
           "raw_width": 0.6611111111111111,
           "scorer": "target_free",
@@ -133,10 +136,10 @@
           "arbitrary_width_reduction": 0.7058823529411764,
           "calibrated_matching_coverage": 0.9583333333333334,
           "calibrated_statistic_coverage": 1.0,
-          "calibrated_tau": 0.34061404523894334,
+          "calibrated_tau": 0.3406140452389434,
           "calibrated_width": 0.6361111111111112,
           "calibrated_width_reduction": 0.037815126050420145,
-          "point_mae": 0.12222222222222223,
+          "point_mae": 0.12222222222222222,
           "raw_coverage": 1.0,
           "raw_width": 0.6611111111111112,
           "scorer": "target_free",
@@ -146,19 +149,31 @@
     },
     "headline_absolute_tolerance": 1e-09,
     "reference_file": "conformal_matching_benchmark.json",
-    "reference_sha256": "8bbfc6bbf44a0b166ff1ceaae34cd041fd6ac96de64238b157fbefdb5e1bae38",
+    "reference_sha256": "65cfa235a2c29dab0e518c27244999c597009e15bd79061144c1f45e44777f12",
+    "score_arrays": {
+      "calibration_score_array_sha256": {
+        "computed": "69a545622d642714c39a69d4d5b03a4cbc9f36796402d002c6712505371025d9",
+        "passed": true,
+        "reference": "69a545622d642714c39a69d4d5b03a4cbc9f36796402d002c6712505371025d9"
+      },
+      "test_score_array_sha256": {
+        "computed": "5ab6cfd7af58f7424f52b22f7e90e997bac637a943c11477ea18cc47da5daced",
+        "passed": true,
+        "reference": "5ab6cfd7af58f7424f52b22f7e90e997bac637a943c11477ea18cc47da5daced"
+      }
+    },
     "tau": {
       "query_leaking": {
-        "absolute_error": 1.1102230246251565e-16,
-        "enumerated": 0.5037976580417014,
+        "absolute_error": 0.0,
+        "enumerated": 0.5037976580417015,
         "passed": true,
-        "reference": 0.5037976580417013
+        "reference": 0.5037976580417015
       },
       "target_free": {
-        "absolute_error": 5.551115123125783e-17,
+        "absolute_error": 0.0,
         "enumerated": 0.3406140452389434,
         "passed": true,
-        "reference": 0.34061404523894334
+        "reference": 0.3406140452389434
       }
     },
     "tau_absolute_tolerance": 1e-12

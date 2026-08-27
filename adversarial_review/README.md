@@ -1,10 +1,23 @@
 # Adversarial Audit Package
 
 This directory records the restart-from-zero audit of repository commit
-`9867029b5d3e97fd1346cbd8d11a052ab7f69e53`. Prior conversational judgments
-were not treated as evidence. The frozen manuscript and PDF were not revised,
-because the audit concludes that a coherent submission paper cannot yet be
-supported by the available data and validation.
+`9867029b5d3e97fd1346cbd8d11a052ab7f69e53` and the subsequent KDD Research
+method pivot. Prior conversational judgments were not treated as evidence. The
+original Chicago manuscript remains frozen in the historical record. The
+current paper is a separate method working draft; it does not convert the
+missing Chicago evidence into a scientific result.
+
+## Post-pivot decision — 2026-08-27
+
+- Immediate KDD submission: **NO-GO**.
+- KDD Research development program: **CONDITIONAL GO**.
+- Strongest surviving increment: an exact score-aware temporal-frontier
+  algorithm with witness recovery, a pathwidth-two weak-hardness boundary, and
+  a certified outward score relaxation for a declared release-coupled world
+  model.
+- Unchanged blockers: no production observation-operator compiler, verified
+  current Chicago suppression mechanism, complete-day width/runtime profile,
+  or external relation-truth benchmark.
 
 ## Required artifacts
 
@@ -31,6 +44,15 @@ supported by the available data and validation.
 - The bounds test suite now distinguishes exact `OPTIMAL`, floating-point
   `NUMERICALLY_OPTIMAL`, `PROVEN_INFEASIBLE`, and `UNRESOLVED`; time limits and
   numerical infeasibility reports are not promoted to exact certificates.
+- `../code/ai_pilot/bounds/path_frontier_dp.py` implements the exact temporal
+  frontier and outward score certificate with exact rational arithmetic and
+  replayed endpoint witnesses.
+- `../code/ai_pilot/benchmarks/path_frontier_benchmark.py` runs the locked
+  34-case structural benchmark and records hashes, oracle agreements, state
+  growth, and the relaxation inclusion check.
+- `../code/ai_pilot/bounds/conformal_matching.py` now freezes the score range
+  across Gamma sensitivities and uses the same declared rational scorer in
+  calibration and the exact optimizer.
 
 Run the local audit checks with:
 
@@ -39,22 +61,24 @@ python adversarial_review/counterexamples.py
 python -m unittest discover -s code/ai_pilot/bounds/tests -v
 ```
 
-The current suite contains 30 passing tests. Small-graph exhaustive solutions
+The current suite contains 72 passing tests. Small-graph exhaustive solutions
 are the exact audit oracle; SciPy/HiGHS results are treated as numerical.
 
 ## Decision
 
-- Current KDD/transport manuscript: **NO-GO**.
-- Research program: **CONDITIONAL GO**.
-- First attainable target after repair and complete data: **Data Science for
-  Transportation**.
-- Strongest unimplemented route: a version-confirmed, endpoint-marginal
-  suppression-aware partner/context model using all trips that contribute to
-  the City's privacy buckets.
+- Original Chicago manuscript: **NO-GO**.
+- Current KDD Research working draft: **CONDITIONAL GO for development; NO-GO
+  for immediate submission**.
+- Primary target if the algorithm, external-truth, and production gates pass:
+  **KDD Research**.
+- Fallback if only a complete and material Chicago measurement result survives:
+  **Data Science for Transportation**.
 
 The currently accessible 2019 City clarification, associated with legacy
 dataset IDs, describes separate pickup-time/tract and dropoff-time/tract
 buckets, with paired tract removal when either bucket is small. It does not
 establish an OD-tract-pair threshold, and its unchanged application to the
-2025/2026 dataset has not been verified. Accordingly, the coupled model remains
-a research route rather than a completed claim.
+2025/2026 dataset has not been verified. Accordingly, Chicago
+mechanism-specific claims remain a research route rather than a completed
+claim; the abstract paired-threshold compiler in the method paper is explicitly
+not asserted to be the current City operator.

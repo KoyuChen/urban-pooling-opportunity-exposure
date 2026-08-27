@@ -12,8 +12,8 @@ submission.
   `\documentclass[sigconf,anonymous,review]{acmart}`.
 - [x] Author names, affiliations, acknowledgments, repository URLs, and other
   direct identifiers removed from the review PDF.
-- [x] Main content occupies pages 1--7; references begin on page 8 and the
-  appendix on page 9.
+- [x] Main content occupies pages 1--8; references begin on page 9 and the
+  appendix on page 10.
 - [x] No overfull boxes, missing citations, undefined references, Type-3
   fonts, clipped objects, or unreadable figures in the final visual audit.
 - [ ] Live template, dates, artifact policy, disclosure requirements, and
@@ -30,8 +30,10 @@ submission.
   claim that the hidden graph has been recovered.
 - [x] Paired-suppression feasibility boundary has a complete adversarially
   audited NP-completeness proof, with operator and compatibility limits stated.
-- [ ] Scalable certified algorithm goes beyond the reference MILP and is
-  evaluated on production-scale graphs.
+- [x] Exact temporal-frontier algorithm goes beyond the reference MILP on
+  declared bounded-frontier instances and returns replayable witnesses.
+- [ ] Production compiler, full-day temporal order, and measured width/resource
+  profile establish scalability beyond the locked synthetic families.
 - [ ] At least one non-Chicago benchmark with independently observed relation
   truth is included.
 
@@ -47,6 +49,12 @@ submission.
   declared-input tests.
 - [x] Exact small-instance oracle agrees with the numerical reference solver
   on the deterministic 250-instance audit.
+- [x] Temporal frontier agrees with every applicable exact, analytic, and
+  resolved numerical comparator in the locked 34-case benchmark.
+- [x] Certified score relaxation is checked for exact-set containment,
+  score slack, and sufficient a-posteriori endpoint certificates.
+- [x] Conformal normalization is frozen across the Gamma path and uses the same
+  exact rationalized score map as the endpoint solver.
 - [x] Every result distinguishes attained endpoints, their convex-hull range,
   and any sampling uncertainty.
 - [ ] Candidate graph is a necessary-condition supergraph or its omissions are
@@ -61,8 +69,10 @@ submission.
   reproducible; its directly edge-supervised and query-leaking design is
   disclosed.
 - [x] Proxy-shift diagnostic shows the coverage cost of arbitrary sharpening.
-- [ ] Controlled benchmark varies rounding, suppression, boundary edges,
-  candidate omissions, proxy leakage, and graph scale.
+- [x] Structural benchmark varies record order, active-factor overlap,
+  score encoding, Gamma, and graph scale with exact references.
+- [ ] Application-facing benchmark additionally varies verified suppression
+  rules, boundary edges, candidate omissions, and operator misspecification.
 - [ ] Ground-truth relational benchmark reports true-world retention, query
   coverage, width, runtime, gaps, and certificate status.
 - [ ] Baselines include maximum-score point matching, complete cases,

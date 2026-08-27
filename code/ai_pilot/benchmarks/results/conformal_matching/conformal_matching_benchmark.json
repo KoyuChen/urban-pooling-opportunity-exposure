@@ -1,4 +1,5 @@
 {
+  "schema_version": 2,
   "design": {
     "seed": 271828,
     "pairs_per_market": 6,
@@ -15,14 +16,14 @@
       "alpha": 0.1,
       "calibration_size": 49,
       "order_rank": 45,
-      "tau": 0.34061404523894334,
+      "tau": 0.3406140452389434,
       "calibration_coverage": 0.9183673469387755
     },
     "query_leaking": {
       "alpha": 0.1,
       "calibration_size": 49,
       "order_rank": 45,
-      "tau": 0.5037976580417013,
+      "tau": 0.5037976580417015,
       "calibration_coverage": 0.9183673469387755
     }
   },
@@ -68,10 +69,10 @@
       "arbitrary_matching_coverage": 0.15,
       "arbitrary_statistic_coverage": 0.24166666666666667,
       "arbitrary_width": 0.027777777777777783,
-      "point_mae": 0.3083333333333334,
+      "point_mae": 0.30833333333333335,
       "calibrated_width_reduction": 0.0756302521008404,
       "arbitrary_width_reduction": 0.957983193277311,
-      "calibrated_tau": 0.5037976580417013
+      "calibrated_tau": 0.5037976580417015
     },
     {
       "scorer": "target_free",
@@ -84,10 +85,24 @@
       "arbitrary_matching_coverage": 0.3,
       "arbitrary_statistic_coverage": 0.8333333333333334,
       "arbitrary_width": 0.19444444444444448,
-      "point_mae": 0.12222222222222223,
+      "point_mae": 0.12222222222222222,
       "calibrated_width_reduction": 0.037815126050420145,
       "arbitrary_width_reduction": 0.7058823529411764,
-      "calibrated_tau": 0.34061404523894334
+      "calibrated_tau": 0.3406140452389434
     }
-  ]
+  ],
+  "reproducibility": {
+    "numpy_version": "2.3.5",
+    "pandas_version": "2.2.3",
+    "scikit_learn_version": "1.8.0",
+    "calibration_score_array_sha256": "69a545622d642714c39a69d4d5b03a4cbc9f36796402d002c6712505371025d9",
+    "test_score_array_sha256": "5ab6cfd7af58f7424f52b22f7e90e997bac637a943c11477ea18cc47da5daced"
+  },
+  "score_semantics": {
+    "matching_domain": "all 10,395 perfect matchings of each complete 12-node graph",
+    "rationalization": "each float edge score is parsed from its shortest decimal spelling before termwise Fraction summation",
+    "floor_membership": "exact Fraction comparison without tolerance",
+    "edge_row_order": "validated node-row lexicographic complete-graph order",
+    "score_multiplicity": "one per selected edge; the all-core paper incidence score is exactly twice this value and induces the same normalized-regret set"
+  }
 }

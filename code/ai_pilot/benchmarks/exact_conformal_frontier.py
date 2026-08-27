@@ -5,8 +5,11 @@ The controlled benchmark has twelve nodes per market and a complete candidate
 graph.  There are only ``11!! = 10,395`` perfect matchings, so this audit does
 not call a MILP solver: it enumerates every feasible matching, recomputes the
 calibration regrets, and evaluates every downstream endpoint directly.  The
-result is exact with respect to the generated candidate set and the stored
-double-precision model scores (it is not a symbolic-arithmetic claim).
+result uses the benchmark's declared score semantics end to end: each stored
+float edge score is parsed from its decimal spelling before termwise rational
+summation, and score-floor membership is an exact rational comparison with no
+tolerance.  Integer same-SES counts are also compared exactly.  Floats are
+used only for learned edge outputs and serialized summaries.
 
 The script intentionally reconstructs the deterministic source/calibration/test split
 from :class:`conformal_set_benchmark.Design`.  It fails if exact enumeration no
@@ -20,6 +23,7 @@ import hashlib
 import json
 import math
 from dataclasses import asdict, dataclass
+from fractions import Fraction
 from pathlib import Path
 
 import numpy as np
@@ -29,15 +33,20 @@ from conformal_set_benchmark import (
     BENCHMARK_DIR,
     Design,
     add_scores,
+    exact_matching_score_sums,
     fit_scorers,
     generate_market,
+    statistic_counts,
 )
-from conformal_matching import normalized_matching_regret, split_conformal_radius
+from conformal_matching import (  # noqa: E402
+    exact_score_floor_from_radius,
+    normalized_matching_regret,
+    split_conformal_radius,
+)
 
 
 RESULTS_DIR = BENCHMARK_DIR / "results" / "conformal_matching"
 GRID_RADII = tuple(float(value) / 20.0 for value in range(21))
-SCORE_TOLERANCE = 1e-12
 TAU_AUDIT_TOLERANCE = 1e-12
 HEADLINE_AUDIT_TOLERANCE = 1e-9
 
@@ -112,6 +121,40 @@ def enumerate_matching_edge_rows(node_count: int) -> np.ndarray:
     return result
 
 
+def _validate_complete_graph_edge_order(
+    nodes: pd.DataFrame,
+    edges: pd.DataFrame,
+) -> None:
+    """Independently verify the positional edge-index convention."""
+
+    node_ids = nodes["node_id"].astype(str).tolist()
+    expected = [
+        (node_ids[left], node_ids[right])
+        for left in range(len(node_ids))
+        for right in range(left + 1, len(node_ids))
+    ]
+    actual = list(zip(edges["u"].astype(str), edges["v"].astype(str)))
+    if actual != expected:
+        raise ValueError(
+            "edge rows do not match the audit's complete-graph index convention"
+        )
+
+
+def _score_array_sha256(markets, scorer_names) -> str:
+    """Hash every declared calibration/test edge score in stable order."""
+
+    digest = hashlib.sha256()
+    for _, edges, _ in markets:
+        for row in edges.itertuples(index=False):
+            edge_id = str(row.edge_id)
+            for scorer_name in sorted(scorer_names):
+                declared = str(float(getattr(row, f"score_{scorer_name}")))
+                digest.update(
+                    f"{edge_id}\t{scorer_name}\t{declared}\n".encode("utf-8")
+                )
+    return digest.hexdigest()
+
+
 def _reconstruct_split(design: Design):
     seed_sequence = np.random.SeedSequence(design.seed)
     children = seed_sequence.spawn(
@@ -165,12 +208,13 @@ def _score_geometry(
     matching_edge_rows: np.ndarray,
     true_index: int,
     score_col: str,
-) -> tuple[np.ndarray, float, float, float]:
-    edge_scores = edges[score_col].to_numpy(dtype=float)
-    score_sums = edge_scores[matching_edge_rows].sum(axis=1)
-    minimum = float(score_sums.min())
-    maximum = float(score_sums.max())
-    true_score = float(score_sums[true_index])
+) -> tuple[tuple[Fraction, ...], Fraction, Fraction, float]:
+    score_sums = exact_matching_score_sums(
+        edges[score_col].tolist(), matching_edge_rows
+    )
+    minimum = min(score_sums)
+    maximum = max(score_sums)
+    true_score = score_sums[true_index]
     regret = normalized_matching_regret(true_score, minimum, maximum)
     return score_sums, minimum, maximum, regret
 
@@ -185,10 +229,6 @@ def _frontier_points(calibrated_tau: float) -> list[tuple[str, float]]:
             for kind, radius in points
         ]
     return sorted(points, key=lambda item: (item[1], item[0]))
-
-
-def _contains(lower: float, upper: float, truth: float) -> bool:
-    return lower - SCORE_TOLERANCE <= truth <= upper + SCORE_TOLERANCE
 
 
 def _numeric_headline(
@@ -235,11 +275,18 @@ def run(output_dir: Path, reference_json: Path) -> dict:
     node_count = 2 * design.pairs_per_market
     matching_edge_rows = enumerate_matching_edge_rows(node_count)
     matchings_per_market = int(len(matching_edge_rows))
+    calibration_scored = [
+        (nodes, add_scores(edges, scorers), true_edge_ids)
+        for nodes, edges, true_edge_ids in calibration
+    ]
+    test_scored = [
+        (nodes, add_scores(edges, scorers), true_edge_ids)
+        for nodes, edges, true_edge_ids in test
+    ]
 
     calibration_regrets: dict[str, list[float]] = {name: [] for name in scorers}
-    for nodes, edges, true_edge_ids in calibration:
-        del nodes
-        scored = add_scores(edges, scorers)
+    for nodes, scored, true_edge_ids in calibration_scored:
+        _validate_complete_graph_edge_order(nodes, scored)
         true_index = _true_matching_index(scored, true_edge_ids, matching_edge_rows)
         for scorer in scorers:
             _, minimum, maximum, regret = _score_geometry(
@@ -269,42 +316,56 @@ def run(output_dir: Path, reference_json: Path) -> dict:
     raw_covers: list[bool] = []
     point_errors: dict[str, list[float]] = {name: [] for name in scorers}
 
-    for nodes, edges, true_edge_ids in test:
-        del nodes
-        scored = add_scores(edges, scorers)
+    for nodes, scored, true_edge_ids in test_scored:
+        _validate_complete_graph_edge_order(nodes, scored)
         true_index = _true_matching_index(scored, true_edge_ids, matching_edge_rows)
-        statistic = scored["same_ses"].to_numpy(dtype=float)[matching_edge_rows].mean(axis=1)
-        truth = float(statistic[true_index])
-        raw_lower = float(statistic.min())
-        raw_upper = float(statistic.max())
+        counts = statistic_counts(scored, matching_edge_rows)
+        pair_count = matching_edge_rows.shape[1]
+        truth_count = int(counts[true_index])
+        raw_lower_count = int(counts.min())
+        raw_upper_count = int(counts.max())
+        truth = truth_count / pair_count
+        raw_lower = raw_lower_count / pair_count
+        raw_upper = raw_upper_count / pair_count
         raw_widths.append(raw_upper - raw_lower)
-        raw_covers.append(_contains(raw_lower, raw_upper, truth))
+        raw_covers.append(raw_lower_count <= truth_count <= raw_upper_count)
 
         for scorer in scorers:
-            score_sums, minimum, maximum, true_regret = _score_geometry(
+            score_sums, minimum, maximum, _ = _score_geometry(
                 scored,
                 matching_edge_rows,
                 true_index,
                 f"score_{scorer}",
             )
-            maximizing = np.flatnonzero(score_sums == maximum)
-            maximizing_statistics = statistic[maximizing]
-            if float(maximizing_statistics.max() - maximizing_statistics.min()) > SCORE_TOLERANCE:
+            maximizing = tuple(
+                index
+                for index, score in enumerate(score_sums)
+                if score == maximum
+            )
+            maximizing_counts = {int(counts[index]) for index in maximizing}
+            if len(maximizing_counts) != 1:
                 raise RuntimeError("the point comparator is ambiguous under a score tie")
-            point_errors[scorer].append(abs(float(maximizing_statistics[0]) - truth))
+            point_errors[scorer].append(
+                abs(next(iter(maximizing_counts)) - truth_count) / pair_count
+            )
 
-            score_scale = max(1.0, abs(minimum), abs(maximum))
             for kind, radius in points[scorer]:
-                floor = maximum - radius * (maximum - minimum)
-                admissible = score_sums >= floor - SCORE_TOLERANCE * score_scale
-                admissible_count = int(admissible.sum())
+                floor = exact_score_floor_from_radius(minimum, maximum, radius)
+                admissible = tuple(
+                    index
+                    for index, score in enumerate(score_sums)
+                    if score >= floor
+                )
+                admissible_count = len(admissible)
                 if admissible_count == 0:
                     raise RuntimeError("a regret ball excluded every feasible matching")
-                lower = float(statistic[admissible].min())
-                upper = float(statistic[admissible].max())
+                lower_count = min(int(counts[index]) for index in admissible)
+                upper_count = max(int(counts[index]) for index in admissible)
+                lower = lower_count / pair_count
+                upper = upper_count / pair_count
                 accumulators[scorer][(kind, radius)].update(
-                    retained=true_regret <= radius + SCORE_TOLERANCE,
-                    covered=_contains(lower, upper, truth),
+                    retained=score_sums[true_index] >= floor,
+                    covered=lower_count <= truth_count <= upper_count,
                     admissible=admissible_count,
                     lower=lower,
                     upper=upper,
@@ -340,8 +401,7 @@ def run(output_dir: Path, reference_json: Path) -> dict:
                     "mean_raw_width": mean_raw_width,
                     "mean_width_reduction": (
                         0.0
-                        if mean_raw_width == 0.0
-                        or abs(mean_width - mean_raw_width) <= SCORE_TOLERANCE
+                        if mean_raw_width == 0.0 or mean_width == mean_raw_width
                         else 1.0 - mean_width / mean_raw_width
                     ),
                 }
@@ -372,9 +432,26 @@ def run(output_dir: Path, reference_json: Path) -> dict:
     reference = json.loads(reference_bytes)
     reference_radii = reference["radii"]
     reference_headlines = {row["scorer"]: row for row in reference["summary"]}
+    computed_score_hashes = {
+        "calibration_score_array_sha256": _score_array_sha256(
+            calibration_scored, scorers
+        ),
+        "test_score_array_sha256": _score_array_sha256(test_scored, scorers),
+    }
+    reference_score_hashes = {
+        key: reference["reproducibility"][key] for key in computed_score_hashes
+    }
+    score_hash_audit = {
+        key: {
+            "computed": value,
+            "reference": reference_score_hashes[key],
+            "passed": value == reference_score_hashes[key],
+        }
+        for key, value in computed_score_hashes.items()
+    }
     tau_audit: dict[str, dict] = {}
     headline_audit: dict[str, dict] = {}
-    all_passed = True
+    all_passed = all(item["passed"] for item in score_hash_audit.values())
     for scorer in sorted(scorers):
         expected_tau = float(reference_radii[scorer]["tau"])
         tau_error = abs(radii[scorer].tau - expected_tau)
@@ -408,7 +485,7 @@ def run(output_dir: Path, reference_json: Path) -> dict:
     audit_path = output_dir / "exact_conformal_audit.json"
     frontier.to_csv(frontier_path, index=False, float_format="%.15g")
     audit = {
-        "schema_version": 1,
+        "schema_version": 2,
         "design": asdict(design),
         "enumeration": {
             "nodes_per_market": node_count,
@@ -420,8 +497,16 @@ def run(output_dir: Path, reference_json: Path) -> dict:
         "semantics": {
             "feasible_set": "all perfect matchings of each generated complete 12-node graph",
             "endpoint_method": "direct exhaustive enumeration; no optimization solver",
-            "arithmetic": "exact combinatorial enumeration with IEEE-754 model scores",
-            "matching_coverage": "the hidden matching lies in the normalized-regret ball",
+            "arithmetic": (
+                "termwise decimal-rational edge-score sums and integer query counts; "
+                "float only at learned-score input and serialization"
+            ),
+            "score_floor_membership": "exact Fraction comparison without tolerance",
+            "edge_row_order": "validated independently against node-row order",
+            "score_multiplicity": (
+                "one per selected edge; exactly half the all-core incidence score"
+            ),
+            "matching_coverage": "the hidden matching satisfies the actual exact score floor",
             "statistic_coverage": "the hidden same-SES fraction lies between attainable extrema",
         },
         "calibrated_radii": {name: radius.to_dict() for name, radius in radii.items()},
@@ -435,6 +520,7 @@ def run(output_dir: Path, reference_json: Path) -> dict:
             "reference_sha256": hashlib.sha256(reference_bytes).hexdigest(),
             "tau_absolute_tolerance": TAU_AUDIT_TOLERANCE,
             "headline_absolute_tolerance": HEADLINE_AUDIT_TOLERANCE,
+            "score_arrays": score_hash_audit,
             "tau": tau_audit,
             "headline": headline_audit,
             "all_passed": all_passed,

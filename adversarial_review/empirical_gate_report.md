@@ -1,6 +1,10 @@
 # Empirical Gate Report
 
-## Overall status: FAIL for scientific and policy claims
+## Overall status
+
+- Chicago scientific and policy claims: **FAIL / not run**.
+- KDD method artifact at reference-instance scale: **CONDITIONAL PASS**.
+- Immediate submission: **FAIL** until production and external-truth gates pass.
 
 The frozen artifact is reproducible as a software pilot. It does not yet pass
 the gates needed for a Chicago structural estimate, an AI validation claim, or
@@ -77,23 +81,28 @@ values additionally have no invariant cross-score meaning.
 
 ## 2a. Post-audit repair verification
 
-The audit added a generic endpoint interface and regression tests without
-changing the frozen benchmark outputs. The current suite contains 30 passing
-tests. It covers distinct signed endpoint objectives, explicit independent
-missing-bin envelopes, the FWL edge identity, collinear-treatment rejection,
-positive-affine score-floor invariance, Gamma candidate-miss monotonicity,
-strict score-floor enforcement, invalid-envelope and identifier rejection,
-scale/rank diagnostics, duplicate-pair rejection, and separation of exact
-fallback certificates from numerical MILP optima and unresolved limits.
+The current bounds suite contains 72 passing deterministic tests. In addition
+to the generic signed-endpoint, missing-support, FWL, numerical-status, and
+Gamma repairs, it now tests an exact temporal-frontier solver that jointly
+tracks core/buffer matching, compiled latent labels, active capped-count release
+automata, an omitted-edge budget, and an exact rational score floor. It also
+tests fixed-reference score normalization and exact edge-by-edge scorer
+rationalization from calibration through the dynamic program.
 
-An additional randomized audit compared the exhaustive fallback with
-SciPy/HiGHS on 500 six-node draws with signed objectives spanning many scales,
-Gamma budgets, and optional score floors. All 468 feasible cases agreed in
-status and endpoints within the declared scale-adjusted tolerance; the SciPy
-outputs remained explicitly numerical rather than exact-certified. These tests
-verify implementation logic only.
-They do not establish a truth-containing Chicago graph or the current privacy
-operator.
+The locked temporal benchmark has 34 cases: 32 applicable exhaustive-oracle
+agreements, 24 analytic agreements, 16 resolved numerical HiGHS agreements,
+and one certified outward-relaxation check. The committed unit suite includes
+80 seeded exact-DP brute-force instances and 40 seeded relaxation
+inclusion/witness checks. The separate joint-solver audit agrees on status for
+250/250 instances and endpoints for all 185 feasible instances.
+
+The controlled matching-set benchmark still uses direct edge truth in synthetic
+source/calibration markets. Its primary evaluator uses exact decimal-rational
+membership over all 10,395 perfect matchings per market; a separate
+reconstruction reproduces its 44 radius/scorer frontier rows and headline counts.
+These checks verify declared finite-instance behavior only. They do not
+establish a truth-containing Chicago graph, the current privacy operator, a
+production temporal order, or transfer of synthetic calibration.
 
 ## 3. Real-data evidence
 
@@ -127,12 +136,13 @@ evidence.
 | Candidate outer support | Every true edge satisfies necessary public-data constraints | **Fail** | Current min/max is graph-conditional sensitivity only |
 | Candidate recall validation | Independent real or realistic pair truth | **Fail** | Synthetic recall 1.0 is generator-specific |
 | Exact-cover solver correctness | Exhaustive agreement on small instances | **Pass** | Small-instance optimization logic is supported |
-| Endpoint terminology | Distinguish attained endpoints from exact attainable set | **Fail** | “Sharp interval/identified set” must be corrected |
+| Endpoint terminology | Distinguish attained endpoints from exact attainable set | **Pass in current method draft** | Paper states attained endpoints and denies scalar interpolation |
 | Missing context | Exact-cover all target nodes before handling SES suppression | **Fail** | Complete-case results can be entirely falsely paired |
 | Node score objective | Coherent likelihood or explicit composite loss | **Fail** | No edge-probability claim |
-| Score ambiguity radius | Invariant definition plus calibration | **Fail** | Same-`rho` comparisons have no evidentiary meaning |
+| Score ambiguity radius | Invariant definition plus calibration | **Pass conditionally in method/code** | Fixed-reference matching regret is exact and nested; Chicago calibration markets are absent |
 | Independent score validation | Untouched markets and edge truth | **Fail** | AI can only be presented as optional sensitivity scoring |
-| Production computation | Complete-day runtime, memory, gaps, and status certificates | **Fail** | Scalability untested |
+| Temporal algorithm correctness | Exact endpoints/witnesses and explicit complexity boundary | **Pass on declared small instances** | Reference implementation and weak-hardness boundary are supported |
+| Production computation | Complete-day compiler, runtime, memory, frontier size, and fallback policy | **Fail** | Scalability and real schedule width are untested |
 | All-trip policy denominator | Download contains all completed TNP trips | **Fail** | Current authorized-only downloader cannot estimate `/all` rates |
 | Policy treatment encoding | Pickup or drop-off, day-of-week schedule, correct zone transition | **Fail** | Current proposed treatment requires repair |
 | Global coefficient propagation | Optimize the actual signed linear contrast over one global matching | **Fail, theorem available** | Day/block endpoint regressions are invalid |
@@ -161,18 +171,22 @@ The following are necessary before any substantive empirical claim:
 
 ## 6. Empirical disposition
 
+- Exact temporal method artifact: **PASS on declared small instances**.
+- Certified outward score relaxation: **PASS as a bicriteria certificate; not a query FPTAS**.
 - Software pilot: **PASS with documented counterexamples**.
 - Synthetic scientific validation: **FAIL**.
 - Chicago structural estimate: **FAIL / not run**.
 - AI sharpening claim for Chicago: **FAIL / uncalibrated**.
 - Policy effect: **FAIL / not run and current estimand invalid**.
-- Repaired theorem development: **CONDITIONAL GO**, subject to independent
-  implementation tests and novelty positioning.
+- KDD Research development: **CONDITIONAL GO**; production compilation,
+  external relation truth, multi-size validation, and Chicago operator
+  verification remain indispensable.
 
 ## Status
 
-The frozen numerical outputs and the post-audit small-instance solver repairs
-have been independently reproduced and audited as described above. Data
-completeness, candidate coverage, score calibration, current suppression-rule
-continuity, production scalability, and every Chicago scientific or policy
-gate remain unresolved.
+The frozen numerical outputs and the post-audit exact temporal implementation
+have been independently reproduced and audited as described above. The new
+algorithmic result changes the venue-development decision but not the Chicago
+evidence decision. Data completeness, candidate coverage, real-market score
+calibration, current suppression-rule continuity, production scalability, and
+every Chicago scientific or policy gate remain unresolved.
