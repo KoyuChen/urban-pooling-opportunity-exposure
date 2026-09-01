@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """NYC HVFHV ordered latent-run smoke frontier.
 
-A run is a connected component of the positive interval-overlap graph with
-simultaneous occupancy bounded by C. Total run membership may exceed C. The
-formulation uses root-indexed assignments plus single-commodity connectivity
-flow and is polynomial in the declared candidate universe.
+A latent run is a selected set of public trip intervals whose positive-overlap
+interval graph is connected and whose simultaneous occupancy never exceeds C.
+Total run membership may exceed C.
+
+The implementation uses an interval-specific compact formulation.  Instead of
+one flow variable per overlap edge, it introduces per-run elementary-segment
+activity variables.  Connectedness is exact for interval graphs: active
+segments must form one consecutive block and every adjacent active pair must be
+bridged by at least one selected interval that crosses their common endpoint.
+This removes the O(|R||E|) single-commodity flow expansion from v1 while
+preserving the declared positive-overlap semantics.
 """
 
 from __future__ import annotations
@@ -29,7 +36,6 @@ from nyc_hvfhv_smoke_types import (
     DATASET_NAME,
     LiveDataError,
     ModelTrip,
-    Trip,
     model_rows,
     parse_trips,
     required_dt,
@@ -37,6 +43,11 @@ from nyc_hvfhv_smoke_types import (
 
 CAPACITIES = (2, 3, 4)
 TIME_MODELS = ("exact_second", "rounded_15m_outer")
+QUERIES = (
+    "run_count_per_core",
+    "selected_buffer_rows_per_core",
+    "companion_mass_per_core",
+)
 
 
 @dataclass
@@ -45,12 +56,16 @@ class Program:
     roots: list[int]
     y_col: dict[int, int]
     x_col: dict[tuple[int, int], int]
-    f_col: dict[tuple[int, int, int], int]
+    z_col: dict[tuple[int, int], int]
+    s_col: dict[tuple[int, int], int]
     matrix: csr_matrix
     lower: np.ndarray
     upper: np.ndarray
     bounds: Bounds
     integrality: np.ndarray
+    overlap_edge_count: int
+    segment_count: int
+    bridge_count: int
 
 
 def positive_overlap(left: ModelTrip, right: ModelTrip) -> bool:
@@ -102,16 +117,16 @@ def elementary_segments(rows: Sequence[ModelTrip]) -> list[tuple[datetime, datet
             if value is not None
         }
     )
-    return [
-        (left, right)
-        for left, right in zip(endpoints, endpoints[1:])
-        if left < right
-    ]
+    return [(left, right) for left, right in zip(endpoints, endpoints[1:]) if left < right]
 
 
 def active_on(row: ModelTrip, segment: tuple[datetime, datetime]) -> bool:
     left, right = segment
     return row.start is not None and row.end is not None and row.start < right and row.end > left
+
+
+def crosses_boundary(row: ModelTrip, boundary: datetime) -> bool:
+    return row.start is not None and row.end is not None and row.start < boundary < row.end
 
 
 def ordered_subcohort(rows: Sequence[ModelTrip], core_limit: int) -> list[ModelTrip]:
@@ -141,6 +156,51 @@ def ordered_subcohort(rows: Sequence[ModelTrip], core_limit: int) -> list[ModelT
     return output
 
 
+def selected_graph_connected(rows: Sequence[ModelTrip], selected: set[int]) -> bool:
+    if not selected:
+        return False
+    by_index = {row.index: row for row in rows}
+    adjacency = {node: set() for node in selected}
+    for left in selected:
+        for right in selected:
+            if left < right and positive_overlap(by_index[left], by_index[right]):
+                adjacency[left].add(right)
+                adjacency[right].add(left)
+    seen = {next(iter(selected))}
+    queue = deque(seen)
+    while queue:
+        node = queue.popleft()
+        for neighbor in adjacency[node]:
+            if neighbor not in seen:
+                seen.add(neighbor)
+                queue.append(neighbor)
+    return seen == selected
+
+
+def compact_connectivity_feasible(rows: Sequence[ModelTrip], selected: set[int]) -> bool:
+    """Directly replay the segment characterization used by the MILP."""
+    if not selected:
+        return False
+    by_index = {row.index: row for row in rows}
+    segments = elementary_segments(rows)
+    active = [
+        any(active_on(by_index[node], segment) for node in selected)
+        for segment in segments
+    ]
+    active_positions = [idx for idx, value in enumerate(active) if value]
+    if not active_positions:
+        return False
+    if active_positions != list(range(active_positions[0], active_positions[-1] + 1)):
+        return False
+    for left_pos, right_pos in zip(active_positions, active_positions[1:]):
+        boundary = segments[left_pos][1]
+        if boundary != segments[right_pos][0]:
+            return False
+        if not any(crosses_boundary(by_index[node], boundary) for node in selected):
+            return False
+    return True
+
+
 def build_program(rows: Sequence[ModelTrip], capacity: int) -> Program:
     if capacity < 2:
         raise ValueError("capacity must be >=2")
@@ -154,9 +214,22 @@ def build_program(rows: Sequence[ModelTrip], capacity: int) -> Program:
         if len(component_by_node[root]) < 2:
             raise LiveDataError(f"core root {root} is isolated in positive-overlap graph")
 
+    segments = elementary_segments(rows)
+    active_members: list[list[int]] = [
+        [row.index for row in rows if active_on(row, segment)]
+        for segment in segments
+    ]
+    crossing_members: list[list[int]] = []
+    for left, right in zip(segments, segments[1:]):
+        if left[1] != right[0]:
+            crossing_members.append([])
+        else:
+            crossing_members.append([row.index for row in rows if crosses_boundary(row, left[1])])
+
     y_col: dict[int, int] = {}
     x_col: dict[tuple[int, int], int] = {}
-    f_col: dict[tuple[int, int, int], int] = {}
+    z_col: dict[tuple[int, int], int] = {}
+    s_col: dict[tuple[int, int], int] = {}
     cursor = 0
     for root in roots:
         y_col[root] = cursor
@@ -165,15 +238,20 @@ def build_program(rows: Sequence[ModelTrip], capacity: int) -> Program:
         for member in sorted(component_by_node[root]):
             x_col[(member, root)] = cursor
             cursor += 1
-    edge_set = {tuple(sorted(edge)) for edge in edges}
+    relevant_segments: dict[int, list[int]] = {}
     for root in roots:
         component = component_by_node[root]
-        for left, right in sorted(edge_set):
-            if left in component and right in component:
-                f_col[(left, right, root)] = cursor
-                cursor += 1
-                f_col[(right, left, root)] = cursor
-                cursor += 1
+        rel = [
+            seg_idx
+            for seg_idx, members in enumerate(active_members)
+            if any(member in component for member in members)
+        ]
+        relevant_segments[root] = rel
+        for seg_idx in rel:
+            z_col[(seg_idx, root)] = cursor
+            cursor += 1
+            s_col[(seg_idx, root)] = cursor
+            cursor += 1
     nvar = cursor
     constraints: list[tuple[dict[int, float], float, float]] = []
 
@@ -199,50 +277,46 @@ def build_program(rows: Sequence[ModelTrip], capacity: int) -> Program:
         coeff[y_col[root]] = -2.0
         constraints.append((coeff, 0.0, np.inf))
 
-    # Occupancy on every elementary time segment.
-    segments = elementary_segments(rows)
+    bridge_count = 0
     for root in roots:
         component = component_by_node[root]
-        for segment in segments:
-            active = [member for member in component if active_on(by_index[member], segment)]
-            if not active:
-                continue
-            coeff = {x_col[(member, root)]: 1.0 for member in active}
-            coeff[y_col[root]] = -float(capacity)
+        rel = relevant_segments[root]
+        rel_set = set(rel)
+
+        # Segment occupancy: z=1 iff the run occupies that elementary segment.
+        for seg_idx in rel:
+            active = [member for member in active_members[seg_idx] if member in component]
+            coeff_upper = {x_col[(member, root)]: 1.0 for member in active}
+            coeff_upper[z_col[(seg_idx, root)]] = -float(capacity)
+            constraints.append((coeff_upper, -np.inf, 0.0))
+            coeff_lower = {x_col[(member, root)]: 1.0 for member in active}
+            coeff_lower[z_col[(seg_idx, root)]] = -1.0
+            constraints.append((coeff_lower, 0.0, np.inf))
+
+        # Active segments form at most one block.  Since any open run selects at
+        # least two rows, it necessarily has one 0->1 start.
+        previous: int | None = None
+        start_cols: dict[int, float] = {}
+        for seg_idx in rel:
+            coeff = {z_col[(seg_idx, root)]: 1.0, s_col[(seg_idx, root)]: -1.0}
+            if previous is not None and previous + 1 == seg_idx:
+                coeff[z_col[(previous, root)]] = -1.0
             constraints.append((coeff, -np.inf, 0.0))
+            start_cols[s_col[(seg_idx, root)]] = 1.0
+            previous = seg_idx
+        start_cols[y_col[root]] = -1.0
+        constraints.append((start_cols, -np.inf, 0.0))
 
-    # Connectivity flow. Root supplies one unit per selected non-root member.
-    outgoing: dict[tuple[int, int], list[int]] = defaultdict(list)
-    incoming: dict[tuple[int, int], list[int]] = defaultdict(list)
-    for (left, right, root), col in f_col.items():
-        outgoing[(left, root)].append(col)
-        incoming[(right, root)].append(col)
-    big_m = float(max(1, len(nodes) - 1))
-    for root in roots:
-        component = component_by_node[root]
-        root_coeff: dict[int, float] = {}
-        for col in outgoing[(root, root)]:
-            root_coeff[col] = root_coeff.get(col, 0.0) + 1.0
-        for col in incoming[(root, root)]:
-            root_coeff[col] = root_coeff.get(col, 0.0) - 1.0
-        for member in component:
-            if member != root:
-                root_coeff[x_col[(member, root)]] = -1.0
-        constraints.append((root_coeff, 0.0, 0.0))
-        for member in component:
-            if member == root:
+        # Positive-overlap bridge across every adjacent active segment pair.
+        for left_idx, right_idx in zip(rel, rel[1:]):
+            if right_idx != left_idx + 1:
                 continue
-            coeff: dict[int, float] = {x_col[(member, root)]: -1.0}
-            for col in incoming[(member, root)]:
-                coeff[col] = coeff.get(col, 0.0) + 1.0
-            for col in outgoing[(member, root)]:
-                coeff[col] = coeff.get(col, 0.0) - 1.0
-            constraints.append((coeff, 0.0, 0.0))
-
-    # Flow may traverse only selected endpoints in the same run.
-    for (left, right, root), flow_col in f_col.items():
-        constraints.append(({flow_col: 1.0, x_col[(left, root)]: -big_m}, -np.inf, 0.0))
-        constraints.append(({flow_col: 1.0, x_col[(right, root)]: -big_m}, -np.inf, 0.0))
+            crossing = [member for member in crossing_members[left_idx] if member in component]
+            coeff = {x_col[(member, root)]: 1.0 for member in crossing}
+            coeff[z_col[(left_idx, root)]] = coeff.get(z_col[(left_idx, root)], 0.0) - 1.0
+            coeff[z_col[(right_idx, root)]] = coeff.get(z_col[(right_idx, root)], 0.0) - 1.0
+            constraints.append((coeff, -1.0, np.inf))
+            bridge_count += 1
 
     matrix = lil_matrix((len(constraints), nvar), dtype=float)
     lower = np.empty(len(constraints), dtype=float)
@@ -252,23 +326,27 @@ def build_program(rows: Sequence[ModelTrip], capacity: int) -> Program:
             matrix[row_index, col] = value
         lower[row_index] = lo
         upper[row_index] = hi
+
     lower_bounds = np.zeros(nvar, dtype=float)
-    upper_bounds = np.full(nvar, big_m, dtype=float)
-    binary_columns = [*y_col.values(), *x_col.values()]
-    upper_bounds[binary_columns] = 1.0
+    upper_bounds = np.ones(nvar, dtype=float)
+    binary_columns = [*y_col.values(), *x_col.values(), *z_col.values()]
     integrality = np.zeros(nvar, dtype=int)
     integrality[binary_columns] = 1
     return Program(
-        rows,
-        roots,
-        y_col,
-        x_col,
-        f_col,
-        matrix.tocsr(),
-        lower,
-        upper,
-        Bounds(lower_bounds, upper_bounds),
-        integrality,
+        rows=rows,
+        roots=roots,
+        y_col=y_col,
+        x_col=x_col,
+        z_col=z_col,
+        s_col=s_col,
+        matrix=matrix.tocsr(),
+        lower=lower,
+        upper=upper,
+        bounds=Bounds(lower_bounds, upper_bounds),
+        integrality=integrality,
+        overlap_edge_count=len(edges),
+        segment_count=len(segments),
+        bridge_count=bridge_count,
     )
 
 
@@ -329,7 +407,7 @@ def solve_frontier(rows: Sequence[ModelTrip], time_model: str, time_limit: float
     output: list[dict[str, Any]] = []
     for capacity in CAPACITIES:
         program = build_program(rows, capacity)
-        for query in ("run_count_per_core", "selected_buffer_rows_per_core", "companion_mass_per_core"):
+        for query in QUERIES:
             coeff = objective(program, query)
             lower = solve(program, coeff, False, time_limit)
             upper = solve(program, coeff, True, time_limit)
@@ -348,9 +426,11 @@ def solve_frontier(rows: Sequence[ModelTrip], time_model: str, time_limit: float
                     "upper_mip_gap": upper["mip_gap"],
                     "max_replay_residual": max(v for v in (lower["residual"], upper["residual"]) if v is not None) if any(v is not None for v in (lower["residual"], upper["residual"])) else None,
                     "variables": program.matrix.shape[1],
+                    "binary_variables": int(np.count_nonzero(program.integrality)),
                     "constraints": program.matrix.shape[0],
-                    "overlap_edges": len(overlap_edges(rows)),
-                    "elementary_segments": len(elementary_segments(rows)),
+                    "overlap_edges": program.overlap_edge_count,
+                    "elementary_segments": program.segment_count,
+                    "bridge_constraints": program.bridge_count,
                 }
             )
     return output
@@ -361,7 +441,7 @@ def audit(frontier: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     comparisons = 0
     index = {(row["time_model"], int(row["capacity"]), row["query"]): row for row in frontier}
     for time_model in TIME_MODELS:
-        for query in ("run_count_per_core", "selected_buffer_rows_per_core", "companion_mass_per_core"):
+        for query in QUERIES:
             previous = None
             for capacity in CAPACITIES:
                 row = index[(time_model, capacity, query)]
@@ -384,19 +464,25 @@ def render(report: Mapping[str, Any]) -> str:
         f"Generated UTC: `{report['generated_at_utc']}`  ",
         f"Dataset: `{DATASET_ID}` ({DATASET_NAME})",
         "",
-        f"Ordered subcore: **{report['cohort']['ordered_core_rows']}** rows from provider `{report['cohort']['provider']}`; determinate candidate universe: **{report['cohort']['ordered_candidate_rows']}** rows.",
+        f"Ordered subcore: **{report['cohort']['ordered_core_rows']}** rows from provider `{report['cohort']['provider']}`; determinate candidate universe: `{report['cohort']['ordered_candidate_rows']}`.",
         "",
         "Runs are connected positive-overlap interval subgraphs. Capacity C bounds simultaneous occupancy, not total run cardinality.",
         "",
-        "| Time model | C | Query | Lower | Upper | Width | Variables | Constraints |",
-        "|---|---:|---|---:|---:|---:|---:|---:|",
+        "| Time model | C | Query | Lower | Upper | Width | Vars | Binary | Constraints |",
+        "|---|---:|---|---:|---:|---:|---:|---:|---:|",
     ]
     for row in report["frontier"]:
         lo = "—" if row["lower"] is None else f"{row['lower']:.4f}"
         hi = "—" if row["upper"] is None else f"{row['upper']:.4f}"
         width = "—" if row["width"] is None else f"{row['width']:.4f}"
-        lines.append(f"| {row['time_model']} | {row['capacity']} | {row['query']} | {lo} | {hi} | {width} | {row['variables']} | {row['constraints']} |")
-    lines.extend(["", f"Capacity nesting audit: `{report['audit']['status']}` over **{report['audit']['comparisons']}** adjacent certified comparisons.", "", "This remains a public-data identified-set benchmark, not recovered vehicle runs.", ""])
+        lines.append(f"| {row['time_model']} | {row['capacity']} | {row['query']} | {lo} | {hi} | {width} | {row['variables']} | {row['binary_variables']} | {row['constraints']} |")
+    lines.extend([
+        "",
+        f"Capacity nesting audit: `{report['audit']['status']}` over **{report['audit']['comparisons']}** adjacent certified comparisons.",
+        "",
+        "The compact segment formulation is exact for the declared positive-overlap interval-graph connectivity rule; it does not recover actual vehicle runs.",
+        "",
+    ])
     return "\n".join(lines)
 
 
@@ -414,13 +500,35 @@ def self_test() -> None:
     assert positive_overlap(rows[0], rows[1])
     assert positive_overlap(rows[1], rows[2])
     assert not positive_overlap(rows[0], rows[2])
+    assert selected_graph_connected(rows, {0, 1, 2})
+    assert compact_connectivity_feasible(rows, {0, 1, 2})
     program = build_program(rows, 2)
-    # Max buffer use must place C in one of the connected runs despite A and C not overlapping.
     result = solve(program, objective(program, "selected_buffer_rows_per_core"), True, 10.0)
     assert result["status"] == CERTIFIED
     assert abs(result["value"] - 0.5) < 1e-7
-    # A three-way simultaneous overlap requires C=3.
+
+    # Endpoint-touch is not positive overlap and must not bridge two blocks.
     base = datetime(2023, 1, 1, 12, 0)
+    touch = [
+        ModelTrip(0, "HV", "core", base, base + timedelta(minutes=10), "1", "2", 1.0, 600.0, 10.0, 8.0),
+        ModelTrip(1, "HV", "buffer", base + timedelta(minutes=10), base + timedelta(minutes=20), "2", "3", 1.0, 600.0, 10.0, 8.0),
+    ]
+    assert not selected_graph_connected(touch, {0, 1})
+    assert not compact_connectivity_feasible(touch, {0, 1})
+
+    # Exhaustively compare graph and segment connectedness on a small library.
+    library = [
+        ModelTrip(0, "HV", "core", base, base + timedelta(minutes=8), "1", "2", 1.0, 480.0, 10.0, 8.0),
+        ModelTrip(1, "HV", "buffer", base + timedelta(minutes=3), base + timedelta(minutes=11), "1", "3", 1.0, 480.0, 10.0, 8.0),
+        ModelTrip(2, "HV", "buffer", base + timedelta(minutes=8), base + timedelta(minutes=14), "2", "4", 1.0, 360.0, 10.0, 8.0),
+        ModelTrip(3, "HV", "buffer", base + timedelta(minutes=11), base + timedelta(minutes=18), "2", "5", 1.0, 420.0, 10.0, 8.0),
+        ModelTrip(4, "HV", "buffer", base + timedelta(minutes=18), base + timedelta(minutes=22), "2", "6", 1.0, 240.0, 10.0, 8.0),
+    ]
+    for mask in range(1, 1 << len(library)):
+        selected = {idx for idx in range(len(library)) if mask & (1 << idx)}
+        assert selected_graph_connected(library, selected) == compact_connectivity_feasible(library, selected), selected
+
+    # A three-way simultaneous overlap requires C=3 for selecting all three.
     clique = [
         ModelTrip(i, "HV", "core" if i < 2 else "buffer", base, base + timedelta(minutes=10), "1", str(i), 1.0, 600.0, 10.0, 8.0)
         for i in range(3)
@@ -431,7 +539,7 @@ def self_test() -> None:
     max3 = solve(p3, objective(p3, "selected_buffer_rows_per_core"), True, 10.0)
     assert max2["status"] == max3["status"] == CERTIFIED
     assert max3["value"] >= max2["value"]
-    print("NYC ordered-run self-test: PASS")
+    print("NYC ordered-run compact self-test: PASS")
 
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
@@ -455,8 +563,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     audit = audit(frontier)
     if audit["status"] != "PASS":
         raise LiveDataError("ordered-run capacity nesting audit failed: " + json.dumps(audit["problems"][:8]))
-    report = {
-        "report_version": "nyc-hvfhv-ordered-run/v1",
+    return {
+        "report_version": "nyc-hvfhv-ordered-run/v2-compact-segments",
         "generated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
         "snapshot": after,
         "cohort": {
@@ -470,12 +578,17 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         },
         "frontier": frontier,
         "audit": audit,
+        "formulation": {
+            "connectivity": "consecutive active elementary segments plus positive-overlap bridge at every active boundary",
+            "capacity": "simultaneous occupancy <= C on every elementary segment",
+            "total_run_cardinality_bounded_by_C": False,
+            "edge_flow_variables": False,
+        },
         "claim_boundary": {
             "supported": "connected interval-run structural endpoints in a fixed public candidate universe under declared C",
             "not_supported": "actual vehicle/run recovery, true NYC capacity, partner recall, or population effects",
         },
     }
-    return report
 
 
 def write_csv(rows: Sequence[Mapping[str, Any]], path: Path) -> None:
@@ -522,8 +635,8 @@ def main() -> int:
         self_test()
         return 0
     validate(args)
-    report = run(args)
     args.output_dir.mkdir(parents=True, exist_ok=True)
+    report = run(args)
     write_csv(report["frontier"], args.output_dir / "ordered_run_frontier.csv")
     (args.output_dir / "report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     (args.output_dir / "REPORT.md").write_text(render(report), encoding="utf-8")
