@@ -40,18 +40,33 @@ The nested-support/coarsening audit is `PASS`.
 
 Validated workflow: `33528697566`; artifact `9808875413`; artifact digest `sha256:622a1ad6c2416c26a3c6e424382f76ab88984638edb40f244cbe77613adfc1d3`.
 
+## Gate C: unknown-capacity ordered latent runs
+
+The pairwise `C=2` restriction has now been replaced by an ordered latent-run model on an 8-row core inside the same fixed 437-row public candidate universe. A run is a connected positive-overlap interval subgraph. Capacity `C` restricts simultaneous occupancy but not total run cardinality, so sequential `A-B-C` chains are admissible even when `A` and `C` never overlap.
+
+The compact interval-segment MILP is exact for this declared connectivity rule and passes the capacity-nesting audit.
+
+| C | Run count/core, exact seconds | Run count/core, 15-min outer | Max selected buffers/core, 15-min outer |
+|---:|---:|---:|---:|
+| 2 | `0.500`--`1.000` | `0.500`--`1.000` | `9.000` |
+| 3 | `0.375`--`1.000` | `0.375`--`1.000` | `14.125` |
+| 4 | `0.250`--`1.000` | `0.250`--`1.000` | `18.500` |
+
+The run-count range widens monotonically with `C`: larger simultaneous capacity permits the same core to be consolidated into fewer connected runs. More strikingly, under coarse public time support the feasible latent membership grows much faster than the run-count range because bounded-occupancy runs may accumulate many sequential members.
+
+The exact-second maximization problems for selected-buffer and companion mass remain computationally unresolved at the 60-second smoke limit and are deliberately unpublished. Exact-second run-count endpoints are certified; all displayed 15-minute endpoints are certified.
+
+This gives the first non-pairwise real-data evidence for the NYC extension: **unknown capacity and sequential run composition are material identification dimensions, while finer timestamps trade a smaller feasible linkage set for a substantially harder exact optimization problem.**
+
+Validated workflow: `33545170861`; artifact `9815675232`; artifact digest `sha256:7ecad13140f22f1aa83409d34eadfa32836995d973a2a1accb96fe90b8170506`.
+
 ## Gate conclusion
 
-NYC passes the **problem-existence and scale Gate**:
+NYC passes the **problem-existence, scale, and ordered-run modeling Gates**:
 
 1. latent-linkage ambiguity is large even with public second-level timestamps;
-2. Chicago-like time coarsening materially expands the candidate graph and the
-   identified ranges, but does not create the ambiguity by itself; and
-3. exact Taxi-Zone equality is far too restrictive to serve as a necessary
-   candidate rule.
+2. Chicago-like time coarsening materially expands the candidate graph and identified ranges, but does not create the ambiguity by itself;
+3. exact Taxi-Zone equality is far too restrictive to serve as a necessary candidate rule; and
+4. replacing pairwise matching by connected bounded-occupancy runs preserves substantial partial identification and reveals a separate computational burden at exact timestamps.
 
-NYC does **not** yet pass the final modeling Gate because public HVFHV data do
-not expose realized pool size. The pairwise program is therefore a conditional
-`C=2` benchmark, not an empirical statement that these rides formed pairs.
-The natural NYC extension is an unknown-capacity, temporally ordered shared-run
-model rather than a direct copy of the Chicago matching model.
+The public data still do **not** identify realized pool size, actual vehicle runs, or co-rider identities. All capacity comparisons are conditional on declared `C`; they are not empirical estimates of NYC's true vehicle capacity or production matching logic.
