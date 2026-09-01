@@ -5,6 +5,8 @@ on:
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_LATTICE_GATE.md
+      - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_RUN_TRACTABILITY.md
+      - code/ai_pilot/data_pipeline/production_audit/ordered_run_interval_oracle.py
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_lattice.py
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_common_support.py
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_outcomes.py
@@ -35,6 +37,8 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Test exact rooted-run interval LP oracle
+        run: python code/ai_pilot/data_pipeline/production_audit/ordered_run_interval_oracle.py
       - name: Test time-capacity lattice audits
         run: python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_lattice.py --self-test
 
