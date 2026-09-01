@@ -1,0 +1,70 @@
+name: nyc-hvfhv-ordered-common-support
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_common_support.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_outcomes.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke.py
+      - code/ai_pilot/data_pipeline/production_audit/nyc_ordered_run_symmetry.py
+      - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_fetch.py
+      - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_types.py
+      - .github/workflows/nyc-hvfhv-ordered-common-support.yml
+
+concurrency:
+  group: nyc-hvfhv-ordered-common-support-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Test common-support capacity nesting
+        run: python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_common_support.py --self-test
+
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Build common-support composition bounds
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_common_support.py \
+            --output-dir tmp/nyc-hvfhv-ordered-common-support \
+            --scan-start 2023-01-03T17:00:00 \
+            --scan-end 2023-01-04T01:00:00 \
+            --ordered-core 8 \
+            --solver-time-limit 60
+      - name: Upload aggregate common-support evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-hvfhv-ordered-common-support
+          path: tmp/nyc-hvfhv-ordered-common-support
+          if-no-files-found: warn
+          retention-days: 90
