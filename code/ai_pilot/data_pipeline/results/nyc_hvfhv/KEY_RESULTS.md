@@ -60,13 +60,30 @@ This gives the first non-pairwise real-data evidence for the NYC extension: **un
 
 Validated workflow: `33545170861`; artifact `9815675232`; artifact digest `sha256:7ecad13140f22f1aa83409d34eadfa32836995d973a2a1accb96fe90b8170506`.
 
+## Gate D: run-invariant outcome composition at maximum support
+
+The next stage fixes, for each declared `C`, that capacity's certified maximum number of selected buffer rows and then bounds the mean public miles and trip duration of those selected rows. The estimands are invariant to the canonical run-root label.
+
+| C | Max buffers/core | Mean selected-buffer miles | Mean selected-buffer minutes |
+|---:|---:|---:|---:|
+| 2 | 9.000 | `3.440`--`9.679` | `17.779`--`37.147` |
+| 3 | 14.125 | `4.148`--`8.514` | `20.329`--`34.155` |
+| 4 | 18.500 | `4.615`--`8.411` | `21.999`--`33.812` |
+
+All six endpoint pairs are certified with zero reported MIP gap. The maximum-support requirement expands from 72 selected buffers at `C=2` to 113 at `C=3` and 148 at `C=4`. Conditional on those different support maxima, the miles interval width falls by **39.2%** and the duration width by **39.0%** between `C=2` and `C=4`.
+
+This contraction is **not** a nested-set result: the conditioning event changes with capacity. Larger `C` expands the feasible latent-world set but also raises the C-specific maximum-support cardinality, forcing maximum-support worlds to include more public rows and reducing the ability to select only outcome extremes. A clean capacity comparison therefore needs a **common fixed support cardinality** across `C`; that is the next Gate.
+
+Validated workflow: `33551028665`; artifact `9817489639`; artifact digest `sha256:cf4f16f590deababc74ecad20be99d18e1e62994bb9acfa7e09ace6923475806`.
+
 ## Gate conclusion
 
-NYC passes the **problem-existence, scale, and ordered-run modeling Gates**:
+NYC passes the **problem-existence, scale, ordered-run modeling, and first outcome-composition Gates**:
 
 1. latent-linkage ambiguity is large even with public second-level timestamps;
 2. Chicago-like time coarsening materially expands the candidate graph and identified ranges, but does not create the ambiguity by itself;
-3. exact Taxi-Zone equality is far too restrictive to serve as a necessary candidate rule; and
-4. replacing pairwise matching by connected bounded-occupancy runs preserves substantial partial identification and reveals a separate computational burden at exact timestamps.
+3. exact Taxi-Zone equality is far too restrictive to serve as a necessary candidate rule;
+4. replacing pairwise matching by connected bounded-occupancy runs preserves substantial partial identification and reveals a separate computational burden at exact timestamps; and
+5. outcome uncertainty has two distinct margins: feasible-support expansion with `C`, and composition restrictions induced by conditioning on C-specific maximum support.
 
 The public data still do **not** identify realized pool size, actual vehicle runs, or co-rider identities. All capacity comparisons are conditional on declared `C`; they are not empirical estimates of NYC's true vehicle capacity or production matching logic.
