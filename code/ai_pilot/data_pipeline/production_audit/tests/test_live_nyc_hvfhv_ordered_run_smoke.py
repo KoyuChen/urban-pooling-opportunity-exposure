@@ -17,6 +17,8 @@ class OrderedRunTests(unittest.TestCase):
         self.assertTrue(ordered.positive_overlap(rows[0], rows[1]))
         self.assertTrue(ordered.positive_overlap(rows[1], rows[2]))
         self.assertFalse(ordered.positive_overlap(rows[0], rows[2]))
+        self.assertTrue(ordered.selected_graph_connected(rows, {0, 1, 2}))
+        self.assertTrue(ordered.compact_connectivity_feasible(rows, {0, 1, 2}))
         program = ordered.build_program(rows, 2)
         result = ordered.solve(
             program,
@@ -26,6 +28,33 @@ class OrderedRunTests(unittest.TestCase):
         )
         self.assertEqual(result["status"], CERTIFIED)
         self.assertAlmostEqual(result["value"], 0.5)
+
+    def test_touch_only_is_not_positive_overlap_connectivity(self):
+        base = datetime(2023, 1, 1, 12)
+        rows = [
+            ModelTrip(0, "HV", "core", base, base + timedelta(minutes=10), "1", "2", 1.0, 600.0, 10.0, 8.0),
+            ModelTrip(1, "HV", "buffer", base + timedelta(minutes=10), base + timedelta(minutes=20), "2", "3", 1.0, 600.0, 10.0, 8.0),
+        ]
+        self.assertFalse(ordered.positive_overlap(rows[0], rows[1]))
+        self.assertFalse(ordered.selected_graph_connected(rows, {0, 1}))
+        self.assertFalse(ordered.compact_connectivity_feasible(rows, {0, 1}))
+
+    def test_segment_characterization_matches_graph_connectivity(self):
+        base = datetime(2023, 1, 1, 12)
+        rows = [
+            ModelTrip(0, "HV", "core", base, base + timedelta(minutes=8), "1", "2", 1.0, 480.0, 10.0, 8.0),
+            ModelTrip(1, "HV", "buffer", base + timedelta(minutes=3), base + timedelta(minutes=11), "1", "3", 1.0, 480.0, 10.0, 8.0),
+            ModelTrip(2, "HV", "buffer", base + timedelta(minutes=8), base + timedelta(minutes=14), "2", "4", 1.0, 360.0, 10.0, 8.0),
+            ModelTrip(3, "HV", "buffer", base + timedelta(minutes=11), base + timedelta(minutes=18), "2", "5", 1.0, 420.0, 10.0, 8.0),
+            ModelTrip(4, "HV", "buffer", base + timedelta(minutes=18), base + timedelta(minutes=22), "2", "6", 1.0, 240.0, 10.0, 8.0),
+        ]
+        for mask in range(1, 1 << len(rows)):
+            selected = {idx for idx in range(len(rows)) if mask & (1 << idx)}
+            self.assertEqual(
+                ordered.selected_graph_connected(rows, selected),
+                ordered.compact_connectivity_feasible(rows, selected),
+                selected,
+            )
 
     def test_capacity_three_weakly_expands_clique_feasible_set(self):
         base = datetime(2023, 1, 1, 12)
@@ -61,7 +90,6 @@ class OrderedRunTests(unittest.TestCase):
     def test_capacity_frontier_is_nested_on_chain_fixture(self):
         rows = ordered.synthetic_chain()
         frontier = ordered.solve_frontier(rows, "exact_second", 10.0)
-        # Duplicate under second time-model label so the generic audit sees both chains.
         twin = [{**row, "time_model": "rounded_15m_outer"} for row in frontier]
         audit = ordered.audit([*frontier, *twin])
         self.assertEqual(audit["status"], "PASS")
