@@ -6,8 +6,11 @@ on:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier.py
       - code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py
+      - code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py
       - code/ai_pilot/data_pipeline/production_audit/tests/test_live_chicago_k2_frontier.py
       - code/ai_pilot/data_pipeline/production_audit/tests/test_partitioned_chicago_k2_fetch.py
+      - code/ai_pilot/data_pipeline/production_audit/tests/test_boundary_padding_chicago_k2_frontier.py
+      - scripts/run_chicago_k2_boundary_local.sh
       - .github/workflows/chicago-k2-frontier.yml
 
 concurrency:
@@ -38,7 +41,7 @@ jobs:
       - name: Run deterministic frontier checks
         run: |
           python \
-            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
             --self-test
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
@@ -46,6 +49,9 @@ jobs:
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_partitioned_chicago_k2_fetch.py' -v
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests \
+            -p 'test_boundary_padding_chicago_k2_frontier.py' -v
 
   live:
     runs-on: ubuntu-latest
@@ -67,11 +73,11 @@ jobs:
             numpy==2.3.5 \
             scipy==1.17.0 \
             matplotlib==3.10.8
-      - name: Build K=2 public temporal candidate universe and sensitivity curves
+      - name: Build K=2 boundary, radius, and Gamma support curves
         run: |
           python \
-            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py \
-            --output-dir tmp/chicago-k2-frontier \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
+            --output-dir tmp/chicago-k2-frontier-boundary \
             --scan-start 2026-01-13T17:00:00 \
             --scan-end 2026-01-13T21:00:00 \
             --min-core-rows 12 \
@@ -81,12 +87,13 @@ jobs:
             --request-timeout 90 \
             --request-attempts 3 \
             --base-radius-km 2 \
-            --solver-time-limit 60
+            --solver-time-limit 60 \
+            --boundary-padding-minutes 0,5,10,15,30
       - name: Upload aggregate frontier evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: chicago-k2-frontier
-          path: tmp/chicago-k2-frontier
+          name: chicago-k2-frontier-boundary
+          path: tmp/chicago-k2-frontier-boundary
           if-no-files-found: warn
           retention-days: 90
