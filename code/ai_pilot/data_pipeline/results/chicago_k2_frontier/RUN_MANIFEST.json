@@ -12,7 +12,7 @@
   },
   "run": {
     "workflow_run_id": 33468343107,
-    "source_commit": "f573379b5e452712a52fec497f622ad888e84dd9",
+    "numerical_source_commit": "f573379b5e452712a52fec497f622ad888e84dd9",
     "generated_at_utc": "2026-09-01T04:02:47+00:00",
     "unit_job": "success",
     "live_job": "success"
@@ -24,7 +24,7 @@
     "buffer_rows": 551,
     "candidate_rows": 611,
     "null_start_or_end_target_rows": 0,
-    "public_candidate_universe_closure_status": "PASS_PUBLIC_RELEASE_TEMPORAL_CANDIDATE_UNIVERSE_CLOSED",
+    "public_temporal_candidate_universe_status": "COUNT_CLOSED_CORE_INCIDENT_BOUNDARY_COMPLETE",
     "hidden_run_closure_status": "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
   },
   "logical_graph": {
@@ -38,12 +38,19 @@
     "cover_mip_gap": 0.0,
     "partner_coverage_claim": "NOT_ESTIMATED_FROM_PUBLIC_ROWS"
   },
+  "gamma_semantics": {
+    "base_radius_km": 2.0,
+    "costed_object": "core incidences through measured-distance edges outside the base radius",
+    "unmeasured_distance_edges_cost": 0,
+    "not_a_total_candidate_miss_budget": true,
+    "not_an_estimated_miss_rate": true
+  },
   "audits": {
     "snapshot_stable": true,
     "server_counts_stable": true,
     "core_subset_verified": true,
-    "nested_set_monotonicity": "PASS",
-    "monotonicity_violations": 0,
+    "legacy_run_nested_set_monotonicity": "PASS",
+    "legacy_run_monotonicity_violations": 0,
     "raw_rows_serialized": false,
     "raw_trip_ids_serialized": false,
     "matching_witnesses_serialized": false
