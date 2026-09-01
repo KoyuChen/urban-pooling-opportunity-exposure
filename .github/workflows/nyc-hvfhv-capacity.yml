@@ -1,0 +1,93 @@
+name: nyc-hvfhv-capacity
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_live:
+        description: Run the live NYC Open Data capacity frontier
+        required: true
+        default: true
+        type: boolean
+  pull_request:
+    paths:
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_capacity_smoke.py
+      - code/ai_pilot/data_pipeline/production_audit/NYC_UNKNOWN_CAPACITY_MODEL.md
+      - code/ai_pilot/data_pipeline/production_audit/tests/test_live_nyc_hvfhv_capacity_smoke.py
+      - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_types.py
+      - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_fetch.py
+      - .github/workflows/nyc-hvfhv-capacity.yml
+
+concurrency:
+  group: nyc-hvfhv-capacity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Test anchored capacity model
+        run: |
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests \
+            -p 'test_live_nyc_hvfhv_capacity_smoke.py' -v
+
+  live:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.run_live) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Build C=2,3,4 anchored-group frontier
+        shell: bash
+        run: |
+          mkdir -p tmp/nyc-hvfhv-capacity
+          set +e
+          python \
+            code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_capacity_smoke.py \
+            --output-dir tmp/nyc-hvfhv-capacity \
+            --scan-start 2023-01-03T17:00:00 \
+            --scan-end 2023-01-04T01:00:00 \
+            --scan-window-hours 1 \
+            --min-core-rows 6 \
+            --max-core-rows 40 \
+            --max-scan-rows 5000 \
+            --max-candidate-rows 2500 \
+            --max-indeterminate-rows 200 \
+            --solver-time-limit 45 \
+            2>&1 | tee tmp/nyc-hvfhv-capacity/run.log
+          status=${PIPESTATUS[0]}
+          exit ${status}
+      - name: Upload aggregate capacity evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-hvfhv-capacity
+          path: tmp/nyc-hvfhv-capacity
+          if-no-files-found: warn
+          retention-days: 90
