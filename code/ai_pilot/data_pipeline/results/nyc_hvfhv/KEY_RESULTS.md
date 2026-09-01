@@ -72,18 +72,37 @@ The next stage fixes, for each declared `C`, that capacity's certified maximum n
 
 All six endpoint pairs are certified with zero reported MIP gap. The maximum-support requirement expands from 72 selected buffers at `C=2` to 113 at `C=3` and 148 at `C=4`. Conditional on those different support maxima, the miles interval width falls by **39.2%** and the duration width by **39.0%** between `C=2` and `C=4`.
 
-This contraction is **not** a nested-set result: the conditioning event changes with capacity. Larger `C` expands the feasible latent-world set but also raises the C-specific maximum-support cardinality, forcing maximum-support worlds to include more public rows and reducing the ability to select only outcome extremes. A clean capacity comparison therefore needs a **common fixed support cardinality** across `C`; that is the next Gate.
+This contraction is **not** a nested-set result: the conditioning event changes with capacity. Larger `C` expands the feasible latent-world set but also raises the C-specific maximum-support cardinality, forcing maximum-support worlds to include more public rows and reducing the ability to select only outcome extremes.
 
 Validated workflow: `33551028665`; artifact `9817489639`; artifact digest `sha256:cf4f16f590deababc74ecad20be99d18e1e62994bb9acfa7e09ace6923475806`.
 
+## Gate E: common-support capacity geometry
+
+To isolate the pure effect of relaxing capacity, the support cardinality is now held fixed at the certified `C=2` maximum: **72 selected buffers**, or **9.0/core**, for all `C=2,3,4`. Under this common estimand the feasible worlds are nested in `C`, so lower endpoints must weakly fall and upper endpoints must weakly rise.
+
+| C | Mean selected-buffer miles | Width | Mean selected-buffer minutes | Width |
+|---:|---:|---:|---:|---:|
+| 2 | `3.440`--`9.679` | 6.239 | `17.779`--`37.147` | 19.368 |
+| 3 | `3.131`--`15.448` | 12.317 | `15.983`--`55.712` | 39.729 |
+| 4 | `3.116`--`16.166` | 13.050 | `15.924`--`58.906` | 42.982 |
+
+All six endpoint pairs are certified with zero reported MIP gap and the four adjacent-capacity nestedness checks pass. Once the moving-conditioning effect is removed, the capacity effect reverses the Gate-D visual contraction exactly as theory requires: identified intervals expand sharply with `C`.
+
+The widening is strongly front-loaded. From `C=2` to `C=3`, the miles width rises **97.4%** and the duration width rises **105.1%**. Moving from `C=3` to `C=4` adds only **6.0%** and **8.2%**, respectively. Thus **89.2%** of the total `C=2` to `C=4` miles widening and **86.2%** of the duration widening occurs at the first capacity relaxation in this smoke cohort.
+
+This establishes a clean decomposition: `C=2 -> 3` is the dominant capacity-uncertainty margin here, while `C=3 -> 4` is comparatively close to saturation. It is a property of the declared feasible-world model and selected cohort, not an estimate of the platform's realized capacity.
+
+Validated workflow: `33556633111`; artifact `9819681582`; artifact digest `sha256:33a96ea9e8eb6a21426b8a903b04c2f82b8ec7c68ae42efbb873bf9b2eb69a50`.
+
 ## Gate conclusion
 
-NYC passes the **problem-existence, scale, ordered-run modeling, and first outcome-composition Gates**:
+NYC passes the **problem-existence, scale, ordered-run modeling, and common-estimand outcome-composition Gates**:
 
 1. latent-linkage ambiguity is large even with public second-level timestamps;
 2. Chicago-like time coarsening materially expands the candidate graph and identified ranges, but does not create the ambiguity by itself;
 3. exact Taxi-Zone equality is far too restrictive to serve as a necessary candidate rule;
-4. replacing pairwise matching by connected bounded-occupancy runs preserves substantial partial identification and reveals a separate computational burden at exact timestamps; and
-5. outcome uncertainty has two distinct margins: feasible-support expansion with `C`, and composition restrictions induced by conditioning on C-specific maximum support.
+4. replacing pairwise matching by connected bounded-occupancy runs preserves substantial partial identification and reveals a separate computational burden at exact timestamps;
+5. outcome uncertainty has two distinct margins: feasible-support expansion with `C`, and composition restrictions induced by conditioning on C-specific maximum support; and
+6. with support cardinality fixed, capacity becomes a pure nested feasible-set relaxation, and most of the observed `C=2` to `C=4` uncertainty expansion occurs already at `C=3`.
 
 The public data still do **not** identify realized pool size, actual vehicle runs, or co-rider identities. All capacity comparisons are conditional on declared `C`; they are not empirical estimates of NYC's true vehicle capacity or production matching logic.
