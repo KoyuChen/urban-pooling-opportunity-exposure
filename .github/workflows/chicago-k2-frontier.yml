@@ -5,7 +5,9 @@ on:
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier.py
+      - code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py
       - code/ai_pilot/data_pipeline/production_audit/tests/test_live_chicago_k2_frontier.py
+      - code/ai_pilot/data_pipeline/production_audit/tests/test_partitioned_chicago_k2_fetch.py
       - .github/workflows/chicago-k2-frontier.yml
 
 concurrency:
@@ -36,11 +38,14 @@ jobs:
       - name: Run deterministic frontier checks
         run: |
           python \
-            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier.py \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py \
             --self-test
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_live_chicago_k2_frontier.py' -v
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests \
+            -p 'test_partitioned_chicago_k2_fetch.py' -v
 
   live:
     runs-on: ubuntu-latest
@@ -65,14 +70,16 @@ jobs:
       - name: Build boundary-closed K=2 cohort and sensitivity curves
         run: |
           python \
-            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier.py \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py \
             --output-dir tmp/chicago-k2-frontier \
             --scan-start 2026-01-13T17:00:00 \
             --scan-end 2026-01-13T21:00:00 \
             --min-core-rows 12 \
             --max-core-rows 60 \
             --max-candidate-rows 5000 \
-            --page-size 5000 \
+            --page-size 100 \
+            --request-timeout 90 \
+            --request-attempts 3 \
             --base-radius-km 2 \
             --solver-time-limit 20
       - name: Upload aggregate frontier evidence
