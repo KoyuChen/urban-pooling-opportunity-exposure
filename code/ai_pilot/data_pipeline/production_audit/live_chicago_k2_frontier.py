@@ -1,27 +1,32 @@
 #!/usr/bin/env python3
-"""Build a boundary-complete Chicago K=2 public-release cohort and sensitivity curves.
+"""Build a Chicago K=2 public temporal candidate universe and sensitivity curves.
 
 The City of Chicago public TNP table reports ``Shared Trip Match`` and
 ``Trips Pooled`` but suppresses the ``Shared Trip ID`` that joins transactions
 within an empty-to-empty pooled run.  This script therefore distinguishes two
 claims:
 
-1. **Public-release temporal candidate-universe closure.**  For one released
-   15-minute core bin, retrieve every literal ``Match=true, K=2`` row whose
-   released start/end envelopes could overlap any core row, plus every target
-   row with a null released start or end.  Snapshot and server-count checks make
-   this candidate universe complete for the declared public timestamp model.
-2. **Hidden-run closure.**  This remains unidentified because partner/run IDs
-   are absent.  Neither graph feasibility nor a narrow query range is treated
-   as partner-recall evidence.
+1. **Public temporal candidate-universe closure.**  For one released 15-minute
+   core bin, retrieve every literal ``Match=true, K=2`` row whose released
+   start/end envelopes could overlap any core row, plus every target row with a
+   null released start or end.  Snapshot and server-count checks make this a
+   count-closed, core-incident public temporal candidate universe: a
+   boundary-complete candidate superset for the core under the declared public
+   timestamp model.
+2. **Hidden-run closure is not claimed.**  It remains unidentified because
+   partner/run IDs are absent.  Buffer rows' other run-mates are not recursively
+   fetched, graph feasibility is not partner-recall evidence, and this object is
+   not a union of reconstructed complete pooled runs.
 
-On the closed public candidate universe, the script computes two nested
+On this public candidate universe, the script computes two nested
 candidate-support sensitivity families:
 
 * a geographic radius expansion from strict endpoint compatibility to the full
   temporal graph; and
-* a core-incidence miss budget ``Gamma`` that permits an increasing number of
-  core assignments to use temporal edges outside a fixed geographic screen.
+* a core-incidence budget ``Gamma`` that permits an increasing number of core
+  assignments to use measured-distance edges outside a fixed radius.  Edges
+  with unmeasured endpoint distance remain in the base graph and cost zero, so
+  ``Gamma`` is not a total candidate-miss budget or estimated miss rate.
 
 For every family point it solves min/max binary matching-cover programs for
 semantic trip queries.  The denominator is the fixed number of core rows; a
@@ -61,6 +66,7 @@ TARGET_PREDICATE = "shared_trip_match = true AND trips_pooled = 2"
 DEFAULT_SCAN_START = "2026-01-13T17:00:00"
 DEFAULT_SCAN_END = "2026-01-13T21:00:00"
 DEFAULT_RADII_KM = (0.0, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0)
+CERTIFIED_ENDPOINT_STATUS = "OPTIMAL_NUMERICAL_MILP"
 
 FIELDS = (
     "trip_id",
@@ -173,12 +179,26 @@ def sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def _request_json(url: str, *, timeout: int = 180, attempts: int = 4) -> Any:
+def _request_json(
+    url: str,
+    *,
+    timeout: int = 180,
+    attempts: int = 4,
+    json_body: Mapping[str, Any] | None = None,
+) -> Any:
     headers = {"User-Agent": USER_AGENT, "Accept": "application/json"}
     token = os.environ.get("SOCRATA_APP_TOKEN")
     if token:
         headers["X-App-Token"] = token
-    request = urllib.request.Request(url, headers=headers)
+    data = canonical_json_bytes(json_body) if json_body is not None else None
+    if data is not None:
+        headers["Content-Type"] = "application/json"
+    request = urllib.request.Request(
+        url,
+        data=data,
+        headers=headers,
+        method="POST" if data is not None else "GET",
+    )
     errors: list[str] = []
     for attempt in range(attempts):
         try:
@@ -201,22 +221,28 @@ def _soda2_url(query: str) -> str:
     )
 
 
-def _soda3_url(query: str, *, page_number: int, page_size: int) -> str:
-    return f"{DOMAIN}/api/v3/views/{DATASET_ID}/query.json?" + urllib.parse.urlencode(
-        {"query": query, "pageNumber": page_number, "pageSize": page_size}
-    )
+def _soda3_url() -> str:
+    return f"{DOMAIN}/api/v3/views/{DATASET_ID}/query.json"
 
 
 def query_rows(query: str, *, page_size: int = 5000) -> tuple[list[dict[str, Any]], str]:
     """Run one bounded query, trying SODA2 before SODA3."""
 
     errors: list[str] = []
-    for api_name, url in (
-        ("soda2", _soda2_url(query)),
-        ("soda3", _soda3_url(query, page_number=1, page_size=page_size)),
+    for api_name, url, json_body in (
+        ("soda2", _soda2_url(query), None),
+        (
+            "soda3",
+            _soda3_url(),
+            {
+                "query": query,
+                "page": {"pageNumber": 1, "pageSize": page_size},
+                "includeSynthetic": False,
+            },
+        ),
     ):
         try:
-            payload = _request_json(url)
+            payload = _request_json(url, json_body=json_body)
             if not isinstance(payload, list) or not all(
                 isinstance(row, dict) for row in payload
             ):
@@ -1005,6 +1031,8 @@ def edge_query_coefficients(
     rows: Sequence[TripRow],
     edges: Sequence[tuple[int, int]],
     spec: QuerySpec,
+    *,
+    forced_zero_edges: Sequence[bool] | None = None,
 ) -> tuple[list[float] | None, list[float] | None, int]:
     core_indices = {row.index for row in rows if row.role == "core"}
     denominator = len(core_indices)
@@ -1013,10 +1041,16 @@ def edge_query_coefficients(
     lower: list[float] = []
     upper: list[float] = []
     missing_edges = 0
-    for edge in edges:
+    if forced_zero_edges is not None and len(forced_zero_edges) != len(edges):
+        raise ValueError("forced-zero mask must have one entry per edge")
+    for position, edge in enumerate(edges):
         left, right = rows_by_index[edge[0]], rows_by_index[edge[1]]
         interval = spec.coefficient_interval(left, right)
         if interval is None:
+            if forced_zero_edges is not None and forced_zero_edges[position]:
+                lower.append(0.0)
+                upper.append(0.0)
+                continue
             missing_edges += 1
             continue
         core_incidences = int(edge[0] in core_indices) + int(edge[1] in core_indices)
@@ -1033,6 +1067,14 @@ def edge_miss_costs(
     edges: Sequence[tuple[int, int]],
     base_edges: set[tuple[int, int]],
 ) -> list[int]:
+    """Count measured out-of-radius core incidences.
+
+    ``base_edges`` comes from :func:`radius_graph`, which retains every edge
+    with unmeasured route radius.  Such an edge therefore costs zero.  A
+    measured edge outside the base radius costs two for core-core incidence and
+    one for core-buffer incidence.
+    """
+
     core = {row.index for row in rows if row.role == "core"}
     return [
         0
@@ -1040,6 +1082,60 @@ def edge_miss_costs(
         else int(edge[0] in core) + int(edge[1] in core)
         for edge in edges
     ]
+
+
+def certified_endpoint_payload(
+    lower: BoundResult, upper: BoundResult
+) -> dict[str, Any]:
+    """Publish an interval only when both optimization endpoints are certified.
+
+    A replayed incumbent from a time-limited or otherwise unresolved solve is
+    useful diagnostic information, but it is not an identified endpoint.  It
+    is therefore kept only under an explicitly diagnostic field.
+    """
+
+    statuses_certified = (
+        lower.status == CERTIFIED_ENDPOINT_STATUS
+        and upper.status == CERTIFIED_ENDPOINT_STATUS
+    )
+    values_finite = (
+        lower.value is not None
+        and upper.value is not None
+        and math.isfinite(float(lower.value))
+        and math.isfinite(float(upper.value))
+    )
+    values_ordered = (
+        values_finite and float(lower.value) <= float(upper.value)
+    )
+    pair_certified = statuses_certified and values_finite and values_ordered
+    published_lower = float(lower.value) if pair_certified else None
+    published_upper = float(upper.value) if pair_certified else None
+    return {
+        "lower": published_lower,
+        "upper": published_upper,
+        "width": (
+            published_upper - published_lower
+            if published_lower is not None and published_upper is not None
+            else None
+        ),
+        "endpoint_pair_certification": (
+            "CERTIFIED_OPTIMAL_PAIR" if pair_certified else "UNCERTIFIED"
+        ),
+        "diagnostic_lower_nonoptimal_incumbent": (
+            float(lower.value)
+            if lower.status != CERTIFIED_ENDPOINT_STATUS
+            and lower.value is not None
+            and math.isfinite(float(lower.value))
+            else None
+        ),
+        "diagnostic_upper_nonoptimal_incumbent": (
+            float(upper.value)
+            if upper.status != CERTIFIED_ENDPOINT_STATUS
+            and upper.value is not None
+            and math.isfinite(float(upper.value))
+            else None
+        ),
+    }
 
 
 def solve_curve_point(
@@ -1056,15 +1152,18 @@ def solve_curve_point(
     miss_costs: Sequence[int] | None,
     time_limit_seconds: float,
 ) -> tuple[GraphPoint, list[dict[str, Any]]]:
+    if (gamma is None) != (miss_costs is None):
+        raise ValueError("gamma and miss_costs must be supplied together")
     stats = graph_degrees(rows, edges)
     zero_objective = [0.0] * len(edges)
+    optimization_gamma = gamma
     cover = solve_binary_cover_objective(
         rows,
         edges,
         zero_objective,
         maximize=False,
         miss_costs=miss_costs,
-        gamma=gamma,
+        gamma=optimization_gamma,
         time_limit_seconds=time_limit_seconds,
     )
     graph_point = GraphPoint(
@@ -1083,10 +1182,19 @@ def solve_curve_point(
         cover_mip_gap=cover.mip_gap,
     )
     rows_by_index = {row.index: row for row in rows}
+    forced_zero_edges = (
+        [cost > optimization_gamma for cost in miss_costs]
+        if miss_costs is not None and optimization_gamma is not None
+        else None
+    )
     query_rows: list[dict[str, Any]] = []
     for spec in query_specs():
         lower_coefficients, upper_coefficients, missing_edges = edge_query_coefficients(
-            rows_by_index, rows, edges, spec
+            rows_by_index,
+            rows,
+            edges,
+            spec,
+            forced_zero_edges=forced_zero_edges,
         )
         if lower_coefficients is None or upper_coefficients is None:
             lower = BoundResult(
@@ -1107,7 +1215,7 @@ def solve_curve_point(
                 lower_coefficients,
                 maximize=False,
                 miss_costs=miss_costs,
-                gamma=gamma,
+                gamma=optimization_gamma,
                 time_limit_seconds=time_limit_seconds,
             )
             upper = solve_binary_cover_objective(
@@ -1116,22 +1224,16 @@ def solve_curve_point(
                 upper_coefficients,
                 maximize=True,
                 miss_costs=miss_costs,
-                gamma=gamma,
+                gamma=optimization_gamma,
                 time_limit_seconds=time_limit_seconds,
             )
-        width = (
-            upper.value - lower.value
-            if lower.value is not None and upper.value is not None
-            else None
-        )
+        endpoints = certified_endpoint_payload(lower, upper)
         query_rows.append(
             {
                 **asdict(graph_point),
                 "query": spec.name,
                 "unit": spec.unit,
-                "lower": lower.value,
-                "upper": upper.value,
-                "width": width,
+                **endpoints,
                 "lower_status": lower.status,
                 "upper_status": upper.status,
                 "lower_mip_gap": lower.mip_gap,
@@ -1148,7 +1250,10 @@ def solve_curve_point(
                 else None,
                 "edges_with_missing_query_values": missing_edges,
                 "query_missing_semantics": spec.missing_semantics,
-                "claim": "conditional sensitivity over a declared public candidate family; no partner-recall claim",
+                "claim": (
+                    "conditional sensitivity over a count-closed, core-incident public "
+                    "temporal candidate universe; no hidden-run or partner-recall claim"
+                ),
             }
         )
     return graph_point, query_rows
@@ -1159,27 +1264,259 @@ def gamma_grid(core_count: int) -> list[int]:
     return sorted({value for value in candidates if 0 <= value <= core_count})
 
 
-def monotonicity_audit(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def monotonicity_audit(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    expected_parameter_labels: Mapping[str, Sequence[str]] | None = None,
+    expected_queries: Sequence[str] | None = None,
+) -> dict[str, Any]:
+    """Audit complete certified endpoint chains, never just available values.
+
+    ``PASS`` means every curve/query chain is nonempty, fully certified at every
+    point, finite, internally ordered, and monotone.  ``PARTIAL`` means at least
+    one *entire* chain passes those checks while another chain does not.  Empty
+    input, all-unavailable endpoints, or a collection with no completely
+    certified monotone chain is ``FAIL``.
+    """
+
     violations: list[dict[str, Any]] = []
+    certification_failures: list[dict[str, Any]] = []
+    malformed_rows: list[dict[str, Any]] = []
     grouped: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
-    for row in rows:
-        grouped[(str(row["curve_type"]), str(row["query"]))].append(row)
+    expected_query_set = (
+        {str(query) for query in expected_queries}
+        if expected_queries is not None
+        else None
+    )
+    expected_curve_set = (
+        {str(curve) for curve in expected_parameter_labels}
+        if expected_parameter_labels is not None
+        else None
+    )
+    for position, row in enumerate(rows):
+        curve_type = row.get("curve_type")
+        query = row.get("query")
+        if curve_type is None or query is None:
+            malformed_rows.append(
+                {
+                    "row_index": position,
+                    "reason": "missing_curve_type_or_query",
+                }
+            )
+            continue
+        curve_key = str(curve_type)
+        query_key = str(query)
+        if expected_curve_set is not None and curve_key not in expected_curve_set:
+            malformed_rows.append(
+                {
+                    "row_index": position,
+                    "reason": "unexpected_curve_type",
+                    "curve_type": curve_key,
+                }
+            )
+        if expected_query_set is not None and query_key not in expected_query_set:
+            malformed_rows.append(
+                {
+                    "row_index": position,
+                    "reason": "unexpected_query",
+                    "query": query_key,
+                }
+            )
+        grouped[(curve_key, query_key)].append(row)
+
+    if expected_curve_set is not None and expected_query_set is not None:
+        for curve_type in sorted(expected_curve_set):
+            for query in sorted(expected_query_set):
+                grouped.setdefault((curve_type, query), [])
+
+    def parameter_sort_key(row: Mapping[str, Any]) -> tuple[int, float, str]:
+        value = row.get("parameter_value")
+        if value is None:
+            return 1, math.inf, str(row.get("parameter_label", ""))
+        try:
+            numeric = float(value)
+        except (TypeError, ValueError):
+            return 2, math.inf, str(row.get("parameter_label", ""))
+        if not math.isfinite(numeric):
+            return 2, math.inf, str(row.get("parameter_label", ""))
+        return 0, numeric, str(row.get("parameter_label", ""))
+
+    chain_audits: list[dict[str, Any]] = []
     for (curve_type, query), group in grouped.items():
-        ordered = sorted(
-            group,
-            key=lambda row: (
-                math.inf if row["parameter_value"] is None else float(row["parameter_value"])
-            ),
-        )
+        ordered = sorted(group, key=parameter_sort_key)
         previous_lower: float | None = None
         previous_upper: float | None = None
+        chain_failure_count_before = len(certification_failures)
+        chain_violation_count_before = len(violations)
+        labels = [str(row.get("parameter_label")) for row in ordered]
+        if len(ordered) < 2:
+            certification_failures.append(
+                {
+                    "curve_type": curve_type,
+                    "query": query,
+                    "reason": "chain_has_fewer_than_two_points",
+                    "point_count": len(ordered),
+                }
+            )
+        if len(labels) != len(set(labels)):
+            certification_failures.append(
+                {
+                    "curve_type": curve_type,
+                    "query": query,
+                    "reason": "duplicate_parameter_label",
+                }
+            )
+        if expected_parameter_labels is not None and curve_type in expected_parameter_labels:
+            expected_labels = {
+                str(label) for label in expected_parameter_labels[curve_type]
+            }
+            observed_labels = set(labels)
+            if observed_labels != expected_labels:
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "reason": "incomplete_or_unexpected_parameter_chain",
+                        "missing_labels": sorted(expected_labels - observed_labels),
+                        "unexpected_labels": sorted(observed_labels - expected_labels),
+                    }
+                )
+        parameter_keys: list[tuple[str, float | None]] = []
         for row in ordered:
+            raw_parameter = row.get("parameter_value")
+            if raw_parameter is None:
+                parameter_keys.append(("none", None))
+            else:
+                try:
+                    parameter_keys.append(("number", float(raw_parameter)))
+                except (TypeError, ValueError):
+                    parameter_keys.append(("invalid", None))
+        if len(parameter_keys) != len(set(parameter_keys)):
+            certification_failures.append(
+                {
+                    "curve_type": curve_type,
+                    "query": query,
+                    "reason": "duplicate_parameter_value",
+                }
+            )
+
+        for row in ordered:
+            parameter = row.get("parameter_label")
+            parameter_value = row.get("parameter_value")
+            if parameter_value is not None:
+                try:
+                    numeric_parameter = float(parameter_value)
+                except (TypeError, ValueError):
+                    numeric_parameter = math.nan
+                if not math.isfinite(numeric_parameter):
+                    certification_failures.append(
+                        {
+                            "curve_type": curve_type,
+                            "query": query,
+                            "parameter": parameter,
+                            "reason": "nonfinite_or_invalid_parameter",
+                        }
+                    )
+
             lower = row.get("lower")
             upper = row.get("upper")
+            lower_status = row.get("lower_status")
+            upper_status = row.get("upper_status")
+            if (
+                lower_status != CERTIFIED_ENDPOINT_STATUS
+                or upper_status != CERTIFIED_ENDPOINT_STATUS
+            ):
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "parameter": parameter,
+                        "reason": "nonoptimal_or_missing_solver_status",
+                        "lower_status": lower_status,
+                        "upper_status": upper_status,
+                    }
+                )
+            if row.get("endpoint_pair_certification") != "CERTIFIED_OPTIMAL_PAIR":
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "parameter": parameter,
+                        "reason": "endpoint_pair_not_marked_certified",
+                    }
+                )
             if lower is None or upper is None:
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "parameter": parameter,
+                        "reason": "missing_certified_endpoint",
+                    }
+                )
                 continue
-            lower = float(lower)
-            upper = float(upper)
+            try:
+                lower = float(lower)
+                upper = float(upper)
+            except (TypeError, ValueError):
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "parameter": parameter,
+                        "reason": "nonnumeric_endpoint",
+                    }
+                )
+                continue
+            if not math.isfinite(lower) or not math.isfinite(upper):
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "parameter": parameter,
+                        "reason": "nonfinite_endpoint",
+                    }
+                )
+                continue
+            width = row.get("width")
+            try:
+                width = float(width)
+            except (TypeError, ValueError):
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "parameter": parameter,
+                        "reason": "missing_or_nonnumeric_width",
+                    }
+                )
+                continue
+            if not math.isfinite(width) or not math.isclose(
+                width,
+                upper - lower,
+                rel_tol=1e-7,
+                abs_tol=1e-7,
+            ):
+                certification_failures.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "parameter": parameter,
+                        "reason": "nonfinite_or_inconsistent_width",
+                    }
+                )
+                continue
+            if lower > upper + 1e-7:
+                violations.append(
+                    {
+                        "curve_type": curve_type,
+                        "query": query,
+                        "direction": "lower_exceeds_upper",
+                        "lower": lower,
+                        "upper": upper,
+                        "parameter": parameter,
+                    }
+                )
             if previous_lower is not None and lower > previous_lower + 1e-7:
                 violations.append(
                     {
@@ -1188,7 +1525,7 @@ def monotonicity_audit(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
                         "direction": "lower_increased",
                         "previous": previous_lower,
                         "current": lower,
-                        "parameter": row["parameter_label"],
+                        "parameter": parameter,
                     }
                 )
             if previous_upper is not None and upper < previous_upper - 1e-7:
@@ -1199,16 +1536,445 @@ def monotonicity_audit(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
                         "direction": "upper_decreased",
                         "previous": previous_upper,
                         "current": upper,
-                        "parameter": row["parameter_label"],
+                        "parameter": parameter,
                     }
                 )
             previous_lower = lower
             previous_upper = upper
+
+        chain_failure_count = len(certification_failures) - chain_failure_count_before
+        chain_violation_count = len(violations) - chain_violation_count_before
+        chain_status = (
+            "PASS"
+            if ordered and chain_failure_count == 0 and chain_violation_count == 0
+            else "FAIL"
+        )
+        chain_audits.append(
+            {
+                "curve_type": curve_type,
+                "query": query,
+                "point_count": len(ordered),
+                "certification_failure_count": chain_failure_count,
+                "violation_count": chain_violation_count,
+                "status": chain_status,
+            }
+        )
+
+    passing_chains = sum(item["status"] == "PASS" for item in chain_audits)
+    total_chains = len(chain_audits)
+    query_family_audits: list[dict[str, Any]] = []
+    for query in sorted({str(item["query"]) for item in chain_audits}):
+        family = [item for item in chain_audits if item["query"] == query]
+        family_status = (
+            "PASS"
+            if family and all(item["status"] == "PASS" for item in family)
+            else "FAIL"
+        )
+        query_family_audits.append(
+            {
+                "query": query,
+                "curve_chain_count": len(family),
+                "status": family_status,
+            }
+        )
+    passing_query_families = sum(
+        item["status"] == "PASS" for item in query_family_audits
+    )
+    if violations or malformed_rows:
+        status = "FAIL"
+    elif (
+        total_chains > 0
+        and passing_chains == total_chains
+    ):
+        status = "PASS"
+    elif passing_chains > 0:
+        status = "PARTIAL"
+    else:
+        status = "FAIL"
     return {
-        "expected": "lower nonincreasing and upper nondecreasing as candidate support expands",
+        "expected": (
+            "every curve/query chain fully certified; lower nonincreasing and upper "
+            "nondecreasing as candidate support expands"
+        ),
+        "chain_count": total_chains,
+        "fully_certified_monotone_chain_count": passing_chains,
+        "chain_audits": chain_audits,
+        "query_family_count": len(query_family_audits),
+        "fully_certified_monotone_query_family_count": passing_query_families,
+        "query_family_audits": query_family_audits,
+        "certification_failure_count": len(certification_failures),
+        "certification_failures": certification_failures,
+        "malformed_row_count": len(malformed_rows),
+        "malformed_rows": malformed_rows,
         "violation_count": len(violations),
         "violations": violations,
-        "status": "PASS" if not violations else "FAIL",
+        "status": status,
+    }
+
+
+def endpoint_identity_audit(
+    sensitivity_rows: Sequence[Mapping[str, Any]],
+    radius_graph_points: Sequence[Mapping[str, Any]],
+    gamma_graph_points: Sequence[Mapping[str, Any]],
+    *,
+    model_rows: Sequence[TripRow],
+    temporal_edges: Sequence[tuple[int, int]],
+    base_edges: Sequence[tuple[int, int]],
+    miss_costs: Sequence[int],
+    base_radius_km: float,
+    core_count: int,
+    tolerance: float = 1e-7,
+) -> dict[str, Any]:
+    """Verify the two Gamma-family endpoint identities against radius points."""
+
+    mismatches: list[dict[str, Any]] = []
+    core_indices = {row.index for row in model_rows if row.role == "core"}
+    temporal_edge_set = set(temporal_edges)
+    base_edge_set = set(base_edges)
+    if len(temporal_edge_set) != len(temporal_edges):
+        mismatches.append(
+            {
+                "identity": "structural_gamma_endpoint_identity",
+                "reason": "duplicate_temporal_edges",
+            }
+        )
+    if not base_edge_set <= temporal_edge_set:
+        mismatches.append(
+            {
+                "identity": "structural_gamma_endpoint_identity",
+                "reason": "base_edges_not_subset_of_temporal_edges",
+            }
+        )
+    if len(miss_costs) != len(temporal_edges):
+        mismatches.append(
+            {
+                "identity": "structural_gamma_endpoint_identity",
+                "reason": "miss_cost_length_mismatch",
+                "edge_count": len(temporal_edges),
+                "cost_count": len(miss_costs),
+            }
+        )
+    else:
+        for edge, observed_cost in zip(temporal_edges, miss_costs):
+            core_incidences = int(edge[0] in core_indices) + int(
+                edge[1] in core_indices
+            )
+            expected_cost = 0 if edge in base_edge_set else core_incidences
+            if core_incidences not in {1, 2} or observed_cost != expected_cost:
+                mismatches.append(
+                    {
+                        "identity": "structural_gamma_endpoint_identity",
+                        "reason": "incorrect_measured_out_of_radius_incidence_cost",
+                        "edge": list(edge),
+                        "observed_cost": observed_cost,
+                        "expected_cost": expected_cost,
+                        "core_incidences": core_incidences,
+                    }
+                )
+    if len(core_indices) != core_count:
+        mismatches.append(
+            {
+                "identity": "structural_gamma_endpoint_identity",
+                "reason": "core_count_mismatch",
+                "observed": len(core_indices),
+                "declared": core_count,
+            }
+        )
+
+    def numeric_equal(left: Any, right: Any) -> bool:
+        if left is None or right is None:
+            return left is None and right is None
+        try:
+            left_number = float(left)
+            right_number = float(right)
+        except (TypeError, ValueError):
+            return False
+        return (
+            math.isfinite(left_number)
+            and math.isfinite(right_number)
+            and math.isclose(
+                left_number,
+                right_number,
+                rel_tol=tolerance,
+                abs_tol=tolerance,
+            )
+        )
+
+    def unique_point(
+        points: Sequence[Mapping[str, Any]],
+        predicate: Callable[[Mapping[str, Any]], bool],
+        label: str,
+    ) -> Mapping[str, Any] | None:
+        selected = [point for point in points if predicate(point)]
+        if len(selected) != 1:
+            mismatches.append(
+                {
+                    "identity": label,
+                    "reason": "expected_exactly_one_graph_point",
+                    "observed": len(selected),
+                }
+            )
+            return None
+        return selected[0]
+
+    base_graph = unique_point(
+        radius_graph_points,
+        lambda point: point.get("radius_km") is not None
+        and numeric_equal(point.get("radius_km"), base_radius_km),
+        "gamma_0_equals_base_radius",
+    )
+    temporal_graph = unique_point(
+        radius_graph_points,
+        lambda point: point.get("radius_km") is None,
+        "gamma_core_count_equals_temporal_only",
+    )
+    gamma_zero_graph = unique_point(
+        gamma_graph_points,
+        lambda point: point.get("gamma_core_incidences") == 0,
+        "gamma_0_equals_base_radius",
+    )
+    gamma_full_graph = unique_point(
+        gamma_graph_points,
+        lambda point: point.get("gamma_core_incidences") == core_count,
+        "gamma_core_count_equals_temporal_only",
+    )
+
+    certified_cover_statuses = {
+        CERTIFIED_ENDPOINT_STATUS,
+        "PROVEN_INFEASIBLE_ISOLATED_CORE",
+        "PROVEN_INFEASIBLE_BY_HIGHS",
+    }
+
+    def status_class(status: Any) -> str:
+        if status in {
+            "PROVEN_INFEASIBLE_ISOLATED_CORE",
+            "PROVEN_INFEASIBLE_BY_HIGHS",
+        }:
+            return "CERTIFIED_INFEASIBLE"
+        return str(status)
+
+    for identity, left_graph, right_graph in (
+        (
+            "gamma_0_equals_base_radius",
+            base_graph,
+            gamma_zero_graph,
+        ),
+        (
+            "gamma_core_count_equals_temporal_only",
+            temporal_graph,
+            gamma_full_graph,
+        ),
+    ):
+        if left_graph is None or right_graph is None:
+            continue
+        left_status = left_graph.get("cover_status")
+        right_status = right_graph.get("cover_status")
+        if (
+            status_class(left_status) != status_class(right_status)
+            or left_status not in certified_cover_statuses
+            or right_status not in certified_cover_statuses
+        ):
+            mismatches.append(
+                {
+                    "identity": identity,
+                    "reason": "cover_status_mismatch_or_uncertified",
+                    "left": left_status,
+                    "right": right_status,
+                }
+            )
+
+    def indexed_rows(
+        curve_type: str,
+        predicate: Callable[[Mapping[str, Any]], bool],
+        label: str,
+    ) -> dict[str, Mapping[str, Any]]:
+        selected = [
+            row
+            for row in sensitivity_rows
+            if row.get("curve_type") == curve_type and predicate(row)
+        ]
+        indexed: dict[str, Mapping[str, Any]] = {}
+        duplicates: list[str] = []
+        for row in selected:
+            query = str(row.get("query"))
+            if query in indexed:
+                duplicates.append(query)
+            indexed[query] = row
+        if duplicates:
+            mismatches.append(
+                {
+                    "identity": label,
+                    "reason": "duplicate_query_rows",
+                    "queries": sorted(set(duplicates)),
+                }
+            )
+        return indexed
+
+    base_rows = indexed_rows(
+        "radius",
+        lambda row: row.get("radius_km") is not None
+        and numeric_equal(row.get("radius_km"), base_radius_km),
+        "gamma_0_equals_base_radius",
+    )
+    temporal_rows = indexed_rows(
+        "radius",
+        lambda row: row.get("radius_km") is None,
+        "gamma_core_count_equals_temporal_only",
+    )
+    gamma_zero_rows = indexed_rows(
+        "gamma",
+        lambda row: row.get("gamma_core_incidences") == 0,
+        "gamma_0_equals_base_radius",
+    )
+    gamma_full_rows = indexed_rows(
+        "gamma",
+        lambda row: row.get("gamma_core_incidences") == core_count,
+        "gamma_core_count_equals_temporal_only",
+    )
+
+    acceptable_unavailable_statuses = {
+        "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "PROVEN_INFEASIBLE_ISOLATED_CORE",
+        "PROVEN_INFEASIBLE_BY_HIGHS",
+    }
+    comparisons = 0
+    for identity, left_rows, right_rows in (
+        ("gamma_0_equals_base_radius", base_rows, gamma_zero_rows),
+        (
+            "gamma_core_count_equals_temporal_only",
+            temporal_rows,
+            gamma_full_rows,
+        ),
+    ):
+        if set(left_rows) != set(right_rows) or not left_rows:
+            mismatches.append(
+                {
+                    "identity": identity,
+                    "reason": "query_set_mismatch_or_empty",
+                    "left_queries": sorted(left_rows),
+                    "right_queries": sorted(right_rows),
+                }
+            )
+            continue
+        for query in sorted(left_rows):
+            comparisons += 1
+            left = left_rows[query]
+            right = right_rows[query]
+            left_statuses = (left.get("lower_status"), left.get("upper_status"))
+            right_statuses = (right.get("lower_status"), right.get("upper_status"))
+            status_pair_certified = (
+                left_statuses
+                == (
+                    CERTIFIED_ENDPOINT_STATUS,
+                    CERTIFIED_ENDPOINT_STATUS,
+                )
+                and right_statuses
+                == (
+                    CERTIFIED_ENDPOINT_STATUS,
+                    CERTIFIED_ENDPOINT_STATUS,
+                )
+                and left.get("endpoint_pair_certification")
+                == "CERTIFIED_OPTIMAL_PAIR"
+                and right.get("endpoint_pair_certification")
+                == "CERTIFIED_OPTIMAL_PAIR"
+            )
+            status_pair_comparably_unavailable = (
+                tuple(status_class(status) for status in left_statuses)
+                == tuple(status_class(status) for status in right_statuses)
+                and all(
+                    status in acceptable_unavailable_statuses
+                    for status in (*left_statuses, *right_statuses)
+                )
+            )
+            if not (
+                status_pair_certified or status_pair_comparably_unavailable
+            ):
+                mismatches.append(
+                    {
+                        "identity": identity,
+                        "query": query,
+                        "reason": "endpoint_status_mismatch_or_uncertified",
+                        "left": left_statuses,
+                        "right": right_statuses,
+                    }
+                )
+                continue
+            for field in ("lower", "upper", "width"):
+                if not numeric_equal(left.get(field), right.get(field)):
+                    mismatches.append(
+                        {
+                            "identity": identity,
+                            "query": query,
+                            "reason": f"{field}_mismatch",
+                            "left": left.get(field),
+                            "right": right.get(field),
+                        }
+                    )
+
+    return {
+        "expected": (
+            "Gamma=0 equals the base-radius feasible set; Gamma=core_count "
+            "equals the unconstrained temporal-only feasible set"
+        ),
+        "base_radius_km": base_radius_km,
+        "core_count": core_count,
+        "structural_basis": (
+            "cost zero iff an edge is in the base-radius graph; otherwise cost "
+            "equals its one or two core endpoints. Core cover equalities fix total "
+            "selected core incidence at core_count, so Gamma=core_count is redundant."
+        ),
+        "query_comparison_count": comparisons,
+        "mismatch_count": len(mismatches),
+        "mismatches": mismatches,
+        "status": "PASS" if not mismatches else "FAIL",
+    }
+
+
+def public_temporal_closure_audit(
+    *,
+    snapshot_stable: bool,
+    server_counts_stable: bool,
+    core_subset_verified: bool,
+    candidate_rows: int,
+    expected_candidate_rows: int,
+    observed_indeterminate_rows: int,
+    expected_indeterminate_rows: int,
+    off_release_grid_rows: int,
+    released_chronology_impossible_rows: int,
+    context_rows: int,
+    full_temporal_cover_status: str,
+) -> dict[str, Any]:
+    """Certify the declared public temporal universe, failing every check closed."""
+
+    checks = {
+        "snapshot_stable": bool(snapshot_stable),
+        "server_counts_stable": bool(server_counts_stable),
+        "core_subset_verified": bool(core_subset_verified),
+        "candidate_count_matches_pinned_count": (
+            candidate_rows == expected_candidate_rows
+        ),
+        "global_null_start_or_end_targets_included": (
+            observed_indeterminate_rows == expected_indeterminate_rows
+        ),
+        "no_off_release_grid_rows": off_release_grid_rows == 0,
+        "no_released_chronology_impossible_rows": (
+            released_chronology_impossible_rows == 0
+        ),
+        "no_unusable_context_rows": context_rows == 0,
+        "full_temporal_cover_optimal": (
+            full_temporal_cover_status == CERTIFIED_ENDPOINT_STATUS
+        ),
+    }
+    failed = [name for name, passed in checks.items() if not passed]
+    return {
+        "definition": (
+            "count-closed, core-incident public temporal candidate universe; "
+            "boundary-complete core candidate superset under released timestamps"
+        ),
+        "checks": checks,
+        "failed_checks": failed,
+        "status": "PASS" if not failed else "FAIL",
+        "hidden_run_closure_claimed": False,
     }
 
 
@@ -1250,7 +2016,7 @@ def plot_curves(rows: Sequence[Mapping[str, Any]], output_dir: Path) -> list[str
         ax.set_xticks(x, labels, rotation=35, ha="right")
         ax.set_xlabel("Maximum endpoint radius (km); missing centroids retained")
         ax.set_ylabel("Candidate edges")
-        ax.set_title("Chicago K=2 candidate graph expansion")
+        ax.set_title("Chicago K=2 public temporal candidate graph expansion")
         fig.tight_layout()
         path = output_dir / "radius_edge_curve.svg"
         fig.savefig(path)
@@ -1259,7 +2025,7 @@ def plot_curves(rows: Sequence[Mapping[str, Any]], output_dir: Path) -> list[str
 
     for curve_type, xlabel in (
         ("radius", "Maximum endpoint radius (km)"),
-        ("gamma", "Allowed out-of-screen core incidences Γ"),
+        ("gamma", "Allowed measured out-of-radius core incidences Γ"),
     ):
         relevant = [
             row
@@ -1304,25 +2070,27 @@ def render_report(report: Mapping[str, Any]) -> str:
     cohort = report["cohort"]
     graph = report["logical_graph"]
     lines = [
-        "# Chicago K=2 boundary-closed cohort and candidate-support sensitivity",
+        "# Chicago K=2 public temporal candidate-universe closure and sensitivity",
         "",
         f"Generated UTC: `{report['generated_at_utc']}`  ",
         f"Dataset: City of Chicago `{DATASET_ID}`, {DATASET_NAME}  ",
         f"Snapshot fingerprint: `{report['snapshot']['revision_fingerprint_sha256']}`",
         "",
-        "## Cohort closure",
+        "## Public temporal candidate-universe closure",
         "",
         f"The selected core is the released 15-minute bin `{cohort['core_start_local']}` to "
         f"`{cohort['core_end_local']}`. It contains **{cohort['core_rows']}** literal "
         "`Shared Trip Match=true, Trips Pooled=2` rows.",
         "",
         f"The direct overlap-envelope query retrieved **{cohort['candidate_rows']}** target rows: "
-        f"**{cohort['buffer_rows']}** boundary-buffer rows plus the core. The snapshot and "
-        f"server counts were stable: **{cohort['public_candidate_universe_closure_status']}**.",
+        f"**{cohort['buffer_rows']}** boundary-buffer rows plus the core. This is a "
+        "boundary-complete candidate superset for core-incident public temporal edges. "
+        f"Closure status: **{cohort['public_temporal_candidate_universe_closure_status']}**.",
         "",
-        "This is closure of the candidate universe under the declared public timestamp model. "
-        "It is not closure of the actual pooled runs, because Shared Trip ID and partner identity "
-        "are not public.",
+        "The object is count-closed under the declared released-timestamp model. It is "
+        "explicitly not hidden-run closure: Shared Trip ID and partner identity are not public, "
+        "buffer rows' other run-mates are not recursively fetched, and the candidate set is not "
+        "a union of reconstructed complete pooled runs.",
         "",
         "| Check | Result |",
         "|---|---|",
@@ -1330,7 +2098,14 @@ def render_report(report: Mapping[str, Any]) -> str:
         f"| Server counts stable before/after | `{cohort['server_counts_stable']}` |",
         f"| Core rows recovered in candidate extract | `{cohort['core_subset_verified']}` |",
         f"| Global null-start/end K=2 targets included | `{cohort['indeterminate_timestamp_rows_included']}` ({cohort['indeterminate_timestamp_rows']}) |",
+        f"| Released chronology impossible rows | `{cohort['released_chronology_impossible_rows']}` |",
+        f"| Full temporal cover optimal | `{cohort['closure_audit']['checks']['full_temporal_cover_optimal']}` |",
         f"| Hidden run closure | `{cohort['hidden_run_closure_status']}` |",
+        "",
+        "This is a one-bin, adaptively selected smoke test, not evidence for the Chicago "
+        "trip population. Stable metadata and counts protect extraction consistency but do "
+        "not create an immutable transaction-level snapshot. Query coefficients are computed "
+        "from released public fields and are not latent exact trip attributes.",
         "",
         "## Logical temporal graph",
         "",
@@ -1356,12 +2131,13 @@ def render_report(report: Mapping[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "## Candidate-miss budget sensitivity",
-            "",
-            f"The base screen is **{report['gamma_curve']['base_radius_km']} km**. Γ counts "
-            "core incidences assigned through temporal edges outside that screen; a core-core "
-            "outside edge costs two and a core-buffer outside edge costs one. Γ is a sensitivity "
-            "budget, not an estimated miss rate.",
+        "## Measured out-of-radius incidence sensitivity",
+        "",
+        f"The base radius is **{report['gamma_curve']['base_radius_km']} km**. Γ counts "
+        "core incidences assigned through edges whose measured endpoint distance exceeds that "
+        "radius; a measured out-of-radius core-core edge costs two and a core-buffer edge costs "
+        "one. Edges with unmeasured endpoint distance are retained at every radius and cost zero. "
+        "Therefore Γ is neither a total candidate-miss budget nor an estimated miss rate.",
             "",
             "| Γ | Cover status | Mean miles-gap width | Same-dropoff-area width |",
             "|---:|---|---:|---:|",
@@ -1388,6 +2164,8 @@ def render_report(report: Mapping[str, Any]) -> str:
             "## Audit conclusion",
             "",
             f"Nested-set monotonicity: `{report['monotonicity_audit']['status']}`.  ",
+            f"Endpoint identities: `{report['endpoint_identity_audit']['status']}`.  ",
+            f"Monotonicity claim: **{report['claim_boundary']['monotonicity_statement']}**  ",
             f"Strongest supported statement: **{report['claim_boundary']['strongest_supported_statement']}**  ",
             f"Prohibited statement: **{report['claim_boundary']['prohibited_statement']}**",
             "",
@@ -1438,6 +2216,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         raise LiveDataError("candidate extraction did not recover the exact selected core")
     if row_audit["context_rows"]:
         raise LiveDataError("candidate extract contains unusable target identifiers or literals")
+    off_grid_rows = sum(
+        row.interval_status == "off_release_grid_timestamp" for row in rows
+    )
+    released_chronology_impossible_rows = sum(
+        row.interval_status == "released_chronology_impossible" for row in rows
+    )
+    if off_grid_rows:
+        raise LiveDataError("public temporal closure failed: off-grid released timestamps")
+    if released_chronology_impossible_rows:
+        raise LiveDataError(
+            "public temporal closure failed: released chronology is impossible"
+        )
 
     temporal_edges, temporal_provenance = build_temporal_edges(rows)
     if not temporal_edges:
@@ -1446,13 +2236,15 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     route_radius = {
         edge: edge_route_radius(rows_by_index, edge) for edge in temporal_edges
     }
-    radius_values = [*DEFAULT_RADII_KM, None]
+    base_radius = float(args.base_radius_km)
+    radius_values: list[float | None] = [
+        *sorted({*DEFAULT_RADII_KM, base_radius}),
+        None,
+    ]
     radius_graph_points: list[dict[str, Any]] = []
     sensitivity_rows: list[dict[str, Any]] = []
-    radius_edge_sets: dict[float | None, list[tuple[int, int]]] = {}
     for radius in radius_values:
         edges, unmeasured = radius_graph(temporal_edges, route_radius, radius)
-        radius_edge_sets[radius] = edges
         label = "temporal-only" if radius is None else f"{radius:g} km"
         graph_point, query_rows = solve_curve_point(
             rows=rows,
@@ -1470,13 +2262,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         radius_graph_points.append(asdict(graph_point))
         sensitivity_rows.extend(query_rows)
 
-    base_radius = float(args.base_radius_km)
     base_edges, _ = radius_graph(temporal_edges, route_radius, base_radius)
     base_edge_set = set(base_edges)
     miss_costs = edge_miss_costs(rows, temporal_edges, base_edge_set)
     core_count = row_audit["core_rows"]
     gamma_graph_points: list[dict[str, Any]] = []
-    for gamma in gamma_grid(core_count):
+    gamma_values = gamma_grid(core_count)
+    for gamma in gamma_values:
         unmeasured = sum(route_radius[edge] is None for edge in temporal_edges)
         graph_point, query_rows = solve_curve_point(
             rows=rows,
@@ -1494,36 +2286,91 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         gamma_graph_points.append(asdict(graph_point))
         sensitivity_rows.extend(query_rows)
 
-    monotonicity = monotonicity_audit(sensitivity_rows)
-    if monotonicity["status"] != "PASS":
-        raise LiveDataError("nested sensitivity endpoints violated monotonicity")
-
     full_point = next(point for point in radius_graph_points if point["radius_km"] is None)
     observed_null_timestamp_rows = sum(
         row.released_start is None or row.released_end is None for row in rows
     )
-    off_grid_rows = sum(
-        row.interval_status == "off_release_grid_timestamp" for row in rows
+    closure_audit = public_temporal_closure_audit(
+        snapshot_stable=snapshot_stable,
+        server_counts_stable=counts_stable,
+        core_subset_verified=core_subset_verified,
+        candidate_rows=len(rows),
+        expected_candidate_rows=int(selected["candidate_count"]),
+        observed_indeterminate_rows=observed_null_timestamp_rows,
+        expected_indeterminate_rows=int(selected["indeterminate_count"]),
+        off_release_grid_rows=off_grid_rows,
+        released_chronology_impossible_rows=released_chronology_impossible_rows,
+        context_rows=int(row_audit["context_rows"]),
+        full_temporal_cover_status=str(full_point["cover_status"]),
     )
-    closure_status = (
-        "PASS_PUBLIC_RELEASE_TEMPORAL_CANDIDATE_UNIVERSE_CLOSED"
-        if snapshot_stable
-        and counts_stable
-        and core_subset_verified
-        and int(selected["indeterminate_count"]) == observed_null_timestamp_rows
-        and off_grid_rows == 0
-        else "FAIL"
+    if closure_audit["status"] != "PASS":
+        raise LiveDataError(
+            "public temporal candidate-universe closure failed: "
+            + ", ".join(closure_audit["failed_checks"])
+        )
+
+    endpoint_identities = endpoint_identity_audit(
+        sensitivity_rows,
+        radius_graph_points,
+        gamma_graph_points,
+        model_rows=rows,
+        temporal_edges=temporal_edges,
+        base_edges=base_edges,
+        miss_costs=miss_costs,
+        base_radius_km=base_radius,
+        core_count=core_count,
     )
+    if endpoint_identities["status"] != "PASS":
+        raise LiveDataError("Gamma/radius endpoint identity audit failed")
+
+    monotonicity = monotonicity_audit(
+        sensitivity_rows,
+        expected_parameter_labels={
+            "radius": [
+                "temporal-only" if radius is None else f"{radius:g} km"
+                for radius in radius_values
+            ],
+            "gamma": [str(gamma) for gamma in gamma_values],
+        },
+        expected_queries=[spec.name for spec in query_specs()],
+    )
+    if monotonicity["status"] == "FAIL":
+        raise LiveDataError(
+            "no complete, certified, monotone sensitivity query chain remains"
+        )
+
+    if monotonicity["status"] == "PASS":
+        monotonicity_statement = (
+            "Every declared curve/query chain is fully certified and monotone."
+        )
+        sensitivity_clause = (
+            "all certified query intervals widen monotonically as candidate support "
+            "is relaxed"
+        )
+    else:
+        monotonicity_statement = (
+            f"Only {monotonicity['fully_certified_monotone_chain_count']} of "
+            f"{monotonicity['chain_count']} entire curve/query chains are fully "
+            "certified and monotone, covering "
+            f"{monotonicity['fully_certified_monotone_query_family_count']} of "
+            f"{monotonicity['query_family_count']} complete query families; no "
+            "universal monotonicity claim is made."
+        )
+        sensitivity_clause = (
+            "monotonic widening is supported only for the complete certified chains "
+            "identified by the audit"
+        )
     report: dict[str, Any] = {
-        "report_version": "chicago-k2-closed-cohort-frontier/v1",
+        "report_version": "chicago-k2-public-temporal-candidate-universe/v2",
         "generated_at_utc": generated,
         "snapshot": asdict(snapshot_after),
         "extraction": {
             "scan_start_local": args.scan_start,
             "scan_end_local": args.scan_end,
             "selection_algorithm": (
-                "highest-count released 15-minute K=2 bin satisfying core integrity, "
-                "core/candidate resource caps, and complete core end timestamps"
+                "adaptive smoke-test selection of the highest-count released 15-minute "
+                "K=2 bin satisfying core integrity, core/candidate resource caps, and "
+                "complete core end timestamps; not a population-representative sample"
             ),
             "overlap_envelope_derivation": (
                 "For rounding half-width delta=7.5 minutes, any determinate partner of a "
@@ -1556,8 +2403,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 int(selected["indeterminate_count"]) == observed_null_timestamp_rows
             ),
             "off_release_grid_rows": off_grid_rows,
-            "public_candidate_universe_closure_status": closure_status,
-            "hidden_run_closure_status": "NOT_IDENTIFIED_FROM_PUBLIC_ROWS",
+            "released_chronology_impossible_rows": (
+                released_chronology_impossible_rows
+            ),
+            "public_temporal_candidate_universe_closure_status": closure_audit[
+                "status"
+            ],
+            "closure_audit": closure_audit,
+            "hidden_run_closure_status": "NOT_IDENTIFIED_AND_NOT_CLAIMED",
             "row_audit": row_audit,
         },
         "logical_graph": {
@@ -1573,30 +2426,46 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 value is None for value in route_radius.values()
             ),
             "cover_status": full_point["cover_status"],
-            "partner_coverage_claim": "NOT_ESTIMATED_FROM_PUBLIC_ROWS",
+            "partner_coverage_claim": "NOT_ESTIMATED_OR_IDENTIFIED_FROM_PUBLIC_ROWS",
         },
         "radius_graph_points": radius_graph_points,
         "gamma_curve": {
             "base_radius_km": base_radius,
             "base_edge_count": len(base_edges),
             "gamma_definition": (
-                "number of core incidences assigned through logical temporal edges "
-                "outside the fixed base-radius graph"
+                "number of core incidences assigned through temporal edges whose "
+                "measured endpoint distance exceeds the fixed base radius"
             ),
+            "unmeasured_distance_edges_retained_and_cost_zero": True,
+            "gamma_is_total_candidate_miss_budget": False,
             "gamma_is_estimated_miss_rate": False,
         },
         "gamma_graph_points": gamma_graph_points,
         "sensitivity_rows": sensitivity_rows,
         "monotonicity_audit": monotonicity,
+        "endpoint_identity_audit": endpoint_identities,
         "claim_boundary": {
+            "monotonicity_statement": monotonicity_statement,
             "strongest_supported_statement": (
-                "The pinned public release yields a count-closed K=2 temporal candidate "
-                "universe for the selected core under the declared timestamp-rounding model, "
-                "and query endpoints widen monotonically as candidate support is relaxed."
+                "For one adaptively selected 15-minute smoke-test core, this metadata/count-"
+                "stable extraction yields a count-closed, core-incident K=2 public temporal "
+                "candidate universe under the declared timestamp-rounding model; "
+                f"{sensitivity_clause}."
             ),
             "prohibited_statement": (
-                "The true Chicago pooled runs or co-rider partners have been reconstructed, "
-                "or the declared candidate graph has measured partner recall."
+                "The true Chicago pooled runs or co-rider partners have been reconstructed; "
+                "the boundary buffer is recursively run-closed; the graph has measured "
+                "partner recall; or this one selected bin establishes a Chicago-population "
+                "effect."
+            ),
+            "released_field_scope": (
+                "Query coefficients use released public trip fields and their missing-data "
+                "semantics; they are not claims about latent exact fare, duration, distance, "
+                "or location values."
+            ),
+            "snapshot_scope": (
+                "Stable metadata and server counts pin extraction consistency; they do not "
+                "constitute a transaction-level immutable snapshot guarantee."
             ),
         },
         "redaction": {
@@ -1631,7 +2500,7 @@ def write_outputs(report: Mapping[str, Any], output_dir: Path) -> None:
         json.dumps(compact, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    (output_dir / "CHICAGO_K2_CLOSED_COHORT_REPORT.md").write_text(
+    (output_dir / "CHICAGO_K2_PUBLIC_TEMPORAL_FRONTIER_REPORT.md").write_text(
         render_report(report), encoding="utf-8"
     )
 
@@ -1739,7 +2608,12 @@ def main() -> int:
         raise SystemExit("max candidate rows must be at least max core rows")
     if args.page_size < 1 or args.page_size > 50_000:
         raise SystemExit("page size must lie in [1,50000]")
-    if args.base_radius_km < 0 or args.solver_time_limit <= 0:
+    if (
+        not math.isfinite(args.base_radius_km)
+        or not math.isfinite(args.solver_time_limit)
+        or args.base_radius_km < 0
+        or args.solver_time_limit <= 0
+    ):
         raise SystemExit("radius must be nonnegative and solver time positive")
     report = run(args)
     write_outputs(report, args.output_dir)

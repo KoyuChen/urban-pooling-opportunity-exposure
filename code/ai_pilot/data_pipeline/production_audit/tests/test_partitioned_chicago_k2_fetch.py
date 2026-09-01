@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import sys
 import unittest
@@ -47,6 +48,70 @@ def full_row(trip_id: str, start: str, end: str) -> dict[str, str]:
 
 
 class PartitionedFetchTests(unittest.TestCase):
+    def test_soda3_transport_uses_post_json_contract(self) -> None:
+        body = {
+            "query": "SELECT trip_id LIMIT 1",
+            "page": {"pageNumber": 1, "pageSize": 1},
+            "includeSynthetic": False,
+        }
+        response = io.BytesIO(b'[{"trip_id":"redacted"}]')
+        with patch.object(
+            BASE.urllib.request, "urlopen", return_value=response
+        ) as urlopen, patch.dict(
+            BASE.os.environ, {"SOCRATA_APP_TOKEN": "test-token"}, clear=False
+        ):
+            payload = BASE._request_json(
+                BASE._soda3_url(), attempts=1, json_body=body
+            )
+
+        self.assertEqual(payload, [{"trip_id": "redacted"}])
+        request = urlopen.call_args.args[0]
+        self.assertEqual(request.get_method(), "POST")
+        self.assertEqual(request.full_url, BASE._soda3_url())
+        self.assertEqual(json.loads(request.data.decode("utf-8")), body)
+        headers = {key.lower(): value for key, value in request.header_items()}
+        self.assertEqual(headers["content-type"], "application/json")
+        self.assertEqual(headers["x-app-token"], "test-token")
+
+    def test_request_budget_preserves_soda3_post_options(self) -> None:
+        calls: list[dict] = []
+
+        def fake_request(url, *, timeout, attempts, **request_options):
+            calls.append(
+                {
+                    "url": url,
+                    "timeout": timeout,
+                    "attempts": attempts,
+                    **request_options,
+                }
+            )
+            if "/resource/" in url:
+                raise OSError("force SODA3 fallback")
+            return [{"trip_id": "redacted"}]
+
+        original = WRAPPER.frontier._request_json
+        try:
+            with patch.object(
+                WRAPPER, "_ORIGINAL_REQUEST_JSON", side_effect=fake_request
+            ):
+                WRAPPER._configure_request_budget(90, 3)
+                rows, api = WRAPPER.frontier.query_rows(
+                    "SELECT trip_id LIMIT 1", page_size=7
+                )
+        finally:
+            WRAPPER.frontier._request_json = original
+
+        self.assertEqual(rows, [{"trip_id": "redacted"}])
+        self.assertEqual(api, "soda3")
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(calls[1]["timeout"], 90)
+        self.assertEqual(calls[1]["attempts"], 3)
+        self.assertEqual(
+            calls[1]["json_body"]["page"],
+            {"pageNumber": 1, "pageSize": 7},
+        )
+        self.assertFalse(calls[1]["json_body"]["includeSynthetic"])
+
     def selected_fixture(self) -> dict:
         core_start = datetime(2026, 1, 13, 18, 0)
         core_rows = [

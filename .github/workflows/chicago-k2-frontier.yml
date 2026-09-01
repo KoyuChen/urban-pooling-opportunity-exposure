@@ -67,7 +67,7 @@ jobs:
             numpy==2.3.5 \
             scipy==1.17.0 \
             matplotlib==3.10.8
-      - name: Build boundary-closed K=2 cohort and sensitivity curves
+      - name: Build K=2 public temporal candidate universe and sensitivity curves
         run: |
           python \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py \

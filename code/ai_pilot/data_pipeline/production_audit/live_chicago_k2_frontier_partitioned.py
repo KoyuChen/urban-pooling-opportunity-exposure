@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 """Run the Chicago K=2 frontier with a partitioned Socrata extraction.
 
-The base frontier runner defines the scientific object: a count-closed public
-K=2 temporal candidate universe, a boundary buffer, and nested radius/Gamma
-candidate-support sensitivity curves.  This wrapper changes only the live data
-transport.  A single wide cross-time Socrata query can time out even when its
-server-side count succeeds.  We therefore:
+The base frontier runner defines the scientific object: a count-closed,
+core-incident public K=2 temporal candidate universe, a boundary-complete core
+candidate superset, and nested radius/Gamma candidate-support sensitivity
+curves.  It does not claim hidden-run closure or recursively fetch every
+buffer-row run mate.  This wrapper changes only the live data transport.  A
+single wide cross-time Socrata query can time out even when its server-side
+count succeeds.  We therefore:
 
 1. fetch a narrow ``trip_id, trip_start_timestamp`` index for the determinate
    overlap predicate;
@@ -23,6 +25,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
@@ -365,12 +368,19 @@ def partitioned_fetch_closed_candidate_universe(
 
 
 def _configure_request_budget(timeout_seconds: int, attempts: int) -> None:
-    def bounded_request(url: str, *, timeout: int = 180, attempts: int = 4) -> Any:
+    def bounded_request(
+        url: str,
+        *,
+        timeout: int = 180,
+        attempts: int = 4,
+        **request_options: Any,
+    ) -> Any:
         del timeout, attempts
         return _ORIGINAL_REQUEST_JSON(
             url,
             timeout=timeout_seconds,
             attempts=attempts_count,
+            **request_options,
         )
 
     attempts_count = attempts
@@ -388,7 +398,12 @@ def _validate_args(args: argparse.Namespace) -> None:
         raise SystemExit("max candidate rows must be at least max core rows")
     if args.page_size < 1 or args.page_size > 5000:
         raise SystemExit("partition page size must lie in [1,5000]")
-    if args.base_radius_km < 0 or args.solver_time_limit <= 0:
+    if (
+        not math.isfinite(args.base_radius_km)
+        or not math.isfinite(args.solver_time_limit)
+        or args.base_radius_km < 0
+        or args.solver_time_limit <= 0
+    ):
         raise SystemExit("radius must be nonnegative and solver time positive")
     if not 10 <= args.request_timeout <= 300:
         raise SystemExit("request timeout must lie in [10,300] seconds")

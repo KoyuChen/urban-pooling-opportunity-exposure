@@ -4,6 +4,7 @@ import importlib.util
 import json
 import sys
 import unittest
+from dataclasses import asdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -162,6 +163,264 @@ class GraphAndOptimizationTests(unittest.TestCase):
         )
         self.assertEqual(feasible.status, "OPTIMAL_NUMERICAL_MILP")
 
+    def test_core_buffer_out_of_radius_edge_costs_one(self) -> None:
+        rows = list(self.rows)
+        rows[3] = MODULE.TripRow(**{**rows[3].__dict__, "role": "buffer"})
+        edges = [(0, 1), (0, 3)]
+        self.assertEqual(
+            MODULE.edge_miss_costs(rows, edges, set()),
+            [2, 1],
+        )
+        self.assertEqual(
+            MODULE.edge_miss_costs(rows, edges, {(0, 3)}),
+            [2, 0],
+        )
+
+    def test_forced_zero_missing_edge_does_not_poison_gamma_zero_query(self) -> None:
+        rows = list(self.rows)
+        rows[3] = MODULE.TripRow(**{**rows[3].__dict__, "miles": None})
+        rows_by_index = {row.index: row for row in rows}
+        spec = MODULE.query_specs()[0]
+        lower, upper, missing = MODULE.edge_query_coefficients(
+            rows_by_index,
+            rows,
+            [(0, 1), (2, 3)],
+            spec,
+            forced_zero_edges=[False, True],
+        )
+        self.assertEqual(missing, 0)
+        assert lower is not None and upper is not None
+        self.assertEqual(lower[1], 0.0)
+        self.assertEqual(upper[1], 0.0)
+
+    def test_gamma_endpoints_match_radius_endpoints_and_cost_audit_is_structural(self) -> None:
+        base_edges = [(0, 1), (2, 3)]
+        base_set = set(base_edges)
+        costs = MODULE.edge_miss_costs(self.rows, self.edges, base_set)
+
+        def point(
+            *,
+            edges: list[tuple[int, int]],
+            curve_type: str,
+            label: str,
+            value: float | None,
+            radius: float | None,
+            gamma: int | None,
+            point_costs: list[int] | None,
+        ) -> tuple[dict, list[dict]]:
+            graph_point, query_rows = MODULE.solve_curve_point(
+                rows=self.rows,
+                edges=edges,
+                temporal_edge_count=len(self.edges),
+                unmeasured_edges=0,
+                curve_type=curve_type,
+                parameter_label=label,
+                parameter_value=value,
+                radius_km=radius,
+                gamma=gamma,
+                miss_costs=point_costs,
+                time_limit_seconds=10,
+            )
+            return asdict(graph_point), query_rows
+
+        base_graph, base_rows = point(
+            edges=base_edges,
+            curve_type="radius",
+            label="1 km",
+            value=1.0,
+            radius=1.0,
+            gamma=None,
+            point_costs=None,
+        )
+        temporal_graph, temporal_rows = point(
+            edges=self.edges,
+            curve_type="radius",
+            label="temporal-only",
+            value=None,
+            radius=None,
+            gamma=None,
+            point_costs=None,
+        )
+        gamma_zero_graph, gamma_zero_rows = point(
+            edges=self.edges,
+            curve_type="gamma",
+            label="0",
+            value=0.0,
+            radius=1.0,
+            gamma=0,
+            point_costs=costs,
+        )
+        gamma_full_graph, gamma_full_rows = point(
+            edges=self.edges,
+            curve_type="gamma",
+            label="4",
+            value=4.0,
+            radius=1.0,
+            gamma=4,
+            point_costs=costs,
+        )
+        sensitivity = [
+            *base_rows,
+            *temporal_rows,
+            *gamma_zero_rows,
+            *gamma_full_rows,
+        ]
+        graph_radius = [base_graph, temporal_graph]
+        graph_gamma = [gamma_zero_graph, gamma_full_graph]
+        audit = MODULE.endpoint_identity_audit(
+            sensitivity,
+            graph_radius,
+            graph_gamma,
+            model_rows=self.rows,
+            temporal_edges=self.edges,
+            base_edges=base_edges,
+            miss_costs=costs,
+            base_radius_km=1.0,
+            core_count=4,
+        )
+        self.assertEqual(audit["status"], "PASS", audit)
+
+        tampered = MODULE.endpoint_identity_audit(
+            sensitivity,
+            graph_radius,
+            graph_gamma,
+            model_rows=self.rows,
+            temporal_edges=self.edges,
+            base_edges=base_edges,
+            miss_costs=[0] * len(self.edges),
+            base_radius_km=1.0,
+            core_count=4,
+        )
+        self.assertEqual(tampered["status"], "FAIL")
+        self.assertTrue(
+            any(
+                mismatch["reason"]
+                == "incorrect_measured_out_of_radius_incidence_cost"
+                for mismatch in tampered["mismatches"]
+            )
+        )
+
+    def test_curve_point_rejects_unpaired_gamma_and_miss_costs(self) -> None:
+        with self.assertRaises(ValueError):
+            MODULE.solve_curve_point(
+                rows=self.rows,
+                edges=self.edges,
+                temporal_edge_count=len(self.edges),
+                unmeasured_edges=0,
+                curve_type="gamma",
+                parameter_label="0",
+                parameter_value=0.0,
+                radius_km=1.0,
+                gamma=0,
+                miss_costs=None,
+                time_limit_seconds=10,
+            )
+
+    def test_endpoint_identity_normalizes_certified_infeasibility_backends(self) -> None:
+        base_edges = [(0, 1)]
+        costs = MODULE.edge_miss_costs(self.rows, self.edges, set(base_edges))
+
+        def graph(
+            curve: str,
+            *,
+            radius: float | None,
+            gamma: int | None,
+            status: str,
+        ) -> dict:
+            return {
+                "curve_type": curve,
+                "radius_km": radius,
+                "gamma_core_incidences": gamma,
+                "cover_status": status,
+            }
+
+        def query_row(
+            curve: str,
+            *,
+            radius: float | None,
+            gamma: int | None,
+            status: str,
+            lower: float | None,
+            upper: float | None,
+        ) -> dict:
+            certified = status == "OPTIMAL_NUMERICAL_MILP"
+            return {
+                "curve_type": curve,
+                "query": "q",
+                "radius_km": radius,
+                "gamma_core_incidences": gamma,
+                "lower_status": status,
+                "upper_status": status,
+                "endpoint_pair_certification": (
+                    "CERTIFIED_OPTIMAL_PAIR" if certified else "UNCERTIFIED"
+                ),
+                "lower": lower,
+                "upper": upper,
+                "width": (
+                    upper - lower
+                    if lower is not None and upper is not None
+                    else None
+                ),
+            }
+
+        infeasible_radius = "PROVEN_INFEASIBLE_ISOLATED_CORE"
+        infeasible_gamma = "PROVEN_INFEASIBLE_BY_HIGHS"
+        optimal = "OPTIMAL_NUMERICAL_MILP"
+        radius_graphs = [
+            graph("radius", radius=1.0, gamma=None, status=infeasible_radius),
+            graph("radius", radius=None, gamma=None, status=optimal),
+        ]
+        gamma_graphs = [
+            graph("gamma", radius=1.0, gamma=0, status=infeasible_gamma),
+            graph("gamma", radius=1.0, gamma=4, status=optimal),
+        ]
+        sensitivity = [
+            query_row(
+                "radius",
+                radius=1.0,
+                gamma=None,
+                status=infeasible_radius,
+                lower=None,
+                upper=None,
+            ),
+            query_row(
+                "radius",
+                radius=None,
+                gamma=None,
+                status=optimal,
+                lower=1.0,
+                upper=2.0,
+            ),
+            query_row(
+                "gamma",
+                radius=1.0,
+                gamma=0,
+                status=infeasible_gamma,
+                lower=None,
+                upper=None,
+            ),
+            query_row(
+                "gamma",
+                radius=1.0,
+                gamma=4,
+                status=optimal,
+                lower=1.0,
+                upper=2.0,
+            ),
+        ]
+        audit = MODULE.endpoint_identity_audit(
+            sensitivity,
+            radius_graphs,
+            gamma_graphs,
+            model_rows=self.rows,
+            temporal_edges=self.edges,
+            base_edges=base_edges,
+            miss_costs=costs,
+            base_radius_km=1.0,
+            core_count=4,
+        )
+        self.assertEqual(audit["status"], "PASS", audit)
+
     def test_categorical_missingness_uses_outer_zero_one_coefficients(self) -> None:
         rows = list(self.rows)
         first = rows[0]
@@ -193,30 +452,219 @@ class GraphAndOptimizationTests(unittest.TestCase):
 
 
 class MonotonicityTests(unittest.TestCase):
+    @staticmethod
+    def row(
+        *,
+        query: str = "q",
+        label: str,
+        value: float,
+        lower: float | None,
+        upper: float | None,
+        lower_status: str = "OPTIMAL_NUMERICAL_MILP",
+        upper_status: str = "OPTIMAL_NUMERICAL_MILP",
+        certification: str = "CERTIFIED_OPTIMAL_PAIR",
+        width: float | None = None,
+    ) -> dict:
+        return {
+            "curve_type": "gamma",
+            "query": query,
+            "parameter_label": label,
+            "parameter_value": value,
+            "lower": lower,
+            "upper": upper,
+            "width": (
+                upper - lower
+                if width is None and lower is not None and upper is not None
+                else width
+            ),
+            "lower_status": lower_status,
+            "upper_status": upper_status,
+            "endpoint_pair_certification": certification,
+        }
+
     def test_nested_endpoint_audit_passes_and_detects_reversal(self) -> None:
         rows = [
-            {
-                "curve_type": "gamma",
-                "query": "q",
-                "parameter_label": "0",
-                "parameter_value": 0,
-                "lower": 1.0,
-                "upper": 2.0,
-            },
-            {
-                "curve_type": "gamma",
-                "query": "q",
-                "parameter_label": "1",
-                "parameter_value": 1,
-                "lower": 0.5,
-                "upper": 2.5,
-            },
+            self.row(label="0", value=0, lower=1.0, upper=2.0),
+            self.row(label="1", value=1, lower=0.5, upper=2.5),
         ]
         self.assertEqual(MODULE.monotonicity_audit(rows)["status"], "PASS")
         rows[1]["upper"] = 1.5
+        rows[1]["width"] = 1.0
         audit = MODULE.monotonicity_audit(rows)
         self.assertEqual(audit["status"], "FAIL")
         self.assertEqual(audit["violation_count"], 1)
+
+    def test_empty_all_none_and_nonoptimal_chains_fail(self) -> None:
+        self.assertEqual(MODULE.monotonicity_audit([])["status"], "FAIL")
+        unavailable = [
+            self.row(
+                label=str(value),
+                value=value,
+                lower=None,
+                upper=None,
+                lower_status="UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+                upper_status="UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+                certification="UNCERTIFIED",
+            )
+            for value in (0, 1)
+        ]
+        self.assertEqual(
+            MODULE.monotonicity_audit(unavailable)["status"],
+            "FAIL",
+        )
+        nonoptimal = [
+            self.row(label="0", value=0, lower=1.0, upper=2.0),
+            self.row(
+                label="1",
+                value=1,
+                lower=0.5,
+                upper=2.5,
+                lower_status="INCUMBENT_ONLY_UNRESOLVED_LIMIT",
+                certification="UNCERTIFIED",
+            ),
+        ]
+        self.assertEqual(MODULE.monotonicity_audit(nonoptimal)["status"], "FAIL")
+
+    def test_nonfinite_invalid_interval_and_stale_width_fail(self) -> None:
+        valid = self.row(label="0", value=0, lower=1.0, upper=2.0)
+        nonfinite = self.row(label="1", value=1, lower=0.5, upper=float("inf"))
+        self.assertEqual(
+            MODULE.monotonicity_audit([valid, nonfinite])["status"],
+            "FAIL",
+        )
+        invalid = self.row(label="1", value=1, lower=3.0, upper=2.5)
+        invalid_audit = MODULE.monotonicity_audit([valid, invalid])
+        self.assertEqual(invalid_audit["status"], "FAIL")
+        self.assertTrue(
+            any(
+                violation["direction"] == "lower_exceeds_upper"
+                for violation in invalid_audit["violations"]
+            )
+        )
+        stale = self.row(
+            label="1",
+            value=1,
+            lower=0.5,
+            upper=2.5,
+            width=99.0,
+        )
+        self.assertEqual(
+            MODULE.monotonicity_audit([valid, stale])["status"],
+            "FAIL",
+        )
+
+    def test_partial_requires_a_whole_good_chain_and_never_masks_reversal(self) -> None:
+        good = [
+            self.row(query="good", label="0", value=0, lower=1.0, upper=2.0),
+            self.row(query="good", label="1", value=1, lower=0.5, upper=2.5),
+        ]
+        incomplete = [
+            self.row(query="missing", label="0", value=0, lower=1.0, upper=2.0),
+            self.row(
+                query="missing",
+                label="1",
+                value=1,
+                lower=None,
+                upper=None,
+                lower_status="UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+                upper_status="UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+                certification="UNCERTIFIED",
+            ),
+        ]
+        partial = MODULE.monotonicity_audit([*good, *incomplete])
+        self.assertEqual(partial["status"], "PARTIAL")
+        self.assertEqual(partial["fully_certified_monotone_chain_count"], 1)
+
+        reversal = [
+            self.row(query="bad", label="0", value=0, lower=1.0, upper=2.0),
+            self.row(query="bad", label="1", value=1, lower=1.5, upper=2.5),
+        ]
+        self.assertEqual(
+            MODULE.monotonicity_audit([*good, *reversal])["status"],
+            "FAIL",
+        )
+
+    def test_expected_chain_completeness_prevents_vacuous_pass(self) -> None:
+        rows = [
+            self.row(query="present", label="0", value=0, lower=1.0, upper=2.0),
+            self.row(query="present", label="1", value=1, lower=0.5, upper=2.5),
+        ]
+        audit = MODULE.monotonicity_audit(
+            rows,
+            expected_parameter_labels={"gamma": ["0", "1"]},
+            expected_queries=["present", "absent"],
+        )
+        self.assertEqual(audit["status"], "PARTIAL")
+        self.assertEqual(audit["fully_certified_monotone_chain_count"], 1)
+        missing_point = MODULE.monotonicity_audit(
+            rows[:1],
+            expected_parameter_labels={"gamma": ["0", "1"]},
+            expected_queries=["present"],
+        )
+        self.assertEqual(missing_point["status"], "FAIL")
+
+
+class CertificationAndClosureTests(unittest.TestCase):
+    @staticmethod
+    def bound(status: str, value: float | None) -> object:
+        return MODULE.BoundResult(status, value, "test", None, None, 0.0, 1, "")
+
+    def test_only_ordered_optimal_pairs_are_published(self) -> None:
+        certified = MODULE.certified_endpoint_payload(
+            self.bound("OPTIMAL_NUMERICAL_MILP", 1.0),
+            self.bound("OPTIMAL_NUMERICAL_MILP", 2.0),
+        )
+        self.assertEqual(certified["lower"], 1.0)
+        self.assertEqual(certified["upper"], 2.0)
+        self.assertEqual(certified["width"], 1.0)
+
+        incumbent = MODULE.certified_endpoint_payload(
+            self.bound("INCUMBENT_ONLY_UNRESOLVED_LIMIT", 1.0),
+            self.bound("OPTIMAL_NUMERICAL_MILP", 2.0),
+        )
+        self.assertIsNone(incumbent["lower"])
+        self.assertIsNone(incumbent["upper"])
+        self.assertIsNone(incumbent["width"])
+        self.assertEqual(incumbent["diagnostic_lower_nonoptimal_incumbent"], 1.0)
+
+        reversed_pair = MODULE.certified_endpoint_payload(
+            self.bound("OPTIMAL_NUMERICAL_MILP", 3.0),
+            self.bound("OPTIMAL_NUMERICAL_MILP", 2.0),
+        )
+        self.assertEqual(reversed_pair["endpoint_pair_certification"], "UNCERTIFIED")
+        self.assertIsNone(reversed_pair["width"])
+
+    def test_closure_requires_possible_chronology_and_optimal_full_cover(self) -> None:
+        kwargs = {
+            "snapshot_stable": True,
+            "server_counts_stable": True,
+            "core_subset_verified": True,
+            "candidate_rows": 4,
+            "expected_candidate_rows": 4,
+            "observed_indeterminate_rows": 0,
+            "expected_indeterminate_rows": 0,
+            "off_release_grid_rows": 0,
+            "released_chronology_impossible_rows": 0,
+            "context_rows": 0,
+            "full_temporal_cover_status": "OPTIMAL_NUMERICAL_MILP",
+        }
+        self.assertEqual(
+            MODULE.public_temporal_closure_audit(**kwargs)["status"],
+            "PASS",
+        )
+        impossible = dict(kwargs, released_chronology_impossible_rows=1)
+        self.assertEqual(
+            MODULE.public_temporal_closure_audit(**impossible)["status"],
+            "FAIL",
+        )
+        nonoptimal = dict(
+            kwargs,
+            full_temporal_cover_status="INCUMBENT_ONLY_UNRESOLVED_LIMIT",
+        )
+        self.assertEqual(
+            MODULE.public_temporal_closure_audit(**nonoptimal)["status"],
+            "FAIL",
+        )
 
 
 if __name__ == "__main__":
