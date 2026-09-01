@@ -1,0 +1,109 @@
+name: chicago-release-operator-audit
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit.py
+      - code/ai_pilot/data_pipeline/production_audit/tests/test_live_chicago_release_operator_audit.py
+      - code/ai_pilot/data_pipeline/chicago_release_adapter.py
+      - code/ai_pilot/data_pipeline/tests/test_chicago_release_adapter.py
+      - code/ai_pilot/bounds/release_operator_compiler.py
+      - code/ai_pilot/bounds/tests/test_release_operator_compiler.py
+      - .github/workflows/chicago-release-operator-audit.yml
+
+concurrency:
+  group: chicago-release-operator-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install exact audit dependencies
+        run: |
+          python -m pip install \
+            numpy==2.3.5 \
+            scipy==1.17.0
+      - name: Run release-operator and bridge tests
+        run: |
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests \
+            -p 'test_live_chicago_release_operator_audit.py' -v
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/tests \
+            -p 'test_chicago_release_adapter.py' -v
+          python -m unittest discover \
+            -s code/ai_pilot/bounds/tests \
+            -p 'test_release_operator_compiler.py' -v
+
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install exact audit dependencies
+        run: |
+          python -m pip install \
+            numpy==2.3.5 \
+            scipy==1.17.0
+      - name: Audit the live public release operator and pairing identification
+        run: |
+          python \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit.py \
+            --output-dir tmp/chicago-release-operator-audit \
+            --core-start 2026-01-13T17:30:00 \
+            --page-size 1000 \
+            --max-candidate-rows 5000 \
+            --max-contributor-rows 100000 \
+            --request-timeout 90 \
+            --request-attempts 3 \
+            --solver-time-limit 60
+      - name: Enforce the fail-closed claim boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path(
+                  "tmp/chicago-release-operator-audit/release_operator_audit.json"
+              ).read_text(encoding="utf-8")
+          )
+          assert report["overall_status"] == "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY"
+          assert report["documentation"]["city_implementation_validated"] is False
+          assert report["documentation"]["converse_licensed"] is False
+          assert report["documentation"]["low_literals_emitted"] == 0
+          assert report["extraction"]["candidate_count_closed"] is True
+          assert report["extraction"]["all_public_contributors_count_closed"] is True
+          assert report["pairing_identification"]["partner_identification_status"] == "NONIDENTIFIED"
+          assert report["candidate_support_consequence"]["release_prunable_unmeasured_edges"] == 0
+          PY
+      - name: Upload aggregate release-operator evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-release-operator-audit
+          path: tmp/chicago-release-operator-audit
+          if-no-files-found: warn
+          retention-days: 90
