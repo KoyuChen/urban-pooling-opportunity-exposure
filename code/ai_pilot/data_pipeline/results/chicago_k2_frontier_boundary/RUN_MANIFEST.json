@@ -1,0 +1,117 @@
+{
+  "artifact": {
+    "candidate_graph_csv_sha256": "fa44f7d9fb6edf907694fcea5e9d117ca5e10d4d75e46ac5156481b70378402b",
+    "candidate_support_csv_sha256": "00f0a91bd0909cb3588b487e81f206a7adeaaa34af4f0d721897351feb89b145",
+    "id": 9804349342,
+    "internal_report_sha256": "15301b32e1c2eea25c18c676bde42de8a40d89637dab7473071241207becbfff",
+    "name": "chicago-k2-frontier-boundary",
+    "report_json_file_sha256": "5a0445dd26d38b63b1388e5abf17d67fe61601795cbb5e0ec61bdd29fd1e4b43",
+    "size_bytes": 124466,
+    "zip_sha256": "f1d1b88870c046d8feac13fe1b8fc5d884e6b81352a28594fcc58fa5ae4f4ab8"
+  },
+  "audits": {
+    "boundary_endpoint_identity": "PASS",
+    "boundary_endpoint_identity_mismatches": 0,
+    "certified_endpoint_pairs": 96,
+    "curve_query_chains": 15,
+    "fully_certified_monotone_chains": 12,
+    "fully_certified_query_families": 4,
+    "mathematical_monotonicity_violations": 0,
+    "max_certified_mip_gap": 0.0,
+    "max_certified_replay_residual": 0.0,
+    "monotonicity": "PARTIAL",
+    "query_families": 5,
+    "radius_gamma_endpoint_identity": "PASS",
+    "radius_gamma_endpoint_identity_mismatches": 0,
+    "uncertified_endpoint_pairs": 24,
+    "uncertified_pairs_with_published_values": 0
+  },
+  "boundary_padding": {
+    "added_buffer_rows": 92,
+    "added_edges": 2629,
+    "complete_buffer_rows": 551,
+    "complete_edges": 24274,
+    "complete_padding_minutes": 15.0,
+    "duration_width_complete_minutes": 46.941944444444445,
+    "duration_width_increase_percent": 1.016193339749294,
+    "duration_width_underpadded_minutes": 46.469722222222224,
+    "edge_increase_percent": 12.145992145992146,
+    "grid_minutes": [
+      0,
+      5,
+      10,
+      15,
+      30
+    ],
+    "identity_audit": "PASS",
+    "identity_mismatches": 0,
+    "miles_width_complete": 20.266141666666663,
+    "miles_width_increase_percent": 0.5308015009240385,
+    "miles_width_underpadded": 20.15913666666667,
+    "post_complete_query_comparisons": 5,
+    "rounding_half_width_minutes": 7.5,
+    "underpadded_buffer_rows": 459,
+    "underpadded_edges": 21645
+  },
+  "cohort": {
+    "buffer_rows": 551,
+    "candidate_rows": 611,
+    "core_end_local": "2026-01-13T17:45:00",
+    "core_rows": 60,
+    "core_start_local": "2026-01-13T17:30:00",
+    "determinate_rows": 611,
+    "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED",
+    "null_start_or_end_target_rows": 0,
+    "off_release_grid_rows": 0,
+    "public_temporal_candidate_universe_closure": "PASS",
+    "released_chronology_impossible_rows": 0
+  },
+  "dataset": {
+    "dataset_id": "6dvr-xwnh",
+    "fetch_strategy": "narrow index plus exact released-start partitions",
+    "name": "Transportation Network Providers - Trips (2025-)",
+    "partition_page_size": 100,
+    "raw_rows_sha256": "bd31a7c36c7bb4b2d38f8c12797586fd6b0f3e2b5838d28098bc4ef4e03c0523",
+    "snapshot_revision_fingerprint_sha256": "52f2ff4772d94efe764a1406bacd7696ef473e7a2e626c97c04f21b6534f4190"
+  },
+  "logical_graph": {
+    "base_radius_edges": 11965,
+    "base_radius_km": 2.0,
+    "core_buffer_edges": 22504,
+    "core_core_edges": 1770,
+    "full_cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "spatially_unmeasured_edges": 11865,
+    "total_edges": 24274
+  },
+  "redaction": {
+    "matching_witnesses_serialized": false,
+    "raw_rows_serialized": false,
+    "raw_trip_ids_serialized": false
+  },
+  "run": {
+    "deterministic_test_counts": {
+      "base_frontier": 21,
+      "boundary_padding": 5,
+      "partitioned_transport": 6,
+      "total_unittests": 32
+    },
+    "generated_at_utc": "2026-09-01T13:55:12+00:00",
+    "live_job": "success",
+    "self_tests": [
+      "base frontier PASS",
+      "boundary padding PASS"
+    ],
+    "source_commit": "bd51ed45485d4f52af433b3d5b3eb0670d6442ea",
+    "unit_job": "success",
+    "workflow": "chicago-k2-frontier",
+    "workflow_run_id": 33516268840,
+    "workflow_run_number": 50
+  },
+  "semantics": {
+    "boundary_padding_above_complete": "core-incident temporal endpoint identity, not recursive hidden-run closure",
+    "boundary_padding_below_complete": "intentional under-padding stress test, not closed support",
+    "gamma_costed_object": "core incidences through measured-distance edges outside the 2 km base radius",
+    "gamma_not_estimated_miss_rate": true,
+    "gamma_not_total_candidate_miss_budget": true
+  }
+}
