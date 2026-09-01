@@ -1,0 +1,51 @@
+{
+  "artifact": {
+    "id": 9785811599,
+    "name": "chicago-k2-frontier",
+    "size_bytes": 80893,
+    "zip_sha256": "bcd9bfa5186cee322fa2fae954dc90d42dab2adda67311d607ee11ca97fdb460"
+  },
+  "dataset": {
+    "dataset_id": "6dvr-xwnh",
+    "name": "Transportation Network Providers - Trips (2025-)",
+    "snapshot_revision_fingerprint_sha256": "52f2ff4772d94efe764a1406bacd7696ef473e7a2e626c97c04f21b6534f4190"
+  },
+  "run": {
+    "workflow_run_id": 33468343107,
+    "source_commit": "f573379b5e452712a52fec497f622ad888e84dd9",
+    "generated_at_utc": "2026-09-01T04:02:47+00:00",
+    "unit_job": "success",
+    "live_job": "success"
+  },
+  "cohort": {
+    "core_start_local": "2026-01-13T17:30:00",
+    "core_end_local": "2026-01-13T17:45:00",
+    "core_rows": 60,
+    "buffer_rows": 551,
+    "candidate_rows": 611,
+    "null_start_or_end_target_rows": 0,
+    "public_candidate_universe_closure_status": "PASS_PUBLIC_RELEASE_TEMPORAL_CANDIDATE_UNIVERSE_CLOSED",
+    "hidden_run_closure_status": "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
+  },
+  "logical_graph": {
+    "core_nodes": 60,
+    "buffer_nodes": 551,
+    "core_core_edges": 1770,
+    "core_buffer_edges": 22504,
+    "total_edges": 24274,
+    "spatially_unmeasured_edges": 11865,
+    "cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "cover_mip_gap": 0.0,
+    "partner_coverage_claim": "NOT_ESTIMATED_FROM_PUBLIC_ROWS"
+  },
+  "audits": {
+    "snapshot_stable": true,
+    "server_counts_stable": true,
+    "core_subset_verified": true,
+    "nested_set_monotonicity": "PASS",
+    "monotonicity_violations": 0,
+    "raw_rows_serialized": false,
+    "raw_trip_ids_serialized": false,
+    "matching_witnesses_serialized": false
+  }
+}
