@@ -1926,7 +1926,7 @@ def endpoint_identity_audit(
             temporal_rows,
             gamma_full_rows,
         ),
-    ):
+        ):
         if set(left_rows) != set(right_rows) or not left_rows:
             mismatches.append(
                 {
@@ -1967,8 +1967,44 @@ def endpoint_identity_audit(
                     for status in (*left_statuses, *right_statuses)
                 )
             )
+            expected_canonical_source = (
+                "canonical_base_radius_identity"
+                if identity == "gamma_0_equals_base_radius"
+                else "canonical_temporal_only_identity"
+            )
+            canonical_state_fields = (
+                "endpoint_pair_certification",
+                "lower_status",
+                "upper_status",
+                "edges_with_missing_query_values",
+                "query_missing_semantics",
+            )
+            canonical_numeric_fields = (
+                "lower",
+                "upper",
+                "width",
+                "diagnostic_lower_nonoptimal_incumbent",
+                "diagnostic_upper_nonoptimal_incumbent",
+                "lower_mip_gap",
+                "upper_mip_gap",
+                "max_replay_residual",
+            )
+            status_pair_canonical_reuse = (
+                left.get("endpoint_source") == "direct_milp"
+                and right.get("endpoint_source") == expected_canonical_source
+                and all(
+                    left.get(field) == right.get(field)
+                    for field in canonical_state_fields
+                )
+                and all(
+                    numeric_equal(left.get(field), right.get(field))
+                    for field in canonical_numeric_fields
+                )
+            )
             if not (
-                status_pair_certified or status_pair_comparably_unavailable
+                status_pair_certified
+                or status_pair_comparably_unavailable
+                or status_pair_canonical_reuse
             ):
                 mismatches.append(
                     {

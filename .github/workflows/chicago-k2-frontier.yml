@@ -81,7 +81,7 @@ jobs:
             --request-timeout 90 \
             --request-attempts 3 \
             --base-radius-km 2 \
-            --solver-time-limit 20
+            --solver-time-limit 60
       - name: Upload aggregate frontier evidence
         if: always()
         uses: actions/upload-artifact@v4

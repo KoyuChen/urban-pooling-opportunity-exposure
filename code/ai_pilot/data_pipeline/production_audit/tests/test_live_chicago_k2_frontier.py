@@ -442,6 +442,83 @@ class GraphAndOptimizationTests(unittest.TestCase):
         )
         self.assertEqual(audit["status"], "PASS", audit)
 
+    def test_endpoint_identity_accepts_exact_canonical_unresolved_state(self) -> None:
+        base_edges = [(0, 1), (2, 3)]
+        costs = MODULE.edge_miss_costs(self.rows, self.edges, set(base_edges))
+
+        def solved(edges: list[tuple[int, int]], radius: float | None):
+            point, rows = MODULE.solve_curve_point(
+                rows=self.rows,
+                edges=edges,
+                temporal_edge_count=len(self.edges),
+                unmeasured_edges=0,
+                curve_type="radius",
+                parameter_label="temporal-only" if radius is None else "1 km",
+                parameter_value=radius,
+                radius_km=radius,
+                gamma=None,
+                miss_costs=None,
+                time_limit_seconds=10,
+            )
+            return asdict(point), rows
+
+        base_graph, base_rows = solved(base_edges, 1.0)
+        temporal_graph, temporal_rows = solved(self.edges, None)
+        for row in temporal_rows:
+            row.update(
+                lower=None,
+                upper=None,
+                width=None,
+                lower_status="INCUMBENT_ONLY_UNRESOLVED_LIMIT",
+                upper_status="INCUMBENT_ONLY_UNRESOLVED_LIMIT",
+                endpoint_pair_certification="UNCERTIFIED",
+                diagnostic_lower_nonoptimal_incumbent=1.0,
+                diagnostic_upper_nonoptimal_incumbent=2.0,
+            )
+        gamma_zero, gamma_zero_rows = MODULE.reuse_radius_endpoint_for_gamma(
+            source_graph_point=base_graph,
+            source_query_rows=base_rows,
+            rows=self.rows,
+            temporal_edges=self.edges,
+            unmeasured_edges=0,
+            gamma=0,
+            base_radius_km=1.0,
+        )
+        gamma_full, gamma_full_rows = MODULE.reuse_radius_endpoint_for_gamma(
+            source_graph_point=temporal_graph,
+            source_query_rows=temporal_rows,
+            rows=self.rows,
+            temporal_edges=self.edges,
+            unmeasured_edges=0,
+            gamma=4,
+            base_radius_km=1.0,
+        )
+        audit = MODULE.endpoint_identity_audit(
+            [*base_rows, *temporal_rows, *gamma_zero_rows, *gamma_full_rows],
+            [base_graph, temporal_graph],
+            [asdict(gamma_zero), asdict(gamma_full)],
+            model_rows=self.rows,
+            temporal_edges=self.edges,
+            base_edges=base_edges,
+            miss_costs=costs,
+            base_radius_km=1.0,
+            core_count=4,
+        )
+        self.assertEqual(audit["status"], "PASS", audit)
+        gamma_full_rows[0]["endpoint_source"] = "direct_milp"
+        tampered = MODULE.endpoint_identity_audit(
+            [*base_rows, *temporal_rows, *gamma_zero_rows, *gamma_full_rows],
+            [base_graph, temporal_graph],
+            [asdict(gamma_zero), asdict(gamma_full)],
+            model_rows=self.rows,
+            temporal_edges=self.edges,
+            base_edges=base_edges,
+            miss_costs=costs,
+            base_radius_km=1.0,
+            core_count=4,
+        )
+        self.assertEqual(tampered["status"], "FAIL")
+
     def test_categorical_missingness_uses_outer_zero_one_coefficients(self) -> None:
         rows = list(self.rows)
         first = rows[0]
