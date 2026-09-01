@@ -1,18 +1,19 @@
 {
   "artifact": {
-    "id": 9788392927,
+    "id": 9789458822,
     "name": "chicago-release-operator-audit",
-    "size_bytes": 4867,
-    "zip_sha256": "2c19f6167a228a5723983e5efd02064977aa66f3c04f132bbf56e92f0a561457",
-    "report_sha256": "3165b6552fa147ebfa41526b4720d253ba0140eb6a0b7969e12045be08cb5cf2",
-    "json_sha256": "704e488494def6bd31161c04ee44bdba9903eaee6bd76d99024b6299faef27ff"
+    "size_bytes": 5787,
+    "zip_sha256": "ed6bd27cacfd8a63fbc624227afc442a6f9b2b3e50da2e06637a90365539beca",
+    "report_sha256": "4aff7a1a83e9865a6426c44e92e7a16e68e0e89f7c0657dfa6840967f14b3130",
+    "json_sha256": "ca7154bac97b271703031f57874a529a06aba402392e0e08c392a2430694c8dc",
+    "report_self_hash": "fc13e690dedc48e310c0df084bdf86dd4348147f1ff888a89886f025146cce43"
   },
   "run": {
     "workflow": "chicago-release-operator-audit",
-    "workflow_run_id": 33476086013,
-    "workflow_run_number": 1,
-    "source_commit": "f4ef196f49937c438ebd7c4a1ef722a7230e2f00",
-    "generated_at_utc": "2026-09-01T06:13:03+00:00",
+    "workflow_run_id": 33479383449,
+    "workflow_run_number": 6,
+    "source_commit": "0f05d09ecffbc96b5928bac9cd42f6a69b5e09a2",
+    "generated_at_utc": "2026-09-01T06:55:48+00:00",
     "unit_job": "success",
     "live_job": "success"
   },
@@ -32,36 +33,55 @@
     "all_public_contributors_count_closed": true,
     "candidate_null_start_or_end_rows": 0
   },
-  "strict_overlap": {
-    "closed_outer_interval_edges": 24274,
-    "strict_positive_overlap_edges": 18462,
-    "boundary_touch_only_edges": 5812,
-    "strict_cover_status": "OPTIMAL_NUMERICAL_MILP",
-    "alternative_cover_status": "OPTIMAL_NUMERICAL_MILP"
-  },
-  "nonidentification": {
-    "status": "CERTIFIED_TWO_DISTINCT_PUBLICLY_COMPATIBLE_COVERS",
-    "partner_identification_status": "NONIDENTIFIED",
-    "core_assignment_hamming_distance": 60,
-    "ambiguous_core_count": 60,
+  "released_time_envelope_graph_sensitivity": {
+    "closed_outer_released_time_envelope_intersection_edges": 24274,
+    "positive_length_outer_released_time_envelope_intersection_edges": 18462,
+    "outer_released_time_envelope_boundary_touch_only_edges": 5812,
+    "cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "alternative_cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "multiplicity_status": "CERTIFIED_TWO_DISTINCT_CORE_COVERS_IN_POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH",
+    "conditional_on_positive_length_outer_released_time_envelope_graph": true,
+    "cores_changed_between_displayed_covers": 60,
+    "spatially_unmeasured_edges": 9339,
+    "spatially_unmeasured_core_incidences_min": 15.0,
+    "spatially_unmeasured_core_incidences_min_status": "OPTIMAL_NUMERICAL_MILP",
+    "spatially_unmeasured_core_incidences_max": 60.0,
+    "spatially_unmeasured_core_incidences_max_status": "OPTIMAL_NUMERICAL_MILP",
+    "unmeasured_core_incidence_range_scope": "POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH_CORE_COVERS",
     "max_mip_gap": 0.0,
     "max_replay_residual": 0.0,
     "matching_witnesses_serialized": false
   },
-  "spatial_missingness": {
-    "strict_unmeasured_edges": 9339,
-    "unmeasured_core_incidences_min": 15.0,
-    "unmeasured_core_incidences_max": 60.0,
+  "identification_boundary": {
+    "partner_recovery_status": "NOT_RECOVERED_FROM_PUBLIC_ROWS",
+    "cohort_partner_identification_status": "NOT_ADJUDICATED_NO_FULL_WORLD_CERTIFICATE",
+    "cohort_partner_nonidentification_certified": false,
+    "full_hidden_worlds_constructed": false,
+    "shared_exact_timestamp_witness_constructed": false,
+    "remaining_buffer_run_completion_constructed": false,
+    "hidden_partner_identification_claim": "NONE",
+    "hidden_run_closure": "NOT_CONSTRUCTED_AND_NOT_CLAIMED"
+  },
+  "documented_release_map_abstraction": {
+    "scope": "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION",
+    "same_documented_public_release": true,
+    "full_city_implementation_validated": false,
+    "applies_to_observed_cohort": false,
+    "linked_to_displayed_graph_covers": false,
+    "cohort_partner_nonidentification_certified": false
+  },
+  "spatial_release_boundary": {
     "release_prunable_unmeasured_edges": 0,
-    "candidate_pickup_area_coordinate_masks_equal": true,
-    "candidate_dropoff_area_coordinate_masks_equal": true
+    "finite_radius_policy": "RETAIN_ALL_SPATIALLY_UNMEASURED_EDGES",
+    "mask_equalities_scope": "SNAPSHOT_SUBSET_DESCRIPTIVE_ONLY",
+    "chicago_release_rule_inferred_from_mask_equality": false,
+    "blank_to_low_inversion_permitted": false
   },
   "release_operator_claims": {
     "overall_status": "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY",
     "city_implementation_validated": false,
     "converse_licensed": false,
-    "low_literals_emitted": 0,
-    "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED"
+    "low_literals_emitted": 0
   },
   "redaction": {
     "raw_rows_serialized": false,

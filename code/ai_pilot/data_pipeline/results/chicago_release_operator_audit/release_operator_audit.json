@@ -7,8 +7,8 @@
     "status": "NO_NEW_NECESSARY_SPATIAL_EDGE_DELETIONS"
   },
   "claim_boundary": {
-    "not_supported": "City production-code fidelity, latent tract-cell reconstruction, blank-cause identification, hidden-run closure, partner identity or recall, and any finite spatial support rule for missing centroids",
-    "supported": "snapshot-relative count closure of the public temporal candidate universe and all public rows contributing to its released endpoint bins; documented one-way release semantics; public pairing non-identification"
+    "not_supported": "City production-code fidelity, latent tract-cell reconstruction, blank-cause identification, hidden-run closure, partner identity or recall, hidden-partner identification or nonidentification, and any finite spatial support rule for missing centroids",
+    "supported": "snapshot-relative count closure of the public temporal candidate universe and all public rows contributing to its released endpoint bins; documented one-way release semantics; an abstract release-map noninjectivity witness; and conditional core-cover multiplicity in the positive-length outer released-time-envelope graph"
   },
   "dataset": {
     "historical_rows_may_later_change": true,
@@ -71,6 +71,32 @@
     "pins_are_versioned_reference_declarations_not_content_attestations": true,
     "pins_sha256": "3f5d7bababef7f22788c944d59fbfc94d024ea9131e0a7421da8b47ca9a40f54"
   },
+  "documented_release_map_abstraction": {
+    "applies_to_observed_cohort": false,
+    "cohort_partner_nonidentification_certified": false,
+    "confidential_linkage_assignment_a": "(c1,b1),(c2,b2)",
+    "confidential_linkage_assignment_b": "(c1,b2),(c2,b1)",
+    "confidential_linkages_allowed_to_change": [
+      "Shared Trip ID assignment",
+      "vehicle and driver linkage needed to realize each empty-to-empty run"
+    ],
+    "different_confidential_pairing": true,
+    "documented_public_field_map_invariant_to_witness_linkage_swap": true,
+    "fixed_between_assignments": [
+      "passenger-trip exact times and locations",
+      "provider identity",
+      "released timestamps",
+      "tract/community-area/centroid release values",
+      "privacy cell counts and missingness masks",
+      "Shared Trip Match=true and Trips Pooled=2"
+    ],
+    "full_city_implementation_validated": false,
+    "linked_to_displayed_graph_covers": false,
+    "logical_conclusion": "DOCUMENTED_PUBLIC_FIELD_MAP_DOES_NOT_ENCODE_SHARED_TRIP_ID",
+    "minimum_abstract_witness_nodes": 4,
+    "same_documented_public_release": true,
+    "scope": "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION"
+  },
   "extraction": {
     "all_public_contributors_count_closed": true,
     "all_trip_release_cell_contributor_rows": 50405,
@@ -94,49 +120,19 @@
     "raw_trip_ids_serialized": false,
     "snapshot_relative_only": true
   },
-  "generated_at_utc": "2026-09-01T06:13:03+00:00",
-  "overall_status": "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY",
-  "pairing_identification": {
-    "abstract_two_world_certificate": {
-      "changed_between_worlds": "confidential Shared Trip ID assignment only",
-      "different_hidden_pairing": true,
-      "fixed_between_worlds": [
-        "all latent per-trip attributes",
-        "released timestamps",
-        "tract/community-area/centroid release values",
-        "privacy cell counts and missingness masks",
-        "Shared Trip Match=true and Trips Pooled=2"
-      ],
-      "logical_conclusion": "PUBLIC_RELEASE_OPERATOR_IS_NOT_PAIR_IDENTIFYING",
-      "minimum_abstract_witness_nodes": 4,
-      "same_public_release": true,
-      "world_a_pairing": "(c1,b1),(c2,b2)",
-      "world_b_pairing": "(c1,b2),(c2,b1)"
-    },
-    "alternative_strict_cover_status": "OPTIMAL_NUMERICAL_MILP",
-    "ambiguous_core_count": 60,
-    "boundary_touch_only_edge_count": 5812,
-    "closed_outer_interval_edge_count": 24274,
-    "core_assignment_hamming_distance": 60,
-    "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED",
-    "max_certified_mip_gap": 0.0,
-    "max_certified_replay_residual": 0.0,
-    "partner_identification_status": "NONIDENTIFIED",
-    "partner_recall_identified": false,
-    "release_operator_pairing_invariant": true,
-    "release_prunable_unmeasured_edges": 0,
-    "strict_graph_cover_status": "OPTIMAL_NUMERICAL_MILP",
-    "strict_positive_overlap_edge_count": 18462,
-    "two_world_certificate_status": "CERTIFIED_TWO_DISTINCT_PUBLICLY_COMPATIBLE_COVERS",
-    "unmeasured_core_incidences_max": 60.0,
-    "unmeasured_core_incidences_max_status": "OPTIMAL_NUMERICAL_MILP",
-    "unmeasured_core_incidences_min": 15.0,
-    "unmeasured_core_incidences_min_status": "OPTIMAL_NUMERICAL_MILP",
-    "unmeasured_strict_edge_count": 9339,
-    "witnesses_serialized": false,
-    "world_a_selected_edge_count": 51,
-    "world_b_selected_edge_count": 53
+  "generated_at_utc": "2026-09-01T06:55:48+00:00",
+  "identification_boundary": {
+    "cohort_partner_identification_status": "NOT_ADJUDICATED_NO_FULL_WORLD_CERTIFICATE",
+    "cohort_partner_nonidentification_certified": false,
+    "full_hidden_worlds_constructed": false,
+    "hidden_partner_identification_claim": "NONE",
+    "hidden_run_closure": "NOT_CONSTRUCTED_AND_NOT_CLAIMED",
+    "partner_recall_claim": "NONE",
+    "partner_recovery_status": "NOT_RECOVERED_FROM_PUBLIC_ROWS",
+    "remaining_buffer_run_completion_constructed": false,
+    "shared_exact_timestamp_witness_constructed": false
   },
+  "overall_status": "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY",
   "release_masks": {
     "all_trip_contributor_rows": {
       "dropoff": {
@@ -203,8 +199,32 @@
       }
     },
     "centroid_null_implies_outside_chicago": false,
-    "centroid_null_licenses_finite_radius_exclusion": false
+    "centroid_null_licenses_finite_radius_exclusion": false,
+    "chicago_release_rule_inferred_from_mask_equality": false,
+    "mask_equalities_scope": "SNAPSHOT_SUBSET_DESCRIPTIVE_ONLY"
   },
-  "report_sha256_without_self_hash": "bf134a90a6b6761e7edb8392daa98f940057985e0c7404e8c19d024a8e9568dd",
-  "report_version": "chicago-release-operator-live-audit/v1"
+  "released_time_envelope_graph_sensitivity": {
+    "alternative_positive_length_outer_released_time_envelope_graph_cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "closed_outer_released_time_envelope_intersection_edge_count": 24274,
+    "conditional_on_positive_length_outer_released_time_envelope_graph": true,
+    "cores_changed_between_displayed_covers": 60,
+    "cover_a_selected_edge_count": 51,
+    "cover_b_selected_edge_count": 53,
+    "max_certified_mip_gap": 0.0,
+    "max_certified_replay_residual": 0.0,
+    "outer_released_time_envelope_boundary_touch_only_edge_count": 5812,
+    "outer_released_time_envelope_graph_core_cover_multiplicity_status": "CERTIFIED_TWO_DISTINCT_CORE_COVERS_IN_POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH",
+    "positive_length_outer_released_time_envelope_graph_cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "positive_length_outer_released_time_envelope_intersection_edge_count": 18462,
+    "release_prunable_unmeasured_edges": 0,
+    "spatially_unmeasured_core_incidences_max_over_graph_covers": 60.0,
+    "spatially_unmeasured_core_incidences_max_status_over_graph_covers": "OPTIMAL_NUMERICAL_MILP",
+    "spatially_unmeasured_core_incidences_min_over_graph_covers": 15.0,
+    "spatially_unmeasured_core_incidences_min_status_over_graph_covers": "OPTIMAL_NUMERICAL_MILP",
+    "spatially_unmeasured_edges_in_positive_length_outer_released_time_envelope_graph": 9339,
+    "unmeasured_core_incidence_range_scope": "POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH_CORE_COVERS",
+    "witnesses_serialized": false
+  },
+  "report_sha256_without_self_hash": "fc13e690dedc48e310c0df084bdf86dd4348147f1ff888a89886f025146cce43",
+  "report_version": "chicago-release-operator-live-audit/v2"
 }
