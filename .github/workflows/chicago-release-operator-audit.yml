@@ -90,23 +90,58 @@ jobs:
                   "tmp/chicago-release-operator-audit/release_operator_audit.json"
               ).read_text(encoding="utf-8")
           )
+          assert report["report_version"] == "chicago-release-operator-live-audit/v2"
           assert report["overall_status"] == "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY"
           assert report["documentation"]["city_implementation_validated"] is False
           assert report["documentation"]["converse_licensed"] is False
           assert report["documentation"]["low_literals_emitted"] == 0
           assert report["extraction"]["candidate_count_closed"] is True
           assert report["extraction"]["all_public_contributors_count_closed"] is True
-          assert report["pairing_identification"]["partner_identification_status"] == "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
-          assert report["pairing_identification"]["strict_core_cover_multiplicity_status"] == "CERTIFIED_TWO_DISTINCT_STRICT_CORE_COVERS"
-          assert report["pairing_identification"]["conditional_on_strict_released_time_envelope_graph"] is True
-          assert report["pairing_identification"]["cores_changed_between_displayed_covers"] == report["extraction"]["core_rows"]
-          assert report["pairing_identification"]["full_hidden_worlds_constructed"] is False
-          assert report["pairing_identification"]["shared_exact_timestamp_witness_constructed"] is False
-          assert report["pairing_identification"]["remaining_buffer_run_completion_constructed"] is False
-          assert report["pairing_identification"]["hidden_run_closure"] == "NOT_CONSTRUCTED_AND_NOT_CLAIMED"
-          assert report["pairing_identification"]["hidden_partner_identification_claim"] == "NONE"
-          assert report["pairing_identification"]["abstract_release_map_noninjectivity_witness"]["scope"] == "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION"
-          assert report["candidate_support_consequence"]["release_prunable_unmeasured_edges"] == 0
+          assert report["extraction"]["candidate_null_start_or_end_rows"] == 0
+
+          masks = report["release_masks"]
+          assert masks["mask_equalities_scope"] == "SNAPSHOT_SUBSET_DESCRIPTIVE_ONLY"
+          assert masks["chicago_release_rule_inferred_from_mask_equality"] is False
+          assert masks["blank_cause_identified_from_public_release"] is False
+          assert masks["blank_to_low_inversion_permitted"] is False
+          assert masks["centroid_null_implies_outside_chicago"] is False
+          assert masks["centroid_null_licenses_finite_radius_exclusion"] is False
+
+          graph = report["released_time_envelope_graph_sensitivity"]
+          assert graph["positive_length_outer_released_time_envelope_graph_cover_status"] == "OPTIMAL_NUMERICAL_MILP"
+          assert graph["alternative_positive_length_outer_released_time_envelope_graph_cover_status"] == "OPTIMAL_NUMERICAL_MILP"
+          assert graph["outer_released_time_envelope_graph_core_cover_multiplicity_status"] == "CERTIFIED_TWO_DISTINCT_CORE_COVERS_IN_POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH"
+          assert graph["conditional_on_positive_length_outer_released_time_envelope_graph"] is True
+          assert graph["cores_changed_between_displayed_covers"] == report["extraction"]["core_rows"]
+          assert graph["spatially_unmeasured_core_incidences_min_status_over_graph_covers"] == "OPTIMAL_NUMERICAL_MILP"
+          assert graph["spatially_unmeasured_core_incidences_max_status_over_graph_covers"] == "OPTIMAL_NUMERICAL_MILP"
+          assert graph["max_certified_mip_gap"] <= 1e-9
+          assert graph["max_certified_replay_residual"] <= 1e-9
+          assert graph["positive_length_outer_released_time_envelope_intersection_edge_count"] + graph["outer_released_time_envelope_boundary_touch_only_edge_count"] == graph["closed_outer_released_time_envelope_intersection_edge_count"]
+
+          boundary = report["identification_boundary"]
+          assert boundary["partner_recovery_status"] == "NOT_RECOVERED_FROM_PUBLIC_ROWS"
+          assert boundary["cohort_partner_identification_status"] == "NOT_ADJUDICATED_NO_FULL_WORLD_CERTIFICATE"
+          assert boundary["cohort_partner_nonidentification_certified"] is False
+          assert boundary["full_hidden_worlds_constructed"] is False
+          assert boundary["shared_exact_timestamp_witness_constructed"] is False
+          assert boundary["remaining_buffer_run_completion_constructed"] is False
+          assert boundary["hidden_run_closure"] == "NOT_CONSTRUCTED_AND_NOT_CLAIMED"
+          assert boundary["hidden_partner_identification_claim"] == "NONE"
+
+          abstraction = report["documented_release_map_abstraction"]
+          assert abstraction["scope"] == "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION"
+          assert abstraction["same_documented_public_release"] is True
+          assert abstraction["documented_public_field_map_invariant_to_witness_linkage_swap"] is True
+          assert abstraction["full_city_implementation_validated"] is False
+          assert abstraction["applies_to_observed_cohort"] is False
+          assert abstraction["linked_to_displayed_graph_covers"] is False
+          assert abstraction["cohort_partner_nonidentification_certified"] is False
+
+          support = report["candidate_support_consequence"]
+          assert support["release_prunable_unmeasured_edges"] == 0
+          assert support["finite_radius_policy"] == "RETAIN_ALL_SPATIALLY_UNMEASURED_EDGES"
+          assert support["measured_centroid_radius_classification"] == "ANALYST_CANDIDATE_SUPPORT_SENSITIVITY_NOT_NECESSARY_COMPATIBILITY"
           PY
       - name: Upload aggregate release-operator evidence
         if: always()

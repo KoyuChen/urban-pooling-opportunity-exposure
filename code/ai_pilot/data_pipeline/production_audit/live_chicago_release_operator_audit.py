@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Live, aggregate Chicago release-operator and pairing-identification audit.
+"""Live, aggregate Chicago release-operator identification-boundary audit.
 
 This audit deliberately separates three objects that are easy to conflate:
 
@@ -52,8 +52,14 @@ ROUNDING_HALF_MINUTES = 7.5
 TARGET_PREDICATE = "shared_trip_match = true AND trips_pooled = 2"
 DEFAULT_CORE_START = "2026-01-13T17:30:00"
 STATUS_PARTIAL = "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY"
-STATUS_NOT_IDENTIFIED = "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
+STATUS_NOT_RECOVERED = "NOT_RECOVERED_FROM_PUBLIC_ROWS"
 OPTIMAL_MILP = "OPTIMAL_NUMERICAL_MILP"
+TIME_RELATION_POSITIVE_POSSIBLE = (
+    "POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_INTERSECTION"
+)
+TIME_RELATION_BOUNDARY_TOUCH = "OUTER_RELEASED_TIME_ENVELOPE_BOUNDARY_TOUCH_ONLY"
+TIME_RELATION_DISJOINT = "OUTER_RELEASED_TIME_ENVELOPES_DISJOINT"
+TIME_RELATION_UNMEASURED = "RELEASED_TIME_ENVELOPE_UNMEASURED"
 
 DOCUMENTATION = (
     {
@@ -573,22 +579,41 @@ def summarize_endpoint_masks(
     }
 
 
-def temporal_compatible(first: ParsedRow, second: ParsedRow, *, strict: bool) -> bool:
+def released_time_envelope_relation(first: ParsedRow, second: ParsedRow) -> str:
     if (
         first.released_start is None
         or first.released_end is None
         or second.released_start is None
         or second.released_end is None
     ):
-        return True
+        return TIME_RELATION_UNMEASURED
     delta = timedelta(minutes=ROUNDING_HALF_MINUTES)
     latest_start = max(first.released_start - delta, second.released_start - delta)
     earliest_end = min(first.released_end + delta, second.released_end + delta)
-    return latest_start < earliest_end if strict else latest_start <= earliest_end
+    if latest_start < earliest_end:
+        return TIME_RELATION_POSITIVE_POSSIBLE
+    if latest_start == earliest_end:
+        return TIME_RELATION_BOUNDARY_TOUCH
+    return TIME_RELATION_DISJOINT
+
+
+def temporal_compatible(
+    first: ParsedRow,
+    second: ParsedRow,
+    *,
+    require_positive_length_envelope_intersection: bool,
+) -> bool:
+    relation = released_time_envelope_relation(first, second)
+    if require_positive_length_envelope_intersection:
+        return relation == TIME_RELATION_POSITIVE_POSSIBLE
+    return relation != TIME_RELATION_DISJOINT
 
 
 def build_candidate_edges(
-    rows: Sequence[ParsedRow], core_indices: Sequence[int], *, strict: bool
+    rows: Sequence[ParsedRow],
+    core_indices: Sequence[int],
+    *,
+    require_positive_length_envelope_intersection: bool,
 ) -> tuple[Edge, ...]:
     core = set(core_indices)
     if not core:
@@ -598,7 +623,13 @@ def build_candidate_edges(
         for v in range(u + 1, len(rows)):
             if u not in core and v not in core:
                 continue
-            if not temporal_compatible(rows[u], rows[v], strict=strict):
+            if not temporal_compatible(
+                rows[u],
+                rows[v],
+                require_positive_length_envelope_intersection=(
+                    require_positive_length_envelope_intersection
+                ),
+            ):
                 continue
             core_endpoints = int(u in core) + int(v in core)
             unmeasured = not (
@@ -741,21 +772,35 @@ def core_assignment_hamming(
     return sum(left[node] != right[node] for node in core)
 
 
-def pairing_certificate(
+def released_time_envelope_graph_sensitivity(
     rows: Sequence[ParsedRow],
     core_indices: Sequence[int],
     *,
     solver_time_limit: float,
 ) -> dict[str, Any]:
-    closed_edges = build_candidate_edges(rows, core_indices, strict=False)
-    strict_edges = build_candidate_edges(rows, core_indices, strict=True)
-    touch_only = len(closed_edges) - len(strict_edges)
+    if any(
+        row.released_start is None or row.released_end is None for row in rows
+    ):
+        raise AuditError(
+            "rounding-envelope graph certificate requires time-complete candidates"
+        )
+    closed_edges = build_candidate_edges(
+        rows,
+        core_indices,
+        require_positive_length_envelope_intersection=False,
+    )
+    positive_envelope_edges = build_candidate_edges(
+        rows,
+        core_indices,
+        require_positive_length_envelope_intersection=True,
+    )
+    touch_only = len(closed_edges) - len(positive_envelope_edges)
     first = solve_cover(
-        strict_edges, core_indices, time_limit=solver_time_limit
+        positive_envelope_edges, core_indices, time_limit=solver_time_limit
     )
     alternative = (
         solve_cover(
-            strict_edges,
+            positive_envelope_edges,
             core_indices,
             exclude_selected=first.selected_edge_indices,
             time_limit=solver_time_limit,
@@ -766,20 +811,22 @@ def pairing_certificate(
     hamming = None
     if first.status == OPTIMAL_MILP and alternative.status == OPTIMAL_MILP:
         hamming = core_assignment_hamming(
-            strict_edges,
+            positive_envelope_edges,
             core_indices,
             first.selected_edge_indices,
             alternative.selected_edge_indices,
         )
-    unmeasured_costs = [edge.unmeasured_core_cost for edge in strict_edges]
+    unmeasured_costs = [
+        edge.unmeasured_core_cost for edge in positive_envelope_edges
+    ]
     minimum_unmeasured = solve_cover(
-        strict_edges,
+        positive_envelope_edges,
         core_indices,
         objective=unmeasured_costs,
         time_limit=solver_time_limit,
     )
     maximum_unmeasured = solve_cover(
-        strict_edges,
+        positive_envelope_edges,
         core_indices,
         objective=unmeasured_costs,
         maximize=True,
@@ -792,13 +839,13 @@ def pairing_certificate(
         and hamming > 0
     )
     return {
-        "closed_outer_interval_edge_count": len(closed_edges),
-        "strict_positive_overlap_edge_count": len(strict_edges),
-        "boundary_touch_only_edge_count": touch_only,
-        "strict_graph_cover_status": first.status,
-        "alternative_strict_cover_status": alternative.status,
-        "strict_core_cover_multiplicity_status": (
-            "CERTIFIED_TWO_DISTINCT_STRICT_CORE_COVERS"
+        "closed_outer_released_time_envelope_intersection_edge_count": len(closed_edges),
+        "positive_length_outer_released_time_envelope_intersection_edge_count": len(positive_envelope_edges),
+        "outer_released_time_envelope_boundary_touch_only_edge_count": touch_only,
+        "positive_length_outer_released_time_envelope_graph_cover_status": first.status,
+        "alternative_positive_length_outer_released_time_envelope_graph_cover_status": alternative.status,
+        "outer_released_time_envelope_graph_core_cover_multiplicity_status": (
+            "CERTIFIED_TWO_DISTINCT_CORE_COVERS_IN_POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH"
             if distinct
             else "NOT_CERTIFIED"
         ),
@@ -811,24 +858,26 @@ def pairing_certificate(
             else None
         ),
         "cores_changed_between_displayed_covers": hamming,
-        "conditional_on_strict_released_time_envelope_graph": True,
-        "release_map_pairing_invariant_under_documented_abstraction": True,
-        "release_map_pairing_invariance_scope": (
-            "DOCUMENTED_PUBLIC_FIELD_ABSTRACTION_NOT_FULL_CITY_IMPLEMENTATION"
+        "conditional_on_positive_length_outer_released_time_envelope_graph": True,
+        "unmeasured_core_incidence_range_scope": (
+            "POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH_CORE_COVERS"
         ),
-        "full_hidden_worlds_constructed": False,
-        "shared_exact_timestamp_witness_constructed": False,
-        "remaining_buffer_run_completion_constructed": False,
-        "partner_identification_status": STATUS_NOT_IDENTIFIED,
-        "hidden_partner_identification_claim": "NONE",
         "release_prunable_unmeasured_edges": 0,
-        "unmeasured_strict_edge_count": sum(
-            edge.unmeasured_core_cost > 0 for edge in strict_edges
+        "spatially_unmeasured_edges_in_positive_length_outer_released_time_envelope_graph": sum(
+            edge.unmeasured_core_cost > 0 for edge in positive_envelope_edges
         ),
-        "unmeasured_core_incidences_min_status": minimum_unmeasured.status,
-        "unmeasured_core_incidences_min": minimum_unmeasured.objective_value,
-        "unmeasured_core_incidences_max_status": maximum_unmeasured.status,
-        "unmeasured_core_incidences_max": maximum_unmeasured.objective_value,
+        "spatially_unmeasured_core_incidences_min_status_over_graph_covers": (
+            minimum_unmeasured.status
+        ),
+        "spatially_unmeasured_core_incidences_min_over_graph_covers": (
+            minimum_unmeasured.objective_value
+        ),
+        "spatially_unmeasured_core_incidences_max_status_over_graph_covers": (
+            maximum_unmeasured.status
+        ),
+        "spatially_unmeasured_core_incidences_max_over_graph_covers": (
+            maximum_unmeasured.objective_value
+        ),
         "max_certified_mip_gap": max(
             (
                 value
@@ -859,13 +908,13 @@ def pairing_certificate(
     }
 
 
-def documentary_nonidentification_certificate() -> dict[str, Any]:
+def documentary_release_map_noninjectivity_witness() -> dict[str, Any]:
     return {
         "minimum_abstract_witness_nodes": 4,
         "scope": "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION",
-        "world_a_confidential_pairing": "(c1,b1),(c2,b2)",
-        "world_b_confidential_pairing": "(c1,b2),(c2,b1)",
-        "fixed_between_worlds": [
+        "confidential_linkage_assignment_a": "(c1,b1),(c2,b2)",
+        "confidential_linkage_assignment_b": "(c1,b2),(c2,b1)",
+        "fixed_between_assignments": [
             "passenger-trip exact times and locations",
             "provider identity",
             "released timestamps",
@@ -878,8 +927,12 @@ def documentary_nonidentification_certificate() -> dict[str, Any]:
             "vehicle and driver linkage needed to realize each empty-to-empty run",
         ],
         "same_documented_public_release": True,
-        "different_hidden_pairing": True,
+        "documented_public_field_map_invariant_to_witness_linkage_swap": True,
+        "different_confidential_pairing": True,
         "full_city_implementation_validated": False,
+        "applies_to_observed_cohort": False,
+        "linked_to_displayed_graph_covers": False,
+        "cohort_partner_nonidentification_certified": False,
         "logical_conclusion": (
             "DOCUMENTED_PUBLIC_FIELD_MAP_DOES_NOT_ENCODE_SHARED_TRIP_ID"
         ),
@@ -967,17 +1020,22 @@ def build_report(
         endpoint: summarize_endpoint_masks(contributors, endpoint)
         for endpoint in ("pickup", "dropoff")
     }
-    pairing = pairing_certificate(
-        candidates, core_indices, solver_time_limit=solver_time_limit
-    )
     null_start_or_end = sum(
         row.released_start is None or row.released_end is None for row in candidates
     )
-    documentary = documentary_nonidentification_certificate()
+    if null_start_or_end:
+        raise AuditError(
+            "rounding-envelope graph certificate requires zero candidates with "
+            "a null released time endpoint"
+        )
+    graph_sensitivity = released_time_envelope_graph_sensitivity(
+        candidates, core_indices, solver_time_limit=solver_time_limit
+    )
+    documentary = documentary_release_map_noninjectivity_witness()
     docs_payload = list(DOCUMENTATION)
 
     report = {
-        "report_version": "chicago-release-operator-live-audit/v1",
+        "report_version": "chicago-release-operator-live-audit/v2",
         "generated_at_utc": generated_at_utc,
         "overall_status": STATUS_PARTIAL,
         "dataset": {
@@ -1023,16 +1081,27 @@ def build_report(
         "release_masks": {
             "candidate_rows": candidate_masks,
             "all_trip_contributor_rows": contributor_masks,
+            "mask_equalities_scope": "SNAPSHOT_SUBSET_DESCRIPTIVE_ONLY",
+            "chicago_release_rule_inferred_from_mask_equality": False,
             "blank_cause_identified_from_public_release": False,
             "blank_to_low_inversion_permitted": False,
             "centroid_null_implies_outside_chicago": False,
             "centroid_null_licenses_finite_radius_exclusion": False,
         },
-        "pairing_identification": {
-            **pairing,
-            "abstract_release_map_noninjectivity_witness": documentary,
+        "released_time_envelope_graph_sensitivity": graph_sensitivity,
+        "documented_release_map_abstraction": documentary,
+        "identification_boundary": {
+            "partner_recovery_status": STATUS_NOT_RECOVERED,
+            "cohort_partner_identification_status": (
+                "NOT_ADJUDICATED_NO_FULL_WORLD_CERTIFICATE"
+            ),
+            "cohort_partner_nonidentification_certified": False,
+            "hidden_partner_identification_claim": "NONE",
+            "full_hidden_worlds_constructed": False,
+            "shared_exact_timestamp_witness_constructed": False,
+            "remaining_buffer_run_completion_constructed": False,
             "hidden_run_closure": "NOT_CONSTRUCTED_AND_NOT_CLAIMED",
-            "partner_recall_identified": False,
+            "partner_recall_claim": "NONE",
         },
         "candidate_support_consequence": {
             "status": "NO_NEW_NECESSARY_SPATIAL_EDGE_DELETIONS",
@@ -1050,13 +1119,15 @@ def build_report(
                 "snapshot-relative count closure of the public temporal candidate "
                 "universe and all public rows contributing to its released endpoint "
                 "bins; documented one-way release semantics; an abstract "
-                "release-map noninjectivity witness; and conditional strict-graph "
-                "core-cover multiplicity"
+                "release-map noninjectivity witness; and conditional core-cover "
+                "multiplicity in the positive-length outer released-time-envelope "
+                "graph"
             ),
             "not_supported": (
                 "City production-code fidelity, latent tract-cell reconstruction, "
                 "blank-cause identification, hidden-run closure, partner identity or "
-                "recall, and any finite spatial support rule for missing centroids"
+                "recall, hidden-partner identification or nonidentification, and any "
+                "finite spatial support rule for missing centroids"
             ),
         },
     }
@@ -1070,10 +1141,11 @@ def build_report(
 
 def render_markdown(report: Mapping[str, Any]) -> str:
     extraction = report["extraction"]
-    pairing = report["pairing_identification"]
+    graph = report["released_time_envelope_graph_sensitivity"]
+    boundary = report["identification_boundary"]
     pickup = report["release_masks"]["candidate_rows"]["pickup"]
     dropoff = report["release_masks"]["candidate_rows"]["dropoff"]
-    return f"""# Chicago public release-operator and pairing audit
+    return f"""# Chicago public release-operator identification-boundary audit
 
 Generated: {report['generated_at_utc']}  
 Overall status: `{report['overall_status']}`
@@ -1092,30 +1164,34 @@ public blank as a privacy cell without independent evidence.
 | K=2 public temporal candidates | {extraction['candidate_rows']} |
 | All-trip endpoint-bin contributors | {extraction['all_trip_release_cell_contributor_rows']} |
 | Candidate rows with a null time endpoint | {extraction['candidate_null_start_or_end_rows']} |
-| Strict-positive-overlap edges | {pairing['strict_positive_overlap_edge_count']} |
-| Boundary-touch-only edges | {pairing['boundary_touch_only_edge_count']} |
-| Strict graph cover | `{pairing['strict_graph_cover_status']}` |
-| Alternative strict cover | `{pairing['alternative_strict_cover_status']}` |
-| Core assignments changed between displayed covers | {pairing['cores_changed_between_displayed_covers']} |
+| Positive-length outer released-time-envelope intersections | {graph['positive_length_outer_released_time_envelope_intersection_edge_count']} |
+| Outer released-time envelopes touching only at the boundary | {graph['outer_released_time_envelope_boundary_touch_only_edge_count']} |
+| Positive-length outer-envelope graph cover | `{graph['positive_length_outer_released_time_envelope_graph_cover_status']}` |
+| Alternative graph cover | `{graph['alternative_positive_length_outer_released_time_envelope_graph_cover_status']}` |
+| Core assignments changed between displayed covers | {graph['cores_changed_between_displayed_covers']} |
 | Pickup area without complete coordinates | {pickup['area_without_coordinates_rows']} |
 | Dropoff area without complete coordinates | {dropoff['area_without_coordinates_rows']} |
 
 ## Identification boundary
 
-Conditional on the strict released-time-envelope core-cover graph, the graph
-certificate is `{pairing['strict_core_cover_multiplicity_status']}`. The two
-displayed covers differ on
-{pairing['cores_changed_between_displayed_covers']} of 60 core assignments.
-This establishes substantial graph-model ambiguity, not two fully constructed
-Chicago hidden-run worlds: the audit does not construct common exact timestamp
-witnesses, vehicle/provider feasibility, or a complete pairing of the remaining
-buffer rows.
+An edge in the positive-length graph means only that the two outer activity
+envelopes intersect with positive length; it does not establish actual trip
+overlap. Conditional on that graph, the certificate is
+`{graph['outer_released_time_envelope_graph_core_cover_multiplicity_status']}`. The
+two displayed covers differ on {graph['cores_changed_between_displayed_covers']}
+of {extraction['core_rows']} core assignments. This is graph-cover multiplicity,
+not two fully constructed Chicago hidden-run worlds: the audit does not
+construct common exact timestamp witnesses, vehicle/provider feasibility, or a
+complete pairing of the remaining buffer rows.
 
 A separate abstract four-row construction shows that the documented public
 field map can remain unchanged while confidential run/vehicle linkage changes.
 That abstraction does not validate the City's private implementation or prove
-a cohort-level full-world completion. Hidden partner identity remains
-`{pairing['partner_identification_status']}` rather than recovered.
+a cohort-level full-world completion, and it is not linked to the displayed
+graph covers. The operational recovery status is
+`{boundary['partner_recovery_status']}`; cohort identification is
+`{boundary['cohort_partner_identification_status']}`. No hidden-partner
+identification or nonidentification theorem is claimed.
 
 ## Spatial consequence
 
@@ -1125,6 +1201,8 @@ endpoint or unavailable source data; tract coarsening usually publishes a
 community-area centroid instead. The fail-closed finite-radius policy is to
 retain every spatially unmeasured edge. Radius and Gamma remain
 candidate-support sensitivities, not necessary partner-compatibility rules.
+Any Community Area/coordinate mask equality is descriptive of the extracted
+snapshot subset only; it is not inferred to be a Chicago release rule.
 
 ## Claim boundary
 
@@ -1273,7 +1351,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         "overall_status": report["overall_status"],
         "candidate_rows": report["extraction"]["candidate_rows"],
         "all_trip_contributors": report["extraction"]["all_trip_release_cell_contributor_rows"],
-        "strict_cover_multiplicity": report["pairing_identification"]["strict_core_cover_multiplicity_status"],
+        "outer_envelope_graph_cover_multiplicity": report[
+            "released_time_envelope_graph_sensitivity"
+        ]["outer_released_time_envelope_graph_core_cover_multiplicity_status"],
         "output_dir": str(args.output_dir),
     }, sort_keys=True))
     return 0
