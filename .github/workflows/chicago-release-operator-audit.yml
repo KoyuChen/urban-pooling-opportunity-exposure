@@ -96,7 +96,9 @@ jobs:
           assert report["documentation"]["low_literals_emitted"] == 0
           assert report["extraction"]["candidate_count_closed"] is True
           assert report["extraction"]["all_public_contributors_count_closed"] is True
-          assert report["pairing_identification"]["partner_identification_status"] == "NONIDENTIFIED"
+          assert report["pairing_identification"]["partner_identification_status"] == "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
+          assert report["pairing_identification"]["full_hidden_worlds_constructed"] is False
+          assert report["pairing_identification"]["hidden_partner_identification_claim"] == "NONE"
           assert report["candidate_support_consequence"]["release_prunable_unmeasured_edges"] == 0
           PY
       - name: Upload aggregate release-operator evidence

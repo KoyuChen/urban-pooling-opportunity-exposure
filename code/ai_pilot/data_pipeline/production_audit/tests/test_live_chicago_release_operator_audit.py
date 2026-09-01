@@ -148,7 +148,7 @@ class LiveChicagoReleaseOperatorAuditTests(unittest.TestCase):
         self.assertEqual(len(closed), 1)
         self.assertEqual(len(strict), 0)
 
-    def test_four_row_two_world_certificate_changes_core_assignments(self):
+    def test_two_strict_core_covers_change_core_assignments_without_world_claim(self):
         rows = AUDIT.parse_rows(
             [public_row("core-a"), public_row("core-b"), public_row("buffer-a"), public_row("buffer-b")]
         )
@@ -160,11 +160,17 @@ class LiveChicagoReleaseOperatorAuditTests(unittest.TestCase):
             certificate["alternative_strict_cover_status"], AUDIT.OPTIMAL_MILP
         )
         self.assertEqual(
-            certificate["two_world_certificate_status"],
-            "CERTIFIED_TWO_DISTINCT_PUBLICLY_COMPATIBLE_COVERS",
+            certificate["strict_core_cover_multiplicity_status"],
+            "CERTIFIED_TWO_DISTINCT_STRICT_CORE_COVERS",
         )
-        self.assertGreater(certificate["core_assignment_hamming_distance"], 0)
-        self.assertTrue(certificate["release_operator_pairing_invariant"])
+        self.assertGreater(certificate["cores_changed_between_displayed_covers"], 0)
+        self.assertTrue(
+            certificate["release_map_pairing_invariant_under_documented_abstraction"]
+        )
+        self.assertFalse(certificate["full_hidden_worlds_constructed"])
+        self.assertFalse(certificate["shared_exact_timestamp_witness_constructed"])
+        self.assertFalse(certificate["remaining_buffer_run_completion_constructed"])
+        self.assertEqual(certificate["hidden_partner_identification_claim"], "NONE")
         self.assertEqual(certificate["release_prunable_unmeasured_edges"], 0)
         self.assertFalse(certificate["witnesses_serialized"])
 
@@ -244,6 +250,9 @@ class LiveChicagoReleaseOperatorAuditTests(unittest.TestCase):
         serialized = json.dumps(result, sort_keys=True)
         for raw_id in ("core-a", "core-b", "buffer-a", "buffer-b", "ordinary-trip"):
             self.assertNotIn(raw_id, serialized)
+        markdown = AUDIT.render_markdown(result)
+        self.assertIn("not two fully constructed", markdown)
+        self.assertIn("CERTIFIED_TWO_DISTINCT_STRICT_CORE_COVERS", markdown)
 
     def test_snapshot_or_count_drift_fails_closed(self):
         core = [public_row("core-a"), public_row("core-b")]
@@ -283,9 +292,15 @@ class LiveChicagoReleaseOperatorAuditTests(unittest.TestCase):
     def test_abstract_witness_changes_only_confidential_pairing(self):
         witness = AUDIT.documentary_nonidentification_certificate()
         self.assertEqual(witness["minimum_abstract_witness_nodes"], 4)
-        self.assertTrue(witness["same_public_release"])
+        self.assertTrue(witness["same_documented_public_release"])
         self.assertTrue(witness["different_hidden_pairing"])
-        self.assertIn("Shared Trip ID", witness["changed_between_worlds"])
+        self.assertIn(
+            "Shared Trip ID assignment",
+            witness["confidential_linkages_allowed_to_change"],
+        )
+        self.assertEqual(
+            witness["scope"], "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION"
+        )
 
 
 if __name__ == "__main__":

@@ -13,9 +13,10 @@ public trip contributing to any released start/end bin represented in that
 universe, without filtering on shared service.  This all-trip layer is required
 for even a consistency audit of the documented tract privacy cells.
 
-The output is intentionally a non-identification certificate.  Public blanks
+The output is intentionally an identification-boundary audit.  Public blanks
 are never inverted to LOW tract-count literals, no raw row or trip identifier
-is serialized, and no City implementation-validation claim is emitted.
+is serialized, and neither a full hidden-run world nor City implementation
+validation is claimed.
 """
 
 from __future__ import annotations
@@ -51,7 +52,7 @@ ROUNDING_HALF_MINUTES = 7.5
 TARGET_PREDICATE = "shared_trip_match = true AND trips_pooled = 2"
 DEFAULT_CORE_START = "2026-01-13T17:30:00"
 STATUS_PARTIAL = "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY"
-STATUS_NONIDENTIFIED = "NONIDENTIFIED"
+STATUS_NOT_IDENTIFIED = "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
 OPTIMAL_MILP = "OPTIMAL_NUMERICAL_MILP"
 
 DOCUMENTATION = (
@@ -796,23 +797,30 @@ def pairing_certificate(
         "boundary_touch_only_edge_count": touch_only,
         "strict_graph_cover_status": first.status,
         "alternative_strict_cover_status": alternative.status,
-        "two_world_certificate_status": (
-            "CERTIFIED_TWO_DISTINCT_PUBLICLY_COMPATIBLE_COVERS"
+        "strict_core_cover_multiplicity_status": (
+            "CERTIFIED_TWO_DISTINCT_STRICT_CORE_COVERS"
             if distinct
             else "NOT_CERTIFIED"
         ),
-        "world_a_selected_edge_count": (
+        "cover_a_selected_edge_count": (
             len(first.selected_edge_indices) if first.status == OPTIMAL_MILP else None
         ),
-        "world_b_selected_edge_count": (
+        "cover_b_selected_edge_count": (
             len(alternative.selected_edge_indices)
             if alternative.status == OPTIMAL_MILP
             else None
         ),
-        "core_assignment_hamming_distance": hamming,
-        "ambiguous_core_count": hamming,
-        "release_operator_pairing_invariant": True,
-        "partner_identification_status": STATUS_NONIDENTIFIED,
+        "cores_changed_between_displayed_covers": hamming,
+        "conditional_on_strict_released_time_envelope_graph": True,
+        "release_map_pairing_invariant_under_documented_abstraction": True,
+        "release_map_pairing_invariance_scope": (
+            "DOCUMENTED_PUBLIC_FIELD_ABSTRACTION_NOT_FULL_CITY_IMPLEMENTATION"
+        ),
+        "full_hidden_worlds_constructed": False,
+        "shared_exact_timestamp_witness_constructed": False,
+        "remaining_buffer_run_completion_constructed": False,
+        "partner_identification_status": STATUS_NOT_IDENTIFIED,
+        "hidden_partner_identification_claim": "NONE",
         "release_prunable_unmeasured_edges": 0,
         "unmeasured_strict_edge_count": sum(
             edge.unmeasured_core_cost > 0 for edge in strict_edges
@@ -854,19 +862,27 @@ def pairing_certificate(
 def documentary_nonidentification_certificate() -> dict[str, Any]:
     return {
         "minimum_abstract_witness_nodes": 4,
-        "world_a_pairing": "(c1,b1),(c2,b2)",
-        "world_b_pairing": "(c1,b2),(c2,b1)",
+        "scope": "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION",
+        "world_a_confidential_pairing": "(c1,b1),(c2,b2)",
+        "world_b_confidential_pairing": "(c1,b2),(c2,b1)",
         "fixed_between_worlds": [
-            "all latent per-trip attributes",
+            "passenger-trip exact times and locations",
+            "provider identity",
             "released timestamps",
             "tract/community-area/centroid release values",
             "privacy cell counts and missingness masks",
             "Shared Trip Match=true and Trips Pooled=2",
         ],
-        "changed_between_worlds": "confidential Shared Trip ID assignment only",
-        "same_public_release": True,
+        "confidential_linkages_allowed_to_change": [
+            "Shared Trip ID assignment",
+            "vehicle and driver linkage needed to realize each empty-to-empty run",
+        ],
+        "same_documented_public_release": True,
         "different_hidden_pairing": True,
-        "logical_conclusion": "PUBLIC_RELEASE_OPERATOR_IS_NOT_PAIR_IDENTIFYING",
+        "full_city_implementation_validated": False,
+        "logical_conclusion": (
+            "DOCUMENTED_PUBLIC_FIELD_MAP_DOES_NOT_ENCODE_SHARED_TRIP_ID"
+        ),
     }
 
 
@@ -1014,7 +1030,7 @@ def build_report(
         },
         "pairing_identification": {
             **pairing,
-            "abstract_two_world_certificate": documentary,
+            "abstract_release_map_noninjectivity_witness": documentary,
             "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED",
             "partner_recall_identified": False,
         },
@@ -1033,8 +1049,9 @@ def build_report(
             "supported": (
                 "snapshot-relative count closure of the public temporal candidate "
                 "universe and all public rows contributing to its released endpoint "
-                "bins; documented one-way release semantics; public pairing "
-                "non-identification"
+                "bins; documented one-way release semantics; an abstract "
+                "release-map noninjectivity witness; and conditional strict-graph "
+                "core-cover multiplicity"
             ),
             "not_supported": (
                 "City production-code fidelity, latent tract-cell reconstruction, "
@@ -1079,19 +1096,26 @@ public blank as a privacy cell without independent evidence.
 | Boundary-touch-only edges | {pairing['boundary_touch_only_edge_count']} |
 | Strict graph cover | `{pairing['strict_graph_cover_status']}` |
 | Alternative strict cover | `{pairing['alternative_strict_cover_status']}` |
-| Core assignments changed between covers | {pairing['core_assignment_hamming_distance']} |
+| Core assignments changed between displayed covers | {pairing['cores_changed_between_displayed_covers']} |
 | Pickup area without complete coordinates | {pickup['area_without_coordinates_rows']} |
 | Dropoff area without complete coordinates | {dropoff['area_without_coordinates_rows']} |
 
-## Non-identification certificate
+## Identification boundary
 
-The certificate status is
-`{pairing['two_world_certificate_status']}`. Two distinct strict-overlap covers
-produce different core partner assignments while every public per-trip field
-is fixed. This is possible because the confidential Shared Trip ID is omitted
-from the public schema and the tract privacy rule operates on rows/cells, not
-on run identity. Therefore the public release operator is pairing-invariant and
-partner identity remains `{pairing['partner_identification_status']}`.
+Conditional on the strict released-time-envelope core-cover graph, the graph
+certificate is `{pairing['strict_core_cover_multiplicity_status']}`. The two
+displayed covers differ on
+{pairing['cores_changed_between_displayed_covers']} of 60 core assignments.
+This establishes substantial graph-model ambiguity, not two fully constructed
+Chicago hidden-run worlds: the audit does not construct common exact timestamp
+witnesses, vehicle/provider feasibility, or a complete pairing of the remaining
+buffer rows.
+
+A separate abstract four-row construction shows that the documented public
+field map can remain unchanged while confidential run/vehicle linkage changes.
+That abstraction does not validate the City's private implementation or prove
+a cohort-level full-world completion. Hidden partner identity remains
+`{pairing['partner_identification_status']}` rather than recovered.
 
 ## Spatial consequence
 
@@ -1249,7 +1273,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "overall_status": report["overall_status"],
         "candidate_rows": report["extraction"]["candidate_rows"],
         "all_trip_contributors": report["extraction"]["all_trip_release_cell_contributor_rows"],
-        "two_world_certificate": report["pairing_identification"]["two_world_certificate_status"],
+        "strict_cover_multiplicity": report["pairing_identification"]["strict_core_cover_multiplicity_status"],
         "output_dir": str(args.output_dir),
     }, sort_keys=True))
     return 0
