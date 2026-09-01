@@ -1,21 +1,20 @@
-# Chicago K=2 live frontier evidence
+# Chicago K=2 public temporal frontier
 
-This directory contains aggregate, redacted evidence from the 2026-09-01 live
-Chicago run. See `REPORT.md` for interpretation, `candidate_graph_curve.csv`
-for graph/feasibility points, `query_width_curve.csv` for the two resolved
-continuous-query frontiers, and `RUN_MANIFEST.json` for pinned provenance.
+This directory contains the aggregate, redacted output of the live Chicago
+K=2 cohort run. The scientific object is a **count-closed, core-incident public
+temporal candidate universe** and a boundary-complete candidate superset for
+one selected core bin under the declared timestamp-rounding model.
 
-The complete workflow artifact additionally contains the full long-form
-sensitivity table, machine-readable report, and SVG figures. No raw trip row,
-raw trip identifier, or selected matching witness is committed.
+Start with `REPORT.md`. Machine-readable evidence is in `report.json`,
+`candidate_graph_curve.csv`, and `candidate_support_sensitivity.csv`;
+`query_width_curve.csv` is a compact certified view of the miles and duration
+frontiers. The generated report and SVG plots are retained verbatim from the
+workflow artifact.
 
-The precise object is a **count-closed, core-incident public temporal candidate
-universe**: a boundary-complete candidate superset for one core bin under the
-declared 15-minute timestamp-release model. It is not actual hidden-run
-closure. Shared Trip ID and partner identity remain unavailable; buffer rows'
-other run-mates are not recursively reconstructed.
+This is not hidden-run closure, partner reconstruction, recursive closure over
+buffer rows, a measured partner-recall curve, or a Chicago-population estimate.
+Gamma counts only measured out-of-radius core incidences. Edges with unmeasured
+endpoint distance remain available and cost zero, so Gamma is not a total miss
+budget or miss-rate estimate.
 
-The geographic radius family is an analyst sensitivity. Missing endpoint
-centroids are retained at every radius. The Gamma family counts only measured
-out-of-radius core incidences; it is not a total candidate-miss budget or an
-estimated recall error rate.
+No raw trip row, raw trip identifier, or selected matching witness is included.

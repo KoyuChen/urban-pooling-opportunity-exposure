@@ -1,23 +1,24 @@
-# Key numerical results
+# Key results
 
-- Core: 60 public `Shared Trip Match=true, Trips Pooled=2` rows in the
-  2026-01-13 17:30--17:45 released bin.
-- Boundary buffer: 551 additional K=2 rows not ruled out by the expanded public
-  timestamp intervals.
-- Candidate universe: 611 rows, 24,274 temporal edges, zero null endpoint rows,
-  stable snapshot and stable server counts.
-- Conservative spatial missingness: 11,865 edges (48.88%) have incomplete
-  public endpoint centroids and remain in every radius graph.
-- At 2 km, the candidate screen retains 11,965 edges (49.29% of temporal) and
-  reduces the trip-mile-gap width by 3.05% and duration-gap width by 4.19%
-  relative to temporal-only support.
-- Under the 2 km base graph, relaxing the candidate-miss budget from Gamma=0
-  to Gamma=60 widens the trip-mile-gap interval from 19.6478 to 20.2661 and the
-  duration-gap interval from 44.9761 to 46.9419 minutes.
-- Radius and Gamma curves pass the automated nested-set monotonicity audit with
-  zero violations. Every resolved endpoint has numerical MILP status optimal
-  and MIP gap zero.
-- Pickup/dropoff community-area composition remains `[0,1]` at every point.
-- Fare-gap endpoints fail closed because 6 candidate rows have missing fare,
-  affecting 512 temporal edges; no unaudited support bound or imputation is
-  introduced.
+- Core: 60 literal public K=2/match rows in the released
+  2026-01-13 17:30--17:45 bin.
+- Boundary buffer: 551 rows; total public temporal candidates: 611.
+- Temporal graph: 24,274 edges (1,770 core--core and 22,504 core--buffer);
+  full cover `OPTIMAL_NUMERICAL_MILP`.
+- Spatial suppression: 11,865 edges (48.88%) lack complete released endpoint
+  centroids and are retained at every radius.
+- At 2 km: 11,965 edges; miles-gap interval
+  `[0.168685, 19.816457]`, width 19.647772 miles; duration-gap interval
+  `[0.447222, 45.423333]`, width 44.976111 minutes.
+- Temporal-only: miles width 20.266142 and duration width 46.941944. Relative
+  to temporal-only, the 2 km screen narrows the widths by only 3.05% and 4.19%.
+- Gamma sensitivity widens monotonically and is nearly saturated by
+  Gamma=15--30; Gamma=0 equals the 2 km feasible set and Gamma=60 equals the
+  temporal-only feasible set.
+- Endpoint identity audit: `PASS`, zero mismatches. Monotonicity:
+  `PARTIAL` because 8/10 complete chains (4/5 query families) are certified;
+  there are zero mathematical reversals.
+- Exactly 76/95 endpoint pairs are certified optimal, all with MIP gap 0 and
+  replay residual 0. The other 19 are the fare chain and publish no bounds.
+- Six candidate rows lack public fare, affecting 512 temporal edges. Fare is
+  fail-closed; pickup/dropoff community-area intervals remain `[0,1]`.

@@ -1,21 +1,25 @@
 {
   "artifact": {
-    "id": 9785811599,
+    "id": 9787210996,
     "name": "chicago-k2-frontier",
-    "size_bytes": 80893,
-    "zip_sha256": "bcd9bfa5186cee322fa2fae954dc90d42dab2adda67311d607ee11ca97fdb460"
+    "size_bytes": 83695,
+    "zip_sha256": "3b78dcfbe8737201a3fd042bde758ac17ea4df87eca00bc766679fea0ba4311a",
+    "report_sha256": "107b2f307c1c5f540b345eed8b2bbe1de8141cc5a8cc02bfbfd68e290d29a182"
+  },
+  "run": {
+    "workflow": "chicago-k2-frontier",
+    "workflow_run_id": 33472377443,
+    "workflow_run_number": 36,
+    "source_commit": "d17d555c71162c4e753e64fe12ffc1dd8d8c5513",
+    "generated_at_utc": "2026-09-01T05:07:40+00:00",
+    "unit_job": "success",
+    "live_job": "success"
   },
   "dataset": {
     "dataset_id": "6dvr-xwnh",
     "name": "Transportation Network Providers - Trips (2025-)",
-    "snapshot_revision_fingerprint_sha256": "52f2ff4772d94efe764a1406bacd7696ef473e7a2e626c97c04f21b6534f4190"
-  },
-  "run": {
-    "workflow_run_id": 33468343107,
-    "numerical_source_commit": "f573379b5e452712a52fec497f622ad888e84dd9",
-    "generated_at_utc": "2026-09-01T04:02:47+00:00",
-    "unit_job": "success",
-    "live_job": "success"
+    "snapshot_revision_fingerprint_sha256": "52f2ff4772d94efe764a1406bacd7696ef473e7a2e626c97c04f21b6534f4190",
+    "fetch_strategy": "partitioned-index-v1"
   },
   "cohort": {
     "core_start_local": "2026-01-13T17:30:00",
@@ -23,34 +27,48 @@
     "core_rows": 60,
     "buffer_rows": 551,
     "candidate_rows": 611,
+    "determinate_rows": 611,
     "null_start_or_end_target_rows": 0,
-    "public_temporal_candidate_universe_status": "COUNT_CLOSED_CORE_INCIDENT_BOUNDARY_COMPLETE",
-    "hidden_run_closure_status": "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
+    "off_release_grid_rows": 0,
+    "released_chronology_impossible_rows": 0,
+    "public_temporal_candidate_universe_closure": "PASS",
+    "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED"
   },
   "logical_graph": {
-    "core_nodes": 60,
-    "buffer_nodes": 551,
     "core_core_edges": 1770,
     "core_buffer_edges": 22504,
     "total_edges": 24274,
     "spatially_unmeasured_edges": 11865,
-    "cover_status": "OPTIMAL_NUMERICAL_MILP",
-    "cover_mip_gap": 0.0,
-    "partner_coverage_claim": "NOT_ESTIMATED_FROM_PUBLIC_ROWS"
+    "base_radius_km": 2.0,
+    "base_radius_edges": 11965,
+    "full_cover_status": "OPTIMAL_NUMERICAL_MILP"
+  },
+  "audits": {
+    "endpoint_identity": "PASS",
+    "endpoint_identity_mismatches": 0,
+    "monotonicity": "PARTIAL",
+    "fully_certified_monotone_chains": 8,
+    "curve_query_chains": 10,
+    "fully_certified_query_families": 4,
+    "query_families": 5,
+    "mathematical_monotonicity_violations": 0,
+    "certified_endpoint_pairs": 76,
+    "uncertified_endpoint_pairs": 19,
+    "uncertified_pairs_with_published_values": 0,
+    "max_certified_mip_gap": 0.0,
+    "max_certified_replay_residual": 0.0
   },
   "gamma_semantics": {
-    "base_radius_km": 2.0,
-    "costed_object": "core incidences through measured-distance edges outside the base radius",
-    "unmeasured_distance_edges_cost": 0,
+    "costed_object": "core incidences through measured-distance edges outside the 2 km base radius",
+    "core_core_outside_cost": 2,
+    "core_buffer_outside_cost": 1,
+    "unmeasured_distance_edge_cost": 0,
+    "gamma_zero_identity": "base-radius feasible set",
+    "gamma_core_count_identity": "temporal-only feasible set",
     "not_a_total_candidate_miss_budget": true,
     "not_an_estimated_miss_rate": true
   },
-  "audits": {
-    "snapshot_stable": true,
-    "server_counts_stable": true,
-    "core_subset_verified": true,
-    "legacy_run_nested_set_monotonicity": "PASS",
-    "legacy_run_monotonicity_violations": 0,
+  "redaction": {
     "raw_rows_serialized": false,
     "raw_trip_ids_serialized": false,
     "matching_witnesses_serialized": false

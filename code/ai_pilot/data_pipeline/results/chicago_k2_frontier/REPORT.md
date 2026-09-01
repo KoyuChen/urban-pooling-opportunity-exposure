@@ -1,21 +1,24 @@
 # Chicago K=2 public temporal candidate universe and support sensitivity
 
 Run date: 2026-09-01 UTC  
-Validated live workflow run: `33468343107`  
-Artifact: `chicago-k2-frontier`, ID `9785811599`  
-Artifact ZIP SHA-256: `bcd9bfa5186cee322fa2fae954dc90d42dab2adda67311d607ee11ca97fdb460`  
-Numerical-run source commit: `f573379b5e452712a52fec497f622ad888e84dd9`  
+Validated workflow run: `33472377443` (run 36)  
+Artifact: `chicago-k2-frontier`, ID `9787210996`  
+Artifact ZIP SHA-256: `3b78dcfbe8737201a3fd042bde758ac17ea4df87eca00bc766679fea0ba4311a`  
+Numerical source commit: `d17d555c71162c4e753e64fe12ffc1dd8d8c5513`  
 Dataset: City of Chicago `6dvr-xwnh`, Transportation Network Providers - Trips (2025-)  
 Pinned public-view fingerprint: `52f2ff4772d94efe764a1406bacd7696ef473e7a2e626c97c04f21b6534f4190`
 
-This run uses real Chicago TNP records. It constructs a count-reconciled,
-core-incident public K=2 temporal candidate universe, includes every public
-boundary-buffer row that can overlap the selected core after accounting for
-15-minute timestamp rounding, and solves nested geographic-radius and Gamma
-sensitivity curves. It does not reconstruct Shared Trip ID or validate true
-partner recall.
+## Result
 
-## 1. Cohort and public temporal closure
+The live pipeline completed successfully. It constructs a count-closed,
+core-incident public K=2 temporal candidate universe, adds the complete public
+boundary buffer for the selected core under the declared timestamp-rounding
+model, and solves nested radius and Gamma candidate-support sensitivity curves.
+
+This is not actual hidden-run closure. Shared Trip ID and co-rider identity are
+not public; buffer rows' other run-mates are not recursively reconstructed.
+
+## Cohort and boundary buffer
 
 The selected core is the released 15-minute bin
 `2026-01-13T17:30:00`--`2026-01-13T17:45:00`.
@@ -24,17 +27,18 @@ The selected core is the released 15-minute bin
 |---|---:|
 | Literal `Shared Trip Match=true, Trips Pooled=2` core rows | 60 |
 | Boundary-buffer rows | 551 |
-| Total K=2 temporal candidate rows | 611 |
+| Total public temporal candidates | 611 |
 | Determinate timestamp rows | 611 |
 | Global K=2 rows with null start or end | 0 |
 | Off-grid timestamps | 0 |
+| Chronology-impossible released rows | 0 |
 | Duplicate or blank trip IDs | 0 |
-| Snapshot stable before/after | yes |
-| Server counts stable before/after | yes |
-| Core recovered exactly in final extract | yes |
+| Metadata and server counts stable | yes |
+| Core recovered exactly | yes |
+| Public temporal closure audit | `PASS` |
 
-For rounding half-width \(\delta=7.5\) minutes, every determinate public row
-that can overlap at least one core trip must satisfy
+With release-rounding half-width \(\delta=7.5\) minutes, any determinate
+partner candidate for a core row must obey
 
 \[
 \widehat s_j \le \max_{i\in C}\widehat e_i+2\delta,
@@ -42,121 +46,103 @@ that can overlap at least one core trip must satisfy
 \widehat e_j \ge \min_{i\in C}\widehat s_i-2\delta.
 \]
 
-The resulting released-timestamp cutoffs are 17:15 and 19:15. The extraction
-used a narrow ID/start index followed by 14 exact start-time partitions. Every
-partition was reconciled against a fresh server-side count and an ID-set hash.
+The extractor also globally counts and appends literal K=2/match rows with a
+null released start or end. The 611-row pull was reconciled through a narrow
+ID/start index and 14 exact released-start partitions. No raw row or trip ID is
+serialized.
 
-**Supported status:** a count-closed, core-incident public temporal candidate
-universe and boundary-complete core candidate superset under the released
-15-minute timestamp model.
-
-**Not supported:** actual hidden pooled-run closure. Shared Trip ID and partner
-identity are not public, buffer rows' other run-mates are not recursively
-reconstructed, and the object is not a union of recovered complete pooled runs.
-This is also one adaptively selected bin rather than a city-population estimate.
-
-## 2. Logical temporal graph
+## Logical graph
 
 | Quantity | Result |
 |---|---:|
 | Core nodes | 60 |
 | Buffer nodes | 551 |
-| Core--core edges | 1,770 |
-| Core--buffer edges | 22,504 |
+| Core--core candidate edges | 1,770 |
+| Core--buffer candidate edges | 22,504 |
 | Total temporal candidate edges | 24,274 |
 | Role-compatible pairs ruled out by time | 10,556 |
-| Edges lacking complete endpoint centroids | 11,865 |
-| Cover status | `OPTIMAL_NUMERICAL_MILP` |
-| Cover MIP gap | 0 |
+| Edges without complete endpoint centroids | 11,865 (48.88%) |
+| Full temporal cover | `OPTIMAL_NUMERICAL_MILP` |
 
-The graph only encodes literal K=2/match status, core/buffer incidence, and
-possible closed-interval overlap after timestamp expansion. Feasibility means
-that the declared graph admits a cover of every core row; it is not evidence
-that any selected edge is an observed Chicago co-rider pair.
+The matching-cover model enforces core degree one and buffer degree at most
+one. A core--core selected edge contributes two core incidences; a core--buffer
+edge contributes one. Feasibility establishes only that the declared graph can
+cover the core, not that any edge is an observed co-rider pair.
 
-## 3. Nested route-radius sensitivity
+## Radius sensitivity
 
 An edge is retained when both released pickup-centroid and dropoff-centroid
-distances are at most the radius. Missing centroid information is retained, not
-silently treated as incompatibility. The sequence is nested and ends at the
-full temporal graph.
+distances are within the radius. Missing centroid information is retained at
+every radius.
 
-| Radius | Edges | Temporal fraction | Miles-gap width | Duration-gap width (min) | Cover |
-|---:|---:|---:|---:|---:|---|
-| 0 km | 11,865 | 0.4888 | 19.1009 | 44.1086 | optimal, gap 0 |
-| 0.25 km | 11,865 | 0.4888 | 19.1009 | 44.1086 | optimal, gap 0 |
-| 0.5 km | 11,869 | 0.4890 | 19.4758 | 44.7933 | optimal, gap 0 |
-| 1 km | 11,894 | 0.4900 | 19.4880 | 44.8375 | optimal, gap 0 |
-| 2 km | 11,965 | 0.4929 | 19.6478 | 44.9761 | optimal, gap 0 |
-| 4 km | 12,137 | 0.5000 | 19.6925 | 45.1900 | optimal, gap 0 |
-| 8 km | 13,318 | 0.5487 | 19.8087 | 45.7725 | optimal, gap 0 |
-| 16 km | 18,450 | 0.7601 | 20.2495 | 46.8222 | optimal, gap 0 |
-| 32 km | 23,838 | 0.9820 | 20.2661 | 46.9419 | optimal, gap 0 |
-| Temporal only | 24,274 | 1.0000 | 20.2661 | 46.9419 | optimal, gap 0 |
+| Radius | Edges | Miles-gap width | Duration-gap width (min) |
+|---:|---:|---:|---:|
+| 0 km | 11,865 | 19.1009 | 44.1086 |
+| 0.25 km | 11,865 | 19.1009 | 44.1086 |
+| 0.5 km | 11,869 | 19.4758 | 44.7933 |
+| 1 km | 11,894 | 19.4880 | 44.8375 |
+| 2 km | 11,965 | 19.6478 | 44.9761 |
+| 4 km | 12,137 | 19.6925 | 45.1900 |
+| 8 km | 13,318 | 19.8087 | 45.7725 |
+| 16 km | 18,450 | 20.2495 | 46.8222 |
+| 32 km | 23,838 | 20.2661 | 46.9419 |
+| Temporal only | 24,274 | 20.2661 | 46.9419 |
 
-Relative to the full temporal graph, the 2 km screen reduces the trip-mile-gap
-width by only **3.05%** and the duration-gap width by **4.19%**. Even the zero
-radius sensitivity reduces those widths by only 5.75% and 6.04%. The main
-reason is public-data suppression: 11,865 edges, 48.88% of the temporal graph,
-lack complete endpoint centroids and must remain at every radius under the
-conservative missing-spatial policy.
+At 2 km, the certified intervals are `[0.168685, 19.816457]` miles and
+`[0.447222, 45.423333]` minutes. Relative to temporal-only support, this screen
+narrows their widths by only 3.05% and 4.19%. The main limitation is public
+spatial suppression: 48.88% of temporal edges cannot be screened by centroid
+distance and must remain under the conservative policy.
 
-Both same-pickup-area and same-dropoff-area queries retain the full interval
-\([0,1]\) at every radius. Public area fields and temporal cover constraints
-alone therefore do not identify those composition queries in this cohort.
+## Measured out-of-radius incidence sensitivity
 
-## 4. Measured out-of-radius incidence sensitivity
+The base radius is 2 km. Gamma counts selected **core incidences** on
+measured-distance edges outside that base: a core--core outside edge costs two
+and a core--buffer outside edge costs one. Unmeasured-distance edges cost zero.
+Gamma is therefore neither a total candidate-miss budget nor an estimated
+partner-miss rate.
 
-The base graph uses a 2 km endpoint-radius screen. \(\Gamma\) counts core
-incidences assigned through **measured-distance** temporal edges outside that
-screen; a core--core outside edge costs two and a core--buffer outside edge
-costs one. Edges with unmeasured endpoint distance are already retained in the
-base graph and cost zero. Thus \(\Gamma\) is not a total candidate-miss budget
-and is not an estimated recall error rate.
+| Gamma | Miles-gap width | Duration-gap width (min) |
+|---:|---:|---:|
+| 0 | 19.6478 | 44.9761 |
+| 1 | 19.7376 | 45.2517 |
+| 2 | 19.8172 | 45.4883 |
+| 4 | 19.9539 | 45.8694 |
+| 8 | 20.1535 | 46.4042 |
+| 15 | 20.2519 | 46.8858 |
+| 16 | 20.2542 | 46.9014 |
+| 30 | 20.2660 | 46.9408 |
+| 60 | 20.2661 | 46.9419 |
 
-| Gamma | Miles-gap width | Duration-gap width (min) | Cover |
-|---:|---:|---:|---|
-| 0 | 19.6478 | 44.9761 | optimal, gap 0 |
-| 1 | 19.7376 | 45.2517 | optimal, gap 0 |
-| 2 | 19.8172 | 45.4883 | optimal, gap 0 |
-| 4 | 19.9539 | 45.8694 | optimal, gap 0 |
-| 8 | 20.1535 | 46.4042 | optimal, gap 0 |
-| 15 | 20.2519 | 46.8858 | optimal, gap 0 |
-| 16 | 20.2542 | 46.9014 | optimal, gap 0 |
-| 30 | 20.2660 | 46.9408 | optimal, gap 0 |
-| 60 | 20.2661 | 46.9419 | optimal, gap 0 |
+The curve is nearly saturated by Gamma=15--30. Gamma=0 is the 2 km feasible
+set and Gamma=60 is the temporal-only feasible set. Those identities are
+implemented by canonical reuse of the certified radius endpoints and also
+checked structurally; the endpoint-identity audit is `PASS` with zero
+mismatches.
 
-The curve saturates near the temporal-only range by about \(\Gamma=30\). All
-reported lower endpoints are nonincreasing and all upper endpoints are
-nondecreasing as the declared feasible set expands.
+## Certification and fail-closed results
 
-## 5. Fail-closed outcomes
+There are 95 curve/query rows. Exactly 76 endpoint pairs publish a numeric
+interval; every published pair has two `OPTIMAL_NUMERICAL_MILP` endpoints,
+MIP gap zero, replay residual zero, finite ordered values, and a consistent
+width. No uncertified pair publishes a lower bound, upper bound, or width.
 
-Six of the 611 candidate rows have a missing public fare. Those rows induce 512
-temporal edges with an undefined fare-gap coefficient. Because no audited
-finite support bound was supplied for missing fares, the fare-gap frontier is
-reported as `UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES`; missing values are not
-imputed or replaced by observed extrema.
+The monotonicity audit is `PARTIAL`: 8/10 entire curve/query chains and 4/5
+query families are fully certified and monotone, with zero mathematical
+reversals. The two unresolved chains are fare. Six of 611 rows lack public
+fare, affecting 512 temporal edges; no imputation or unaudited support bound is
+introduced. Pickup and dropoff community-area fractions retain `[0,1]` across
+the curve and are not identified by these constraints.
 
-The successful numerical run returned an integer incumbent for every resolved
-program with independent constraint replay, status `OPTIMAL_NUMERICAL_MILP`,
-and MIP gap zero. These are solver-qualified numerical endpoints, not exact
-rational certificates. A later hardening pass added fail-closed chain-level
-certification and endpoint-identity audits; result provenance remains pinned to
-the immutable workflow artifact above.
+## Interpretation boundary
 
-## 6. Empirical conclusion
+The strongest supported statement is one-bin and conditional: under the
+declared release-rounding model, the public extraction is count-closed for
+core-incident temporal candidates, and the four fully certified query families
+widen monotonically as candidate support is relaxed.
 
-The real-data pipeline and boundary extraction pass. Chicago can replace the
-earlier wholly simulated Chicago-like geography as a real-record application
-environment with semantic distance, duration, fare, and area queries.
-
-The result is deliberately negative about identification. Public geographic
-suppression leaves almost half of temporal edges spatially unmeasured; the 2 km
-screen only modestly narrows the two resolved continuous queries; categorical
-composition remains unidentified; and fare fails closed. The next application
-gain must come from an audited release operator, independently defensible
-candidate support, or restricted partner truth. It cannot be manufactured by
-treating missing geography as a non-edge.
-
-Raw rows, raw trip IDs, and matching witnesses were never serialized.
+It does not show that true Chicago pooled runs or partners were reconstructed,
+that the buffer is recursively run-closed, that the radius has measured
+partner recall, or that the selected bin identifies a Chicago-population
+effect. Stable metadata and counts provide extraction consistency, not an
+immutable transaction-level snapshot.
