@@ -2,6 +2,12 @@ name: chicago-k2-frontier
 
 on:
   workflow_dispatch:
+    inputs:
+      run_live:
+        description: Run the live Socrata extraction after deterministic checks
+        required: true
+        default: false
+        type: boolean
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier.py
@@ -54,6 +60,7 @@ jobs:
             -p 'test_boundary_padding_chicago_k2_frontier.py' -v
 
   live:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_live }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
