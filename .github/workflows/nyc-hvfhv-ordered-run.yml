@@ -7,6 +7,8 @@ on:
       - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_RUN_MODEL.md
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke.py
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke_runner.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke_runner_v3.py
+      - code/ai_pilot/data_pipeline/production_audit/nyc_ordered_run_symmetry.py
       - code/ai_pilot/data_pipeline/production_audit/tests/test_live_nyc_hvfhv_ordered_run_smoke.py
       - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_fetch.py
       - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_types.py
@@ -33,9 +35,9 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: python -m pip install numpy==2.3.5 scipy==1.17.0
-      - name: Test ordered-run formulation
+      - name: Test ordered-run formulation and exact symmetry reduction
         run: |
-          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke_runner.py --self-test
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke_runner_v3.py --self-test
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_live_nyc_hvfhv_ordered_run_smoke.py' -v
@@ -56,9 +58,9 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: python -m pip install numpy==2.3.5 scipy==1.17.0
-      - name: Build connected interval-run C=2,3,4 frontier
+      - name: Build canonical connected interval-run C=2,3,4 frontier
         run: |
-          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke_runner.py \
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke_runner_v3.py \
             --output-dir tmp/nyc-hvfhv-ordered-run \
             --scan-start 2023-01-03T17:00:00 \
             --scan-end 2023-01-04T01:00:00 \
