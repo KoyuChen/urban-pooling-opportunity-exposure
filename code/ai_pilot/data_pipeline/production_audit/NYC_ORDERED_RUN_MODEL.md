@@ -29,17 +29,44 @@ Condition 3 allows sequential chains. In particular, A--B--C may form one run ev
 
 A decomposition is a collection of disjoint admissible runs such that every core row belongs to exactly one run; a buffer row belongs to at most one run.
 
-## Flow-MILP
+## Compact interval connectivity characterization
 
-Use every selected core row r as a possible run root. Binary x_ir indicates that row i is assigned to run r, and y_r indicates that run r is open. Root identity is x_rr=y_r. Core rows satisfy sum_r x_ir=1; buffers satisfy sum_r x_ir<=1. Every open run has at least two members.
+The first implementation used a generic single-commodity flow on overlap edges. That formulation is correct but unnecessarily large for interval graphs: with |R| candidate roots and |E| overlap edges it creates O(|R||E|) flow variables. The first eight-core live smoke therefore hit the 45-minute CI wall before emitting evidence. The current formulation removes edge-flow variables entirely.
 
-Connectivity is imposed with a single-commodity flow on the directed version of E. For every root r, non-root selected member i consumes one unit of flow; r supplies sum_i x_ir-y_r units. Flow is allowed only on positive-overlap edges and only between rows assigned to r. Hence the selected rows for each open root form a connected interval subgraph.
+Let tau_1,...,tau_T be the elementary open time segments induced by all released endpoints. For a candidate run R define
 
-For every elementary segment tau and root r,
+z_t(R)=1{some i in R is active on tau_t}.
 
-sum_{i active on tau} x_ir <= C y_r.
+For two adjacent segments tau_t=(a,b) and tau_{t+1}=(b,c), say that boundary b is bridged by R when at least one selected interval satisfies s_i < b < e_i.
 
-This is a polynomial-size MILP in the declared candidate universe. It avoids exponential enumeration of connected subsets.
+### Proposition: exact segment characterization
+
+For any nonempty set R of positive-length intervals, the positive-overlap graph G[R] is connected if and only if:
+
+1. the active segment indicators z_1(R),...,z_T(R) form one consecutive block; and
+2. every adjacent pair of active segments is bridged by at least one interval in R.
+
+**Proof.** If G[R] is connected, take any path of positively overlapping intervals. Positive overlap prevents a path from crossing an internal released endpoint only by endpoint touching, so the union of the path has no inactive elementary segment and every internal active boundary is crossed by an interval. Taking the union over the connected graph gives conditions 1--2.
+
+Conversely, within a fixed active elementary segment all selected intervals active there pairwise overlap and hence form a clique. At each adjacent active boundary, a selected interval crosses the boundary and belongs to the cliques on both sides. These crossing intervals link the consecutive segment cliques into one connected graph, so G[R] is connected. QED.
+
+The implementation exhaustively checks this equivalence on a small interval library, including endpoint-touch counterexamples.
+
+## Compact MILP
+
+Use every selected core row r as a possible formulation root. Binary x_ir indicates that row i is assigned to run r, and y_r indicates that run r is open. Root identity is x_rr=y_r. Core rows satisfy sum_r x_ir=1; buffers satisfy sum_r x_ir<=1. Every open run has at least two members.
+
+For every root r and elementary segment tau_t, binary z_tr records whether the run is active on that segment. Occupancy activation is enforced by
+
+z_tr <= sum_{i active on tau_t} x_ir <= C z_tr.
+
+Connectivity uses the proposition above. The z_tr sequence may have at most one 0-to-1 start, so its active entries form one block. For every adjacent active pair tau_t,tau_{t+1},
+
+sum_{i: s_i < b_t < e_i} x_ir >= z_tr + z_{t+1,r} - 1,
+
+where b_t is the shared endpoint. Thus endpoint-touch alone cannot join two pieces of a run.
+
+This formulation has O(|R|(|V|+T)) assignment/segment variables and constraints after connected-component pruning, rather than O(|R||E|) flow variables. It is exact for the declared interval-connectivity rule; the improvement is computational, not a relaxation of the model.
 
 ## Structural sharp endpoints
 
@@ -59,4 +86,4 @@ so every minimum must weakly decrease and every maximum weakly increase with C. 
 
 This model is still conditional on the declared public candidate universe and released intervals. It does not recover actual vehicle runs, establish partner recall, validate TLC/provider production data, or assert a true NYC capacity. The roots are formulation devices and are not interpreted as first riders or vehicle identifiers.
 
-The next statistical layer should add run-invariant outcome functionals, such as within-run pairwise dispersion or exposure, after the structural ordered-run gate is computationally stable.
+The next statistical layer should add run-invariant outcome functionals, such as within-run pairwise dispersion or exposure, after the compact structural ordered-run gate is computationally stable.
