@@ -14,7 +14,7 @@ concurrency:
 jobs:
   live:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -22,11 +22,35 @@ jobs:
           python-version: "3.12"
       - name: Install DuckDB
         run: python -m pip install duckdb==1.4.1
-      - name: Query official TLC HVFHV parquet
+      - name: Query an available official TLC HVFHV parquet
+        shell: bash
         run: |
-          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_smoke.py \
-            --output-dir tmp/nyc-hvfhv-smoke \
-            --min-core 20 --max-core 200 --max-padding-minutes 30
+          set -uo pipefail
+          mkdir -p tmp/nyc-hvfhv-smoke
+          urls=(
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-05.parquet"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-04.parquet"
+            "https://d37ci6vzurychx.cloudfront.net/trip-data/fhvhv_tripdata_2026-03.parquet"
+          )
+          status=1
+          attempt=0
+          for url in "${urls[@]}"; do
+            for retry in 1 2 3; do
+              attempt=$((attempt + 1))
+              echo "Attempt ${attempt}: ${url} (retry ${retry})"
+              python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_smoke.py \
+                --url "${url}" \
+                --output-dir tmp/nyc-hvfhv-smoke \
+                --min-core 20 --max-core 200 --max-padding-minutes 30 \
+                2>&1 | tee "tmp/nyc-hvfhv-smoke/run-attempt-${attempt}.log"
+              status=${PIPESTATUS[0]}
+              if [[ ${status} -eq 0 ]]; then
+                break 2
+              fi
+              sleep $((10 * retry))
+            done
+          done
+          exit ${status}
       - name: Upload aggregate evidence
         if: always()
         uses: actions/upload-artifact@v4
