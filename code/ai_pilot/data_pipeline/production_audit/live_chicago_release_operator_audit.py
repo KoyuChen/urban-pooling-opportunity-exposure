@@ -1031,7 +1031,7 @@ def build_report(
         "pairing_identification": {
             **pairing,
             "abstract_release_map_noninjectivity_witness": documentary,
-            "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED",
+            "hidden_run_closure": "NOT_CONSTRUCTED_AND_NOT_CLAIMED",
             "partner_recall_identified": False,
         },
         "candidate_support_consequence": {

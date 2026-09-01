@@ -244,6 +244,10 @@ class LiveChicagoReleaseOperatorAuditTests(unittest.TestCase):
         self.assertFalse(result["documentation"]["city_implementation_validated"])
         self.assertFalse(result["documentation"]["converse_licensed"])
         self.assertEqual(
+            result["pairing_identification"]["hidden_run_closure"],
+            "NOT_CONSTRUCTED_AND_NOT_CLAIMED",
+        )
+        self.assertEqual(
             result["candidate_support_consequence"]["release_prunable_unmeasured_edges"],
             0,
         )
