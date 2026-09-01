@@ -67,7 +67,7 @@ jobs:
           python -m pip install \
             numpy==2.3.5 \
             scipy==1.17.0
-      - name: Audit the live public release operator and pairing identification
+      - name: Audit the live public release operator and identification boundary
         run: |
           python \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit.py \
@@ -97,8 +97,15 @@ jobs:
           assert report["extraction"]["candidate_count_closed"] is True
           assert report["extraction"]["all_public_contributors_count_closed"] is True
           assert report["pairing_identification"]["partner_identification_status"] == "NOT_IDENTIFIED_FROM_PUBLIC_ROWS"
+          assert report["pairing_identification"]["strict_core_cover_multiplicity_status"] == "CERTIFIED_TWO_DISTINCT_STRICT_CORE_COVERS"
+          assert report["pairing_identification"]["conditional_on_strict_released_time_envelope_graph"] is True
+          assert report["pairing_identification"]["cores_changed_between_displayed_covers"] == report["extraction"]["core_rows"]
           assert report["pairing_identification"]["full_hidden_worlds_constructed"] is False
+          assert report["pairing_identification"]["shared_exact_timestamp_witness_constructed"] is False
+          assert report["pairing_identification"]["remaining_buffer_run_completion_constructed"] is False
+          assert report["pairing_identification"]["hidden_run_closure"] == "NOT_CONSTRUCTED_AND_NOT_CLAIMED"
           assert report["pairing_identification"]["hidden_partner_identification_claim"] == "NONE"
+          assert report["pairing_identification"]["abstract_release_map_noninjectivity_witness"]["scope"] == "ABSTRACT_FOUR_ROW_CONSTRUCTION_NOT_COHORT_COMPLETION"
           assert report["candidate_support_consequence"]["release_prunable_unmeasured_edges"] == 0
           PY
       - name: Upload aggregate release-operator evidence
