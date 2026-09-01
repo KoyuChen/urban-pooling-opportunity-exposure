@@ -1250,12 +1250,80 @@ def solve_curve_point(
                 else None,
                 "edges_with_missing_query_values": missing_edges,
                 "query_missing_semantics": spec.missing_semantics,
+                "endpoint_source": "direct_milp",
                 "claim": (
                     "conditional sensitivity over a count-closed, core-incident public "
                     "temporal candidate universe; no hidden-run or partner-recall claim"
                 ),
             }
         )
+    return graph_point, query_rows
+
+
+def reuse_radius_endpoint_for_gamma(
+    *,
+    source_graph_point: Mapping[str, Any],
+    source_query_rows: Sequence[Mapping[str, Any]],
+    rows: Sequence[TripRow],
+    temporal_edges: Sequence[tuple[int, int]],
+    unmeasured_edges: int,
+    gamma: int,
+    base_radius_km: float,
+) -> tuple[GraphPoint, list[dict[str, Any]]]:
+    """Canonicalize a mathematically identical Gamma endpoint.
+
+    Gamma zero has exactly the base-radius feasible set: every non-base edge
+    has positive miss cost and is forced to zero.  Gamma equal to the number
+    of core rows has exactly the temporal-only feasible set: core degree
+    equalities fix total selected core incidence at that number, so the miss
+    constraint is redundant.  Re-solving either identity with a larger MILP
+    can produce a different numerical termination status even though the
+    feasible sets are identical.  Reuse the already audited radius solve so
+    the implementation enforces the mathematical identity by construction.
+
+    Gamma graph metadata still describes the full temporal edge model plus a
+    budget constraint; only its cover and query endpoint certificates are
+    inherited from the equivalent radius formulation.
+    """
+
+    if gamma < 0:
+        raise ValueError("gamma must be nonnegative")
+    if not source_query_rows:
+        raise ValueError("an equivalent Gamma endpoint requires query rows")
+    if source_graph_point.get("curve_type") != "radius":
+        raise ValueError("Gamma endpoint source must be a radius graph point")
+    if any(row.get("curve_type") != "radius" for row in source_query_rows):
+        raise ValueError("Gamma endpoint source rows must come from a radius curve")
+
+    stats = graph_degrees(rows, temporal_edges)
+    graph_point = GraphPoint(
+        curve_type="gamma",
+        parameter_label=str(gamma),
+        parameter_value=float(gamma),
+        radius_km=base_radius_km,
+        gamma_core_incidences=gamma,
+        edge_count=len(temporal_edges),
+        retained_fraction_of_temporal=1.0 if temporal_edges else 0.0,
+        spatially_unmeasured_edges_retained=unmeasured_edges,
+        core_zero_degree_count=stats["core_zero_degree_count"],
+        core_min_degree=stats["core_min_degree"],
+        core_max_degree=stats["core_max_degree"],
+        cover_status=str(source_graph_point.get("cover_status")),
+        cover_mip_gap=source_graph_point.get("cover_mip_gap"),
+    )
+    graph_metadata = asdict(graph_point)
+    query_rows = [
+        {
+            **dict(source_row),
+            **graph_metadata,
+            "endpoint_source": (
+                "canonical_base_radius_identity"
+                if source_graph_point.get("radius_km") is not None
+                else "canonical_temporal_only_identity"
+            ),
+        }
+        for source_row in source_query_rows
+    ]
     return graph_point, query_rows
 
 
@@ -2268,21 +2336,56 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     core_count = row_audit["core_rows"]
     gamma_graph_points: list[dict[str, Any]] = []
     gamma_values = gamma_grid(core_count)
+    unmeasured_temporal_edges = sum(
+        route_radius[edge] is None for edge in temporal_edges
+    )
     for gamma in gamma_values:
-        unmeasured = sum(route_radius[edge] is None for edge in temporal_edges)
-        graph_point, query_rows = solve_curve_point(
-            rows=rows,
-            edges=temporal_edges,
-            temporal_edge_count=len(temporal_edges),
-            unmeasured_edges=unmeasured,
-            curve_type="gamma",
-            parameter_label=str(gamma),
-            parameter_value=float(gamma),
-            radius_km=base_radius,
-            gamma=gamma,
-            miss_costs=miss_costs,
-            time_limit_seconds=args.solver_time_limit,
+        equivalent_radius = (
+            base_radius if gamma == 0 else None if gamma == core_count else "solve"
         )
+        if equivalent_radius != "solve":
+            source_graph_point = next(
+                point
+                for point in radius_graph_points
+                if (
+                    point["radius_km"] is None
+                    if equivalent_radius is None
+                    else float(point["radius_km"]) == float(equivalent_radius)
+                )
+            )
+            source_query_rows = [
+                row
+                for row in sensitivity_rows
+                if row["curve_type"] == "radius"
+                and (
+                    row["radius_km"] is None
+                    if equivalent_radius is None
+                    else float(row["radius_km"]) == float(equivalent_radius)
+                )
+            ]
+            graph_point, query_rows = reuse_radius_endpoint_for_gamma(
+                source_graph_point=source_graph_point,
+                source_query_rows=source_query_rows,
+                rows=rows,
+                temporal_edges=temporal_edges,
+                unmeasured_edges=unmeasured_temporal_edges,
+                gamma=gamma,
+                base_radius_km=base_radius,
+            )
+        else:
+            graph_point, query_rows = solve_curve_point(
+                rows=rows,
+                edges=temporal_edges,
+                temporal_edge_count=len(temporal_edges),
+                unmeasured_edges=unmeasured_temporal_edges,
+                curve_type="gamma",
+                parameter_label=str(gamma),
+                parameter_value=float(gamma),
+                radius_km=base_radius,
+                gamma=gamma,
+                miss_costs=miss_costs,
+                time_limit_seconds=args.solver_time_limit,
+            )
         gamma_graph_points.append(asdict(graph_point))
         sensitivity_rows.extend(query_rows)
 
@@ -2321,7 +2424,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         core_count=core_count,
     )
     if endpoint_identities["status"] != "PASS":
-        raise LiveDataError("Gamma/radius endpoint identity audit failed")
+        mismatch_summary = [
+            {
+                key: mismatch[key]
+                for key in ("identity", "query", "reason")
+                if key in mismatch
+            }
+            for mismatch in endpoint_identities["mismatches"][:8]
+        ]
+        raise LiveDataError(
+            "Gamma/radius endpoint identity audit failed: "
+            + json.dumps(mismatch_summary, sort_keys=True)
+        )
 
     monotonicity = monotonicity_audit(
         sensitivity_rows,
@@ -2432,6 +2546,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "gamma_curve": {
             "base_radius_km": base_radius,
             "base_edge_count": len(base_edges),
+            "endpoint_identity_implementation": (
+                "Gamma=0 reuses the certified base-radius endpoint pair and "
+                "Gamma=core_count reuses the certified temporal-only endpoint pair; "
+                "the equivalences are also checked structurally"
+            ),
             "gamma_definition": (
                 "number of core incidences assigned through temporal edges whose "
                 "measured endpoint distance exceeds the fixed base radius"

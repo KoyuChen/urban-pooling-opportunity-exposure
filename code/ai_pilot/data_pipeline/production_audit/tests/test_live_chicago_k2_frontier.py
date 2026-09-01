@@ -241,24 +241,38 @@ class GraphAndOptimizationTests(unittest.TestCase):
             gamma=None,
             point_costs=None,
         )
-        gamma_zero_graph, gamma_zero_rows = point(
-            edges=self.edges,
-            curve_type="gamma",
-            label="0",
-            value=0.0,
-            radius=1.0,
+        gamma_zero_point, gamma_zero_rows = MODULE.reuse_radius_endpoint_for_gamma(
+            source_graph_point=base_graph,
+            source_query_rows=base_rows,
+            rows=self.rows,
+            temporal_edges=self.edges,
+            unmeasured_edges=0,
             gamma=0,
-            point_costs=costs,
+            base_radius_km=1.0,
         )
-        gamma_full_graph, gamma_full_rows = point(
-            edges=self.edges,
-            curve_type="gamma",
-            label="4",
-            value=4.0,
-            radius=1.0,
+        gamma_full_point, gamma_full_rows = MODULE.reuse_radius_endpoint_for_gamma(
+            source_graph_point=temporal_graph,
+            source_query_rows=temporal_rows,
+            rows=self.rows,
+            temporal_edges=self.edges,
+            unmeasured_edges=0,
             gamma=4,
-            point_costs=costs,
+            base_radius_km=1.0,
         )
+        gamma_zero_graph = asdict(gamma_zero_point)
+        gamma_full_graph = asdict(gamma_full_point)
+        self.assertEqual(gamma_zero_graph["edge_count"], len(self.edges))
+        self.assertEqual(gamma_zero_rows[0]["lower"], base_rows[0]["lower"])
+        self.assertEqual(gamma_full_rows[0]["upper"], temporal_rows[0]["upper"])
+        self.assertEqual(
+            gamma_zero_rows[0]["endpoint_source"],
+            "canonical_base_radius_identity",
+        )
+        self.assertEqual(
+            gamma_full_rows[0]["endpoint_source"],
+            "canonical_temporal_only_identity",
+        )
+        self.assertEqual(base_rows[0]["endpoint_source"], "direct_milp")
         sensitivity = [
             *base_rows,
             *temporal_rows,
