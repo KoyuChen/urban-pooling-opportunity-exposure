@@ -12,6 +12,12 @@ The radius and Gamma families are nested. Eight of ten complete curve/query
 chains, covering four of five query families, have paired optimal numerical
 endpoints and pass the widening audit with zero mathematical violations.
 
+The separate live release-operator audit reconciles the 611 candidates against
+50,405 all-trip endpoint-bin contributors. Removing 5,812 boundary-touch-only
+edges leaves a strict-positive-overlap graph with 18,462 edges and an optimal
+cover. A second optimal cover changes all 60 core assignments, certifying that
+the public release is not partner-identifying.
+
 ## Not supported
 
 Chicago does not release Shared Trip ID or co-rider identity in these rows.
@@ -23,4 +29,8 @@ exact trip attributes.
 
 The 2 km radius is an analyst sensitivity screen, not a proven necessary
 support rule. Gamma counts measured out-of-radius core incidences only;
-unmeasured-distance edges are retained with zero Gamma cost.
+unmeasured-distance edges are retained with zero Gamma cost. The release audit
+finds zero operator-licensed deletions among those edges: every strict cover
+requires at least 15 and can use up to 60 unmeasured core incidences. Public
+blanks emit no LOW tract-count literals, and City implementation fidelity is
+not claimed.

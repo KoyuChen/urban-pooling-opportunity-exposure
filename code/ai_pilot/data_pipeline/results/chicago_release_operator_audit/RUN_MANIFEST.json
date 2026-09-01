@@ -1,0 +1,71 @@
+{
+  "artifact": {
+    "id": 9788392927,
+    "name": "chicago-release-operator-audit",
+    "size_bytes": 4867,
+    "zip_sha256": "2c19f6167a228a5723983e5efd02064977aa66f3c04f132bbf56e92f0a561457",
+    "report_sha256": "3165b6552fa147ebfa41526b4720d253ba0140eb6a0b7969e12045be08cb5cf2",
+    "json_sha256": "704e488494def6bd31161c04ee44bdba9903eaee6bd76d99024b6299faef27ff"
+  },
+  "run": {
+    "workflow": "chicago-release-operator-audit",
+    "workflow_run_id": 33476086013,
+    "workflow_run_number": 1,
+    "source_commit": "f4ef196f49937c438ebd7c4a1ef722a7230e2f00",
+    "generated_at_utc": "2026-09-01T06:13:03+00:00",
+    "unit_job": "success",
+    "live_job": "success"
+  },
+  "dataset": {
+    "dataset_id": "6dvr-xwnh",
+    "public_column_count": 24,
+    "snapshot_revision_fingerprint_sha256": "b807bfd2ef2216070d1d4b5deb1c5dbd14034f595540e081413eaf9ac7a43420",
+    "schema_sha256": "4a0ec188bdee38b7967c443a39f8da65651e191a39a88d7ca3d5a20b648fde42",
+    "snapshot_stable_during_extraction": true,
+    "historical_rows_may_later_change": true
+  },
+  "extraction": {
+    "core_rows": 60,
+    "candidate_rows": 611,
+    "all_trip_release_cell_contributor_rows": 50405,
+    "candidate_count_closed": true,
+    "all_public_contributors_count_closed": true,
+    "candidate_null_start_or_end_rows": 0
+  },
+  "strict_overlap": {
+    "closed_outer_interval_edges": 24274,
+    "strict_positive_overlap_edges": 18462,
+    "boundary_touch_only_edges": 5812,
+    "strict_cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "alternative_cover_status": "OPTIMAL_NUMERICAL_MILP"
+  },
+  "nonidentification": {
+    "status": "CERTIFIED_TWO_DISTINCT_PUBLICLY_COMPATIBLE_COVERS",
+    "partner_identification_status": "NONIDENTIFIED",
+    "core_assignment_hamming_distance": 60,
+    "ambiguous_core_count": 60,
+    "max_mip_gap": 0.0,
+    "max_replay_residual": 0.0,
+    "matching_witnesses_serialized": false
+  },
+  "spatial_missingness": {
+    "strict_unmeasured_edges": 9339,
+    "unmeasured_core_incidences_min": 15.0,
+    "unmeasured_core_incidences_max": 60.0,
+    "release_prunable_unmeasured_edges": 0,
+    "candidate_pickup_area_coordinate_masks_equal": true,
+    "candidate_dropoff_area_coordinate_masks_equal": true
+  },
+  "release_operator_claims": {
+    "overall_status": "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY",
+    "city_implementation_validated": false,
+    "converse_licensed": false,
+    "low_literals_emitted": 0,
+    "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED"
+  },
+  "redaction": {
+    "raw_rows_serialized": false,
+    "raw_trip_ids_serialized": false,
+    "matching_witnesses_serialized": false
+  }
+}

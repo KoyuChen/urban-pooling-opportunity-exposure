@@ -1,0 +1,210 @@
+{
+  "candidate_support_consequence": {
+    "finite_radius_policy": "RETAIN_ALL_SPATIALLY_UNMEASURED_EDGES",
+    "measured_centroid_radius_classification": "ANALYST_CANDIDATE_SUPPORT_SENSITIVITY_NOT_NECESSARY_COMPATIBILITY",
+    "recommended_next_axis": "Lambda = selected core incidences through spatially unmeasured edges",
+    "release_prunable_unmeasured_edges": 0,
+    "status": "NO_NEW_NECESSARY_SPATIAL_EDGE_DELETIONS"
+  },
+  "claim_boundary": {
+    "not_supported": "City production-code fidelity, latent tract-cell reconstruction, blank-cause identification, hidden-run closure, partner identity or recall, and any finite spatial support rule for missing centroids",
+    "supported": "snapshot-relative count closure of the public temporal candidate universe and all public rows contributing to its released endpoint bins; documented one-way release semantics; public pairing non-identification"
+  },
+  "dataset": {
+    "historical_rows_may_later_change": true,
+    "id": "6dvr-xwnh",
+    "name": "Transportation Network Providers - Trips (2025-)",
+    "public_linkage_fields_present": false,
+    "shared_trip_id_public": false,
+    "snapshot": {
+      "dataset_id": "6dvr-xwnh",
+      "public_column_count": 24,
+      "publication_date": 1740694134,
+      "required_column_descriptions_sha256": "8cdecdf6b33d868e54e33214931e5262f0c6c66c7d704d3d65ae67e5417811cf",
+      "revision_fingerprint_sha256": "b807bfd2ef2216070d1d4b5deb1c5dbd14034f595540e081413eaf9ac7a43420",
+      "rows_updated_at": 1788219933,
+      "schema_sha256": "4a0ec188bdee38b7967c443a39f8da65651e191a39a88d7ca3d5a20b648fde42",
+      "view_last_modified": 1774466850
+    },
+    "snapshot_stable_during_extraction": true
+  },
+  "documentation": {
+    "city_implementation_validated": false,
+    "converse_licensed": false,
+    "documented_low_upper": 2,
+    "documented_time_rounding_minutes": 15,
+    "documented_tract_k": 3,
+    "live_document_content_fetched": false,
+    "low_literals_emitted": 0,
+    "pins": [
+      {
+        "id": "public_dataset",
+        "licensed_implication": "released start/end timestamps are rounded to the nearest 15 minutes",
+        "url": "https://data.cityofchicago.org/Transportation/Transportation-Network-Providers-Trips-2025-/6dvr-xwnh/about_data"
+      },
+      {
+        "id": "public_columns",
+        "licensed_implication": "released centroid is the published tract center or, when tract detail is suppressed, the published community-area center",
+        "url": "https://data.cityofchicago.org/api/views/6dvr-xwnh/columns.json"
+      },
+      {
+        "id": "privacy_method",
+        "licensed_implication": "a tract-by-15-minute aggregation with two or fewer unique trips is widened to community-area level for both trip ends",
+        "url": "https://data.cityofchicago.org/stories/s/How-Chicago-Protects-Privacy-in-TNP-and-Taxi-Open-/82d7-i4i2/"
+      },
+      {
+        "id": "tract_rule_clarification",
+        "licensed_implication": "released fine-tract counts cannot be naively read as complete latent cell counts because the paired-end rule can coarsen both ends",
+        "url": "https://data.cityofchicago.org/stories/s/Census-Tract-Rules-for-Taxi-and-TNP-Datasets-7-29-/28mt-8asw/"
+      },
+      {
+        "id": "confidential_reporting_schema",
+        "licensed_implication": "TNPs report a Shared Trip ID shared by every transaction in one complete empty-to-empty run; that field is absent from the public table",
+        "url": "https://chicago.github.io/tnp-reporting-manual/trip/"
+      },
+      {
+        "id": "change_notice",
+        "licensed_implication": "recent periods may be published at generally 99%+ completeness and past periods can later be updated",
+        "url": "https://data.cityofchicago.org/stories/s/Change-Notice-Transportation-Network-Provider-Data/wmdt-6h9e/"
+      }
+    ],
+    "pins_are_versioned_reference_declarations_not_content_attestations": true,
+    "pins_sha256": "3f5d7bababef7f22788c944d59fbfc94d024ea9131e0a7421da8b47ca9a40f54"
+  },
+  "extraction": {
+    "all_public_contributors_count_closed": true,
+    "all_trip_release_cell_contributor_rows": 50405,
+    "candidate_api_paths": [
+      "soda2"
+    ],
+    "candidate_count_closed": true,
+    "candidate_id_set_sha256": "d1f9e0eb5648b73ccceab7dbb3dc08f5faf0030c380d32ce04e2de484f1f948e",
+    "candidate_null_start_or_end_rows": 0,
+    "candidate_raw_rows_sha256": "cf761f5442760d864eb743359aae258c7615cac0a8a4139770f7f422178da51e",
+    "candidate_rows": 611,
+    "contributor_api_paths": [
+      "soda2"
+    ],
+    "contributor_id_set_sha256": "ec7b279a04f2cfefb203317cfb66cc6807c6ca6c8304a484348b5b278c9bf8d5",
+    "contributor_raw_rows_sha256": "f47885fad9c115ed56ecc7b2202a1783353ebb1263dbcaa1d09d8ad42c156eb6",
+    "core_end_local": "2026-01-13T17:45:00",
+    "core_rows": 60,
+    "core_start_local": "2026-01-13T17:30:00",
+    "raw_rows_serialized": false,
+    "raw_trip_ids_serialized": false,
+    "snapshot_relative_only": true
+  },
+  "generated_at_utc": "2026-09-01T06:13:03+00:00",
+  "overall_status": "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY",
+  "pairing_identification": {
+    "abstract_two_world_certificate": {
+      "changed_between_worlds": "confidential Shared Trip ID assignment only",
+      "different_hidden_pairing": true,
+      "fixed_between_worlds": [
+        "all latent per-trip attributes",
+        "released timestamps",
+        "tract/community-area/centroid release values",
+        "privacy cell counts and missingness masks",
+        "Shared Trip Match=true and Trips Pooled=2"
+      ],
+      "logical_conclusion": "PUBLIC_RELEASE_OPERATOR_IS_NOT_PAIR_IDENTIFYING",
+      "minimum_abstract_witness_nodes": 4,
+      "same_public_release": true,
+      "world_a_pairing": "(c1,b1),(c2,b2)",
+      "world_b_pairing": "(c1,b2),(c2,b1)"
+    },
+    "alternative_strict_cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "ambiguous_core_count": 60,
+    "boundary_touch_only_edge_count": 5812,
+    "closed_outer_interval_edge_count": 24274,
+    "core_assignment_hamming_distance": 60,
+    "hidden_run_closure": "NOT_IDENTIFIED_AND_NOT_CLAIMED",
+    "max_certified_mip_gap": 0.0,
+    "max_certified_replay_residual": 0.0,
+    "partner_identification_status": "NONIDENTIFIED",
+    "partner_recall_identified": false,
+    "release_operator_pairing_invariant": true,
+    "release_prunable_unmeasured_edges": 0,
+    "strict_graph_cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "strict_positive_overlap_edge_count": 18462,
+    "two_world_certificate_status": "CERTIFIED_TWO_DISTINCT_PUBLICLY_COMPATIBLE_COVERS",
+    "unmeasured_core_incidences_max": 60.0,
+    "unmeasured_core_incidences_max_status": "OPTIMAL_NUMERICAL_MILP",
+    "unmeasured_core_incidences_min": 15.0,
+    "unmeasured_core_incidences_min_status": "OPTIMAL_NUMERICAL_MILP",
+    "unmeasured_strict_edge_count": 9339,
+    "witnesses_serialized": false,
+    "world_a_selected_edge_count": 51,
+    "world_b_selected_edge_count": 53
+  },
+  "release_masks": {
+    "all_trip_contributor_rows": {
+      "dropoff": {
+        "area_coordinate_presence_masks_equal": false,
+        "area_without_coordinates_rows": 0,
+        "coordinates_without_area_rows": 166,
+        "cross_tab": {
+          "tract=0|area=0|coordinates_complete=0": 4067,
+          "tract=0|area=1|coordinates_complete=1": 14459,
+          "tract=1|area=0|coordinates_complete=0": 656,
+          "tract=1|area=0|coordinates_complete=1": 166,
+          "tract=1|area=1|coordinates_complete=1": 31057
+        },
+        "partial_lat_lon_rows": 0,
+        "rows": 50405,
+        "tract_without_coordinates_rows": 656
+      },
+      "pickup": {
+        "area_coordinate_presence_masks_equal": false,
+        "area_without_coordinates_rows": 0,
+        "coordinates_without_area_rows": 168,
+        "cross_tab": {
+          "tract=0|area=0|coordinates_complete=0": 3125,
+          "tract=0|area=1|coordinates_complete=1": 14766,
+          "tract=1|area=0|coordinates_complete=0": 645,
+          "tract=1|area=0|coordinates_complete=1": 168,
+          "tract=1|area=1|coordinates_complete=1": 31701
+        },
+        "partial_lat_lon_rows": 0,
+        "rows": 50405,
+        "tract_without_coordinates_rows": 645
+      }
+    },
+    "blank_cause_identified_from_public_release": false,
+    "blank_to_low_inversion_permitted": false,
+    "candidate_rows": {
+      "dropoff": {
+        "area_coordinate_presence_masks_equal": true,
+        "area_without_coordinates_rows": 0,
+        "coordinates_without_area_rows": 0,
+        "cross_tab": {
+          "tract=0|area=0|coordinates_complete=0": 67,
+          "tract=0|area=1|coordinates_complete=1": 262,
+          "tract=1|area=0|coordinates_complete=0": 13,
+          "tract=1|area=1|coordinates_complete=1": 269
+        },
+        "partial_lat_lon_rows": 0,
+        "rows": 611,
+        "tract_without_coordinates_rows": 13
+      },
+      "pickup": {
+        "area_coordinate_presence_masks_equal": true,
+        "area_without_coordinates_rows": 0,
+        "coordinates_without_area_rows": 0,
+        "cross_tab": {
+          "tract=0|area=0|coordinates_complete=0": 81,
+          "tract=0|area=1|coordinates_complete=1": 249,
+          "tract=1|area=0|coordinates_complete=0": 13,
+          "tract=1|area=1|coordinates_complete=1": 268
+        },
+        "partial_lat_lon_rows": 0,
+        "rows": 611,
+        "tract_without_coordinates_rows": 13
+      }
+    },
+    "centroid_null_implies_outside_chicago": false,
+    "centroid_null_licenses_finite_radius_exclusion": false
+  },
+  "report_sha256_without_self_hash": "bf134a90a6b6761e7edb8392daa98f940057985e0c7404e8c19d024a8e9568dd",
+  "report_version": "chicago-release-operator-live-audit/v1"
+}
