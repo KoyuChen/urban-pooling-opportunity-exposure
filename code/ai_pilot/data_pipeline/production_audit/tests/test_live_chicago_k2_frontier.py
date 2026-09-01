@@ -330,6 +330,13 @@ class GraphAndOptimizationTests(unittest.TestCase):
                 time_limit_seconds=10,
             )
 
+    def test_radius_selector_never_coerces_temporal_only_none(self) -> None:
+        self.assertTrue(MODULE.same_radius_parameter(None, None))
+        self.assertFalse(MODULE.same_radius_parameter(None, 2.0))
+        self.assertFalse(MODULE.same_radius_parameter(2.0, None))
+        self.assertTrue(MODULE.same_radius_parameter("2.0", 2.0))
+        self.assertFalse(MODULE.same_radius_parameter("bad", 2.0))
+
     def test_endpoint_identity_normalizes_certified_infeasibility_backends(self) -> None:
         base_edges = [(0, 1)]
         costs = MODULE.edge_miss_costs(self.rows, self.edges, set(base_edges))

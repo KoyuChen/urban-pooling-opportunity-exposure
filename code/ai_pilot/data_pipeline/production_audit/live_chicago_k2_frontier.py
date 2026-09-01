@@ -1327,6 +1327,19 @@ def reuse_radius_endpoint_for_gamma(
     return graph_point, query_rows
 
 
+def same_radius_parameter(value: Any, target: float | None) -> bool:
+    """Match a radius point without coercing the temporal-only ``None`` value."""
+
+    if target is None:
+        return value is None
+    if value is None:
+        return False
+    try:
+        return float(value) == float(target)
+    except (TypeError, ValueError):
+        return False
+
+
 def gamma_grid(core_count: int) -> list[int]:
     candidates = [0, 1, 2, 4, 8, 16, math.ceil(core_count / 4), math.ceil(core_count / 2), core_count]
     return sorted({value for value in candidates if 0 <= value <= core_count})
@@ -2347,21 +2360,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             source_graph_point = next(
                 point
                 for point in radius_graph_points
-                if (
-                    point["radius_km"] is None
-                    if equivalent_radius is None
-                    else float(point["radius_km"]) == float(equivalent_radius)
-                )
+                if same_radius_parameter(point["radius_km"], equivalent_radius)
             )
             source_query_rows = [
                 row
                 for row in sensitivity_rows
                 if row["curve_type"] == "radius"
-                and (
-                    row["radius_km"] is None
-                    if equivalent_radius is None
-                    else float(row["radius_km"]) == float(equivalent_radius)
-                )
+                and same_radius_parameter(row["radius_km"], equivalent_radius)
             ]
             graph_point, query_rows = reuse_radius_endpoint_for_gamma(
                 source_graph_point=source_graph_point,
