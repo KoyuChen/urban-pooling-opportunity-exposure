@@ -1,0 +1,57 @@
+{
+  "artifact": {
+    "artifact_id": 9849696343,
+    "digest": "sha256:5a723a316321ca76ac47b50358908ca2dc0f62666adc83c9329d7142bb95cf87",
+    "name": "nyc-hvfhv-branch-and-price"
+  },
+  "cells": {
+    "2": {
+      "certified_integer_maximum_selected_buffers": 4,
+      "full_run_column_count": 54,
+      "nodes_processed": 1,
+      "root_lp_upper_bound": 4.0
+    },
+    "3": {
+      "certified_integer_maximum_selected_buffers": 8,
+      "full_run_column_count": 394,
+      "nodes_processed": 4,
+      "root_lp_upper_bound": 8.0
+    },
+    "4": {
+      "certified_integer_maximum_selected_buffers": 12,
+      "full_run_column_count": 1719,
+      "nodes_processed": 2,
+      "root_lp_upper_bound": 12.000000000000002
+    }
+  },
+  "claim_boundary": "exact integer algorithm validation on one fixed four-core/twelve-buffer public cohort and deterministic exhaustive tests; no partner, vehicle-run, realized-capacity, production-logic, or city-scale runtime claim",
+  "cohort": {
+    "audit_buffer_rows": 12,
+    "audit_core_rows": 4,
+    "provider": "HV0005",
+    "selection": "first core rows by frozen source order plus nearest complete buffers by exact temporal gap; no outcome values used",
+    "source_candidate_rows": 437,
+    "source_core_end": "2023-01-03T18:00:00",
+    "source_core_rows": 38,
+    "source_core_start": "2023-01-03T17:45:00"
+  },
+  "generated_at_utc": "2026-09-02T13:51:13+00:00",
+  "locked_nonintegrality_witness": {
+    "buffer_branches": 1,
+    "certified_integer_value": 3,
+    "maximum_depth": 5,
+    "nodes_processed": 17,
+    "pair_branches": 7,
+    "root_lp_value": 4
+  },
+  "redaction": {
+    "aggregate_only": true,
+    "raw_rows_emitted": false,
+    "row_identifiers_emitted": false,
+    "run_columns_emitted": false,
+    "selected_run_witnesses_emitted": false
+  },
+  "source_branch": "real-data-smoke-20260901",
+  "source_commit": "5435331243b56400a53724d963b040e1199ed97f",
+  "workflow_run_id": 33637896306
+}
