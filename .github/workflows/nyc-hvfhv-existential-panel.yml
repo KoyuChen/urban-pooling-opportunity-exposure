@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_support_frontier.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_panel_window.py
       - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_existential_panel.py
       - code/ai_pilot/data_pipeline/production_audit/NYC_EXISTENTIAL_PANEL_PROTOCOL.md
       - .github/workflows/nyc-hvfhv-existential-panel.yml
@@ -33,15 +34,15 @@ jobs:
       - name: Test support frontier and panel aggregation
         run: |
           python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_support_frontier.py --self-test
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_panel_window.py --self-test
           python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_existential_panel.py --self-test
 
-  cell:
+  window:
     needs: unit
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 2
       matrix:
-        capacity: [2, 3, 4]
         window:
           - label: jan_weekday_am
             start: 2023-01-03T06:00:00
@@ -62,7 +63,7 @@ jobs:
             start: 2023-10-03T17:00:00
             end: 2023-10-03T21:00:00
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 90
     env:
       PYTHONHASHSEED: "0"
       OPENBLAS_NUM_THREADS: "1"
@@ -76,54 +77,48 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: python -m pip install numpy==2.3.5 scipy==1.17.0
-      - name: Build one panel cell
+      - name: Fetch once and solve C=2,3,4
         shell: bash
         run: |
-          output="tmp/nyc-existential-panel/${{ matrix.window.label }}/C${{ matrix.capacity }}"
+          output="tmp/nyc-existential-panel/${{ matrix.window.label }}"
           mkdir -p "${output}"
-          cat > "${output}/panel_cell.json" <<EOF
-          {
-            "window_label": "${{ matrix.window.label }}",
-            "scan_start": "${{ matrix.window.start }}",
-            "scan_end": "${{ matrix.window.end }}",
-            "capacity": ${{ matrix.capacity }},
-            "source_commit": "${GITHUB_SHA}"
-          }
-          EOF
-          set +e
-          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_support_frontier.py \
-            --output-dir "${output}" \
-            --scan-start "${{ matrix.window.start }}" \
-            --scan-end "${{ matrix.window.end }}" \
-            --scan-window-hours 1 \
-            --existential-core 4 \
-            --existential-buffers 12 \
-            --frontier-capacity ${{ matrix.capacity }} \
-            --overlap-epsilon-seconds 1.0 \
-            --solver-time-limit 30 \
-            2>&1 | tee "${output}/run.log"
-          status=${PIPESTATUS[0]}
-          python - <<PY
-          import json
-          from pathlib import Path
-          path = Path("${output}/panel_cell.json")
-          payload = json.loads(path.read_text())
-          payload["process_exit_status"] = ${status}
-          path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\\n")
-          PY
+          status=1
+          for retry in 1 2 3; do
+            echo "Window ${{ matrix.window.label }}, attempt ${retry}"
+            rm -rf "${output}/C2" "${output}/C3" "${output}/C4" \
+              "${output}/window_report.json" "${output}/WINDOW_REPORT.md"
+            set +e
+            python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_panel_window.py \
+              --output-dir "${output}" \
+              --window-label "${{ matrix.window.label }}" \
+              --scan-start "${{ matrix.window.start }}" \
+              --scan-end "${{ matrix.window.end }}" \
+              --scan-window-hours 1 \
+              --existential-core 4 \
+              --existential-buffers 12 \
+              --overlap-epsilon-seconds 1.0 \
+              --solver-time-limit 30 \
+              2>&1 | tee "${output}/run-attempt-${retry}.log"
+            status=${PIPESTATUS[0]}
+            set -e
+            if [[ ${status} -eq 0 ]]; then
+              break
+            fi
+            sleep $((20 * retry))
+          done
           exit ${status}
-      - name: Upload panel cell
+      - name: Upload panel window
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nyc-existential-panel-${{ matrix.window.label }}-C${{ matrix.capacity }}
-          path: tmp/nyc-existential-panel/${{ matrix.window.label }}/C${{ matrix.capacity }}
+          name: nyc-existential-panel-window-${{ matrix.window.label }}
+          path: tmp/nyc-existential-panel/${{ matrix.window.label }}
           if-no-files-found: warn
           retention-days: 90
 
   aggregate:
     if: ${{ always() && needs.unit.result == 'success' }}
-    needs: [unit, cell]
+    needs: [unit, window]
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -131,10 +126,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Download panel cells
+      - name: Download panel windows
         uses: actions/download-artifact@v4
         with:
-          pattern: nyc-existential-panel-*
+          pattern: nyc-existential-panel-window-*
           path: tmp/nyc-existential-panel-downloads
       - name: Aggregate and audit panel
         shell: bash
