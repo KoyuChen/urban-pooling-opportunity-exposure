@@ -11,8 +11,11 @@ on:
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/ordered_run_column_generation.py
+      - code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_column_generation_smoke.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_smoke.py
       - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_RUN_COLUMN_GENERATION.md
+      - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_RUN_BRANCH_AND_PRICE.md
       - code/ai_pilot/data_pipeline/production_audit/tests/test_ordered_run_column_generation.py
       - .github/workflows/nyc-hvfhv-column-generation.yml
 
@@ -23,7 +26,7 @@ concurrency:
 jobs:
   unit:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     env:
       PYTHONHASHSEED: "0"
       OPENBLAS_NUM_THREADS: "1"
@@ -37,9 +40,10 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: python -m pip install numpy==2.3.5 scipy==1.17.0
-      - name: Audit pricing, column generation, and master nonintegrality
+      - name: Audit pricing, LP column generation, integer branching, and master nonintegrality
         run: |
           python code/ai_pilot/data_pipeline/production_audit/ordered_run_column_generation.py
+          python code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_ordered_run_column_generation.py' -v
@@ -62,7 +66,7 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: python -m pip install numpy==2.3.5 scipy==1.17.0
-      - name: Compare generated and complete masters on one public cohort
+      - name: Compare generated and complete LP masters on one public cohort
         shell: bash
         run: |
           output="tmp/nyc-hvfhv-column-generation"
