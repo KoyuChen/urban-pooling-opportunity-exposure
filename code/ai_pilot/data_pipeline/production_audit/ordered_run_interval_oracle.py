@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import product
-from typing import Iterable, Sequence
+from typing import Sequence
 
 import numpy as np
 from scipy.optimize import linprog
@@ -110,9 +110,21 @@ def solve_fixed_span(
 
     a, b = span
     if not allowed_in_span(intervals[root], span):
-        return {"status": "INFEASIBLE_ROOT_OUTSIDE_SPAN", "value": None, "x": None}
-    if forced_companion is not None and not allowed_in_span(intervals[forced_companion], span):
-        return {"status": "INFEASIBLE_COMPANION_OUTSIDE_SPAN", "value": None, "x": None}
+        return {
+            "status": "PROVEN_INFEASIBLE",
+            "reason": "ROOT_OUTSIDE_DECLARED_SPAN",
+            "value": None,
+            "x": None,
+        }
+    if forced_companion is not None and not allowed_in_span(
+        intervals[forced_companion], span
+    ):
+        return {
+            "status": "PROVEN_INFEASIBLE",
+            "reason": "FORCED_COMPANION_OUTSIDE_DECLARED_SPAN",
+            "value": None,
+            "x": None,
+        }
 
     bounds = [
         (0.0, 1.0) if allowed_in_span(interval, span) else (0.0, 0.0)
@@ -124,7 +136,9 @@ def solve_fixed_span(
 
     # Every segment inside the declared run span must be covered, with depth <= C.
     for k in range(a, b):
-        row = np.asarray([float(covers_segment(interval, k)) for interval in intervals])
+        row = np.asarray(
+            [float(covers_segment(interval, k)) for interval in intervals]
+        )
         A_ub.append(row)
         b_ub.append(float(capacity))
         A_ub.append(-row)
@@ -133,7 +147,9 @@ def solve_fixed_span(
     # Endpoint touching does not connect runs: each internal boundary needs a
     # selected interval that strictly crosses it.
     for k in range(a + 1, b):
-        row = np.asarray([float(bridges_boundary(interval, k)) for interval in intervals])
+        row = np.asarray(
+            [float(bridges_boundary(interval, k)) for interval in intervals]
+        )
         A_ub.append(-row)
         b_ub.append(-1.0)
 
@@ -252,24 +268,26 @@ def brute_fixed_span(
             continue
         if forced_companion is not None and bits[forced_companion] != 1:
             continue
-        selected = [i for i, bit in enumerate(bits) if bit]
-        if any(not allowed_in_span(intervals[i], span) for i in selected):
+        selected = [index for index, bit in enumerate(bits) if bit]
+        if any(not allowed_in_span(intervals[index], span) for index in selected):
             continue
         feasible = True
         for k in range(a, b):
-            occupancy = sum(covers_segment(intervals[i], k) for i in selected)
+            occupancy = sum(covers_segment(intervals[index], k) for index in selected)
             if occupancy < 1 or occupancy > capacity:
                 feasible = False
                 break
         if not feasible:
             continue
         for k in range(a + 1, b):
-            if not any(bridges_boundary(intervals[i], k) for i in selected):
+            if not any(
+                bridges_boundary(intervals[index], k) for index in selected
+            ):
                 feasible = False
                 break
         if not feasible:
             continue
-        value = float(sum(weights[i] for i in selected))
+        value = float(sum(weights[index] for index in selected))
         if best_value is None or (maximize and value > best_value + TOL) or (
             not maximize and value < best_value - TOL
         ):
@@ -283,13 +301,23 @@ def brute_fixed_span(
 def self_test() -> None:
     # Endpoint-touch alone must not connect the two sides.
     touch = [GridInterval(0, 1), GridInterval(1, 2)]
-    assert solve_fixed_span(touch, [1.0, 1.0], 0, (0, 2), 2)["status"] == "PROVEN_INFEASIBLE"
+    assert (
+        solve_fixed_span(touch, [1.0, 1.0], 0, (0, 2), 2)["status"]
+        == "PROVEN_INFEASIBLE"
+    )
 
     # A-B-C chain is connected even though A and C do not overlap.
     chain = [GridInterval(0, 2), GridInterval(1, 3), GridInterval(2, 4)]
     matrix, _labels = augmented_incidence(chain, (0, 4))
     assert consecutive_ones_columns(matrix)
-    lp = solve_fixed_span(chain, [1.0, 1.0, 1.0], 0, (0, 4), 2, forced_companion=1)
+    lp = solve_fixed_span(
+        chain,
+        [1.0, 1.0, 1.0],
+        0,
+        (0, 4),
+        2,
+        forced_companion=1,
+    )
     assert lp["status"] == "CERTIFIED_OPTIMAL_LP_INTEGER"
     assert lp["x"] == [1, 1, 1]
 
@@ -333,7 +361,10 @@ def self_test() -> None:
                                 assert lp["status"] == "PROVEN_INFEASIBLE"
                             else:
                                 assert lp["status"] == "CERTIFIED_OPTIMAL_LP_INTEGER"
-                                assert abs(float(lp["value"]) - float(brute["value"])) <= TOL
+                                assert (
+                                    abs(float(lp["value"]) - float(brute["value"]))
+                                    <= TOL
+                                )
     print("ordered-run interval LP oracle self-test: PASS")
 
 
