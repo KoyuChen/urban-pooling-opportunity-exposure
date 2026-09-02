@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       run_live:
-        description: Run the live NYC fixed-time column-generation audit
+        description: Run the live NYC fixed-time decomposition audits
         required: true
         default: true
         type: boolean
@@ -48,7 +48,7 @@ jobs:
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_ordered_run_column_generation.py' -v
 
-  live:
+  live-lp:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.run_live) }}
     needs: unit
     runs-on: ubuntu-latest
@@ -93,11 +93,67 @@ jobs:
             sleep $((20 * retry))
           done
           exit ${status}
-      - name: Upload aggregate algorithm evidence
+      - name: Upload aggregate LP evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: nyc-hvfhv-column-generation
           path: tmp/nyc-hvfhv-column-generation
+          if-no-files-found: warn
+          retention-days: 90
+
+  live-integer:
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.run_live) }}
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Certify the exact integer masters by branch-and-price
+        shell: bash
+        run: |
+          output="tmp/nyc-hvfhv-branch-and-price"
+          mkdir -p "${output}"
+          status=1
+          for retry in 1 2; do
+            echo "Live branch-and-price audit attempt ${retry}"
+            rm -f "${output}/report.json" "${output}/REPORT.md" \
+              "${output}/branch_and_price_cells.csv"
+            set +e
+            python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_smoke.py \
+              --output-dir "${output}" \
+              --scan-start 2023-01-03T17:00:00 \
+              --scan-end 2023-01-03T21:00:00 \
+              --existential-core 4 \
+              --existential-buffers 12 \
+              --overlap-epsilon-seconds 1.0 \
+              --bp-max-nodes 5000 \
+              --bp-time-limit-seconds 900 \
+              2>&1 | tee "${output}/run-attempt-${retry}.log"
+            status=${PIPESTATUS[0]}
+            set -e
+            if [[ ${status} -eq 0 ]]; then
+              break
+            fi
+            sleep $((20 * retry))
+          done
+          exit ${status}
+      - name: Upload aggregate integer evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-hvfhv-branch-and-price
+          path: tmp/nyc-hvfhv-branch-and-price
           if-no-files-found: warn
           retention-days: 90
