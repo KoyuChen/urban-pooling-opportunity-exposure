@@ -1,0 +1,67 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Many event streams are \emph{row-complete but relation-incomplete}: the public
+release preserves one row per transaction, visit, referral, or service action,
+yet suppresses the key that says which rows belong to the same underlying
+episode.  Examples include patients moving through a referral episode,
+household members observed through separate visits, maintenance records from a
+shared service run, and travelers sharing a vehicle trajectory.  This is not
+ordinary missing-data uncertainty.  Every released row may be accurate, while
+the relational object needed for an aggregate query is absent.
+
+A standard pipeline first reconstructs one linkage or clustering and then treats
+it as observed.  That workflow can produce a precise answer whose precision is
+entirely an artifact of the chosen reconstruction.  Our goal is different:
+\emph{discover only the aggregate conclusions that survive every latent event
+structure consistent with the released information}.  Given public rows,
+possibly set-valued timestamps, and a declared simultaneous-capacity bound, we
+optimize a downstream aggregate over all admissible ordered-event
+decompositions.  The resulting frontier separates conclusions forced by the
+release from conclusions that depend on an arbitrary point reconstruction.
+
+The temporal structure is richer than pair linkage or clique clustering.  A
+valid event can contain an $A$--$B$--$C$ chain: $A$ overlaps $B$, $B$ overlaps
+$C$, and $A$ never overlaps $C$.  Event size may therefore exceed instantaneous
+capacity.  What matters is positive-overlap connectivity across time together
+with an occupancy bound at every instant.  This distinction arises naturally
+in vehicle runs, referral chains, rotating service crews, and other episodes
+whose membership changes sequentially.
+
+We introduce \methodname, a release-aware partial-identification and
+optimization framework for this setting.  It has three layers.  First, a
+feasible-world model maps the public release into all ordered event partitions
+that satisfy timestamp support, connectivity, capacity, and core--buffer
+conditions.  Second, an interval formulation exploits consecutive-ones
+structure to solve the fixed-root, fixed-span run-pricing problem exactly by
+linear programming.  Third, Dantzig--Wolfe decomposition and branch-and-price
+combine those run columns into globally feasible event partitions and certify
+integer aggregate endpoints.
+
+Our contributions are as follows.
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=2pt]
+    \item \textbf{Certified aggregate discovery.}  We define sharp,
+    assumption-indexed frontiers for row-complete, relation-incomplete event
+    streams.  Expanding timestamp supports or relaxing capacity nests the
+    feasible worlds and weakly widens every fixed-estimand frontier.
+    \item \textbf{Structure-exploiting exact algorithms.}  For one rooted run,
+    interval connectivity and occupancy yield an integral consecutive-ones LP
+    pricing oracle.  The cross-run master is not generally integral, so we add
+    exact buffer-usage and Ryan--Foster branching while retaining the same
+    structural pricing oracle at every node.
+    \item \textbf{Truth-based and public-data evidence.}  Across 3,000
+    controlled instances, complete candidate universes cover the true
+    aggregate in every case.  A feasible temporal point reconstruction makes a
+    wrong threshold decision in roughly $17$--$19\%$ of instances; every such
+    error is marked ambiguous by the certified frontier.  Public Chicago and
+    New York City releases then illustrate three distinct uncertainty sources:
+    latent linkage, timestamp support, and simultaneous capacity.
+\end{enumerate}
+
+Ride pooling is our audit instance, not the scope of the method.  The public
+city data contain no partner or run ground truth, so we do not claim to recover
+co-riders, vehicle runs, realized capacity, or a population effect.  The city
+experiments instead ask which aggregate statements are invariant over the
+explicitly declared candidate universe and release semantics.  Controlled
+truth experiments separately evaluate coverage, point-reconstruction error,
+and sensitivity to candidate recall.
