@@ -1,8 +1,12 @@
 name: nyc-hvfhv-branch-price-scale
 
+# Push-path filtering keeps this expensive lattice from restarting on ordinary
+# paper edits. Manual dispatch remains available for an explicit rerun.
 on:
   workflow_dispatch:
-  pull_request:
+  push:
+    branches:
+      - real-data-smoke-20260901
     paths:
       - code/ai_pilot/data_pipeline/production_audit/run_nyc_branch_price_scale.py
       - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_branch_price_scale.py
@@ -10,7 +14,7 @@ on:
       - code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py
       - code/ai_pilot/data_pipeline/production_audit/ordered_run_column_generation.py
       - code/ai_pilot/data_pipeline/production_audit/ordered_run_interval_oracle.py
-      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv*.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_scale.py
       - .github/workflows/nyc-hvfhv-branch-price-scale.yml
 
 concurrency:
@@ -33,7 +37,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
       - name: Test scaling driver and aggregator
         run: |
           python code/ai_pilot/data_pipeline/production_audit/run_nyc_branch_price_scale.py --self-test \
@@ -51,18 +55,10 @@ jobs:
       max-parallel: 2
       matrix:
         include:
-          - label: jan_weekday_pm_n4
-            core: 4
-            limit: 120
-          - label: jan_weekday_pm_n8
-            core: 8
-            limit: 300
-          - label: jan_weekday_pm_n12
-            core: 12
-            limit: 600
-          - label: jan_weekday_pm_n16
-            core: 16
-            limit: 900
+          - {label: jan_weekday_pm_n4, core: 4, limit: 60}
+          - {label: jan_weekday_pm_n8, core: 8, limit: 180}
+          - {label: jan_weekday_pm_n12, core: 12, limit: 360}
+          - {label: jan_weekday_pm_n16, core: 16, limit: 600}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -77,7 +73,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
       - name: Run exact integer scaling cell
         shell: bash
         run: |
@@ -101,15 +97,13 @@ jobs:
           from datetime import datetime, timezone
           from pathlib import Path
           path = Path("${output}/driver_manifest.json")
-          if path.exists():
-              payload = json.loads(path.read_text())
-          else:
-              payload = {
-                  "report_version": "nyc-branch-price-scale-driver/v1",
-                  "window_label": "${{ matrix.label }}",
-                  "ordered_core": ${{ matrix.core }},
-                  "solver_time_limit": ${{ matrix.limit }}
-              }
+          payload = json.loads(path.read_text()) if path.exists() else {
+              "report_version": "nyc-branch-price-scale-driver/v2-single-target",
+              "window_label": "${{ matrix.label }}",
+              "ordered_core": ${{ matrix.core }},
+              "ordered_buffers": $((3 * ${{ matrix.core }})),
+              "solver_time_limit_per_capacity": ${{ matrix.limit }}
+          }
           payload.update({
               "status": "WORKFLOW_TIMEOUT_UNRESOLVED",
               "process_exit_status": ${status},
@@ -150,7 +144,7 @@ jobs:
           python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_branch_price_scale.py \
             --input-dir tmp/nyc-branch-price-scale-downloads \
             --output-dir tmp/nyc-branch-price-scale-summary \
-            --expected-cell-count 4
+            --expected-driver-count 4
       - name: Upload scaling summary
         if: always()
         uses: actions/upload-artifact@v4
