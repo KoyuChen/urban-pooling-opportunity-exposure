@@ -1,0 +1,54 @@
+\section{Proof of Proposition~\ref{prop:nesting}}
+Take $F=(t,\Pi)\in\F(\T,C,q)$. Since each $t_i\in\T_i\subseteq\T'_i$, the same
+completion is allowed by $\T'$. Every run in $\Pi$ has the same positive-overlap
+graph under the unchanged completion, and its maximum occupancy is at most
+$C\le C'$. Core and buffer incidence constraints and the selected-buffer count
+$q$ are unchanged. Hence $F\in\F(\T',C',q)$. Set inclusion immediately gives
+nesting of reachable counts and maxima. Minimizing a fixed functional over a
+superset can only weakly lower its optimum, and maximizing can only weakly raise
+it.
+
+\section{Fixed-Span Connectivity Detail}
+Let $S$ be a selected interval family with union span $[a,b)$. If the
+positive-overlap graph is connected, the union is connected and therefore
+covers every elementary segment. At any internal endpoint boundary, a path
+from an interval active immediately to its left to one active immediately to
+its right must contain an interval crossing the boundary strictly; endpoint
+touching alone is not a positive-overlap edge.
+
+Conversely, suppose every elementary segment is covered and every internal
+boundary is strictly crossed. Moving from left to right, the crossing interval
+at each boundary overlaps intervals covering the adjacent segments with
+positive length. Induction joins the segment-covering intervals into one
+positive-overlap component. Any selected interval lies inside the covered span
+and overlaps the component on a segment it covers, so the full selected family
+is connected.
+
+Interleaving segment and boundary rows makes each interval column consecutive.
+The lower-coverage, upper-capacity, and bridge constraints are signed copies of
+this interval matrix; root and companion fixes are identity rows. The resulting
+matrix is totally unimodular with integral right-hand side, proving
+Theorem~\ref{thm:oracle}.
+
+\section{Master Nonintegrality Witness}
+At capacity two, use four cores
+$c_0=[1,2)$, $c_1=[4,7)$, $c_2=[0,2)$, and $c_3=[1,2)$, and five buffers
+$b_0=[0,7)$, $b_1=[5,6)$, $b_2=[5,7)$, $b_3=[1,2)$, and $b_4=[2,6)$.
+Complete run-column enumeration has LP value four. One fractional solution uses
+weights $1/2,1,1/2,1/2,1/2,1/2$ on
+\[
+\{c_0,c_2\},\ \{c_1,b_1\},\ \{c_2,b_3\},\ \{c_3,b_3\},\
+\{c_0,b_0,b_4\},\ \{c_3,b_0,b_4\}.
+\]
+Every core has total coverage one and each buffer has use at most one. Complete
+integer enumeration gives value three, attained for example by
+$\{c_0,c_2\}$, $\{c_3,b_0,b_1\}$, and $\{c_1,b_4\}$.
+
+\section{Artifact Claim Boundary}
+The repository contains deterministic small-instance oracles, exact fixed-time
+frontiers, numerical existential-time programs, solver-status validators,
+public-data snapshot and count contracts, and aggregate evidence manifests.
+Supported claims are limited to the declared candidate universes and models.
+No artifact output should be interpreted as recovered partner identity, a
+complete private run, an estimate of realized capacity, or a statement about a
+city's proprietary production system.
