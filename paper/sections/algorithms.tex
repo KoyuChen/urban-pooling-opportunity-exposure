@@ -1,0 +1,87 @@
+\section{Structure-Exploiting Optimization}
+\label{sec:algorithm}
+
+\subsection{The declared $K=2$ special case}
+If every run must contain exactly two rows, the world reduces to a core-cover
+matching: every core has degree one, every buffer has degree at most one, and
+buffer--buffer edges are excluded. Pair-additive queries become weighted
+matching objectives. This is the Chicago benchmark and a useful lower-complexity
+special case, but it cannot represent sequential high-capacity runs such as
+Figure~\ref{fig:chain}.
+
+\subsection{A compact connectivity characterization}
+Fix exact intervals, a root row $r$, and a candidate span $[a,b)$. Let the
+sorted distinct endpoints inside the span induce elementary open segments.
+For a selected set containing $r$, positive-overlap connectivity with union
+span $[a,b)$ is equivalent to two conditions:
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=2pt]
+\item every elementary segment is covered by at least one selected interval;
+\item every internal endpoint boundary is strictly crossed by at least one
+selected interval.
+\end{enumerate}
+The second condition rules out components that merely touch at an endpoint.
+Capacity adds an upper bound of $C$ to every segment-coverage row.
+
+Interleave segment and boundary rows in temporal order. Each interval column
+then contains ones in one consecutive block. This gives the key pricing result.
+
+\begin{theorem}[Integral rooted single-run oracle]
+\label{thm:oracle}
+For fixed exact intervals, root $r$, span $[a,b)$, capacity $C$, and additive
+row weights, the linear relaxation of the segment-coverage, boundary-bridge,
+capacity, root, and forced-companion formulation has an integral optimum.
+Hence a minimum- or maximum-weight rooted run can be found by linear programming.
+Enumerating observed endpoint spans and, only when needed, one forced companion
+gives a polynomial-time exact single-run oracle.
+\end{theorem}
+
+\paragraph{Proof sketch.}
+The interleaved segment/boundary incidence matrix has the consecutive-ones
+property by columns. Signed duplicate rows for lower and upper coverage bounds,
+plus identity rows fixing the root and companion, preserve total unimodularity.
+The right-hand side is integral, so every extreme point is integral. Candidate
+span endpoints need only be chosen from observed interval endpoints. Full
+details and exhaustive small-library comparisons are in the artifact.
+
+\subsection{Column generation for the full LP master}
+Let $\R_C$ be all feasible exact-time run columns. For run $R$, let
+$b_R=|R\cap B_0|$ and introduce $\lambda_R\ge0$. The full LP relaxation for
+maximum reachable buffer support is
+\begin{align}
+\max_{\lambda}\quad & \sum_{R\in\R_C}b_R\lambda_R \label{eq:masterobj}\\
+\text{s.t.}\quad &\sum_{R\ni i}\lambda_R=1 && i\in C_0,\label{eq:coremaster}\\
+&\sum_{R\ni j}\lambda_R\le1 && j\in B_0.\label{eq:buffermaster}
+\end{align}
+Core equalities and buffer inequalities couple otherwise independent run
+columns. Given master duals, reduced cost is additive across selected rows, so
+Theorem~\ref{thm:oracle} is an exact pricing oracle. A phase-one artificial-core
+master establishes feasibility. When pricing finds no improving run, the
+restricted master equals the full LP optimum.
+
+\begin{proposition}[Full-master LP certificate]
+\label{prop:cg}
+If every rooted pricing call is solved exactly and the terminal minimum reduced
+cost is nonnegative, the current restricted-master value is the optimum of
+Eqs.~\eqref{eq:masterobj}--\eqref{eq:buffermaster} over all feasible run
+columns.
+\end{proposition}
+
+This certificate does not solve the full integer decomposition. The artifact
+contains a capacity-two instance with four cores and five buffers for which
+\[
+ \operatorname{OPT}_{LP}=4>3=\operatorname{OPT}_{IP}.
+\]
+Thus integral single-run pricing does not imply an integral master. A complete
+integer solver requires branch-and-price, an alternative integral formulation,
+or a separate complexity/parameterized result.
+
+\subsection{Existential timestamp completion}
+For set-valued timestamps, a world is feasible when there \emph{exists} one
+exact interval choice inside every support that satisfies connectivity and
+capacity. Replacing each support by its entire outer envelope is neither an
+inner nor an outer model for ordered runs: it can add bridges while also
+creating artificial concurrency. Our continuous mixed-integer model therefore
+chooses latent starts and ends jointly with run membership. Each requested
+support count receives one of four statuses: certified feasible witness, proven
+infeasible, unresolved without incumbent, or unresolved invalid incumbent.
+Only the first two are treated as resolved.
