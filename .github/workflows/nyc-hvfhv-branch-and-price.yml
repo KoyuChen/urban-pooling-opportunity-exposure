@@ -1,0 +1,71 @@
+name: nyc-hvfhv-branch-and-price
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_smoke.py
+      - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_RUN_BRANCH_AND_PRICE.md
+      - paper/main.tex
+      - paper/sections/**
+      - .github/workflows/nyc-hvfhv-branch-and-price.yml
+
+concurrency:
+  group: nyc-hvfhv-branch-and-price-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned optimization stack
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Run exact branch-and-price battery
+        working-directory: code/ai_pilot/data_pipeline/production_audit
+        run: python ordered_run_branch_and_price.py
+
+  live-small:
+    if: ${{ hashFiles('code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_smoke.py') != '' }}
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned optimization stack
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Run NYC exact integer decomposition audit
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_smoke.py \
+            --output-dir tmp/nyc-hvfhv-branch-and-price \
+            --existential-core 4 \
+            --existential-buffers 12 \
+            --overlap-epsilon-seconds 1.0
+      - name: Upload branch-and-price evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-hvfhv-branch-and-price
+          path: tmp/nyc-hvfhv-branch-and-price
+          if-no-files-found: warn
+          retention-days: 90
