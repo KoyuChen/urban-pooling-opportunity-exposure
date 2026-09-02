@@ -41,7 +41,7 @@ jobs:
         run: |
           python code/ai_pilot/data_pipeline/production_audit/ordered_run_existential_time.py
           python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time.py --self-test
-          python -m py_compile code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time_hybrid.py
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time_hybrid.py --self-test
 
   certified:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.run_live) }}
