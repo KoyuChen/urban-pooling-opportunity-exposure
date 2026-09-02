@@ -18,6 +18,7 @@ on:
       - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_RUN_BRANCH_AND_PRICE.md
       - code/ai_pilot/data_pipeline/production_audit/tests/test_ordered_run_column_generation.py
       - code/ai_pilot/benchmarks/relation_incomplete_event_benchmark.py
+      - code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py
       - .github/workflows/nyc-hvfhv-column-generation.yml
 
 concurrency:
@@ -45,7 +46,7 @@ jobs:
         run: |
           python code/ai_pilot/data_pipeline/production_audit/ordered_run_column_generation.py
           python code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py
-          python code/ai_pilot/benchmarks/relation_incomplete_event_benchmark.py --self-test
+          python code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py --self-test
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_ordered_run_column_generation.py' -v
@@ -63,16 +64,16 @@ jobs:
           python-version: "3.12"
       - name: Run point-reconstruction and candidate-recall benchmark
         run: |
-          python code/ai_pilot/benchmarks/relation_incomplete_event_benchmark.py \
+          python code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py \
             --instances-per-capacity 250 \
             --base-seed 20260902 \
-            --output-dir tmp/relation-incomplete-event-benchmark
+            --output-dir tmp/event-frontier-truth-benchmark
       - name: Upload truth-based benchmark evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: relation-incomplete-event-benchmark
-          path: tmp/relation-incomplete-event-benchmark
+          name: event-frontier-truth-benchmark
+          path: tmp/event-frontier-truth-benchmark
           if-no-files-found: warn
           retention-days: 90
 
