@@ -18,6 +18,8 @@ import live_nyc_hvfhv_existential_time as existential
 import live_nyc_hvfhv_ordered_run_smoke as base
 import ordered_run_fixed_time_master as fixed_master
 
+RESOLVED_INFEASIBLE_STATUSES = {"PROVEN_INFEASIBLE_EXACT_ENUMERATION"}
+
 
 def _fixed_rows(reduced, origin):
     output = []
@@ -35,6 +37,51 @@ def _fixed_rows(reduced, origin):
             )
         )
     return output
+
+
+def resolution_audit(cells_by_time: dict[str, list[dict[str, Any]]]) -> dict[str, Any]:
+    """Separate certified feasibility, proven infeasibility, and unresolved cells."""
+
+    proven_infeasible: list[dict[str, Any]] = []
+    unresolved: list[dict[str, Any]] = []
+    certified_feasible = 0
+    for time_model, cells in cells_by_time.items():
+        for cell in cells:
+            status = cell["status"]
+            descriptor = {
+                "time_model": time_model,
+                "capacity": cell["capacity"],
+                "status": status,
+                "outcome_statuses": [
+                    row["status"] for row in cell.get("outcomes", [])
+                ],
+            }
+            if status in RESOLVED_INFEASIBLE_STATUSES:
+                proven_infeasible.append(descriptor)
+                continue
+            if status != "CERTIFIED_COMMON_SUPPORT_FEASIBILITY":
+                unresolved.append(descriptor)
+                continue
+            if any(
+                row["status"] != "CERTIFIED_OPTIMAL_PAIR"
+                for row in cell.get("outcomes", [])
+            ):
+                unresolved.append(descriptor)
+                continue
+            certified_feasible += 1
+    return {
+        "status": "PASS" if not unresolved else "FAIL",
+        "certified_feasible_cell_count": certified_feasible,
+        "proven_infeasible_cell_count": len(proven_infeasible),
+        "unresolved_cell_count": len(unresolved),
+        "proven_infeasible_cells": proven_infeasible,
+        "unresolved_cells": unresolved,
+        "principle": (
+            "resolved evidence includes certified feasible cells and exact "
+            "enumeration proofs of infeasibility; only unresolved cells fail "
+            "the strict Gate"
+        ),
+    }
 
 
 def run(args) -> dict[str, Any]:
@@ -136,33 +183,19 @@ def run(args) -> dict[str, Any]:
             f"existential time nestedness failed: {time_audit}"
         )
 
-    if args.require_all_certified:
-        unresolved = [
-            {
-                "time_model": time_model,
-                "capacity": cell["capacity"],
-                "status": cell["status"],
-                "outcome_statuses": [
-                    row["status"] for row in cell.get("outcomes", [])
-                ],
-            }
-            for time_model, cells in cells_by_time.items()
-            for cell in cells
-            if cell["status"] != "CERTIFIED_COMMON_SUPPORT_FEASIBILITY"
-            or any(
-                row["status"] != "CERTIFIED_OPTIMAL_PAIR"
-                for row in cell.get("outcomes", [])
+    cell_resolution = resolution_audit(cells_by_time)
+    if args.require_all_certified and cell_resolution["unresolved_cells"]:
+        raise base.LiveDataError(
+            "existential-time Gate contains unresolved cells: "
+            + json.dumps(
+                cell_resolution["unresolved_cells"][:8],
+                sort_keys=True,
             )
-        ]
-        if unresolved:
-            raise base.LiveDataError(
-                "not every existential-time cell was certified: "
-                + json.dumps(unresolved[:8], sort_keys=True)
-            )
+        )
 
     return {
         "report_version": (
-            "nyc-hvfhv-ordered-existential-time/v3-exact-column-master"
+            "nyc-hvfhv-ordered-existential-time/v4-resolved-infeasibility"
         ),
         "generated_at_utc": datetime.now(timezone.utc)
         .replace(microsecond=0)
@@ -208,13 +241,15 @@ def run(args) -> dict[str, Any]:
         "cells_by_time": cells_by_time,
         "capacity_audits": capacity_audits,
         "time_nesting_audit": time_audit,
+        "cell_resolution_audit": cell_resolution,
         "estimand": (
             "mean public miles or trip duration among one common number of "
             "selected buffer rows across exact and existential coarse-time worlds"
         ),
         "claim_boundary": {
             "supported": (
-                "small-cohort feasible-world bounds under a declared artificial "
+                "small-cohort feasible-world bounds and exact support-"
+                "infeasibility statements under a declared artificial "
                 "independent rounding-support model"
             ),
             "not_supported": (
@@ -237,6 +272,37 @@ def main() -> int:
     if args.self_test:
         fixed_master.self_test()
         existential.self_test()
+        synthetic = {
+            "exact_singleton": [
+                {
+                    "capacity": 2,
+                    "status": "PROVEN_INFEASIBLE_EXACT_ENUMERATION",
+                    "outcomes": [],
+                },
+                {
+                    "capacity": 3,
+                    "status": "CERTIFIED_COMMON_SUPPORT_FEASIBILITY",
+                    "outcomes": [
+                        {"status": "CERTIFIED_OPTIMAL_PAIR"},
+                        {"status": "CERTIFIED_OPTIMAL_PAIR"},
+                    ],
+                },
+            ],
+            "rounded_15m_existential": [
+                {
+                    "capacity": 2,
+                    "status": "CERTIFIED_COMMON_SUPPORT_FEASIBILITY",
+                    "outcomes": [
+                        {"status": "CERTIFIED_OPTIMAL_PAIR"},
+                        {"status": "CERTIFIED_OPTIMAL_PAIR"},
+                    ],
+                }
+            ],
+        }
+        audit = resolution_audit(synthetic)
+        assert audit["status"] == "PASS", audit
+        assert audit["proven_infeasible_cell_count"] == 1
+        print("hybrid resolved-infeasibility audit self-test: PASS")
         return 0
     existential.validate(args)
     args.output_dir.mkdir(parents=True, exist_ok=True)
