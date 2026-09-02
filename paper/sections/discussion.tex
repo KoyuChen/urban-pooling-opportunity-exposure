@@ -1,0 +1,59 @@
+\section{Discussion}
+
+\paragraph{What is identified.}
+The method identifies sharp or certified endpoints only relative to the
+declared candidate universe, timestamp supports, connectivity rule, capacity,
+and query. It does not identify a unique partition. The strongest empirical
+statement is comparative: expanding time supports or capacity cannot shrink a
+fixed-support feasible set, and the audits quantify how much selected support
+and outcome ranges move under those declared relaxations.
+
+\paragraph{Algorithmic boundary.}
+Theorem~\ref{thm:oracle} makes the single-run pricing problem tractable, and
+Proposition~\ref{prop:cg} certifies the full LP relaxation. The exact integer
+master remains open. Branch-and-price is the natural next step, but branching
+must preserve a solvable pricing problem. A complementary goal is a hardness or
+fixed-parameter boundary in capacity, temporal width, or core count.
+
+\paragraph{Candidate support and validation.}
+A true run omitted before optimization cannot be recovered by endpoint
+certification. Future work should pair broad public support with ground-truth
+or semi-synthetic recall tests, then scale the predeclared panel to many more
+cohorts. Point-reconstruction baselines remain useful only if evaluated by
+whether their downstream answers lie inside the certified frontier and how
+often they fail under known truth.
+
+\section{Limitations and Ethical Considerations}
+
+Neither city release exposes a public vehicle-run key. We therefore do not
+claim actual co-riders, partner recall outside the candidate universe,
+production matching logic, realized pool size, or vehicle capacity. The
+15-minute NYC supports are an artificial information-loss experiment, not an
+assertion about the TLC observation operator. The six-window panel is too small
+and purposive for a citywide prevalence estimate or causal effect. A true run
+omitted from the declared candidate universe cannot be recovered by endpoint
+certification, and numerical optimality remains conditional on the recorded
+solver status and tolerances.
+
+The unit is a released transaction, not a stable person. Public zones and
+neighborhood attributes describe context, not individual socioeconomic status
+or preferences. Publishing extremal partner assignments could create
+reidentification risk, so the artifact suppresses row identifiers and latent
+world witnesses and reports only aggregate results and audit metadata.
+
+\section{Generative AI Usage}
+Generative AI assisted drafting, code review, counterexample search, and
+editing. All mathematical claims, empirical outputs, citations, and artifact
+states remain author-verified; generated text is not treated as city evidence.
+
+\section{Conclusion}
+Public rows can be individually rich yet relationally incomplete. We formulate
+hidden shared events as ordered, bounded-occupancy interval runs with exact or
+set-valued timestamps and propagate their ambiguity to aggregate queries. The
+resulting geometry separates timestamp support, capacity, and candidate
+support; the algorithm separates an integral single-run pricing problem from a
+nonintegral cross-run master. Chicago and NYC audits show that second-level
+time does not identify shared-run membership and that timestamp uncertainty can
+produce capacity-equivalent support expansion whose magnitude varies by
+regime. The next decisive step is an exact integer branch-and-price method and
+a larger predeclared validation panel, not a more confident point linkage.
