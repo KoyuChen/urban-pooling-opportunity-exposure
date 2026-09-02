@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
       - name: Test panel endpoint bounds and aggregation
         run: |
           python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_panel_window.py --self-test
@@ -43,107 +43,35 @@ jobs:
     needs: unit
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 4
       matrix:
         include:
-          - label: jan_weekday_am_n8
-            start: 2023-01-03T06:00:00
-            end: 2023-01-03T10:00:00
-            core: 8
-          - label: jan_weekday_midday_n8
-            start: 2023-01-03T11:00:00
-            end: 2023-01-03T15:00:00
-            core: 8
-          - label: jan_weekday_pm_n8
-            start: 2023-01-03T17:00:00
-            end: 2023-01-03T21:00:00
-            core: 8
-          - label: jan_weekend_am_n8
-            start: 2023-01-07T09:00:00
-            end: 2023-01-07T13:00:00
-            core: 8
-          - label: jan_weekend_pm_n8
-            start: 2023-01-07T18:00:00
-            end: 2023-01-07T22:00:00
-            core: 8
-          - label: apr_weekday_am_n8
-            start: 2023-04-04T06:00:00
-            end: 2023-04-04T10:00:00
-            core: 8
-          - label: apr_weekday_midday_n8
-            start: 2023-04-04T11:00:00
-            end: 2023-04-04T15:00:00
-            core: 8
-          - label: apr_weekday_pm_n8
-            start: 2023-04-04T17:00:00
-            end: 2023-04-04T21:00:00
-            core: 8
-          - label: apr_weekend_am_n8
-            start: 2023-04-08T09:00:00
-            end: 2023-04-08T13:00:00
-            core: 8
-          - label: apr_weekend_pm_n8
-            start: 2023-04-08T18:00:00
-            end: 2023-04-08T22:00:00
-            core: 8
-          - label: jul_weekday_am_n8
-            start: 2023-07-05T06:00:00
-            end: 2023-07-05T10:00:00
-            core: 8
-          - label: jul_weekday_midday_n8
-            start: 2023-07-05T11:00:00
-            end: 2023-07-05T15:00:00
-            core: 8
-          - label: jul_weekday_pm_n8
-            start: 2023-07-05T17:00:00
-            end: 2023-07-05T21:00:00
-            core: 8
-          - label: jul_weekend_am_n8
-            start: 2023-07-08T09:00:00
-            end: 2023-07-08T13:00:00
-            core: 8
-          - label: jul_weekend_pm_n8
-            start: 2023-07-08T18:00:00
-            end: 2023-07-08T22:00:00
-            core: 8
-          - label: oct_weekday_am_n8
-            start: 2023-10-03T06:00:00
-            end: 2023-10-03T10:00:00
-            core: 8
-          - label: oct_weekday_midday_n8
-            start: 2023-10-03T11:00:00
-            end: 2023-10-03T15:00:00
-            core: 8
-          - label: oct_weekday_pm_n8
-            start: 2023-10-03T17:00:00
-            end: 2023-10-03T21:00:00
-            core: 8
-          - label: oct_weekend_am_n8
-            start: 2023-10-07T09:00:00
-            end: 2023-10-07T13:00:00
-            core: 8
-          - label: oct_weekend_pm_n8
-            start: 2023-10-07T18:00:00
-            end: 2023-10-07T22:00:00
-            core: 8
-          - label: jan_weekday_pm_n16
-            start: 2023-01-03T17:00:00
-            end: 2023-01-03T21:00:00
-            core: 16
-          - label: apr_weekday_pm_n16
-            start: 2023-04-04T17:00:00
-            end: 2023-04-04T21:00:00
-            core: 16
-          - label: jul_weekday_pm_n16
-            start: 2023-07-05T17:00:00
-            end: 2023-07-05T21:00:00
-            core: 16
-          - label: oct_weekday_pm_n16
-            start: 2023-10-03T17:00:00
-            end: 2023-10-03T21:00:00
-            core: 16
+          - {label: jan_weekday_am_n8, start: 2023-01-03T06:00:00, end: 2023-01-03T10:00:00, core: 8}
+          - {label: jan_weekday_midday_n8, start: 2023-01-03T11:00:00, end: 2023-01-03T15:00:00, core: 8}
+          - {label: jan_weekday_pm_n8, start: 2023-01-03T17:00:00, end: 2023-01-03T21:00:00, core: 8}
+          - {label: jan_weekend_am_n8, start: 2023-01-07T09:00:00, end: 2023-01-07T13:00:00, core: 8}
+          - {label: jan_weekend_pm_n8, start: 2023-01-07T18:00:00, end: 2023-01-07T22:00:00, core: 8}
+          - {label: apr_weekday_am_n8, start: 2023-04-04T06:00:00, end: 2023-04-04T10:00:00, core: 8}
+          - {label: apr_weekday_midday_n8, start: 2023-04-04T11:00:00, end: 2023-04-04T15:00:00, core: 8}
+          - {label: apr_weekday_pm_n8, start: 2023-04-04T17:00:00, end: 2023-04-04T21:00:00, core: 8}
+          - {label: apr_weekend_am_n8, start: 2023-04-08T09:00:00, end: 2023-04-08T13:00:00, core: 8}
+          - {label: apr_weekend_pm_n8, start: 2023-04-08T18:00:00, end: 2023-04-08T22:00:00, core: 8}
+          - {label: jul_weekday_am_n8, start: 2023-07-05T06:00:00, end: 2023-07-05T10:00:00, core: 8}
+          - {label: jul_weekday_midday_n8, start: 2023-07-05T11:00:00, end: 2023-07-05T15:00:00, core: 8}
+          - {label: jul_weekday_pm_n8, start: 2023-07-05T17:00:00, end: 2023-07-05T21:00:00, core: 8}
+          - {label: jul_weekend_am_n8, start: 2023-07-08T09:00:00, end: 2023-07-08T13:00:00, core: 8}
+          - {label: jul_weekend_pm_n8, start: 2023-07-08T18:00:00, end: 2023-07-08T22:00:00, core: 8}
+          - {label: oct_weekday_am_n8, start: 2023-10-03T06:00:00, end: 2023-10-03T10:00:00, core: 8}
+          - {label: oct_weekday_midday_n8, start: 2023-10-03T11:00:00, end: 2023-10-03T15:00:00, core: 8}
+          - {label: oct_weekday_pm_n8, start: 2023-10-03T17:00:00, end: 2023-10-03T21:00:00, core: 8}
+          - {label: oct_weekend_am_n8, start: 2023-10-07T09:00:00, end: 2023-10-07T13:00:00, core: 8}
+          - {label: oct_weekend_pm_n8, start: 2023-10-07T18:00:00, end: 2023-10-07T22:00:00, core: 8}
+          - {label: jan_weekday_pm_n16, start: 2023-01-03T17:00:00, end: 2023-01-03T21:00:00, core: 16}
+          - {label: apr_weekday_pm_n16, start: 2023-04-04T17:00:00, end: 2023-04-04T21:00:00, core: 16}
+          - {label: jul_weekday_pm_n16, start: 2023-07-05T17:00:00, end: 2023-07-05T21:00:00, core: 16}
+          - {label: oct_weekday_pm_n16, start: 2023-10-03T17:00:00, end: 2023-10-03T21:00:00, core: 16}
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 65
     env:
       PYTHONHASHSEED: "0"
       OPENBLAS_NUM_THREADS: "1"
@@ -156,38 +84,46 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
       - name: Solve predeclared exact-second run-count cell
         shell: bash
         run: |
           output="tmp/nyc-ordered-panel/${{ matrix.label }}"
           mkdir -p "${output}"
+          if [[ "${{ matrix.core }}" -le 8 ]]; then
+            solver_limit=60
+            process_limit=16m
+          else
+            solver_limit=120
+            process_limit=31m
+          fi
           status=1
-          for retry in 1 2 3; do
+          for retry in 1 2; do
             echo "Panel cell ${{ matrix.label }}, attempt ${retry}"
             rm -f "${output}/report.json" "${output}/REPORT.md" \
               "${output}/ordered_run_panel_cells.csv"
             set +e
-            python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_panel_window.py \
-              --output-dir "${output}" \
-              --window-label "${{ matrix.label }}" \
-              --scan-start "${{ matrix.start }}" \
-              --scan-end "${{ matrix.end }}" \
-              --scan-window-hours 1 \
-              --min-core-rows "${{ matrix.core }}" \
-              --max-core-rows 40 \
-              --max-scan-rows 5000 \
-              --max-candidate-rows 2500 \
-              --ordered-core "${{ matrix.core }}" \
-              --solver-time-limit 90 \
-              --time-models exact_second \
-              2>&1 | tee "${output}/run-attempt-${retry}.log"
+            timeout --signal=TERM --kill-after=30s "${process_limit}" \
+              python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_panel_window.py \
+                --output-dir "${output}" \
+                --window-label "${{ matrix.label }}" \
+                --scan-start "${{ matrix.start }}" \
+                --scan-end "${{ matrix.end }}" \
+                --scan-window-hours 1 \
+                --min-core-rows "${{ matrix.core }}" \
+                --max-core-rows 40 \
+                --max-scan-rows 5000 \
+                --max-candidate-rows 2500 \
+                --ordered-core "${{ matrix.core }}" \
+                --solver-time-limit "${solver_limit}" \
+                --time-models exact_second \
+                2>&1 | tee "${output}/run-attempt-${retry}.log"
             status=${PIPESTATUS[0]}
             set -e
             if [[ ${status} -eq 0 ]]; then
               break
             fi
-            sleep $((20 * retry))
+            sleep $((15 * retry))
           done
           exit ${status}
       - name: Upload panel cell

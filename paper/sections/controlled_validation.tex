@@ -1,0 +1,84 @@
+\section{Controlled-Truth Validation}
+\label{sec:truth}
+
+The public city releases do not expose event identifiers, so they cannot measure
+relation-recovery accuracy. We therefore separate method validation from public
+auditing through a controlled generator with known ordered-event membership.
+Each instance contains three required cores, eight candidate buffers, public
+time intervals, and a public scalar outcome. Every core has a direct member and
+one or two events receive a sequential member that can connect through the
+direct member without overlapping the core. Remaining buffers are temporally
+plausible distractors. Membership labels generate and evaluate the instance but
+are never supplied to \methodname{} or the point rules.
+
+We run 1,000 predeclared seeds at each $C\in\{2,3,4\}$. The composition task is
+conditioned on the true selected-buffer count $q$, while hiding membership, to
+isolate relation ambiguity from support-count error. The point comparator
+chooses, among feasible worlds at $q$, the world maximizing an outcome-blind
+temporal-proximity score. Three fixed thresholds, $0.25$, $0.50$, and $0.75$,
+convert the mean selected-buffer outcome into a downstream decision. A decision
+is certified only when the full frontier lies on one side of the threshold.
+
+\begin{table}[t]
+\caption{Controlled truth over 3,000 relation-incomplete event instances.
+Decision error is averaged over three predeclared thresholds.}
+\label{tab:truth}
+\small
+\centering
+\begin{tabular}{@{}crrrr@{}}
+\toprule
+$C$ & Instances & Median width & Point MAE & Decision error \\
+\midrule
+2 & 1,000 & 0.446 & 0.121 & 17.9\% \\
+3 & 1,000 & 0.459 & 0.118 & 17.4\% \\
+4 & 1,000 & 0.473 & 0.125 & 19.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+With the full candidate universe, the true aggregate lies in the certified
+frontier in all 3,000 instances. The feasible temporal point is often close in
+absolute error yet makes a threshold decision error in roughly one of six
+comparisons (Table~\ref{tab:truth}). Every such error occurs when the frontier
+straddles the threshold:
+\[
+\Pr(\text{frontier flags ambiguity}\mid \text{point decision is wrong})=1.
+\]
+Thus the method's downstream value is not to promise a superior missing-link
+guess. It identifies when the desired conclusion is invariant to all admissible
+relations and abstains precisely on these observed point-rule failures.
+
+\paragraph{Candidate recall is not world coverage.}
+We next rank buffers by the same outcome-blind temporal score and retain only
+four, six, or all eight. Table~\ref{tab:truncation} reports the intermediate
+six-buffer screen. Mean true-member recall remains about 84\%, but the entire
+true relational world is representable only 31--33\% of the time. Nevertheless,
+a nonempty frontier at the true support count exists in 98.9--100\% of
+instances. Feasibility of the optimization problem is therefore not evidence
+that the candidate universe still contains truth.
+
+\begin{table}[t]
+\caption{Candidate truncation after retaining six of eight buffers.}
+\label{tab:truncation}
+\small
+\centering
+\begin{tabular}{@{}crrrr@{}}
+\toprule
+$C$ & Member recall & World repr. & Frontier exists & Scalar covered \\
+\midrule
+2 & 83.4\% & 31.4\% & 98.9\% & 69.2\% \\
+3 & 83.8\% & 31.9\% & 100.0\% & 71.1\% \\
+4 & 83.8\% & 32.6\% & 100.0\% & 71.7\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Scalar coverage can also survive by coincidence after the joint world is
+removed: this occurs in 37.8--39.2\% of instances. Consequently, validating
+only an aggregate, or only average candidate recall, can conceal a misspecified
+relation universe. The correct workflow reports candidate-support sensitivity
+as a separate identification layer. Pair matching and connected components are
+also evaluated in the artifact, but their failure rates are generator-specific:
+the generator intentionally includes sequential non-clique events and bounded
+occupancy. We therefore use them as diagnostic misspecification baselines, not
+as estimates of real-world algorithm accuracy.

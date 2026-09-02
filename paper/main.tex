@@ -1,6 +1,6 @@
 \documentclass[sigconf,anonymous,review,balance=false]{acmart}
 
-\AtBeginDocument{\providecommand\BibTeX{{Bib\TeX}}}
+\AtBeginDocument{\providecommand\BibTeX{{\BibTeX}}}
 \setcopyright{none}
 \settopmatter{printacmref=true,printccs=true,printfolios=true}
 \renewcommand\footnotetextcopyrightpermission[1]{}
@@ -22,49 +22,53 @@
 \newcommand{\T}{\mathcal T}
 \newcommand{\R}{\mathcal R}
 \newcommand{\ind}{\mathbb I}
-\newcommand{\methodname}{\textsc{RunFrontier}}
+\newcommand{\methodname}{\textsc{EventFrontier}}
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
 
-\title{Hidden Runs, Visible Rows: Certified Aggregate Frontiers under Timestamp and Capacity Uncertainty}
+\title{Visible Rows, Hidden Events: Certified Aggregates for Relation-Incomplete Event Streams}
 
 \begin{document}
 
 \begin{abstract}
-Public event streams often retain one row per transaction while suppressing the
-key that joins rows into a shared event. In ride-pooling data, this leaves trip
-outcomes visible but co-rider and vehicle-run membership hidden. We introduce
-\methodname, a partial-identification framework that optimizes aggregate
-queries over every temporally ordered latent-run decomposition consistent with
-released rows, timestamp supports, and a declared simultaneous-capacity bound.
-A run need not be a clique: sequential members may form an $A$--$B$--$C$ chain
-even when $A$ and $C$ never overlap. We prove monotonicity of reachable support
-and fixed-estimand endpoints under timestamp-support expansion and capacity
-relaxation. For a fixed root and temporal span, interval connectivity and
-occupancy admit a consecutive-ones formulation, giving an exact integral LP
-pricing oracle. Dantzig--Wolfe column generation then certifies the full
-fixed-time master LP, while an explicit counterexample shows that the integer
-master remains nonintegral. Two public-data audits illustrate the geometry.
-Chicago provides a declared two-transaction benchmark; NYC provides second-level
-timestamps but unknown latent-run membership. Across six predeclared NYC audit
-windows, artificial timestamp uncertainty expands certified reachable support
-at capacities two and three in all six windows. On one exact-time cohort,
-column generation closes the $C=4$ LP after generating 102 of 1,719 feasible
-run columns. These are conditional feasible-world statements: we do not
-recover partners, vehicle runs, realized capacity, or a population effect.
+Many event streams are row-complete but relation-incomplete: every transaction
+is visible, yet the key joining rows into shared referrals, visits, service
+episodes, or vehicle runs is suppressed. Choosing one linkage can turn this
+structural uncertainty into apparently precise but decision-unstable
+statistics. We introduce \methodname, which optimizes aggregate queries over
+all temporally ordered event decompositions consistent with released rows,
+timestamp supports, and a declared simultaneous-capacity bound. An event need
+not be a clique: sequential members may form an $A$--$B$--$C$ overlap chain
+although $A$ and $C$ never coexist. We prove joint nesting under timestamp
+support expansion and capacity relaxation. For a fixed root and span,
+connectivity and occupancy have a consecutive-ones formulation, yielding an
+integral LP pricing oracle. Dantzig--Wolfe decomposition closes the full LP;
+branching on row usage and Ryan--Foster co-membership, while reusing exact
+branch-compatible pricing, gives a certified integer algorithm on medium
+instances. In 3,000 controlled-truth experiments, full candidate support covers
+the true aggregate in every instance, while a feasible temporal point rule
+makes threshold errors in 17.4--19.0\% of cases; every such error is flagged by
+a frontier that crosses the threshold. Retaining about 84\% of true members
+leaves the complete true event world representable only 31--33\% of the time.
+Public Chicago and NYC audits then separate hidden-linkage, timestamp-support,
+and capacity ambiguity. These are conditional feasible-world claims: we do not
+recover operational event identities, realized capacity, or population effects.
 \end{abstract}
 
 \ccsdesc[500]{Information systems~Data provenance}
+\ccsdesc[500]{Information systems~Data integration}
 \ccsdesc[500]{Theory of computation~Mathematical optimization}
 \ccsdesc[300]{Computing methodologies~Structured outputs}
-\keywords{partial identification, hidden event membership, interval graphs, column generation, ride pooling}
+\keywords{partial identification, relation-incomplete data, hidden event membership, interval graphs, branch-and-price}
+
 \maketitle
 
 \input{sections/introduction}
 \input{sections/related_work}
 \input{sections/model}
 \input{sections/algorithms}
+\input{sections/controlled_validation}
 \input{sections/data_results}
 \input{sections/discussion}
 

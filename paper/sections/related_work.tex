@@ -4,45 +4,49 @@
 \paragraph{Uncertain linkage and aggregate queries.}
 Record-linkage research represents globally compatible links as constrained
 matchings rather than independent pair decisions \citep{sadinle2017linkage}.
-Database work has propagated linkage uncertainty to aggregate queries
-\citep{hua2012aggregate} and optimized extremal aggregate answers over
+Database work propagates linkage uncertainty to aggregate queries
+\citep{hua2012aggregate} and optimizes extremal aggregate answers over
 candidate-constrained two-table integrations \citep{turkcapar2023aggregate}.
 Attribute-uncertain databases likewise track value bounds through relational
-queries \citep{feng2021audb}. We share the possible-worlds viewpoint but study
-a different latent object: rows in one public event stream must be partitioned
-into temporally ordered groups whose total membership may exceed simultaneous
-capacity. The release can also expose only a support for each exact timestamp.
-Our estimand is an aggregate frontier over all such groupings and time
-completions, not a posterior over pair identities.
+queries \citep{feng2021audb}. We share the possible-worlds principle but study a
+different latent object: rows inside one event stream must be partitioned into
+temporally ordered groups whose total membership may exceed simultaneous
+capacity, while exact timestamps may themselves be set-valued. The estimand is
+an aggregate frontier over joint grouping and time completions, not a posterior
+over pair identities.
 
-\paragraph{Ride pooling and temporal grouping.}
+\paragraph{Temporal grouping and mobility applications.}
 Shareability networks and dynamic trip--vehicle assignment solve a forward
 allocation problem when requests and candidate trips are observed
 \citep{santi2014shareability,alonsomora2017ondemand,ozkanward2020dynamic}.
 Empirical work predicts sharing or matching outcomes
 \citep{taiebat2022sharing,mucci2024understanding}, studies pooled demand across
 neighborhoods \citep{soria2021sociospatial}, or constructs proxy groups by
-spatiotemporal clustering \citep{sebtichen2026hidden}. Our problem is inverse:
-the release preserves trip rows and outcomes but removes the event key. We do
-not select a most likely cluster. We certify what aggregate conclusions survive
-across every latent run decomposition admitted by declared public information.
+spatiotemporal clustering \citep{sebtichen2026hidden}. Our city audit is
+inverse: the release preserves transaction rows and outcomes but removes the
+event key. More broadly, the same inferential object arises in referral,
+household-visit, and service-tour streams. We do not select the most likely
+cluster; we certify which downstream aggregate claims survive all declared
+temporal-event decompositions.
 
-\paragraph{Structured optimization and disclosure constraints.}
-Integer programming is standard for globally coupled disclosure-control
-constraints \citep{fischetti2001suppression}, and bounded-width dynamic
-programming is standard in structured inference
-\citep{freuder1990ktree,dechter1999bucket}. Our algorithmic contribution is
-specific to ordered interval runs. For one rooted run and a fixed span,
-positive-overlap connectivity and occupancy constraints yield an integral
-interval LP. This becomes an exact pricing oracle for a Dantzig--Wolfe master.
-The coupling master is nevertheless nonintegral, which separates the tractable
-single-run subproblem from the unresolved integer decomposition problem.
+\paragraph{Structured optimization.}
+Integer programming is standard for globally coupled disclosure constraints
+\citep{fischetti2001suppression}, and bounded-width dynamic programming is
+standard in structured inference \citep{freuder1990ktree,dechter1999bucket}.
+Our decomposition exploits a more specific interval structure. One rooted
+event with a fixed span has an integral consecutive-ones formulation, which
+becomes an exact pricing oracle for a Dantzig--Wolfe master. The master itself
+is nonintegral, so we use branch-compatible row-usage and pair-co-membership
+disjunctions. This separates a polynomial local pricing problem from a
+potentially exponential global integer search while retaining valid anytime
+bounds.
 
 \paragraph{Candidate restrictions and calibrated learning.}
-Learning may sharpen a feasible-world set, but node-level sharing outcomes do
+Learning can sharpen a feasible-world set, but node-level event indicators do
 not identify partner probabilities without assumptions. Matching-level
-conformal prediction and weakly supervised structured prediction already have
-well-developed foundations \citep{lei2018conformal,cauchois2024weak}. We
-therefore keep learned scoring outside the central contribution of this paper.
-The main results are score-free and expose candidate-support, timestamp-support,
-and capacity assumptions separately.
+conformal prediction and weakly supervised structured prediction have
+well-developed foundations \citep{lei2018conformal,cauchois2024weak}. We keep
+learned scoring outside the central contribution. Headline candidate rules are
+score-free and outcome-blind; the controlled study instead asks whether simple
+point reconstructions yield decisions invariant to the certified frontier and
+how candidate truncation affects full-world coverage.

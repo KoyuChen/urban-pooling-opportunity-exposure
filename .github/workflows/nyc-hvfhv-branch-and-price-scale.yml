@@ -1,0 +1,80 @@
+name: nyc-hvfhv-branch-and-price-scale
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_scale.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time_hybrid.py
+      - .github/workflows/nyc-hvfhv-branch-and-price-scale.yml
+
+concurrency:
+  group: nyc-hvfhv-branch-and-price-scale-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned optimization stack
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
+      - name: Test exact scale driver
+        working-directory: code/ai_pilot/data_pipeline/production_audit
+        run: python live_nyc_hvfhv_branch_and_price_scale.py --self-test
+
+  live-scale:
+    needs: unit
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned optimization stack
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
+      - name: Run predeclared public-cohort scale lattice
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_branch_and_price_scale.py \
+            --output-dir tmp/nyc-hvfhv-branch-and-price-scale \
+            --scan-start 2023-01-03T17:00:00 \
+            --scan-end 2023-01-04T01:00:00 \
+            --scan-window-hours 1 \
+            --min-core-rows 16 \
+            --max-core-rows 40 \
+            --max-scan-rows 5000 \
+            --max-candidate-rows 2500 \
+            --existential-core 16 \
+            --existential-buffers 48 \
+            --scale-pairs 4:12 6:18 8:24 10:30 12:36 16:48 \
+            --overlap-epsilon-seconds 1.0 \
+            --bp-max-nodes 3000 \
+            --bp-time-limit-seconds 180 \
+            --bp-max-pricing-cases 4096
+      - name: Upload exact integer scale evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-hvfhv-branch-and-price-scale
+          path: tmp/nyc-hvfhv-branch-and-price-scale
+          if-no-files-found: warn
+          retention-days: 90

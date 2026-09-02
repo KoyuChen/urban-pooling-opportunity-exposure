@@ -9,51 +9,58 @@ For-Hire Vehicle release provides second-level pickup and drop-off times,
 shared-match indicators, Taxi Zones, trip miles, and trip time, but no public
 co-rider or run key. We use the official 2023 Open Data table\footnote{Dataset
 \texttt{u253-aew4}: \url{https://data.cityofnewyork.us/d/u253-aew4}.} for
-audited small-cohort optimization and the May 2026 monthly Parquet only for
-current candidate-multiplicity scale.
+audited exact optimization and the May 2026 monthly Parquet only for current
+candidate-multiplicity scale. These datasets instantiate a general
+relation-incomplete event problem; neither supplies ground truth for operational
+event membership.
 
-\paragraph{Candidate universes.}
-A candidate rule is deliberately visible. Chicago uses a boundary-complete
-core-incident temporal universe and reports radius and omitted-incidence
-sensitivity separately. NYC uses provider and temporal proximity; exact Taxi
-Zone equality is only a sensitivity screen because it can delete plausible
-partners. No learned score enters the headline results.
+\paragraph{Visible candidate universes.}
+A candidate rule is part of the estimand rather than hidden preprocessing.
+Chicago uses a boundary-complete core-incident temporal universe and reports
+radius and omitted-incidence sensitivity separately. NYC uses provider and
+temporal proximity; exact Taxi Zone equality is only a sensitivity screen
+because it can delete plausible relations. No learned score or public outcome
+enters the headline candidate construction.
 
-\paragraph{Audit levels.}
-The experiments are designed as certification gates rather than population
-estimation.
+\paragraph{Certification levels.}
+The experiments are certification audits, not population estimation.
 \begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=2pt]
-\item A current-month NYC scale audit counts shared-match rows and candidate
+\item A current-month NYC count audit measures shared-match rows and candidate
 multiplicity for a fixed 200-row cohort.
-\item A fixed 2023 pairwise cohort contains 38 core and 399 buffer rows and
+\item A fixed 2023 pairwise cohort contains 38 cores and 399 buffers and
 compares exact seconds with artificial 15-minute outer intervals.
-\item Ordered-run audits use exact or set-valued times and $C\in\{2,3,4\}$.
-One common-support cohort has 8 cores; a predeclared replication panel uses 4
-cores and 12 outcome-blind nearest temporal buffers in each of six windows.
-\item A 4-core, 12-buffer exact-time cohort compares complete run-column
-enumeration with column generation.
+\item Ordered-event audits use exact or set-valued time and
+$C\in\{2,3,4\}$. A common-support cohort has eight cores; a separately
+predeclared replication panel uses four cores and 12 outcome-blind temporal
+buffers in each of six windows.
+\item A four-core, 12-buffer exact-time cohort compares complete event-column
+enumeration, column generation, and exact branch-and-price. The same cohort is
+used only as a small algorithmic audit, not as a city-scale claim.
 \end{enumerate}
-The panel windows were fixed before their support frontiers were inspected.
-They span weekday morning, weekday evening, weekend evening, and three seasons.
-They are purposive, not a probability sample.
+The six panel windows were frozen before their frontiers were inspected. They
+span weekday morning, weekday evening, weekend evening, and three seasons, but
+remain purposive rather than probabilistically sampled.
 
-\paragraph{Certification and disclosure.}
-Exact fixed-time support frontiers use complete run-column enumeration.
-Continuous existential-time cells use solver certificates and witness replay;
-unresolved counts are never classified as infeasible. Published numerical
-endpoints have zero reported MIP gap. Artifacts contain aggregate tables,
-counts, hashes, and statuses, but no raw trip identifiers, selected run columns,
-partner assignments, or latent timestamp witnesses.
+\paragraph{Solver and disclosure contracts.}
+Exact fixed-time support frontiers use complete enumeration where declared.
+Column generation closes a full LP only after every rooted pricing problem is
+solved and no improving column remains. Branch-and-price calls an integer
+optimum only after the node queue closes; otherwise it retains an incumbent and
+open-node upper bound. Continuous existential-time cells use solver
+certificates and witness replay, and unresolved counts are never classified as
+infeasible. Artifacts publish aggregate tables, hashes, and statuses, but no
+raw identifiers, event columns, partner assignments, or latent timestamps.
 
-\section{Results}
+\section{Public-Data Results}
 \label{sec:results}
 
 \subsection{Fine timestamps do not identify the hidden relation}
 The May 2026 NYC file contains 222,149 public shared-match rows. In a fixed
 200-row cohort, exact public interval overlap yields 154,708 directed
 core-candidate incidences over 1,042 candidate nodes; the median core degree is
-786. Requiring equal pickup and drop-off Taxi Zones leaves only 44 incidences,
-showing why zone equality cannot be treated as a necessary partner rule.
+786. Requiring equal pickup and drop-off Taxi Zones leaves only 44 incidences.
+Zone equality is therefore an aggressive candidate screen, not a defensible
+necessary condition for hidden co-membership.
 
 Table~\ref{tab:pairwise} uses the separate fixed 2023 pairwise cohort. Exact
 seconds already leave broad ranges. Artificial 15-minute time coarsening adds
@@ -63,8 +70,7 @@ it.
 
 \begin{table}[t]
 \caption{NYC pairwise benchmark: exact seconds versus artificial 15-minute
-outer intervals. All displayed endpoint pairs are solver-certified with zero
-reported gap.}
+outer intervals. Endpoint pairs are solver-certified with zero reported gap.}
 \label{tab:pairwise}
 \small
 \begin{tabular}{@{}lrrr@{}}
@@ -82,15 +88,15 @@ Same-dropoff-zone width & 0.737 & 0.842 & +14.3\% \\
 
 \subsection{Capacity uncertainty is front-loaded}
 To isolate the pure effect of capacity, Table~\ref{tab:capacity} fixes the same
-72 selected buffers across $C=2,3,4$. The feasible sets are then nested by
-Proposition~\ref{prop:nesting}. Miles width nearly doubles from $C=2$ to 3 but
-rises only 6.0\% from $C=3$ to 4. Duration width behaves similarly. In this
+72 selected buffers across $C=2,3,4$. Proposition~\ref{prop:nesting} then
+guarantees nested feasible sets. Miles width nearly doubles from $C=2$ to 3
+but rises only 6.0\% from $C=3$ to 4; duration behaves similarly. In this
 cohort, 89.2\% of the total miles widening and 86.2\% of the duration widening
 from $C=2$ to 4 occurs at the first relaxation. This is a cohort-specific
-identification result, not an estimate of realized vehicle capacity.
+identification result, not an estimate of realized physical capacity.
 
 \begin{table}[t]
-\caption{Ordered-run outcome frontiers at a common support of 72 selected
+\caption{Ordered-event outcome frontiers at a common support of 72 selected
 buffers.}
 \label{tab:capacity}
 \small
@@ -106,25 +112,24 @@ $C$ & Miles range & Width & Minutes range & Width \\
 \end{table}
 
 A different conditioning event explains an initially counterintuitive pattern.
-If each $C$ is evaluated at its own maximum support, the selected-buffer
-composition range contracts with capacity because larger $C$ forces the world
-to include more rows rather than cherry-pick extreme outcomes. Holding support
-fixed reverses that visual contraction exactly as nesting predicts. This
-separates an extensive margin---which rows can enter any feasible world---from
-a conditional composition margin.
+At each capacity's own maximum support, composition ranges can contract because
+larger $C$ forces inclusion of more rows rather than permitting an extremal
+subset. Holding support fixed restores the monotone set comparison. This
+separates the extensive margin---which rows can enter some feasible
+world---from the conditional composition margin.
 
-\subsection{Timestamp uncertainty and capacity are partially substitutable}
+\subsection{Timestamp support and capacity are partially substitutable}
 Table~\ref{tab:panel} reports the six-window existential-time panel. Every
-window has a positive certified coarse-support gain at $C=2$ and $C=3$. The
-gain varies substantially, from one to seven buffers at $C=2$. Artificial
-coarse $C=2$ reaches the exact $C=3$ maximum in two of six windows, whereas
-coarse $C=3$ reaches the exact $C=4$ maximum in all six. The latter comparison
-is capped by the 12-buffer audit design, so it is evidence of support
-substitution within the declared panel, not universal saturation.
+window has a positive certified coarse-support gain at both $C=2$ and $C=3$.
+The $C=2$ gain ranges from one to seven buffers. Artificial coarse $C=2$
+reaches the exact $C=3$ maximum in two of six windows, whereas coarse $C=3$
+reaches the exact $C=4$ maximum in all six. The latter comparison is capped by
+the 12-buffer design, so it indicates support substitution within the declared
+panel, not universal saturation.
 
 \begin{table}[t]
-\caption{Predeclared NYC existential-time panel. Each cell is exact maximum /
-coarse certified maximum / gain lower bound.}
+\caption{Predeclared NYC existential-time panel. Each entry is exact maximum /
+coarse certified maximum / certified gain lower bound.}
 \label{tab:panel}
 \scriptsize
 \centering
@@ -142,30 +147,41 @@ October weekday PM & 5/8/$+3$ & 9/12/$+3$ \\
 \end{tabular}
 \end{table}
 
-The correct conclusion is therefore not that 15-minute uncertainty is always
-``one extra seat.'' Rather, timestamp information and simultaneous capacity are
-partially substitutable dimensions of the identified set, with a magnitude
-determined by local interval density and chain structure.
+The defensible conclusion is not that a 15-minute support is always ``one
+extra seat.'' Timestamp information and simultaneous capacity are partially
+substitutable dimensions of the identified set, with a magnitude determined by
+local interval density and chain structure.
 
-\subsection{Exact pricing closes the LP with few columns}
-Table~\ref{tab:cg} compares column generation with complete enumeration on one
-exact-time cohort. At $C=4$, the number of feasible run columns rises to 1,719,
-but 102 columns---5.9\%---suffice to certify the full LP optimum. The restricted
-integer master is lower than the complete integer optimum at $C=3$ and 4,
-matching the theoretical nonintegrality boundary. Column generation is thus a
-useful LP engine and lower-bound generator, not yet an exact integer solver.
+\subsection{Exact decomposition needs few LP columns and closes the IP}
+Table~\ref{tab:bp} uses one exact-time public cohort. At $C=4$, complete
+enumeration contains 1,719 feasible event columns, while 102 columns
+(5.9\%) close the full LP. Solving the integer problem requires columns that
+may not be generated for the root LP alone: the restricted integer objectives
+at $C=3,4$ are seven and ten, below the full optima eight and 12. The
+branch-and-price layer closes both values while preserving exact pricing at
+every node.
 
 \begin{table}[t]
-\caption{Exact-time ordered-run column generation on 4 cores and 12 buffers.}
-\label{tab:cg}
+\caption{Exact-time decomposition on four cores and 12 buffers. Runtime is for
+branch-and-price; full column counts are available only through this small
+enumeration audit.}
+\label{tab:bp}
 \small
-\begin{tabular}{@{}crrrrr@{}}
+\centering
+\begin{tabular}{@{}crrrrrr@{}}
 \toprule
-$C$ & Full cols. & Gen. cols. & Share & Full LP & IP / restr. IP \\
+$C$ & Full cols. & LP cols. & LP share & LP/IP & Nodes & Seconds \\
 \midrule
-2 & 54 & 54 & 100.0\% & 4 & 4 / 4 \\
-3 & 394 & 82 & 20.8\% & 8 & 8 / 7 \\
-4 & 1,719 & 102 & 5.9\% & 12 & 12 / 10 \\
+2 & 54 & 54 & 100.0\% & 4/4 & 1 & 0.74 \\
+3 & 394 & 82 & 20.8\% & 8/8 & 4 & 10.47 \\
+4 & 1,719 & 102 & 5.9\% & 12/12 & 2 & 9.31 \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+The public cohort has essentially zero root integrality gap, so it does not by
+itself show why branching is necessary. The locked nonintegrality witness does:
+its root LP is four, its integer optimum is three, and branch-and-price closes
+the value after 17 nodes. Together, the two audits distinguish column economy
+from integer difficulty. They establish an exact medium-instance algorithmic
+path, not a city-scale runtime guarantee.

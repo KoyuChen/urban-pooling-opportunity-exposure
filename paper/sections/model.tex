@@ -1,10 +1,10 @@
-\section{Latent Temporal-Run Worlds}
+\section{Latent Ordered-Event Worlds}
 \label{sec:model}
 
 \paragraph{Released rows and boundary roles.}
 Let $V=C_0\cup B_0$ be a finite candidate universe. Core rows $C_0$ define the
 target cohort. Buffer rows $B_0$ lie near its temporal boundary and may belong
-to a run containing a core row, but need not be selected. This role distinction
+to an event containing a core row, but need not be selected. This distinction
 prevents an arbitrary observation window from forcing every nearby row into
 the target population.
 
@@ -14,12 +14,11 @@ For row $i$, the release supplies a timestamp support
 \]
 Exact public time is the singleton case. A latent completion chooses
 $t_i=(s_i,e_i)\in\T_i$ for every row. We use half-open intervals
-$I_i=[s_i,e_i)$ and define positive overlap by
-$|I_i\cap I_j|>0$.
+$I_i=[s_i,e_i)$ and define positive overlap by $|I_i\cap I_j|>0$.
 
-\paragraph{Ordered runs.}
+\paragraph{Ordered temporal events.}
 For a completed timestamp vector $t$, a subset $R\subseteq V$ is a feasible
-run at simultaneous capacity $C$ if:
+event at simultaneous capacity $C$ if:
 (i) $R$ contains at least two rows and at least one core;
 (ii) the graph on $R$ joining positive-overlap pairs is connected; and
 (iii)
@@ -27,35 +26,37 @@ run at simultaneous capacity $C$ if:
  \max_{u}\sum_{i\in R}\ind\{u\in I_i\}\le C.
  \label{eq:capacity}
 \end{equation}
-Condition~\eqref{eq:capacity} limits simultaneous occupancy, not total run
-cardinality. Thus a run may contain more than $C$ rows through sequential
-turnover.
+Condition~\eqref{eq:capacity} limits simultaneous occupancy, not total event
+cardinality. Thus one event may contain more than $C$ rows through sequential
+turnover. In the ride-pooling audit such an event is a latent vehicle run; in
+other streams it may be a referral episode, household visit, or service tour.
 
 A world $F=(t,\Pi)$ consists of a timestamp completion and a collection of
-disjoint feasible runs such that every core row belongs to exactly one run and
-every buffer row belongs to at most one. Unselected buffers remain outside
+disjoint feasible events such that every core row belongs to exactly one event
+and every buffer row belongs to at most one. Unselected buffers remain outside
 $\Pi$. Let $q(F)$ denote the number of selected buffers. For fixed $q$, write
 \[
  \F(\T,C,q)=\{F:q(F)=q\}.
 \]
-The reachable support set and its maximum are
+The reachable support set and maximum are
 \[
  Q(\T,C)=\{q:\F(\T,C,q)\ne\varnothing\},\qquad
  M(\T,C)=\max Q(\T,C).
 \]
 
 \paragraph{Aggregate functionals.}
-Let $H(F)$ be any run-label-invariant aggregate computable from public row
-attributes and the latent partition, such as mean miles among selected buffers,
-within-run dispersion, or run count per core. For nonempty $\F(\T,C,q)$ define
+Let $H(F)$ be any event-label-invariant aggregate computable from public row
+attributes and the latent partition, such as mean outcome among selected
+buffers, within-event dispersion, exposure, or event count per core. For
+nonempty $\F(\T,C,q)$ define
 \begin{equation}
  \underline H(\T,C,q)=\min_{F\in\F(\T,C,q)}H(F),\quad
  \overline H(\T,C,q)=\max_{F\in\F(\T,C,q)}H(F).
  \label{eq:endpoints}
 \end{equation}
-Both extrema are attained for the finite fixed-time models used below; the
-continuous-support implementation reports a feasible witness, a certified
-infeasibility result, or an unresolved status rather than coercing timeouts.
+Both extrema are attained for the finite fixed-time models used below. The
+continuous-support implementation reports a feasible witness, certified
+infeasibility, or unresolved status rather than coercing a timeout.
 
 \begin{proposition}[Support and capacity nesting]
 \label{prop:nesting}
@@ -72,20 +73,20 @@ $M(\T,C)\le M(\T',C')$. For fixed $q$ and any $H$,
 \end{proposition}
 
 The fixed-$q$ condition matters. Comparing outcomes at each capacity's own
-maximum $M(\T,C)$ changes both the world set and the conditioning event; such
+maximum $M(\T,C)$ changes both the world set and the conditioning event; those
 ranges need not widen monotonically.
 
 \paragraph{Capacity-equivalent information loss.}
-For a fine support $\T$ and a coarser support $\T'\supseteq\T$, define
+For fine support $\T$ and coarser support $\T'\supseteq\T$, define
 \begin{equation}
  \kappa_{\T\to\T'}(C)=
  \min\{k\ge0:M(\T,C+k)\ge M(\T',C)\}.
  \label{eq:kappa}
 \end{equation}
-It measures how many capacity steps under fine time are required to reach the
-support attainable under coarse time. When the coarse solver only certifies a
-feasible lower bound $L(\T',C)\le M(\T',C)$, replacing $M(\T',C)$ by $L$ yields
-a conservative lower bound on the comparison, not a sharp equality.
+This measures how many fine-time capacity steps are required to reach the
+support attainable under coarse time. When a coarse solver only certifies a
+feasible lower bound $L(\T',C)\le M(\T',C)$, replacing $M$ by $L$ yields a
+conservative lower bound on the comparison, not a sharp equality.
 
 \begin{figure}[t]
 \centering
@@ -99,12 +100,12 @@ a conservative lower bound on the comparison, not a sharp equality.
 \draw[line width=2.2pt] (4.8,1) -- (7.5,1);
 \draw[dashed] (3.2,0.15) -- (3.2,3.35);
 \draw[dashed] (5.2,0.15) -- (5.2,3.35);
-\node[align=center] at (4.1,-0.75) {one connected run, maximum simultaneous occupancy $2$};
+\node[align=center] at (4.1,-0.75) {one connected event, maximum simultaneous occupancy $2$};
 \end{tikzpicture}
-\caption{An ordered run need not be a clique. $A$ overlaps $B$, $B$ overlaps
-$C$, and $A$ does not overlap $C$. The total run has three members but capacity
+\caption{An ordered event need not be a clique. $A$ overlaps $B$, $B$ overlaps
+$C$, and $A$ does not overlap $C$. The event has three members but capacity
 two.}
-\Description{Three horizontal trip intervals form an overlap chain with at most
-two intervals active at any time.}
+\Description{Three horizontal intervals form an overlap chain with at most two
+intervals active at any time.}
 \label{fig:chain}
 \end{figure}
