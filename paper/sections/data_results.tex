@@ -1,0 +1,171 @@
+\section{Public-Data Audit Design}
+\label{sec:data}
+
+\paragraph{Complementary releases.}
+Chicago's TNP release provides a declared two-transaction shared-trip benchmark
+with nearest-15-minute public times and privacy-coarsened geography
+\citep{chicagodata2026,chicagomanual2026,chicagoprivacy2026}. NYC's High Volume
+For-Hire Vehicle release provides second-level pickup and drop-off times,
+shared-match indicators, Taxi Zones, trip miles, and trip time, but no public
+co-rider or run key. We use the official 2023 Open Data table\footnote{Dataset
+\texttt{u253-aew4}: \url{https://data.cityofnewyork.us/d/u253-aew4}.} for
+audited small-cohort optimization and the May 2026 monthly Parquet only for
+current candidate-multiplicity scale.
+
+\paragraph{Candidate universes.}
+A candidate rule is deliberately visible. Chicago uses a boundary-complete
+core-incident temporal universe and reports radius and omitted-incidence
+sensitivity separately. NYC uses provider and temporal proximity; exact Taxi
+Zone equality is only a sensitivity screen because it can delete plausible
+partners. No learned score enters the headline results.
+
+\paragraph{Audit levels.}
+The experiments are designed as certification gates rather than population
+estimation.
+\begin{enumerate}[leftmargin=*,itemsep=1pt,topsep=2pt]
+\item A current-month NYC scale audit counts shared-match rows and candidate
+multiplicity for a fixed 200-row cohort.
+\item A fixed 2023 pairwise cohort contains 38 core and 399 buffer rows and
+compares exact seconds with artificial 15-minute outer intervals.
+\item Ordered-run audits use exact or set-valued times and $C\in\{2,3,4\}$.
+One common-support cohort has 8 cores; a predeclared replication panel uses 4
+cores and 12 outcome-blind nearest temporal buffers in each of six windows.
+\item A 4-core, 12-buffer exact-time cohort compares complete run-column
+enumeration with column generation.
+\end{enumerate}
+The panel windows were fixed before their support frontiers were inspected.
+They span weekday morning, weekday evening, weekend evening, and three seasons.
+They are purposive, not a probability sample.
+
+\paragraph{Certification and disclosure.}
+Exact fixed-time support frontiers use complete run-column enumeration.
+Continuous existential-time cells use solver certificates and witness replay;
+unresolved counts are never classified as infeasible. Published numerical
+endpoints have zero reported MIP gap. Artifacts contain aggregate tables,
+counts, hashes, and statuses, but no raw trip identifiers, selected run columns,
+partner assignments, or latent timestamp witnesses.
+
+\section{Results}
+\label{sec:results}
+
+\subsection{Fine timestamps do not identify the hidden relation}
+The May 2026 NYC file contains 222,149 public shared-match rows. In a fixed
+200-row cohort, exact public interval overlap yields 154,708 directed
+core-candidate incidences over 1,042 candidate nodes; the median core degree is
+786. Requiring equal pickup and drop-off Taxi Zones leaves only 44 incidences,
+showing why zone equality cannot be treated as a necessary partner rule.
+
+Table~\ref{tab:pairwise} uses the separate fixed 2023 pairwise cohort. Exact
+seconds already leave broad ranges. Artificial 15-minute time coarsening adds
+79.5\% more candidate edges and increases the three displayed identified
+widths by 12.4--15.3\%. Time coarsening aggravates ambiguity but does not create
+it.
+
+\begin{table}[t]
+\caption{NYC pairwise benchmark: exact seconds versus artificial 15-minute
+outer intervals. All displayed endpoint pairs are solver-certified with zero
+reported gap.}
+\label{tab:pairwise}
+\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Quantity & Exact & 15-min & Change \\
+\midrule
+Candidate edges & 5,837 & 10,475 & +79.5\% \\
+Minimum core degree & 130 & 260 & +100.0\% \\
+Miles-gap width & 12.285 & 13.807 & +12.4\% \\
+Trip-time-gap width (min) & 38.113 & 43.934 & +15.3\% \\
+Same-dropoff-zone width & 0.737 & 0.842 & +14.3\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Capacity uncertainty is front-loaded}
+To isolate the pure effect of capacity, Table~\ref{tab:capacity} fixes the same
+72 selected buffers across $C=2,3,4$. The feasible sets are then nested by
+Proposition~\ref{prop:nesting}. Miles width nearly doubles from $C=2$ to 3 but
+rises only 6.0\% from $C=3$ to 4. Duration width behaves similarly. In this
+cohort, 89.2\% of the total miles widening and 86.2\% of the duration widening
+from $C=2$ to 4 occurs at the first relaxation. This is a cohort-specific
+identification result, not an estimate of realized vehicle capacity.
+
+\begin{table}[t]
+\caption{Ordered-run outcome frontiers at a common support of 72 selected
+buffers.}
+\label{tab:capacity}
+\small
+\begin{tabular}{@{}crrrr@{}}
+\toprule
+$C$ & Miles range & Width & Minutes range & Width \\
+\midrule
+2 & 3.440--9.679 & 6.239 & 17.779--37.147 & 19.368 \\
+3 & 3.131--15.448 & 12.317 & 15.983--55.712 & 39.729 \\
+4 & 3.116--16.166 & 13.050 & 15.924--58.906 & 42.982 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A different conditioning event explains an initially counterintuitive pattern.
+If each $C$ is evaluated at its own maximum support, the selected-buffer
+composition range contracts with capacity because larger $C$ forces the world
+to include more rows rather than cherry-pick extreme outcomes. Holding support
+fixed reverses that visual contraction exactly as nesting predicts. This
+separates an extensive margin---which rows can enter any feasible world---from
+a conditional composition margin.
+
+\subsection{Timestamp uncertainty and capacity are partially substitutable}
+Table~\ref{tab:panel} reports the six-window existential-time panel. Every
+window has a positive certified coarse-support gain at $C=2$ and $C=3$. The
+gain varies substantially, from one to seven buffers at $C=2$. Artificial
+coarse $C=2$ reaches the exact $C=3$ maximum in two of six windows, whereas
+coarse $C=3$ reaches the exact $C=4$ maximum in all six. The latter comparison
+is capped by the 12-buffer audit design, so it is evidence of support
+substitution within the declared panel, not universal saturation.
+
+\begin{table}[t]
+\caption{Predeclared NYC existential-time panel. Each cell is exact maximum /
+coarse certified maximum / gain lower bound.}
+\label{tab:panel}
+\scriptsize
+\centering
+\begin{tabular}{@{}lcc@{}}
+\toprule
+Window & $C=2$ & $C=3$ \\
+\midrule
+January weekday AM & 5/8/$+3$ & 9/12/$+3$ \\
+January weekday PM & 4/8/$+4$ & 8/12/$+4$ \\
+January weekend PM & 4/11/$+7$ & 8/12/$+4$ \\
+April weekday PM & 7/8/$+1$ & 11/12/$+1$ \\
+July weekday PM & 6/8/$+2$ & 10/12/$+2$ \\
+October weekday PM & 5/8/$+3$ & 9/12/$+3$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The correct conclusion is therefore not that 15-minute uncertainty is always
+``one extra seat.'' Rather, timestamp information and simultaneous capacity are
+partially substitutable dimensions of the identified set, with a magnitude
+determined by local interval density and chain structure.
+
+\subsection{Exact pricing closes the LP with few columns}
+Table~\ref{tab:cg} compares column generation with complete enumeration on one
+exact-time cohort. At $C=4$, the number of feasible run columns rises to 1,719,
+but 102 columns---5.9\%---suffice to certify the full LP optimum. The restricted
+integer master is lower than the complete integer optimum at $C=3$ and 4,
+matching the theoretical nonintegrality boundary. Column generation is thus a
+useful LP engine and lower-bound generator, not yet an exact integer solver.
+
+\begin{table}[t]
+\caption{Exact-time ordered-run column generation on 4 cores and 12 buffers.}
+\label{tab:cg}
+\small
+\begin{tabular}{@{}crrrrr@{}}
+\toprule
+$C$ & Full cols. & Gen. cols. & Share & Full LP & IP / restr. IP \\
+\midrule
+2 & 54 & 54 & 100.0\% & 4 & 4 / 4 \\
+3 & 394 & 82 & 20.8\% & 8 & 8 / 7 \\
+4 & 1,719 & 102 & 5.9\% & 12 & 12 / 10 \\
+\bottomrule
+\end{tabular}
+\end{table}
