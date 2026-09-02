@@ -1,0 +1,86 @@
+\section{Introduction}
+
+Many public datasets are row-complete but relation-incomplete. A release may
+preserve every transaction's timestamp, location, duration, and outcome while
+removing the key that says which rows belonged to the same referral episode,
+household visit, shared ride, or service run. Analysts can still count rows,
+but relational statistics---within-event dispersion, group composition,
+exposure, or resource utilization---depend on an unobserved partition.
+Selecting one linkage or one clustering converts release uncertainty into
+analyst certainty and can make downstream estimates look much more precise than
+the public data justify.
+
+Ride pooling makes the distinction concrete. A public row can report that a
+trip was successfully shared without revealing its co-riders or vehicle-run
+identifier. Pairwise reconstruction is already ambiguous, but high-capacity
+pooling is not pairwise. Three trips may satisfy
+$A\leftrightarrow B$ and $B\leftrightarrow C$ while
+$A\not\leftrightarrow C$; all three can belong to one run if passengers enter
+and leave sequentially and simultaneous occupancy never exceeds capacity.
+Timestamp coarsening adds another layer: the public record may reveal only a
+set containing the exact interval. Treating the entire outer envelope as the
+realized trip is incorrect because it can create artificial concurrency. The
+right quantifier is existential: a latent exact timestamp completion must exist
+inside each released support.
+
+We ask a deliberately different question from partner recovery:
+\begin{quote}
+Which aggregate conclusions hold over all latent temporal-event worlds
+consistent with the declared release information?
+\end{quote}
+The output is a lower and upper endpoint, each accompanied by a feasible-world
+witness or an explicit unresolved status. The interval is conditional on the
+candidate universe, timestamp supports, and capacity assumption; it is not a
+confidence interval and does not imply that every interior scalar is attainable.
+
+This paper makes three contributions.
+\begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=3pt]
+\item \textbf{Identification.} We define core--buffer ordered-run worlds with
+set-valued timestamps, positive-overlap connectivity, occupancy-capacity
+constraints, and aggregate query functionals. We prove joint nesting in time
+support and capacity and define a capacity-equivalent information-loss index.
+\item \textbf{Algorithms.} We characterize one fixed-span rooted run by
+segment coverage and boundary bridge rows. The resulting consecutive-ones structure
+gives an integral LP oracle for additive pricing. A Dantzig--Wolfe master uses
+this oracle to certify the full LP relaxation. We also exhibit master
+nonintegrality, locating the remaining difficulty in cross-run assignment.
+\item \textbf{Evidence.} Chicago and NYC expose complementary release regimes.
+The audits separate hidden-linkage ambiguity, time-support uncertainty, and
+capacity uncertainty; they publish only aggregate endpoints and solver
+certificates, not reconstructed links.
+\end{enumerate}
+
+The empirical findings are modest in scope but sharp within that scope. In a
+fixed NYC pairwise benchmark, replacing exact seconds by artificial 15-minute
+outer intervals increases candidate edges by 79.5\% and several identified
+widths by 12--15\%. In an ordered-run common-support comparison, most of the
+$C=2$ to $C=4$ widening occurs already at $C=3$. Across six predeclared audit
+windows, artificial timestamp supports expand certified reachable run support
+at $C=2$ and $C=3$ in every window, but the amount equivalent to a one-step
+capacity relaxation varies by regime. Fine temporal resolution therefore does
+not imply fine relational resolution.
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw=black!65,rounded corners=2pt,minimum height=0.68in,
+    text width=0.185\textwidth,align=center,inner sep=5pt},
+  arrow/.style={-{Latex[length=2mm]},line width=0.55pt,black!70},
+  node distance=0.018\textwidth
+]
+\node[box] (rows) {\textbf{Released rows}\\trip outcomes and timestamp supports};
+\node[box,right=of rows] (worlds) {\textbf{Latent worlds}\\exact times and ordered run partitions};
+\node[box,right=of worlds] (rules) {\textbf{Declared rules}\\core coverage, buffer use, capacity $C$};
+\node[box,right=of rules] (bounds) {\textbf{Aggregate frontier}\\attained endpoints or unresolved status};
+\draw[arrow] (rows) -- (worlds);
+\draw[arrow] (worlds) -- (rules);
+\draw[arrow] (rules) -- (bounds);
+\end{tikzpicture}
+\caption{\methodname{} never outputs a preferred partner graph. The release
+operator and analyst-declared support rules define a set of latent temporal
+worlds; optimization propagates all surviving ambiguity to a downstream
+aggregate.}
+\Description{Four boxes show released rows flowing to latent time and run worlds,
+declared feasibility rules, and aggregate query endpoints.}
+\label{fig:overview}
+\end{figure*}
