@@ -19,6 +19,7 @@ on:
       - code/ai_pilot/data_pipeline/production_audit/tests/test_ordered_run_column_generation.py
       - code/ai_pilot/benchmarks/relation_incomplete_event_benchmark.py
       - code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py
+      - code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py
       - .github/workflows/nyc-hvfhv-column-generation.yml
 
 concurrency:
@@ -47,6 +48,7 @@ jobs:
           python code/ai_pilot/data_pipeline/production_audit/ordered_run_column_generation.py
           python code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py
           python code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py --self-test
+          python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py --self-test
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_ordered_run_column_generation.py' -v
@@ -54,7 +56,7 @@ jobs:
   truth-benchmark:
     needs: unit
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     env:
       PYTHONHASHSEED: "0"
     steps:
@@ -62,18 +64,19 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run point-reconstruction and candidate-recall benchmark
+      - name: Run scaled point-reconstruction and candidate-recall benchmark
         run: |
-          python code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py \
-            --instances-per-capacity 250 \
+          python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
+            --instances-per-capacity 1000 \
+            --capacities 2 3 4 \
             --base-seed 20260902 \
-            --output-dir tmp/event-frontier-truth-benchmark
-      - name: Upload truth-based benchmark evidence
+            --output-dir tmp/event-frontier-truth-benchmark-scale
+      - name: Upload scaled truth-based benchmark evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: event-frontier-truth-benchmark
-          path: tmp/event-frontier-truth-benchmark
+          name: event-frontier-truth-benchmark-scale
+          path: tmp/event-frontier-truth-benchmark-scale
           if-no-files-found: warn
           retention-days: 90
 
