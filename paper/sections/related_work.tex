@@ -2,63 +2,47 @@
 \label{sec:related}
 
 \paragraph{Uncertain linkage and aggregate queries.}
-Globally compatible record linkages and downstream uncertainty are established
-objects. Sadinle models bipartite linkage as a constrained matching
-\citep{sadinle2017linkage}; Hua and Pei evaluate aggregate queries over
-compatible probabilistic linkages \citep{hua2012aggregate}; and Turkcapar and
-Krishnan compute extremal aggregate answers over candidate-constrained
-two-table linkages \citep{turkcapar2023aggregate}. Attribute-annotated uncertain
-databases propagate value bounds through relational queries
-\citep{feng2021audb}. Our target difference is conditional and narrower: a
-within-file nonbipartite relation and endpoint attributes are simultaneously
-hidden, while global release counts can couple their completions. When
-attribute supports are independent, our problem collapses to ordinary weighted
-matching; that case is a baseline, not a novelty claim.
+Record-linkage research represents globally compatible links as constrained
+matchings rather than independent pair decisions \citep{sadinle2017linkage}.
+Database work has propagated linkage uncertainty to aggregate queries
+\citep{hua2012aggregate} and optimized extremal aggregate answers over
+candidate-constrained two-table integrations \citep{turkcapar2023aggregate}.
+Attribute-uncertain databases likewise track value bounds through relational
+queries \citep{feng2021audb}. We share the possible-worlds viewpoint but study
+a different latent object: rows in one public event stream must be partitioned
+into temporally ordered groups whose total membership may exceed simultaneous
+capacity. The release can also expose only a support for each exact timestamp.
+Our estimand is an aggregate frontier over all such groupings and time
+completions, not a posterior over pair identities.
 
-Classical cell-suppression work solves disclosure-control problems under
-linear table constraints by integer programming and branch-and-cut
-\citep{fischetti2001suppression}. Our inverse object is different: released
-threshold states constrain latent micro-labels that also determine a hidden
-matching. Integer programming remains a general fallback, not an algorithmic
-novelty.
+\paragraph{Ride pooling and temporal grouping.}
+Shareability networks and dynamic trip--vehicle assignment solve a forward
+allocation problem when requests and candidate trips are observed
+\citep{santi2014shareability,alonsomora2017ondemand,ozkanward2020dynamic}.
+Empirical work predicts sharing or matching outcomes
+\citep{taiebat2022sharing,mucci2024understanding}, studies pooled demand across
+neighborhoods \citep{soria2021sociospatial}, or constructs proxy groups by
+spatiotemporal clustering \citep{sebtichen2026hidden}. Our problem is inverse:
+the release preserves trip rows and outcomes but removes the event key. We do
+not select a most likely cluster. We certify what aggregate conclusions survive
+across every latent run decomposition admitted by declared public information.
 
-\paragraph{Resource-constrained matching and structured inference.}
-An additive score floor introduces the same second resource studied in
-standard budgeted matching, which is NP-hard and admits PTAS/EPTAS algorithms
-\citep{berger2011budgeted,doronarad2023eptas}. We do not assume those schemes
-transfer to mandatory core cover, and a generic score constraint or
-approximation scheme is not our contribution. Likewise, bounded-width constraint processing and bucket
-elimination are standard \citep{freuder1990ktree,dechter1999bucket}. Global
-side constraints must be compiled before width is assessed: rainbow matching
-remains APX-complete even when the underlying edge-coloured graph is a path
-\citep{le2014rainbow}. Our algorithmic increment is an executable temporal
-state for this release-coupled world model, with active factor lifetimes,
-threshold caps, score-resource tracking, and endpoint witnesses.
+\paragraph{Structured optimization and disclosure constraints.}
+Integer programming is standard for globally coupled disclosure-control
+constraints \citep{fischetti2001suppression}, and bounded-width dynamic
+programming is standard in structured inference
+\citep{freuder1990ktree,dechter1999bucket}. Our algorithmic contribution is
+specific to ordered interval runs. For one rooted run and a fixed span,
+positive-overlap connectivity and occupancy constraints yield an integral
+interval LP. This becomes an exact pricing oracle for a Dantzig--Wolfe master.
+The coupling master is nevertheless nonintegral, which separates the tractable
+single-run subproblem from the unresolved integer decomposition problem.
 
-\paragraph{Weak supervision and calibrated restrictions.}
-Multiple-instance learning recovers instance-level structure from bag labels
-only through modeling assumptions \citep{maron1998mil}. In our application,
-node match outcomes do not nonparametrically identify partner-edge rankings,
-so we treat any edge model as a scorer. Split conformal calibration supplies
-finite-sample marginal coverage under exchangeability
-\citep{lei2018conformal}. More directly, Cauchois et al. develop conformal
-prediction with weak supervision for structured outputs and instantiate
-bipartite perfect matchings, partial-matching feedback, and matching-oracle
-implementations \citep{cauchois2024weak}. Thus neither matching-level conformal
-prediction nor a matching oracle inside calibration is new here. Our
-calibration markets reveal the complete matching; we use rank calibration as
-a safety layer for a release-coupled nonbipartite optimizer. Candidate and
-release-set eligibility remain separate assumptions.
-
-\paragraph{Ride pooling and contextual composition.}
-Shareability networks and dynamic assignment solve a forward allocation
-problem with observed requests \citep{santi2014shareability,alonsomora2017ondemand}.
-Chicago work predicts sharing and matching outcomes
-\citep{taiebat2022sharing,mucci2024understanding}, relates pooled demand to
-neighborhood disadvantage \citep{soria2021sociospatial}, and constructs proxy
-groups by spatiotemporal clustering \citep{sebtichen2026hidden}. Our flagship
-application asks an inverse measurement question: among a precisely defined
-set of realized two-transaction matches, which neighborhood-context
-compositions remain compatible with the suppressed partner key and the
-verified release operator? It does not infer rider socioeconomic status,
-preferences, durable ties, or an echo chamber.
+\paragraph{Candidate restrictions and calibrated learning.}
+Learning may sharpen a feasible-world set, but node-level sharing outcomes do
+not identify partner probabilities without assumptions. Matching-level
+conformal prediction and weakly supervised structured prediction already have
+well-developed foundations \citep{lei2018conformal,cauchois2024weak}. We
+therefore keep learned scoring outside the central contribution of this paper.
+The main results are score-free and expose candidate-support, timestamp-support,
+and capacity assumptions separately.
