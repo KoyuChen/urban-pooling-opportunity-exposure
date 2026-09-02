@@ -12,6 +12,7 @@ on:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/ordered_run_existential_time.py
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time.py
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time_hybrid.py
       - code/ai_pilot/data_pipeline/production_audit/NYC_EXISTENTIAL_TIME_MODEL.md
       - .github/workflows/nyc-hvfhv-existential-time.yml
 
@@ -40,6 +41,7 @@ jobs:
         run: |
           python code/ai_pilot/data_pipeline/production_audit/ordered_run_existential_time.py
           python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time.py --self-test
+          python -m py_compile code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time_hybrid.py
 
   live:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.run_live) }}
@@ -69,7 +71,7 @@ jobs:
           output="tmp/nyc-hvfhv-existential-time-${slug}"
           mkdir -p "${output}"
           set +e
-          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time.py \
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time_hybrid.py \
             --output-dir "${output}" \
             --scan-start 2023-01-03T17:00:00 \
             --scan-end 2023-01-04T01:00:00 \
