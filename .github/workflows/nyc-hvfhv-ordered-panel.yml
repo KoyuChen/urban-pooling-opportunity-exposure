@@ -1,21 +1,13 @@
 name: nyc-hvfhv-ordered-panel
 
+# This panel is an expensive, predeclared audit.  It is launched explicitly so
+# ordinary manuscript or code commits cannot cancel and restart all 24 cells.
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_panel_window.py
-      - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_run_panel.py
-      - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_RUN_PANEL_PROTOCOL.md
-      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_run_smoke.py
-      - code/ai_pilot/data_pipeline/production_audit/nyc_ordered_run_symmetry.py
-      - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_fetch.py
-      - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_smoke_types.py
-      - .github/workflows/nyc-hvfhv-ordered-panel.yml
 
 concurrency:
   group: nyc-hvfhv-ordered-panel-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   unit:
