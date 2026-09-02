@@ -43,6 +43,10 @@ jobs:
 
   live:
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.run_live) }}
+    strategy:
+      fail-fast: false
+      matrix:
+        support_per_core: ["1.0", "2.0"]
     runs-on: ubuntu-latest
     timeout-minutes: 40
     env:
@@ -61,26 +65,28 @@ jobs:
       - name: Build exact-versus-existential-coarse timestamp frontiers
         shell: bash
         run: |
-          mkdir -p tmp/nyc-hvfhv-existential-time
+          slug="${{ matrix.support_per_core }}"
+          output="tmp/nyc-hvfhv-existential-time-${slug}"
+          mkdir -p "${output}"
           set +e
           python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_existential_time.py \
-            --output-dir tmp/nyc-hvfhv-existential-time \
+            --output-dir "${output}" \
             --scan-start 2023-01-03T17:00:00 \
             --scan-end 2023-01-04T01:00:00 \
             --existential-core 4 \
             --existential-buffers 12 \
-            --common-buffers-per-core 1.0 \
+            --common-buffers-per-core "${{ matrix.support_per_core }}" \
             --overlap-epsilon-seconds 1.0 \
             --solver-time-limit 45 \
             --require-all-certified \
-            2>&1 | tee tmp/nyc-hvfhv-existential-time/run.log
+            2>&1 | tee "${output}/run.log"
           status=${PIPESTATUS[0]}
           exit ${status}
       - name: Upload aggregate existential-time evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: nyc-hvfhv-existential-time
-          path: tmp/nyc-hvfhv-existential-time
+          name: nyc-hvfhv-existential-time-q${{ matrix.support_per_core }}
+          path: tmp/nyc-hvfhv-existential-time-${{ matrix.support_per_core }}
           if-no-files-found: warn
           retention-days: 90
