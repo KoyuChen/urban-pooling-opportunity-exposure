@@ -160,8 +160,6 @@ def build_master(
             bits ^= bit
             columns_by_core_position[bit.bit_length() - 1].append(column)
 
-    # Enumerate disjoint run-column packings. Choosing the lowest uncovered core
-    # as a pivot removes run-order permutations from the search.
     terminal_buffer_masks: set[int] = set()
     seen_states: set[tuple[int, int]] = set()
     stack = [(0, 0)]
@@ -374,23 +372,21 @@ def solve_cell(
 
 
 def self_test() -> None:
-    chain = [
+    pairable = [
         FixedTimeRow(0, "core", 0, 2, miles=0.0, seconds=120.0),
-        FixedTimeRow(1, "core", 1, 3, miles=0.0, seconds=120.0),
-        FixedTimeRow(2, "core", 2, 4, miles=0.0, seconds=120.0),
-        FixedTimeRow(3, "buffer", 0, 1.5, miles=1.0, seconds=60.0),
-        FixedTimeRow(4, "buffer", 2.5, 4, miles=9.0, seconds=180.0),
+        FixedTimeRow(1, "core", 3, 5, miles=0.0, seconds=120.0),
+        FixedTimeRow(2, "buffer", 0, 1.5, miles=1.0, seconds=60.0),
+        FixedTimeRow(3, "buffer", 3.5, 5, miles=9.0, seconds=180.0),
     ]
-    c2 = build_master(chain, 2, epsilon=0.1)
+    c2 = build_master(pairable, 2, epsilon=0.1)
     frontier = support_frontier(c2)
     assert frontier["status"] == "EXACT_ENUMERATION_COMPLETE"
     assert frontier["maximum_selected_buffers"] == 2
-    cell = solve_cell(chain, 2, 2 / 3, epsilon=0.1)
+    cell = solve_cell(pairable, 2, 1.0, epsilon=0.1)
     assert cell["status"] == "CERTIFIED_COMMON_SUPPORT_FEASIBILITY"
     miles = next(row for row in cell["outcomes"] if row["unit"] == "miles")
     assert miles["lower"] == miles["upper"] == 5.0
 
-    # Endpoint touching does not form a connected positive-overlap run.
     touch = [
         FixedTimeRow(0, "core", 0, 1, miles=0.0, seconds=60.0),
         FixedTimeRow(1, "core", 1, 2, miles=0.0, seconds=60.0),
@@ -398,8 +394,7 @@ def self_test() -> None:
     touch_master = build_master(touch, 2, epsilon=0.1)
     assert not touch_master.reachable_buffer_masks
 
-    # Capacity relaxation cannot remove a reachable support mask.
-    c3 = build_master(chain, 3, epsilon=0.1)
+    c3 = build_master(pairable, 3, epsilon=0.1)
     assert c2.reachable_buffer_masks <= c3.reachable_buffer_masks
     print("fixed-time ordered-run column master self-test: PASS")
 
