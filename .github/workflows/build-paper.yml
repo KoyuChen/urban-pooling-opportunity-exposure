@@ -40,7 +40,7 @@ jobs:
             --output-dir "$RUNNER_TEMP/path-frontier"
           python code/ai_pilot/benchmarks/joint_solver_audit.py \
             --output "$RUNNER_TEMP/joint-solver-audit.json"
-          python code/ai_pilot/benchmarks/exact_conformal_frontier.py \
+          python code/ai_pilot/benchmarks/run_exact_conformal_semantic_audit.py \
             --output-dir "$RUNNER_TEMP/exact-conformal" \
             --reference-json code/ai_pilot/benchmarks/results/conformal_matching/conformal_matching_benchmark.json
           python code/ai_pilot/benchmarks/component_frontier_benchmark.py \
