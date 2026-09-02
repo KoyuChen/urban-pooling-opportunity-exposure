@@ -1,23 +1,40 @@
 #!/usr/bin/env python3
 """Hybrid exact/coarse solver for the NYC existential timestamp Gate.
 
-The exact-singleton side uses the existing compact interval-segment ordered-run
-formulation. Only the artificial coarse-support side needs the continuous-time
-existential completion MILP. This removes unnecessary seat/order symmetry from
-exact public timestamps while leaving the estimand, cohort, and claim boundary
-unchanged.
+The exact-singleton side is certified by enumerating all feasible unlabeled run
+columns and solving the small set-partitioning master by dynamic programming.
+Only the artificial coarse-support side needs the continuous-time existential
+completion MILP. This separates exact fixed-time combinatorics from latent-time
+completion and avoids root/seat symmetry in the exact audit cells.
 """
 
 from __future__ import annotations
 
 import json
-from datetime import timezone, datetime
-from pathlib import Path
+from datetime import datetime, timezone
 from typing import Any
 
 import live_nyc_hvfhv_existential_time as existential
-import live_nyc_hvfhv_ordered_common_support as deterministic_common
 import live_nyc_hvfhv_ordered_run_smoke as base
+import ordered_run_fixed_time_master as fixed_master
+
+
+def _fixed_rows(reduced, origin):
+    output = []
+    for trip in reduced:
+        if trip.pickup is None or trip.dropoff is None:
+            raise ValueError("fixed-time enumeration requires determinate timestamps")
+        output.append(
+            fixed_master.FixedTimeRow(
+                index=trip.index,
+                role=trip.role,
+                start=(trip.pickup - origin).total_seconds(),
+                end=(trip.dropoff - origin).total_seconds(),
+                miles=trip.miles,
+                seconds=trip.seconds,
+            )
+        )
+    return output
 
 
 def run(args) -> dict[str, Any]:
@@ -74,21 +91,21 @@ def run(args) -> dict[str, Any]:
     if containment["status"] != "PASS":
         raise base.LiveDataError(f"support containment failed: {containment}")
 
-    # Singleton exact times do not need continuous endpoint, seat-order, or
-    # overlap-edge binaries. The compact deterministic formulation is exact for
-    # these fixed intervals and already carries replay/capacity audits.
-    exact_rows = base.model_rows(reduced, "exact_second")
+    # The 16-row audit cohort admits complete run-column enumeration. This gives
+    # a finite exact certificate for the fixed public timestamps, including a
+    # proof of infeasibility when a requested support count is unreachable.
+    exact_rows = _fixed_rows(reduced, origin)
     exact_cells = [
-        deterministic_common.solve_common_cell(
+        fixed_master.solve_cell(
             exact_rows,
             capacity,
             args.common_buffers_per_core,
-            args.solver_time_limit,
+            epsilon=args.overlap_epsilon_seconds,
         )
         for capacity in existential.CAPACITIES
     ]
 
-    # Coarse released supports require choosing one latent exact completion.
+    # Coarse released supports require selecting one latent exact completion.
     coarse_cells = [
         existential.solve_cell(
             coarse_support,
@@ -144,7 +161,9 @@ def run(args) -> dict[str, Any]:
             )
 
     return {
-        "report_version": "nyc-hvfhv-ordered-existential-time/v2-hybrid-exact",
+        "report_version": (
+            "nyc-hvfhv-ordered-existential-time/v3-exact-column-master"
+        ),
         "generated_at_utc": datetime.now(timezone.utc)
         .replace(microsecond=0)
         .isoformat(),
@@ -178,7 +197,8 @@ def run(args) -> dict[str, Any]:
         },
         "solver_assignment": {
             "exact_singleton": (
-                "compact deterministic interval-segment ordered-run MILP"
+                "complete feasible-run column enumeration plus exact disjoint-"
+                "column master dynamic program"
             ),
             "rounded_15m_existential": (
                 "continuous-time support-completion MILP with exact interval "
@@ -215,6 +235,7 @@ def run(args) -> dict[str, Any]:
 def main() -> int:
     args = existential.parser().parse_args()
     if args.self_test:
+        fixed_master.self_test()
         existential.self_test()
         return 0
     existential.validate(args)
