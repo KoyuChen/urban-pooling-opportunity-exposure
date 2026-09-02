@@ -95,8 +95,8 @@
     "numpy_version": "2.3.5",
     "pandas_version": "2.2.3",
     "scikit_learn_version": "1.8.0",
-    "calibration_score_array_sha256": "b4e78529b96922346f2d92f3cff836d7e4d93f9d63708e1b76ee612c1e670d4d",
-    "test_score_array_sha256": "f1b23f7973fc09b419d858a3141d251ef2fce39b99d5cf27d38eddc5720ac93b"
+    "calibration_score_array_sha256": "69a545622d642714c39a69d4d5b03a4cbc9f36796402d002c6712505371025d9",
+    "test_score_array_sha256": "5ab6cfd7af58f7424f52b22f7e90e997bac637a943c11477ea18cc47da5daced"
   },
   "score_semantics": {
     "matching_domain": "all 10,395 perfect matchings of each complete 12-node graph",
