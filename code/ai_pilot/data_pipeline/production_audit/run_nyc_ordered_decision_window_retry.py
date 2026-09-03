@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Retry-safe launcher for one NYC ordered outcome/decision window.
 
-The underlying scientific routine remains unchanged. This launcher only adds
-bounded retries around transient public-API/integrity failures and guarantees an
-aggregate-only terminal report for every predeclared window. A technical
-failure remains a failed CI cell; it is never recoded as ineligible or as a
-scientific result.
+The scientific optimizer is unchanged. Extraction uses one frozen candidate
+row snapshot per attempt; post-extraction count checks are served from that
+snapshot rather than issuing new Socrata queries. Bounded retries address
+transient public-API failures. A technical failure remains a failed CI cell and
+is never recoded as scientific ineligibility.
 """
 
 from __future__ import annotations
@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from typing import Any
 
 import live_nyc_hvfhv_ordered_decision_panel_window as legacy
+import nyc_hvfhv_consistent_snapshot as consistent
 
 TECHNICAL = "TECHNICAL_FAILURE"
 
@@ -59,6 +60,53 @@ def write_report(args: Any, report: dict[str, Any]) -> None:
     )
 
 
+def run_once(args: Any) -> dict[str, Any]:
+    cache: dict[str, Any] = {}
+    original_choose = legacy.base.choose_and_fetch
+    original_count = legacy.base.count
+
+    def choose(current_args: Any) -> dict[str, Any]:
+        selected = consistent.choose_and_fetch(current_args)
+        cache["selected"] = selected
+        return selected
+
+    def count(where: str) -> tuple[int, str, str]:
+        selected = cache.get("selected")
+        if selected is not None:
+            if where == selected["where"]["determinate"]:
+                return (
+                    int(selected["determinate_count"]),
+                    "frozen_candidate_snapshot",
+                    "cached determinate count",
+                )
+            if where == selected["where"]["indeterminate"]:
+                return (
+                    int(selected["indeterminate_count"]),
+                    "frozen_candidate_snapshot",
+                    "cached indeterminate count",
+                )
+        return original_count(where)
+
+    legacy.base.choose_and_fetch = choose
+    legacy.base.count = count
+    try:
+        report = legacy.run(args)
+    finally:
+        legacy.base.choose_and_fetch = original_choose
+        legacy.base.count = original_count
+
+    selected = cache.get("selected")
+    if selected is not None:
+        report["extraction"] = {
+            "mode": "frozen_candidate_snapshot",
+            "candidate_snapshot_sha256": selected.get("candidate_snapshot_sha256"),
+            "core_snapshot_sha256": selected.get("core_snapshot_sha256"),
+            "candidate_row_count": len(selected.get("candidate_rows", [])),
+            "post_fetch_server_recounts": 0,
+        }
+    return report
+
+
 def self_test() -> None:
     legacy.self_test()
 
@@ -88,7 +136,7 @@ def main() -> int:
     report: dict[str, Any] | None = None
     for attempt in range(1, args.fetch_attempts + 1):
         try:
-            report = legacy.run(args)
+            report = run_once(args)
             report["execution_attempt_count"] = attempt
             report["retry_diagnostics"] = attempts
             break
@@ -113,8 +161,6 @@ def main() -> int:
                 continue
             report = technical_report(args, attempts)
         except Exception:
-            # Programming/model errors must remain loud rather than being disguised as
-            # public-data instability. Preserve a traceback in the Actions log.
             traceback.print_exc()
             raise
 
