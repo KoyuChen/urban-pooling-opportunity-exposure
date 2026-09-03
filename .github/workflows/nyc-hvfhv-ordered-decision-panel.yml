@@ -1,0 +1,159 @@
+name: nyc-hvfhv-ordered-decision-panel
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_decision_panel_window.py
+      - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel.py
+      - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_DECISION_PANEL_PROTOCOL.md
+      - .github/workflows/nyc-hvfhv-ordered-decision-panel.yml
+
+concurrency:
+  group: nyc-hvfhv-ordered-decision-panel-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned optimization stack
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
+      - name: Test fixed-support frontiers, point worlds, and aggregation
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_decision_panel_window.py --self-test
+          python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel.py --self-test
+
+  window:
+    needs: unit
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - {label: jan_weekday_am_n8, start: 2023-01-03T06:00:00, end: 2023-01-03T10:00:00, core: 8}
+          - {label: jan_weekday_midday_n8, start: 2023-01-03T11:00:00, end: 2023-01-03T15:00:00, core: 8}
+          - {label: jan_weekday_pm_n8, start: 2023-01-03T17:00:00, end: 2023-01-03T21:00:00, core: 8}
+          - {label: jan_weekend_am_n8, start: 2023-01-07T09:00:00, end: 2023-01-07T13:00:00, core: 8}
+          - {label: jan_weekend_pm_n8, start: 2023-01-07T18:00:00, end: 2023-01-07T22:00:00, core: 8}
+          - {label: apr_weekday_am_n8, start: 2023-04-04T06:00:00, end: 2023-04-04T10:00:00, core: 8}
+          - {label: apr_weekday_midday_n8, start: 2023-04-04T11:00:00, end: 2023-04-04T15:00:00, core: 8}
+          - {label: apr_weekday_pm_n8, start: 2023-04-04T17:00:00, end: 2023-04-04T21:00:00, core: 8}
+          - {label: apr_weekend_am_n8, start: 2023-04-08T09:00:00, end: 2023-04-08T13:00:00, core: 8}
+          - {label: apr_weekend_pm_n8, start: 2023-04-08T18:00:00, end: 2023-04-08T22:00:00, core: 8}
+          - {label: jul_weekday_am_n8, start: 2023-07-05T06:00:00, end: 2023-07-05T10:00:00, core: 8}
+          - {label: jul_weekday_midday_n8, start: 2023-07-05T11:00:00, end: 2023-07-05T15:00:00, core: 8}
+          - {label: jul_weekday_pm_n8, start: 2023-07-05T17:00:00, end: 2023-07-05T21:00:00, core: 8}
+          - {label: jul_weekend_am_n8, start: 2023-07-08T09:00:00, end: 2023-07-08T13:00:00, core: 8}
+          - {label: jul_weekend_pm_n8, start: 2023-07-08T18:00:00, end: 2023-07-08T22:00:00, core: 8}
+          - {label: oct_weekday_am_n8, start: 2023-10-03T06:00:00, end: 2023-10-03T10:00:00, core: 8}
+          - {label: oct_weekday_midday_n8, start: 2023-10-03T11:00:00, end: 2023-10-03T15:00:00, core: 8}
+          - {label: oct_weekday_pm_n8, start: 2023-10-03T17:00:00, end: 2023-10-03T21:00:00, core: 8}
+          - {label: oct_weekend_am_n8, start: 2023-10-07T09:00:00, end: 2023-10-07T13:00:00, core: 8}
+          - {label: oct_weekend_pm_n8, start: 2023-10-07T18:00:00, end: 2023-10-07T22:00:00, core: 8}
+          - {label: jan_weekday_pm_n16, start: 2023-01-03T17:00:00, end: 2023-01-03T21:00:00, core: 16}
+          - {label: apr_weekday_pm_n16, start: 2023-04-04T17:00:00, end: 2023-04-04T21:00:00, core: 16}
+          - {label: jul_weekday_pm_n16, start: 2023-07-05T17:00:00, end: 2023-07-05T21:00:00, core: 16}
+          - {label: oct_weekday_pm_n16, start: 2023-10-03T17:00:00, end: 2023-10-03T21:00:00, core: 16}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned optimization stack
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
+      - name: Solve one fixed-support outcome/decision cell
+        shell: bash
+        run: |
+          output="tmp/nyc-ordered-decision-panel/${{ matrix.label }}"
+          mkdir -p "${output}"
+          if [[ "${{ matrix.core }}" -le 8 ]]; then
+            solver_limit=45
+            support_limit=25
+            point_limit=35
+            process_limit=26m
+          else
+            solver_limit=90
+            support_limit=50
+            point_limit=75
+            process_limit=52m
+          fi
+          timeout --signal=TERM --kill-after=30s "${process_limit}" \
+            python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_decision_panel_window.py \
+              --output-dir "${output}" \
+              --window-label "${{ matrix.label }}" \
+              --scan-start "${{ matrix.start }}" \
+              --scan-end "${{ matrix.end }}" \
+              --scan-window-hours 1 \
+              --min-core-rows "${{ matrix.core }}" \
+              --max-core-rows 40 \
+              --max-scan-rows 5000 \
+              --max-candidate-rows 2500 \
+              --ordered-core "${{ matrix.core }}" \
+              --support-time-limit "${support_limit}" \
+              --point-time-limit "${point_limit}" \
+              --solver-time-limit "${solver_limit}" \
+              2>&1 | tee "${output}/run.log"
+      - name: Upload aggregate-only window report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-ordered-decision-${{ matrix.label }}
+          path: tmp/nyc-ordered-decision-panel/${{ matrix.label }}
+          if-no-files-found: warn
+          retention-days: 90
+
+  aggregate:
+    if: ${{ always() && needs.unit.result == 'success' }}
+    needs: [unit, window]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download window reports
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nyc-ordered-decision-*
+          path: tmp/nyc-ordered-decision-downloads
+      - name: Aggregate and audit the frozen panel
+        shell: bash
+        run: |
+          mkdir -p tmp/nyc-ordered-decision-summary
+          set +e
+          python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel.py \
+            --input-dir tmp/nyc-ordered-decision-downloads \
+            --output-dir tmp/nyc-ordered-decision-summary \
+            --expected-window-count 24 \
+            2>&1 | tee tmp/nyc-ordered-decision-summary/run.log
+          status=${PIPESTATUS[0]}
+          exit ${status}
+      - name: Upload outcome and decision summary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-ordered-decision-panel-summary
+          path: tmp/nyc-ordered-decision-summary
+          if-no-files-found: warn
+          retention-days: 90
