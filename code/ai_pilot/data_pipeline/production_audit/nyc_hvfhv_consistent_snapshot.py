@@ -9,7 +9,8 @@ This module chooses a provider-time core from one scan response, fetches one
 candidate row snapshot, verifies that the provisional core multiset is contained
 in that snapshot, and derives all later count checks from the frozen snapshot.
 It does not change the candidate predicate, ordering, or outcome-blind selection
-rule.
+rule. A snapshot inconsistency is kept technical and is never relabeled as
+scientific ineligibility.
 """
 
 from __future__ import annotations
@@ -21,6 +22,9 @@ from typing import Any
 import nyc_hvfhv_smoke_fetch as raw
 
 
+SNAPSHOT_MISMATCH = "candidate snapshot omitted a provisional core multiset"
+
+
 def choose_and_fetch(args: Any) -> dict[str, Any]:
     start = raw.required_dt(args.scan_start)
     end = raw.required_dt(args.scan_end)
@@ -29,6 +33,7 @@ def choose_and_fetch(args: Any) -> dict[str, Any]:
         "pulocationid, dolocationid"
     )
     considered: list[dict[str, Any]] = []
+    snapshot_mismatch_count = 0
     for lower_window, upper_window in raw.windows(start, end, args.scan_window_hours):
         where = (
             f"pickup_datetime >= '{raw.fmt(lower_window)}' "
@@ -137,6 +142,7 @@ def choose_and_fetch(args: Any) -> dict[str, Any]:
             candidates = [*determinate_rows, *indeterminate_rows]
             missing_core = raw.multiset(provisional_core) - raw.multiset(candidates)
             if missing_core:
+                snapshot_mismatch_count += 1
                 item["status"] = "candidate_snapshot_missing_provisional_core"
                 item["missing_core_multiplicity"] = sum(missing_core.values())
                 continue
@@ -177,6 +183,11 @@ def choose_and_fetch(args: Any) -> dict[str, Any]:
                     "indeterminate": indeterminate_where,
                 },
             }
+    if snapshot_mismatch_count:
+        raise raw.LiveDataError(
+            f"{SNAPSHOT_MISMATCH}; affected candidate groups: "
+            f"{snapshot_mismatch_count}"
+        )
     raise raw.LiveDataError(
         "no scan window produced an integrity- and cap-qualified core"
     )
