@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_decision_panel_window.py
+      - code/ai_pilot/data_pipeline/production_audit/nyc_hvfhv_consistent_snapshot.py
       - code/ai_pilot/data_pipeline/production_audit/run_nyc_ordered_decision_window_retry.py
       - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel.py
       - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel_v2.py
@@ -13,7 +14,7 @@ on:
 
 concurrency:
   group: nyc-hvfhv-ordered-decision-panel-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   unit:
