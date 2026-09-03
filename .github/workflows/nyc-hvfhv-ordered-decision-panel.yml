@@ -5,7 +5,9 @@ on:
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_decision_panel_window.py
+      - code/ai_pilot/data_pipeline/production_audit/run_nyc_ordered_decision_window_retry.py
       - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel.py
+      - code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel_v2.py
       - code/ai_pilot/data_pipeline/production_audit/NYC_ORDERED_DECISION_PANEL_PROTOCOL.md
       - .github/workflows/nyc-hvfhv-ordered-decision-panel.yml
 
@@ -16,7 +18,7 @@ concurrency:
 jobs:
   unit:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     env:
       PYTHONHASHSEED: "0"
       OPENBLAS_NUM_THREADS: "1"
@@ -30,16 +32,17 @@ jobs:
           python-version: "3.12"
       - name: Install pinned optimization stack
         run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
-      - name: Test fixed-support frontiers, point worlds, and aggregation
+      - name: Test retry-safe windows, fixed-support frontiers, and aggregation
         run: |
-          python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_decision_panel_window.py --self-test
+          python code/ai_pilot/data_pipeline/production_audit/run_nyc_ordered_decision_window_retry.py --self-test
           python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel.py --self-test
+          python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel_v2.py --self-test
 
   window:
     needs: unit
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 2
       matrix:
         include:
           - {label: jan_weekday_am_n8, start: 2023-01-03T06:00:00, end: 2023-01-03T10:00:00, core: 8}
@@ -67,13 +70,14 @@ jobs:
           - {label: jul_weekday_pm_n16, start: 2023-07-05T17:00:00, end: 2023-07-05T21:00:00, core: 16}
           - {label: oct_weekday_pm_n16, start: 2023-10-03T17:00:00, end: 2023-10-03T21:00:00, core: 16}
     runs-on: ubuntu-latest
-    timeout-minutes: 65
+    timeout-minutes: 240
     env:
       PYTHONHASHSEED: "0"
       OPENBLAS_NUM_THREADS: "1"
       OMP_NUM_THREADS: "1"
       MKL_NUM_THREADS: "1"
       NUMEXPR_NUM_THREADS: "1"
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -81,24 +85,24 @@ jobs:
           python-version: "3.12"
       - name: Install pinned optimization stack
         run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
-      - name: Solve one fixed-support outcome/decision cell
+      - name: Solve one retry-safe fixed-support outcome/decision cell
         shell: bash
         run: |
           output="tmp/nyc-ordered-decision-panel/${{ matrix.label }}"
           mkdir -p "${output}"
           if [[ "${{ matrix.core }}" -le 8 ]]; then
-            solver_limit=45
-            support_limit=25
-            point_limit=35
-            process_limit=26m
-          else
             solver_limit=90
-            support_limit=50
-            point_limit=75
-            process_limit=52m
+            support_limit=90
+            point_limit=60
+            process_limit=100m
+          else
+            solver_limit=240
+            support_limit=240
+            point_limit=180
+            process_limit=220m
           fi
           timeout --signal=TERM --kill-after=30s "${process_limit}" \
-            python code/ai_pilot/data_pipeline/production_audit/live_nyc_hvfhv_ordered_decision_panel_window.py \
+            python code/ai_pilot/data_pipeline/production_audit/run_nyc_ordered_decision_window_retry.py \
               --output-dir "${output}" \
               --window-label "${{ matrix.label }}" \
               --scan-start "${{ matrix.start }}" \
@@ -112,6 +116,8 @@ jobs:
               --support-time-limit "${support_limit}" \
               --point-time-limit "${point_limit}" \
               --solver-time-limit "${solver_limit}" \
+              --fetch-attempts 3 \
+              --retry-sleep-seconds 12 \
               2>&1 | tee "${output}/run.log"
       - name: Upload aggregate-only window report
         if: always()
@@ -126,7 +132,7 @@ jobs:
     if: ${{ always() && needs.unit.result == 'success' }}
     needs: [unit, window]
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -137,19 +143,20 @@ jobs:
         with:
           pattern: nyc-ordered-decision-*
           path: tmp/nyc-ordered-decision-downloads
-      - name: Aggregate and audit the frozen panel
+          merge-multiple: false
+      - name: Aggregate, audit, and run threshold sensitivity
         shell: bash
         run: |
           mkdir -p tmp/nyc-ordered-decision-summary
           set +e
-          python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel.py \
+          python code/ai_pilot/data_pipeline/production_audit/aggregate_nyc_ordered_decision_panel_v2.py \
             --input-dir tmp/nyc-ordered-decision-downloads \
             --output-dir tmp/nyc-ordered-decision-summary \
             --expected-window-count 24 \
             2>&1 | tee tmp/nyc-ordered-decision-summary/run.log
           status=${PIPESTATUS[0]}
           exit ${status}
-      - name: Upload outcome and decision summary
+      - name: Upload outcome, decision, and threshold-sensitivity summary
         if: always()
         uses: actions/upload-artifact@v4
         with:
