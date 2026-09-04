@@ -1,0 +1,81 @@
+{
+  "claim_boundary": {
+    "not_supported": "operational query costs, privacy utility, or transfer to public city data",
+    "supported": "exact information savings under the controlled generator and audit atom families"
+  },
+  "design": {
+    "capacities": [2, 3, 4],
+    "composition_conditioned_on_true_support_count": true,
+    "partition_conditioned_on_complete_true_selected_set": true,
+    "partition_instances_per_capacity": 100,
+    "thresholds": [0.25, 0.5, 0.75],
+    "usage_instances_per_capacity": 1000
+  },
+  "partition_summary": {
+    "ambiguous_instance_count": 272,
+    "decision_certificate": {
+      "count": 272,
+      "maximum": 3.0,
+      "mean": 2.014705882352941,
+      "median": 2.0,
+      "p90": 3.0
+    },
+    "decision_to_full_ratio": {
+      "count": 272,
+      "maximum": 1.0,
+      "mean": 0.7723651960784315,
+      "median": 0.75,
+      "p90": 1.0
+    },
+    "facts_saved": {
+      "count": 272,
+      "maximum": 2.0,
+      "mean": 0.6286764705882353,
+      "median": 1.0,
+      "p90": 2.0
+    },
+    "full_partition_certificate": {
+      "count": 272,
+      "maximum": 4.0,
+      "mean": 2.6433823529411766,
+      "median": 3.0,
+      "p90": 4.0
+    },
+    "instance_count": 300,
+    "strict_savings_rate": 0.5257352941176471
+  },
+  "report_version": "eventfrontier-selective-disclosure-recovery-gap/v1",
+  "usage_summary": {
+    "ambiguous_comparison_count": 5954,
+    "comparison_count": 9000,
+    "decision_certificate": {
+      "count": 5954,
+      "maximum": 4.0,
+      "mean": 1.5574403762176687,
+      "median": 1.0,
+      "p90": 3.0
+    },
+    "decision_to_full_ratio": {
+      "count": 5954,
+      "maximum": 1.0,
+      "mean": 0.45197906169521895,
+      "median": 0.3333333333333333,
+      "p90": 0.75
+    },
+    "facts_saved": {
+      "count": 5954,
+      "maximum": 3.0,
+      "mean": 1.930802821632516,
+      "median": 2.0,
+      "p90": 3.0
+    },
+    "full_selected_set_certificate": {
+      "count": 5954,
+      "maximum": 4.0,
+      "mean": 3.488243197850185,
+      "median": 3.0,
+      "p90": 4.0
+    },
+    "strict_savings_rate": 0.9514612025529056
+  }
+}
