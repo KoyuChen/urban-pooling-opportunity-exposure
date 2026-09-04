@@ -1,0 +1,115 @@
+\section{Proof of Proposition~\ref{prop:nesting}}
+Take $F=(t,\Pi)\in\F(\T,C,q)$. Since each $t_i\in\T_i\subseteq\T'_i$, the
+same completion is allowed by $\T'$. Every event in $\Pi$ has the same
+positive-overlap graph under the unchanged completion, and its maximum
+occupancy is at most $C\le C'$. Core and buffer incidence constraints and the
+selected-buffer count $q$ are unchanged. Hence
+$F\in\F(\T',C',q)$. Set inclusion gives nesting of reachable counts and
+maxima. Minimizing a fixed functional over a superset can only weakly lower its
+optimum, and maximizing can only weakly raise it.
+
+\section{Fixed-Span Connectivity and Total Unimodularity}
+Let $S$ be a selected interval family with union span $[a,b)$. If the
+positive-overlap graph is connected, the union is connected and covers every
+elementary segment. At an internal endpoint boundary, a path from an interval
+active immediately to its left to one active immediately to its right must
+contain an interval crossing the boundary strictly; endpoint touching alone is
+not a positive-overlap edge.
+
+Conversely, suppose every elementary segment is covered and every internal
+boundary is strictly crossed. Moving from left to right, the crossing interval
+at each boundary overlaps intervals covering the adjacent segments with
+positive length. Induction joins the segment-covering intervals into one
+positive-overlap component. Any selected interval lies inside the covered span
+and overlaps that component on a segment it covers, so the full family is
+connected.
+
+Interleaving segment and boundary rows makes every interval column
+consecutive. Lower-coverage, upper-capacity, and bridge constraints are signed
+copies of this interval matrix; root and companion fixes are identity rows.
+The matrix is totally unimodular with integral right-hand side, proving
+Theorem~\ref{thm:oracle}.
+
+\section{Proof Detail for Proposition~\ref{prop:bp}}
+At every branch node, exact pricing establishes the optimum of the node LP over
+the full column universe compatible with that node. If a free optional row has
+fractional total usage $z_i\in(0,1)$, every integer solution satisfies either
+$z_i=0$ or $z_i=1$, so the two children partition the parent integer set.
+
+When all row usages are integral but the column vector remains fractional,
+Ryan--Foster branching selects active rows $i,j$ with fractional co-membership
+\[
+0<\sum_{R\ni i,j}\lambda_R<1.
+\]
+Every integer partition places $i$ and $j$ either in the same event or in
+different events. The together and separate children again form an exhaustive
+disjunction. In a priced event column, together means either both rows are
+selected or both are excluded; separate means at least one is excluded.
+Enumerating these finite Boolean cases yields forced-in/forced-out subproblems.
+For each root and span, they add only variable bounds and identity equalities to
+the totally unimodular interval formulation, so pricing remains exact.
+
+Node LP values are valid upper bounds for support maximization. Incumbents are
+valid lower bounds after replay against core-equality, buffer-at-most-once,
+connectivity, and capacity constraints. Standard best-bound branch-and-bound
+therefore preserves the global gap. When the queue is empty, no unexplored
+integer solution can exceed the incumbent; if the queue remains nonempty, the
+largest open-node LP value remains a valid global upper bound.
+
+\section{Master Nonintegrality Witness}
+At capacity two, use four cores
+$c_0=[1,2)$, $c_1=[4,7)$, $c_2=[0,2)$, and $c_3=[1,2)$, and five buffers
+$b_0=[0,7)$, $b_1=[5,6)$, $b_2=[5,7)$, $b_3=[1,2)$, and $b_4=[2,6)$.
+Complete event-column enumeration has LP value four. One fractional solution
+uses weights $1/2,1,1/2,1/2,1/2,1/2$ on
+\[
+\{c_0,c_2\},\ \{c_1,b_1\},\ \{c_2,b_3\},\ \{c_3,b_3\},\
+\{c_0,b_0,b_4\},\ \{c_3,b_0,b_4\}.
+\]
+Every core has total coverage one and each buffer has use at most one. Complete
+integer enumeration gives value three, attained for example by
+$\{c_0,c_2\}$, $\{c_3,b_0,b_1\}$, and $\{c_1,b_4\}$.
+The branch-and-price implementation closes this witness in 17 processed nodes,
+using both buffer-usage and pair-co-membership branching.
+
+\section{Controlled-Truth Generator and Evaluation Contract}
+Each controlled instance has three core rows and eight candidate buffers. Core
+intervals are staggered. Every core receives a direct true member, and one or
+two cores receive a sequential member whose interval overlaps the direct
+member. Distractors are temporally plausible and have broad public outcome
+values. The generated truth has peak occupancy at most two; the same instances
+can therefore be evaluated under $C=2,3,4$, where higher $C$ enlarges only the
+analyst's feasible set.
+
+The composition benchmark reveals the true selected-buffer count $q$ but never
+the selected identities. This isolates relation ambiguity from support-count
+error. The feasible point comparator maximizes an outcome-blind temporal score
+over all worlds with that $q$. A nearest-$q$ rule ignores feasibility.
+Maximum-cardinality, maximum-overlap pair matching and positive-overlap
+connected components are support baselines that do not receive $q$.
+
+For threshold $\eta$, the frontier certifies a positive decision when
+$\underline H\ge\eta$, a negative decision when $\overline H<\eta$, and
+ambiguity otherwise. If a feasible point world disagrees with the generated
+truth while the frontier is identified, two feasible worlds would lie on
+opposite sides despite both endpoints lying on one side, a contradiction.
+This explains the observed 100\% ambiguity flag rate for feasible-point errors;
+the experiment measures how often such errors occur.
+
+Candidate truncation ranks rows without using the public outcome. ``True world
+representable'' requires every true member to remain and the exact true
+partition to exist in the truncated master. ``Frontier exists at true $q$''
+only requires some alternative world with the same count. ``Scalar covered''
+is weaker still: the true mean can fall between endpoints by coincidence even
+when the true joint world is absent. These nested validation concepts are
+reported separately.
+
+\section{Artifact Claim Boundary}
+The repository contains deterministic small-instance oracles, exact fixed-time
+frontiers, numerical existential-time programs, branch-and-price status
+validators, controlled-truth benchmarks, public-data snapshot and count
+contracts, and aggregate evidence manifests. Supported claims are limited to
+the declared candidate universes and models. No artifact output should be
+interpreted as recovered partner identity, a complete private event, an
+estimate of realized capacity, or a statement about a city's proprietary
+production system.

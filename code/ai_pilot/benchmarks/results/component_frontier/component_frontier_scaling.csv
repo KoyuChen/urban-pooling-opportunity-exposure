@@ -1,8 +1,0 @@
-components,records,gamma,score_floor,interleaved_schedule_width,concatenated_schedule_width,max_component_schedule_width,interleaved_monolithic_status,interleaved_monolithic_max_single_frontier_records,interleaved_monolithic_runtime_ms,concatenated_monolithic_status,concatenated_monolithic_max_single_frontier_records,concatenated_monolithic_runtime_ms,component_status,component_max_single_frontier_records,component_total_terminal_frontier_records,component_runtime_ms,lower,upper
-2,8,2,4,4,2,2,EXACT_OPTIMAL,6,1.045,EXACT_OPTIMAL,5,0.959,EXACT_OPTIMAL,3,4,1.144,1,2
-4,16,4,8,8,2,2,EXACT_OPTIMAL,24,5.47,EXACT_OPTIMAL,8,2.414,EXACT_OPTIMAL,3,8,2.312,3,7
-6,24,4,8,12,2,2,EXACT_OPTIMAL,88,17.747,EXACT_OPTIMAL,8,4.223,EXACT_OPTIMAL,3,12,4.054,3,11
-8,32,6,12,16,2,2,EXACT_OPTIMAL,374,94.792,EXACT_OPTIMAL,11,7.12,EXACT_OPTIMAL,4,16,4.595,6,21
-10,40,8,16,20,2,2,EXACT_OPTIMAL,1524,556.057,EXACT_OPTIMAL,14,12.975,EXACT_OPTIMAL,5,20,6.39,10,34
-12,48,8,16,24,2,2,EXACT_OPTIMAL,5778,2305.821,EXACT_OPTIMAL,14,13.938,EXACT_OPTIMAL,5,24,6.695,10,42
-13,52,10,20,26,2,2,FRONTIER_LIMIT,12183,601.385,EXACT_OPTIMAL,17,17.552,EXACT_OPTIMAL,6,26,7.596,15,55

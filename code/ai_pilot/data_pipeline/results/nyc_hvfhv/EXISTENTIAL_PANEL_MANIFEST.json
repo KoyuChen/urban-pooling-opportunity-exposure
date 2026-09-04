@@ -1,0 +1,110 @@
+{
+  "audit": {
+    "C2_windows_with_positive_certified_gain": 6,
+    "C3_windows_with_positive_certified_gain": 6,
+    "C4_right_censored_by_12_buffer_audit_ceiling": true,
+    "coarse_C2_reaches_exact_C3_max": 2,
+    "coarse_C3_reaches_exact_C4_max": 6,
+    "coarse_unresolved_window_capacity_cells": 7,
+    "complete_capacity_triplets": 6,
+    "problem_count": 0,
+    "status": "PASS"
+  },
+  "claim_boundary": {
+    "not_supported": "NYC population prevalence, TLC's actual release operator, actual co-riders or vehicle runs, realized capacity, production matching logic, or causal effects",
+    "supported": "descriptive replication over six predeclared purposive audit windows under the declared artificial timestamp-support model"
+  },
+  "descriptive_metrics": {
+    "C2_certified_gain_lower_bounds": [
+      1,
+      3,
+      4,
+      7,
+      2,
+      3
+    ],
+    "C2_gain_lower_bound_mean": 3.3333333333333335,
+    "C2_gain_lower_bound_median": 3.0,
+    "C2_local_capacity_substitution_ratio_lower_bounds": [
+      0.25,
+      0.75,
+      1.0,
+      1.75,
+      0.5,
+      0.75
+    ],
+    "C2_ratio_mean": 0.8333333333333334,
+    "C2_ratio_median": 0.75,
+    "C2_windows_ratio_at_least_one": 2,
+    "C3_certified_gain_lower_bounds": [
+      1,
+      3,
+      4,
+      4,
+      2,
+      3
+    ],
+    "C3_gain_lower_bound_mean": 2.8333333333333335,
+    "C3_gain_lower_bound_median": 3.0
+  },
+  "design": {
+    "artificial_time_support": "nearest-15-minute endpoints with independent +/-7.5-minute supports",
+    "audit_core_rows_per_window": 4,
+    "buffer_selection_uses_outcomes": false,
+    "candidate_buffer_rows_per_window": 12,
+    "capacities": [
+      2,
+      3,
+      4
+    ],
+    "declared_windows": 6,
+    "one_public_extraction_reused_across_capacities": true,
+    "positive_overlap_margin_seconds": 1.0
+  },
+  "frozen_at_utc": "2026-09-02T07:23:25Z",
+  "redaction": {
+    "aggregate_only": true,
+    "latent_timestamp_witnesses_emitted": false,
+    "raw_rows_emitted": false,
+    "row_identifiers_emitted": false
+  },
+  "report_version": "nyc-existential-support-panel/frozen-v1",
+  "source_branch": "real-data-smoke-20260901",
+  "source_commit": "b79d7939e1c3ecee90a1334202065968e84b4244",
+  "workflow": {
+    "conclusion": "success",
+    "name": "nyc-hvfhv-existential-panel",
+    "run_id": 33599734813,
+    "summary_artifact": {
+      "digest": "sha256:8bbe75bd2c14c298d6c060efbbe6235bd859dec4859660b721d3e8454e144b33",
+      "id": 9836005918,
+      "name": "nyc-existential-panel-summary"
+    },
+    "window_artifacts": {
+      "apr_weekday_pm": {
+        "digest": "sha256:d67d565179287ae1da075b8743963e74367ef05a5525a3fb44728465284af0b3",
+        "id": 9835978457
+      },
+      "jan_weekday_am": {
+        "digest": "sha256:41bd089aa9e7c5d9f20f925f2dc61ad27ca53328dd1363ad895dbf8416369f57",
+        "id": 9834895103
+      },
+      "jan_weekday_pm": {
+        "digest": "sha256:b74d628074cc05b26d43047f659973cadf6aee33285fa6e9236bc35ec5679622",
+        "id": 9834892660
+      },
+      "jan_weekend_pm": {
+        "digest": "sha256:5ad077d4e709716103372a1caed99b9a08110e993df47e395b3176e95b4186c3",
+        "id": 9835249702
+      },
+      "jul_weekday_pm": {
+        "digest": "sha256:0a4f41ee64aab1309d35a40fc38899f96283727f6560ae9efa69379f96e4fda5",
+        "id": 9835740813
+      },
+      "oct_weekday_pm": {
+        "digest": "sha256:203a9d70543b12f9af0f0ff884654ea84cd8158e8dd5d5bf409eda42ed1bea58",
+        "id": 9835999629
+      }
+    }
+  }
+}

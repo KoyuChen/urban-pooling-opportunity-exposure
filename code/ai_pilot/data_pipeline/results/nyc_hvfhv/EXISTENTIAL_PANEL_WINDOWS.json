@@ -1,0 +1,68 @@
+[
+  {
+    "capacity_equivalent_step_count": 1,
+    "coarse_C2_reaches_exact_C3_max": false,
+    "coarse_C3_reaches_exact_C4_max": true,
+    "cohort_key_count": 1,
+    "complete_capacity_triplet": true,
+    "scan_end": "2023-04-04T21:00:00",
+    "scan_start": "2023-04-04T17:00:00",
+    "snapshot_key_count": 1,
+    "window_label": "apr_weekday_pm"
+  },
+  {
+    "capacity_equivalent_step_count": 1,
+    "coarse_C2_reaches_exact_C3_max": false,
+    "coarse_C3_reaches_exact_C4_max": true,
+    "cohort_key_count": 1,
+    "complete_capacity_triplet": true,
+    "scan_end": "2023-01-03T10:00:00",
+    "scan_start": "2023-01-03T06:00:00",
+    "snapshot_key_count": 1,
+    "window_label": "jan_weekday_am"
+  },
+  {
+    "capacity_equivalent_step_count": 2,
+    "coarse_C2_reaches_exact_C3_max": true,
+    "coarse_C3_reaches_exact_C4_max": true,
+    "cohort_key_count": 1,
+    "complete_capacity_triplet": true,
+    "scan_end": "2023-01-03T21:00:00",
+    "scan_start": "2023-01-03T17:00:00",
+    "snapshot_key_count": 1,
+    "window_label": "jan_weekday_pm"
+  },
+  {
+    "capacity_equivalent_step_count": 2,
+    "coarse_C2_reaches_exact_C3_max": true,
+    "coarse_C3_reaches_exact_C4_max": true,
+    "cohort_key_count": 1,
+    "complete_capacity_triplet": true,
+    "scan_end": "2023-01-07T22:00:00",
+    "scan_start": "2023-01-07T18:00:00",
+    "snapshot_key_count": 1,
+    "window_label": "jan_weekend_pm"
+  },
+  {
+    "capacity_equivalent_step_count": 1,
+    "coarse_C2_reaches_exact_C3_max": false,
+    "coarse_C3_reaches_exact_C4_max": true,
+    "cohort_key_count": 1,
+    "complete_capacity_triplet": true,
+    "scan_end": "2023-07-05T21:00:00",
+    "scan_start": "2023-07-05T17:00:00",
+    "snapshot_key_count": 1,
+    "window_label": "jul_weekday_pm"
+  },
+  {
+    "capacity_equivalent_step_count": 1,
+    "coarse_C2_reaches_exact_C3_max": false,
+    "coarse_C3_reaches_exact_C4_max": true,
+    "cohort_key_count": 1,
+    "complete_capacity_triplet": true,
+    "scan_end": "2023-10-03T21:00:00",
+    "scan_start": "2023-10-03T17:00:00",
+    "snapshot_key_count": 1,
+    "window_label": "oct_weekday_pm"
+  }
+]

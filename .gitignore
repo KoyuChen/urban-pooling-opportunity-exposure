@@ -1,5 +1,9 @@
+# Paper builds
 paper/build/
 paper/build_acm/
+paper/KDD_Research_Working_Draft.pdf
+paper/latex-build.log
+paper/main.pdf
 paper/*.aux
 paper/*.bbl
 paper/*.blg
@@ -7,18 +11,27 @@ paper/*.fdb_latexmk
 paper/*.fls
 paper/*.log
 paper/*.out
-paper/main.pdf
-paper/figures/benchmark_summary.png
-paper/figures/synthetic_bounds.png
 paper/*.synctex.gz
 paper/*.toc
+paper/figures/benchmark_summary.png
+paper/figures/synthetic_bounds.png
+
+# Python and local environments
 **/__pycache__/
 *.pyc
-.DS_Store
 .venv/
+
+# Local TeX state
 texmf/
 texmf-var/
 texmf-config/
+
+# Generated evidence, downloads, and scratch space
 tmp/
+artifacts/
+downloads/
 subtasks/
 *.zip
+
+# OS/editor noise
+.DS_Store

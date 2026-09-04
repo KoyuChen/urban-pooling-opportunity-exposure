@@ -1,0 +1,7 @@
+capacity,common_buffer_rows,common_buffer_rows_per_core,lower,lower_mip_gap,query,status,unit,upper,upper_mip_gap,width
+2,72.0,9.0,3.4401527777777776,0.0,mean_selected_buffer_miles_at_common_support,CERTIFIED_OPTIMAL_PAIR,miles,9.679222222222222,0.0,6.239069444444445
+2,72.0,9.0,17.77939814814815,0.0,mean_selected_buffer_trip_minutes_at_common_support,CERTIFIED_OPTIMAL_PAIR,minutes,37.1474537037037,0.0,19.368055555555546
+3,72.0,9.0,3.1314861111111107,0.0,mean_selected_buffer_miles_at_common_support,CERTIFIED_OPTIMAL_PAIR,miles,15.447986111111113,0.0,12.316500000000003
+3,72.0,9.0,15.982870370370371,0.0,mean_selected_buffer_trip_minutes_at_common_support,CERTIFIED_OPTIMAL_PAIR,minutes,55.71157407407408,0.0,39.72870370370371
+4,72.0,9.0,3.1162638888888887,0.0,mean_selected_buffer_miles_at_common_support,CERTIFIED_OPTIMAL_PAIR,miles,16.165888888888887,0.0,13.049624999999999
+4,72.0,9.0,15.92361111111111,0.0,mean_selected_buffer_trip_minutes_at_common_support,CERTIFIED_OPTIMAL_PAIR,minutes,58.90555555555555,0.0,42.98194444444444

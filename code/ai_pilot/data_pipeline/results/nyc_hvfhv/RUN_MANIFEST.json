@@ -1,0 +1,18 @@
+{
+  "coarsening_smoke": {
+    "artifact_id": 9808875413,
+    "artifact_name": "nyc-hvfhv-coarsening",
+    "artifact_zip_sha256": "622a1ad6c2416c26a3c6e424382f76ab88984638edb40f244cbe77613adfc1d3",
+    "workflow_run_id": 33528697566
+  },
+  "frozen_at_utc": "2026-09-01T15:57:43Z",
+  "monthly_smoke": {
+    "artifact_id": 9808787001,
+    "artifact_name": "nyc-hvfhv-smoke",
+    "artifact_zip_sha256": "ba6baba8d3aa9809a0a3fdde65536b973a904306555af86c02244ffc439aacdd",
+    "workflow_run_id": 33528697571
+  },
+  "raw_rows_emitted": false,
+  "row_identifiers_emitted": false,
+  "source_commit": "6f5c469dfde0fa4ecc6f5bb94b4f1a03836ca565"
+}

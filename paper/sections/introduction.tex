@@ -1,0 +1,120 @@
+\section{Introduction}
+
+Many data releases preserve rows while deleting relationships. A stream may
+report each encounter's time, location, duration, and outcome but suppress the
+key that says which rows belonged to the same referral episode, household
+visit, field-service tour, shared ride, or other bounded-capacity event.
+Analysts can still count transactions, but event-level composition, exposure,
+dispersion, utilization, and threshold decisions depend on an unobserved
+partition. A clustering or linkage algorithm returns one plausible partition;
+it does not by itself establish that the downstream conclusion is invariant to
+the other partitions that remain compatible with the release.
+
+We call such streams \emph{row-complete and relation-incomplete}. Their central
+knowledge-discovery problem is not always to guess the missing relation.
+Sometimes the scientifically relevant question is instead:
+\begin{quote}
+Which aggregate conclusions survive every latent event world allowed by the
+released information and explicitly stated structural assumptions?
+\end{quote}
+This distinction matters whenever a point reconstruction is used to trigger a
+policy threshold, rank subpopulations, or compare operating regimes. A point
+estimate may be feasible and reproducible yet still sit on the wrong side of a
+decision boundary relative to another equally feasible world.
+
+Ride pooling provides a demanding public audit instance, but not the scope of
+the framework. A released row may state that a trip was successfully shared
+without exposing a co-rider or vehicle-run key. High-capacity events are not
+pairwise cliques: $A$ may overlap $B$, $B$ may overlap $C$, and $A$ may never
+overlap $C$, while all three belong to one sequential run whose simultaneous
+occupancy is two. The same ordered-event structure appears when cases,
+customers, or visits enter and leave a shared episode over time. Timestamp
+coarsening creates a second ambiguity. Treating the full public envelope as the
+realized interval is generally wrong because it can simultaneously create
+artificial overlap and artificial congestion. The correct
+partial-identification quantifier asks whether \emph{there exists} a latent
+exact timestamp completion inside every released support.
+
+We introduce \methodname, a certification framework for aggregate queries on
+such event streams. A visible candidate universe is divided into required core
+rows and optional boundary buffers. A feasible world chooses exact intervals
+inside released timestamp supports and partitions selected rows into connected,
+bounded-occupancy temporal events. Rather than outputting a preferred graph, the
+method minimizes and maximizes a downstream functional over all feasible worlds.
+Every displayed endpoint is accompanied by an attained witness internally or by
+an explicit solver status; unresolved computations are not converted into
+infeasibility. The resulting interval is conditional on the declared candidate
+universe, supports, connectivity rule, and capacity. It is not a frequentist
+confidence interval, nor does it claim that every interior scalar is attainable.
+
+This paper makes four contributions.
+\begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=3pt]
+\item \textbf{Identification geometry.} We formalize core--buffer ordered-event
+worlds with set-valued timestamps, positive-overlap connectivity, occupancy
+capacity, and aggregate functionals. We prove joint nesting under timestamp
+support expansion and capacity relaxation and define a capacity-equivalent
+information-loss index.
+\item \textbf{Structure-exploiting optimization.} For one fixed-root,
+fixed-span event, interleaved segment-coverage and boundary-bridge rows have the
+consecutive-ones property. This gives an integral LP oracle for additive event
+pricing and an exact Dantzig--Wolfe certificate for the full master relaxation.
+\item \textbf{Certified integer decomposition.} The cross-event master is not
+integral. We therefore branch first on optional-row usage and then on
+Ryan--Foster pair co-membership. Each branch is priced through a finite family
+of forced-in/forced-out versions of the same interval LP. Exhausting the branch
+queue certifies the global integer support optimum; timeouts retain valid lower
+and upper bounds.
+\item \textbf{Validation and public audits.} In 3,000 controlled-truth
+instances, we evaluate point reconstructions, threshold decisions, and
+candidate truncation separately from city evidence. Chicago and NYC then expose
+complementary release regimes and separate hidden-linkage, timestamp-support,
+and capacity ambiguity without publishing reconstructed links.
+\end{enumerate}
+
+The controlled study shows why certification changes the knowledge-discovery
+answer. Conditional on the true support count but not membership labels, a
+feasible temporal point rule makes the wrong decision at predeclared thresholds
+in 17.4--19.0\% of cases across capacities two through four. Every error occurs
+when the certified frontier crosses the threshold, so \methodname{} correctly
+refuses to present that decision as relation-invariant. Candidate completeness
+is a distinct Gate: keeping roughly 84\% of true members leaves the full true
+event world representable only 31--33\% of the time, although a nonempty
+frontier at the true support count usually still exists. Row-level recall can
+therefore substantially overstate relational coverage.
+
+The public audits provide complementary geometry rather than recovery accuracy.
+In a fixed NYC pairwise benchmark, artificial 15-minute time coarsening raises
+candidate edges by 79.5\% and several identified widths by 12--15\%. In an
+ordered-event common-support comparison, most of the $C=2$ to $C=4$ widening
+occurs at the first capacity relaxation. Across six predeclared audit windows,
+artificial timestamp supports increase certified reachable support at both
+$C=2$ and $C=3$ in every window, with regime-dependent magnitude. On a small
+exact-time public cohort, column generation needs 102 of 1,719 feasible
+capacity-four event columns to close the LP, and branch-and-price independently
+certifies the integer optimum. Fine temporal resolution therefore does not
+imply fine relational resolution, while tractable local event structure does
+not imply an integral global partition.
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw=black!65,rounded corners=2pt,minimum height=0.68in,
+    text width=0.185\textwidth,align=center,inner sep=5pt},
+  arrow/.style={-{Latex[length=2mm]},line width=0.55pt,black!70},
+  node distance=0.018\textwidth
+]
+\node[box] (rows) {\textbf{Released rows}\\attributes and timestamp supports};
+\node[box,right=of rows] (worlds) {\textbf{Latent event worlds}\\exact times and ordered partitions};
+\node[box,right=of worlds] (rules) {\textbf{Declared rules}\\core coverage, buffer use, capacity $C$};
+\node[box,right=of rules] (bounds) {\textbf{Certified aggregate}\\endpoints, decision, or abstention};
+\draw[arrow] (rows) -- (worlds);
+\draw[arrow] (worlds) -- (rules);
+\draw[arrow] (rules) -- (bounds);
+\end{tikzpicture}
+\caption{\methodname{} does not output a preferred missing relation. The
+release and analyst-declared support rules define latent event worlds;
+optimization discovers the aggregate statements invariant across those worlds.}
+\Description{Four boxes show released rows flowing to latent event worlds,
+declared feasibility rules, and certified aggregate conclusions.}
+\label{fig:overview}
+\end{figure*}

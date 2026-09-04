@@ -1,0 +1,150 @@
+name: chicago-live-audits
+
+on:
+  workflow_dispatch:
+    inputs:
+      audit:
+        description: Live audit to run
+        required: true
+        default: both
+        type: choice
+        options:
+          - both
+          - release-operator
+          - k2-frontier
+
+concurrency:
+  group: chicago-live-audits-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-operator:
+    if: ${{ inputs.audit == 'both' || inputs.audit == 'release-operator' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0
+      - name: Check release-audit entrypoint
+        run: |
+          python -m py_compile \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests \
+            -p 'test_live_chicago_release_operator_audit.py' -v
+      - name: Run live release-operator audit
+        run: |
+          python \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py \
+            --output-dir tmp/chicago-release-operator-audit \
+            --core-start 2026-01-13T17:30:00 \
+            --page-size 500 \
+            --max-candidate-rows 5000 \
+            --max-contributor-rows 100000 \
+            --request-timeout 90 \
+            --request-attempts 4 \
+            --solver-time-limit 60
+      - name: Enforce claim boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("tmp/chicago-release-operator-audit/release_operator_audit.json")
+              .read_text(encoding="utf-8")
+          )
+          assert report["report_version"] == "chicago-release-operator-live-audit/v2"
+          assert report["overall_status"] == "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY"
+          extraction = report["extraction"]
+          assert extraction["candidate_count_closed"] is True
+          assert extraction["all_public_contributors_count_closed"] is True
+          assert extraction["broad_or_query_used"] is False
+          assert extraction["full_row_cross_column_range_query_used"] is False
+          assert extraction["narrow_cross_column_index_query_used"] is True
+          assert extraction["exact_endpoint_bin_full_row_shards_used"] is True
+          assert extraction["fetch_strategy"] == (
+              "NARROW_OVERLAP_INDEX_THEN_EXACT_START_AND_ENDPOINT_BIN_SHARDS"
+          )
+          graph = report["released_time_envelope_graph_sensitivity"]
+          assert graph[
+              "outer_released_time_envelope_graph_core_cover_multiplicity_status"
+          ] == (
+              "CERTIFIED_TWO_DISTINCT_CORE_COVERS_IN_"
+              "POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH"
+          )
+          assert graph["max_certified_mip_gap"] <= 1e-9
+          assert graph["max_certified_replay_residual"] <= 1e-9
+          boundary = report["identification_boundary"]
+          assert boundary["hidden_partner_identification_claim"] == "NONE"
+          assert boundary["hidden_run_closure"] == "NOT_CONSTRUCTED_AND_NOT_CLAIMED"
+          PY
+      - name: Upload aggregate release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-release-operator-audit
+          path: tmp/chicago-release-operator-audit
+          if-no-files-found: warn
+          retention-days: 90
+
+  k2-frontier:
+    if: ${{ inputs.audit == 'both' || inputs.audit == 'k2-frontier' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --disable-pip-version-check \
+            numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8
+      - name: Check frontier entrypoint
+        run: |
+          python \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
+            --self-test
+      - name: Run K=2 boundary and support audit
+        run: |
+          python \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
+            --output-dir tmp/chicago-k2-frontier-boundary \
+            --scan-start 2026-01-13T17:00:00 \
+            --scan-end 2026-01-13T21:00:00 \
+            --min-core-rows 12 \
+            --max-core-rows 60 \
+            --max-candidate-rows 5000 \
+            --page-size 100 \
+            --request-timeout 90 \
+            --request-attempts 3 \
+            --base-radius-km 2 \
+            --solver-time-limit 60 \
+            --boundary-padding-minutes 0,5,10,15,30
+      - name: Upload aggregate frontier evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-frontier-boundary
+          path: tmp/chicago-k2-frontier-boundary
+          if-no-files-found: warn
+          retention-days: 90

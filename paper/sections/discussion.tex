@@ -1,0 +1,89 @@
+\section{Discussion}
+
+\paragraph{Knowledge discovery under missing relations.}
+The method changes the target from ``recover one plausible relation'' to
+``certify which downstream statements are invariant to the admissible
+relations.'' The controlled experiments show why this is not a semantic
+distinction: a fully feasible point reconstruction can cross the wrong policy
+threshold, while the frontier correctly marks the conclusion as ambiguous.
+Conversely, when the entire frontier lies on one side, every feasible world
+agrees. This certified-decision view is portable to referral episodes,
+household or field visits, service tours, and other row-complete streams with
+hidden temporal grouping.
+
+\paragraph{What is identified.}
+Endpoints are sharp or certified only relative to the declared candidate
+universe, timestamp supports, connectivity rule, capacity, and query. They do
+not identify a unique partition. Expanding timestamp support or capacity cannot
+shrink a fixed-support feasible set, but comparisons at capacity-specific
+maximum support change the conditioning event. Candidate truncation is more
+fundamental: if a true event is deleted before optimization, endpoint
+certification cannot restore it. The controlled benchmark demonstrates that
+high member recall, a nonempty frontier, and even scalar coverage can coexist
+with omission of the true joint world.
+
+\paragraph{Algorithmic boundary.}
+Theorem~\ref{thm:oracle} makes fixed-span event pricing polynomial, and
+Proposition~\ref{prop:cg} certifies the full LP without enumerating all columns.
+Proposition~\ref{prop:bp} supplies an exact integer path through
+branch-compatible row and pair disjunctions. The full algorithm is not claimed
+polynomial: the number of forced-in/forced-out pricing cases can grow
+exponentially with branch depth. The public 4+12 audit is an independent
+correctness check, not evidence of city-scale closure. The next scaling
+question is empirical---how root gap, branching, and generated columns evolve
+with temporal density and core size---and can be reported honestly through
+anytime global gaps when optimality is not reached.
+
+\paragraph{Baselines and external validity.}
+Our point rules are deliberately simple and interpretable. They establish that
+feasibility or temporal plausibility does not guarantee a relation-invariant
+decision, but they are not a final contest against modern learned linkage. A
+stronger application study would train a scoring model on a separate
+ground-truth source, calibrate candidate recall without using target outcomes,
+and compare its point answer with the certified frontier. Public Chicago and
+NYC data cannot supply that operational ground truth. Their role is to audit
+the ambiguity geometry induced by real release operators, not to estimate
+partner-recovery accuracy.
+
+\section{Limitations and Ethical Considerations}
+
+Neither city release exposes a public vehicle-run key. We therefore do not
+claim actual co-riders, partner recall outside a declared candidate universe,
+production matching logic, realized pool size, or physical vehicle capacity.
+The artificial 15-minute NYC supports are an information-loss intervention,
+not an assertion about the TLC observation operator. The six-window panel is
+purposive and too small for a citywide prevalence or causal estimate. The
+controlled generator validates method logic under known truth but does not
+turn its error rates into operational accuracy estimates.
+
+Numerical claims retain their certificate class. Complete enumeration is used
+only where explicitly stated; branch-and-price optima require an exhausted
+node queue; time-limited runs keep valid incumbent and open-node bounds.
+Candidate support remains an analyst-facing assumption rather than a hidden
+modeling choice.
+
+The unit of analysis is a released transaction, not a stable person. Zones and
+neighborhood attributes describe context, not individual socioeconomic status
+or preferences. Extremal event assignments can create reidentification risk,
+so the public artifact suppresses row identifiers, event columns, and latent
+world witnesses and reports aggregate results and provenance metadata only.
+
+\section{Generative AI Usage}
+Generative AI assisted drafting, code review, counterexample search, and
+editing. All mathematical claims, empirical outputs, citations, and artifact
+states remain author-verified; generated text is not treated as city evidence.
+
+\section{Conclusion}
+Row-complete data can remain relation-incomplete enough to reverse downstream
+decisions. \methodname{} represents every admissible ordered temporal event,
+then reports only aggregate conclusions that survive that uncertainty. The
+identification geometry separates candidate support, timestamp support, and
+capacity. The optimization geometry separates an integral local pricing
+problem, a nonintegral global master, and an exact branch-and-price certificate.
+Across 3,000 controlled instances, plausible feasible point answers make
+systematic threshold errors that the frontier consistently flags as ambiguous;
+candidate truncation further shows that row recall is not relational-world
+coverage. Chicago and NYC audits demonstrate that these issues persist in
+public event streams with complementary release regimes. The resulting object
+is not a recovered partner graph, but a certified boundary between discoverable
+and relation-dependent aggregate knowledge.
