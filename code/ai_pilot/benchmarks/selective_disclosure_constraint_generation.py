@@ -63,7 +63,7 @@ def solve_event_master(
         add([bool(c.member_mask & (1 << i)) for c in columns], 1, 1)
     for i in positions(master.all_buffer_mask, len(master.rows)):
         add([bool(c.member_mask & (1 << i)) for c in columns], 0, 1)
-    add([c.buffer_count for c in columns], q, q)
+    add([c.buffer_mask.bit_count() for c in columns], q, q)
 
     if selected_buffer_mask is not None:
         for i in positions(master.all_buffer_mask, len(master.rows)):
