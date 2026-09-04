@@ -1,29 +1,18 @@
 #!/usr/bin/env python3
-"""Constraint-generation audit for selective relation disclosure.
+"""Exact constraint-generation audit for selective relation disclosure.
 
-The explicit selective-disclosure benchmark enumerates all feasible selected
-sets or partitions and solves a hitting set over their disagreement patterns.
-This module validates the scalable decomposition proposed in the accompanying
-research note:
-
-1. a certificate master chooses row-usage or same-event pair facts;
-2. a mixed-integer EventFrontier separation problem searches for an
-   opposite-decision world consistent with the chosen facts;
-3. every discovered world adds one disagreement-set cut.
-
-The current implementation uses the complete small event-column master so it can
-be audited against explicit enumeration.  Replacing this separation MILP with
-the existing branch-and-price node solver is the next scale step.
+A certificate master chooses row-usage or same-event pair facts. A complete
+small event-column MILP then separates any feasible world with the opposite
+downstream decision. Each witness contributes one disagreement-set cut. The
+procedure never enumerates feasible worlds; explicit enumeration is used only
+as a small-instance audit oracle.
 """
 
 from __future__ import annotations
 
 import argparse
-import csv
-from dataclasses import dataclass
 import itertools
 import json
-import math
 from pathlib import Path
 import statistics
 import time
@@ -36,325 +25,432 @@ import event_frontier_truth_benchmark as canonical
 import event_frontier_truth_benchmark_scale as scaled
 import selective_disclosure_benchmark as explicit
 
-TOL = explicit.TOL
+TOL = 1e-8
 
 
-@dataclass(frozen=True)
-class SeparationResult:
-    status: str
-    disagreement: frozenset[int] = frozenset()
-    objective: float | None = None
-    selected_column_masks: tuple[int, ...] = ()
-    solve_seconds: float = 0.0
-    mip_gap: float | None = None
+def positions(mask: int, n: int) -> tuple[int, ...]:
+    return tuple(i for i in range(n) if mask & (1 << i))
 
 
-def _positions(mask: int, row_count: int) -> tuple[int, ...]:
-    return tuple(position for position in range(row_count) if mask & (1 << position))
-
-
-def _active_rows(master: Any, selected_buffer_mask: int) -> tuple[int, ...]:
-    return tuple(
-        position
-        for position in range(len(master.rows))
-        if master.all_core_mask & (1 << position)
-        or selected_buffer_mask & (1 << position)
-    )
-
-
-def _solve_column_master(
+def solve_event_master(
     master: Any,
     objective: Sequence[float],
     *,
     maximize: bool,
-    support_count: int,
-    fixed_usage: Mapping[int, int],
-    fixed_pairs: Mapping[tuple[int, int], int],
+    q: int,
+    fixed_usage: Mapping[int, int] | None = None,
+    fixed_pairs: Mapping[tuple[int, int], int] | None = None,
     selected_buffer_mask: int | None = None,
-) -> tuple[Any, tuple[int, ...], float]:
+) -> tuple[tuple[int, ...] | None, float, float | None]:
+    """Solve the complete-column integer event master and return event masks."""
+
+    fixed_usage = fixed_usage or {}
+    fixed_pairs = fixed_pairs or {}
     columns = tuple(master.columns)
-    column_count = len(columns)
-    if len(objective) != column_count:
-        raise ValueError("objective length does not match event columns")
+    if len(objective) != len(columns):
+        raise ValueError("objective length does not match column count")
 
-    lower_rows: list[float] = []
-    upper_rows: list[float] = []
-    matrix_rows: list[np.ndarray] = []
+    rows: list[np.ndarray] = []
+    lower: list[float] = []
+    upper: list[float] = []
 
-    for position in _positions(master.all_core_mask, len(master.rows)):
-        row = np.asarray(
-            [float(bool(column.member_mask & (1 << position))) for column in columns]
-        )
-        matrix_rows.append(row)
-        lower_rows.append(1.0)
-        upper_rows.append(1.0)
+    def add(coefficients: Sequence[float], lo: float, hi: float) -> None:
+        rows.append(np.asarray(coefficients, dtype=float))
+        lower.append(float(lo))
+        upper.append(float(hi))
 
-    for position in _positions(master.all_buffer_mask, len(master.rows)):
-        row = np.asarray(
-            [float(bool(column.member_mask & (1 << position))) for column in columns]
-        )
-        matrix_rows.append(row)
-        lower_rows.append(0.0)
-        upper_rows.append(1.0)
-
-    support_row = np.asarray([float(column.buffer_count) for column in columns])
-    matrix_rows.append(support_row)
-    lower_rows.append(float(support_count))
-    upper_rows.append(float(support_count))
+    for i in positions(master.all_core_mask, len(master.rows)):
+        add([bool(c.member_mask & (1 << i)) for c in columns], 1, 1)
+    for i in positions(master.all_buffer_mask, len(master.rows)):
+        add([bool(c.member_mask & (1 << i)) for c in columns], 0, 1)
+    add([c.buffer_count for c in columns], q, q)
 
     if selected_buffer_mask is not None:
-        for position in _positions(master.all_buffer_mask, len(master.rows)):
-            answer = int(bool(selected_buffer_mask & (1 << position)))
-            row = np.asarray(
-                [float(bool(column.member_mask & (1 << position))) for column in columns]
-            )
-            matrix_rows.append(row)
-            lower_rows.append(float(answer))
-            upper_rows.append(float(answer))
-
-    for position, answer in sorted(fixed_usage.items()):
-        row = np.asarray(
-            [float(bool(column.member_mask & (1 << position))) for column in columns]
-        )
-        matrix_rows.append(row)
-        lower_rows.append(float(answer))
-        upper_rows.append(float(answer))
-
-    for pair, answer in sorted(fixed_pairs.items()):
-        left, right = pair
-        row = np.asarray(
+        for i in positions(master.all_buffer_mask, len(master.rows)):
+            answer = int(bool(selected_buffer_mask & (1 << i)))
+            add([bool(c.member_mask & (1 << i)) for c in columns], answer, answer)
+    for i, answer in sorted(fixed_usage.items()):
+        add([bool(c.member_mask & (1 << i)) for c in columns], answer, answer)
+    for (i, j), answer in sorted(fixed_pairs.items()):
+        add(
             [
-                float(
-                    bool(column.member_mask & (1 << left))
-                    and bool(column.member_mask & (1 << right))
-                )
-                for column in columns
-            ]
+                bool(c.member_mask & (1 << i))
+                and bool(c.member_mask & (1 << j))
+                for c in columns
+            ],
+            answer,
+            answer,
         )
-        matrix_rows.append(row)
-        lower_rows.append(float(answer))
-        upper_rows.append(float(answer))
 
-    matrix = np.vstack(matrix_rows)
-    c = np.asarray(objective, dtype=float)
+    cost = np.asarray(objective, dtype=float)
     if maximize:
-        c = -c
+        cost = -cost
     start = time.perf_counter()
     result = milp(
-        c=c,
-        integrality=np.ones(column_count, dtype=int),
-        bounds=Bounds(np.zeros(column_count), np.ones(column_count)),
+        c=cost,
+        integrality=np.ones(len(columns), dtype=int),
+        bounds=Bounds(np.zeros(len(columns)), np.ones(len(columns))),
         constraints=LinearConstraint(
-            matrix,
-            np.asarray(lower_rows),
-            np.asarray(upper_rows),
+            np.vstack(rows), np.asarray(lower), np.asarray(upper)
         ),
         options={"time_limit": 30.0, "mip_rel_gap": 0.0},
     )
     elapsed = time.perf_counter() - start
-    mip_gap = getattr(result, "mip_gap", None)
+    gap = getattr(result, "mip_gap", None)
     if (
         not result.success
         or result.x is None
         or result.fun is None
-        or (mip_gap is not None and float(mip_gap) > 1e-8)
+        or (gap is not None and float(gap) > TOL)
     ):
-        return result, (), elapsed
+        return None, elapsed, None if gap is None else float(gap)
     selected = tuple(
-        columns[index].member_mask
-        for index, value in enumerate(result.x)
-        if value >= 0.5
+        columns[k].member_mask for k, value in enumerate(result.x) if value >= 0.5
     )
-    return result, selected, elapsed
+    return selected, elapsed, None if gap is None else float(gap)
 
 
-def _usage_mask_from_columns(master: Any, columns: Sequence[int]) -> int:
-    used = 0
-    for mask in columns:
-        used |= mask & master.all_buffer_mask
-    return used
+def usage_mask(master: Any, events: Sequence[int]) -> int:
+    mask = 0
+    for event in events:
+        mask |= event & master.all_buffer_mask
+    return mask
 
 
-def _pair_signature(
-    event_masks: Sequence[int], pairs: Sequence[tuple[int, int]]
-) -> int:
-    return explicit._pair_signature(event_masks, pairs)
+def pair_signature(events: Sequence[int], pairs: Sequence[tuple[int, int]]) -> int:
+    signature = 0
+    for atom, (i, j) in enumerate(pairs):
+        if any(event & (1 << i) and event & (1 << j) for event in events):
+            signature |= 1 << atom
+    return signature
 
 
-def separate_usage_decision(
+def usage_separation(
     master: Any,
     values: Mapping[int, float],
     q: int,
     threshold: float,
     true_mask: int,
-    disclosed_positions: Sequence[int],
-) -> SeparationResult:
+    certificate: Sequence[int],
+) -> tuple[str, frozenset[int], float]:
     true_decision = explicit._decision(true_mask, values, q, threshold)
-    fixed_usage = {
-        position: int(bool(true_mask & (1 << position)))
-        for position in disclosed_positions
-    }
+    fixed = {i: int(bool(true_mask & (1 << i))) for i in certificate}
     objective = [
-        sum(
-            values[position]
-            for position in values
-            if column.buffer_mask & (1 << position)
-        )
-        for column in master.columns
+        sum(value for i, value in values.items() if c.buffer_mask & (1 << i))
+        for c in master.columns
     ]
-    result, selected_columns, elapsed = _solve_column_master(
+    events, elapsed, _gap = solve_event_master(
         master,
         objective,
         maximize=not true_decision,
-        support_count=q,
-        fixed_usage=fixed_usage,
-        fixed_pairs={},
+        q=q,
+        fixed_usage=fixed,
     )
-    if not result.success or result.x is None:
-        return SeparationResult(status="SEPARATION_UNRESOLVED", solve_seconds=elapsed)
-    witness_mask = _usage_mask_from_columns(master, selected_columns)
-    witness_decision = explicit._decision(
-        witness_mask, values, q, threshold
+    if events is None:
+        return "UNRESOLVED", frozenset(), elapsed
+    witness = usage_mask(master, events)
+    if explicit._decision(witness, values, q, threshold) == true_decision:
+        return "NO_OPPOSITE_WORLD", frozenset(), elapsed
+    cut = frozenset(
+        i
+        for i in values
+        if bool(witness & (1 << i)) != bool(true_mask & (1 << i))
     )
-    objective_value = sum(values[position] for position in values if witness_mask & (1 << position))
-    mip_gap = getattr(result, "mip_gap", None)
-    if witness_decision == true_decision:
-        return SeparationResult(
-            status="NO_OPPOSITE_WORLD",
-            objective=objective_value,
-            selected_column_masks=selected_columns,
-            solve_seconds=elapsed,
-            mip_gap=None if mip_gap is None else float(mip_gap),
-        )
-    disagreement = frozenset(
-        position
-        for position in values
-        if bool(witness_mask & (1 << position))
-        != bool(true_mask & (1 << position))
-    )
-    return SeparationResult(
-        status="OPPOSITE_WORLD_FOUND",
-        disagreement=disagreement,
-        objective=objective_value,
-        selected_column_masks=selected_columns,
-        solve_seconds=elapsed,
-        mip_gap=None if mip_gap is None else float(mip_gap),
-    )
+    if not cut:
+        raise AssertionError("opposite usage world has empty disagreement set")
+    return "OPPOSITE_WORLD", cut, elapsed
 
 
-def separate_event_count_decision(
+def pair_separation(
     master: Any,
-    true_events: Sequence[int],
-    true_buffer_mask: int,
-    cutoff: int,
+    instance: Any,
     pairs: Sequence[tuple[int, int]],
-    disclosed_atoms: Sequence[int],
-) -> SeparationResult:
-    true_count = len(true_events)
-    true_decision = true_count <= cutoff
-    true_signature = _pair_signature(true_events, pairs)
-    fixed_pairs = {
-        pairs[atom]: int(bool(true_signature & (1 << atom)))
-        for atom in disclosed_atoms
-    }
-    result, selected_columns, elapsed = _solve_column_master(
+    certificate: Sequence[int],
+    cutoff: int = 2,
+) -> tuple[str, frozenset[int], float]:
+    true_buffer_mask = explicit._member_mask(instance.true_buffer_indices)
+    true_events = tuple(explicit._member_mask(run) for run in instance.true_runs)
+    true_decision = len(true_events) <= cutoff
+    truth = pair_signature(true_events, pairs)
+    fixed = {pairs[a]: int(bool(truth & (1 << a))) for a in certificate}
+    events, elapsed, _gap = solve_event_master(
         master,
         np.ones(len(master.columns)),
         maximize=true_decision,
-        support_count=true_buffer_mask.bit_count(),
-        fixed_usage={},
-        fixed_pairs=fixed_pairs,
+        q=true_buffer_mask.bit_count(),
+        fixed_pairs=fixed,
         selected_buffer_mask=true_buffer_mask,
     )
-    if not result.success or result.x is None:
-        return SeparationResult(status="SEPARATION_UNRESOLVED", solve_seconds=elapsed)
-    witness_count = len(selected_columns)
-    witness_decision = witness_count <= cutoff
-    mip_gap = getattr(result, "mip_gap", None)
-    if witness_decision == true_decision:
-        return SeparationResult(
-            status="NO_OPPOSITE_WORLD",
-            objective=float(witness_count),
-            selected_column_masks=selected_columns,
-            solve_seconds=elapsed,
-            mip_gap=None if mip_gap is None else float(mip_gap),
-        )
-    witness_signature = _pair_signature(selected_columns, pairs)
-    disagreement = frozenset(
-        atom
-        for atom in range(len(pairs))
-        if bool(true_signature & (1 << atom))
-        != bool(witness_signature & (1 << atom))
+    if events is None:
+        return "UNRESOLVED", frozenset(), elapsed
+    if (len(events) <= cutoff) == true_decision:
+        return "NO_OPPOSITE_WORLD", frozenset(), elapsed
+    witness = pair_signature(events, pairs)
+    cut = frozenset(
+        a
+        for a in range(len(pairs))
+        if bool(truth & (1 << a)) != bool(witness & (1 << a))
     )
-    return SeparationResult(
-        status="OPPOSITE_WORLD_FOUND",
-        disagreement=disagreement,
-        objective=float(witness_count),
-        selected_column_masks=selected_columns,
-        solve_seconds=elapsed,
-        mip_gap=None if mip_gap is None else float(mip_gap),
-    )
+    if not cut:
+        raise AssertionError("opposite partition has empty pair disagreement set")
+    return "OPPOSITE_WORLD", cut, elapsed
 
 
-def _minimum_small_hitting_set(
+def minimum_hitting_set(
     cuts: Iterable[frozenset[int]], atoms: Sequence[int]
 ) -> tuple[int, tuple[int, ...]]:
     cuts = explicit._inclusion_minimal_sets(cuts)
     if not cuts:
         return 0, ()
-    for size in range(1, len(atoms) + 1):
-        for chosen in itertools.combinations#atoms, size):
-            chosen_set = set(chosen)
-            if all(chosen_set & set(cut) for cut in cuts):
-                return size, tuple(chosen)
-    raise AssertionError("finite hitting-set master has no solution")
+    return explicit._minimum_hitting_set(cuts, atoms)
 
 
-def constraint_generate_usage(
-    master: Any,
-    values: Mapping[int, float],
-    q: int,
-    threshold: float,
-    true_mask: int,
-    buffer_positions: Sequence[int],
-) -> dict[str, Any]:
+def constraint_generate(atoms: Sequence[int], separator: Any) -> dict[str, Any]:
     cuts: list[frozenset[int]] = []
-    total_seconds = 0.0
+    elapsed = 0.0
     for iteration in range(10_000):
-        size, certificate = _minimum_small_hitting_set(cuts, buffer_positions)
-        separated = separate_usage_decision(
-            master,
-            values,
-            q,
-            threshold,
-            true_mask,
-            certificate,
-        )
-        total_seconds += separated.solve_seconds
-        if separated.status == "NO_OPPOSITE_WORLD":
+        size, certificate = minimum_hitting_set(cuts, atoms)
+        status, cut, seconds = separator(certificate)
+        elapsed += seconds
+        if status == "NO_OPPOSITE_WORLD":
             return {
                 "status": "CERTIFIED_OPTIMAL_CERTIFICATE",
                 "certificate_size": size,
-                "separation_iterations": iteration + 1,
+                "iterations": iteration + 1,
                 "generated_cuts": len(cuts),
-                "separation_seconds": total_seconds,
+                "separation_seconds": elapsed,
             }
-        if separated.status != "OPPOSITE_WORLD_FOUND":
+        if status != "OPPOSITE_WORLD":
             return {
-                "status": separated.status,
+                "status": status,
                 "certificate_size": None,
-                "separation_iterations": iteration + 1,
+                "iterations": iteration + 1,
                 "generated_cuts": len(cuts),
-                "separation_seconds": total_seconds,
+                "separation_seconds": elapsed,
             }
-        if separated.disagreement in cuts:
-            raise AssertionError("separation returned a duplicate unhit cut")
-        cuts.append(separated.disagreement)
-    raise RuntimeError("usage constraint generation exceeded 10,000 cuts")
+        if cut in cuts:
+            raise AssertionError("separator returned a duplicate unhit cut")
+        cuts.append(cut)
+    raise RuntimeError("constraint generation exceeded 10,000 cuts")
 
 
-def constraint_generate_pairs(
-    master: Any,
-    instance: Any,
-    cutoff: int = 2,
-) 6ßÎwr«²ÚîÆ­y
+def explicit_usage_size(
+    masks: Sequence[int],
+    true_mask: int,
+    values: Mapping[int, float],
+    q: int,
+    threshold: float,
+    atoms: Sequence[int],
+) -> int:
+    truth = explicit._decision(true_mask, values, q, threshold)
+    cuts = [
+        frozenset(
+            i
+            for i in atoms
+            if bool(mask & (1 << i)) != bool(true_mask & (1 << i))
+        )
+        for mask in masks
+        if explicit._decision(mask, values, q, threshold) != truth
+    ]
+    return minimum_hitting_set(cuts, atoms)[0]
+
+
+def describe(values: Sequence[float]) -> dict[str, float | int | None]:
+    if not values:
+        return {"count": 0, "mean": None, "median": None, "maximum": None}
+    return {
+        "count": len(values),
+        "mean": statistics.fmean(values),
+        "median": statistics.median(values),
+        "maximum": max(values),
+    }
+
+
+def run(
+    usage_instances_per_capacity: int,
+    pair_instances_per_capacity: int,
+    base_seed: int,
+) -> dict[str, Any]:
+    usage_rows: list[dict[str, Any]] = []
+    pair_rows: list[dict[str, Any]] = []
+    for capacity in scaled.CAPACITIES:
+        for offset in range(usage_instances_per_capacity):
+            seed = base_seed + capacity * 1_000_000 + offset
+            instance = scaled.generate_instance(seed, capacity)
+            master = canonical.base.exact.build_master(
+                instance.rows, capacity, epsilon=0.1
+            )
+            true_mask = explicit._member_mask(instance.true_buffer_indices)
+            q = true_mask.bit_count()
+            values = explicit._buffer_values(master)
+            usage_atoms = explicit._buffer_positions(master)
+            masks = tuple(
+                mask
+                for mask in master.reachable_buffer_masks
+                if mask.bit_count() == q
+            )
+            for threshold in explicit.DEFAULT_THRESHOLDS:
+                exact = explicit_usage_size(
+                    masks, true_mask, values, q, threshold, usage_atoms
+                )
+                generated = constraint_generate(
+                    usage_atoms,
+                    lambda certificate, threshold=threshold: usage_separation(
+                        master,
+                        values,
+                        q,
+                        threshold,
+                        true_mask,
+                        certificate,
+                    ),
+                )
+                if generated["certificate_size"] != exact:
+                    raise AssertionError(
+                        f"usage mismatch seed={seed} C={capacity} "
+                        f"threshold={threshold}: {exact} versus {generated}"
+                    )
+                usage_rows.append(
+                    {
+                        "seed": seed,
+                        "capacity": capacity,
+                        "threshold": threshold,
+                        "event_columns": len(master.columns),
+                        "explicit_size": exact,
+                        **generated,
+                    }
+                )
+
+            if offset < pair_instances_per_capacity:
+                exact = explicit.minimum_pair_certificate_for_event_count(
+                    master, instance
+                )
+                true_buffer_mask = explicit._member_mask(instance.true_buffer_indices)
+                active = tuple(
+                    i
+                    for i in range(len(master.rows))
+                    if master.all_core_mask & (1 << i)
+                    or true_buffer_mask & (1 << i)
+                )
+                pairs = tuple(itertools.combinations(active, 2))
+                pair_atoms = tuple(range(len(pairs)))
+                generated = constraint_generate(
+                    pair_atoms,
+                    lambda certificate: pair_separation(
+                        master, instance, pairs, certificate
+                    ),
+                )
+                exact_size = int(exact["minimum_pair_certificate_size"])
+                if generated["certificate_size"] != exact_size:
+                    raise AssertionError(
+                        f"pair mismatch seed={seed} C={capacity}: "
+                        f"{exact_size} versus {generated}"
+                    )
+                pair_rows.append(
+                    {
+                        "seed": seed,
+                        "capacity": capacity,
+                        "event_columns": len(master.columns),
+                        "explicit_size": exact_size,
+                        "initially_ambiguous": exact["ambiguous_before_disclosure"],
+                        **generated,
+                    }
+                )
+
+    def summarize(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+        return {
+            "cell_count": len(rows),
+            "exact_agreement_count": sum(
+                row["status"] == "CERTIFIED_OPTIMAL_CERTIFICATE" for row in rows
+            ),
+            "iterations": describe([float(row["iterations"]) for row in rows]),
+            "generated_cuts": describe(
+                [float(row["generated_cuts"]) for row in rows]
+            ),
+            "separation_seconds": describe(
+                [float(row["separation_seconds"]) for row in rows]
+            ),
+        }
+
+    return {
+        "report_version": "eventfrontier-selective-disclosure-separation/v1",
+        "design": {
+            "capacities": list(scaled.CAPACITIES),
+            "usage_instances_per_capacity": usage_instances_per_capacity,
+            "usage_thresholds": list(explicit.DEFAULT_THRESHOLDS),
+            "pair_instances_per_capacity": pair_instances_per_capacity,
+            "world_enumeration_used_by_separation": False,
+            "explicit_enumeration_used_only_as_oracle": True,
+        },
+        "usage_summary": summarize(usage_rows),
+        "pair_summary": summarize(pair_rows),
+        "usage_cells": usage_rows,
+        "pair_cells": pair_rows,
+        "claim_boundary": {
+            "supported": "exact small-instance agreement of constraint generation and explicit certificates",
+            "not_supported": "branch-and-price scaling, noisy answers, or operational disclosure",
+        },
+    }
+
+
+def render(report: Mapping[str, Any]) -> str:
+    usage = report["usage_summary"]
+    pair = report["pair_summary"]
+    return "\n".join(
+        [
+            "# Selective-disclosure constraint generation",
+            "",
+            f"Usage certificates: **{usage['exact_agreement_count']}/{usage['cell_count']}** exact agreements.",
+            f"Pair certificates: **{pair['exact_agreement_count']}/{pair['cell_count']}** exact agreements.",
+            "",
+            "| Interface | Mean iterations | Max | Mean cuts | Mean separation seconds |",
+            "|---|---:|---:|---:|---:|",
+            f"| Row usage | {usage['iterations']['mean']:.2f} | {usage['iterations']['maximum']:.0f} | {usage['generated_cuts']['mean']:.2f} | {usage['separation_seconds']['mean']:.4f} |",
+            f"| Pair co-membership | {pair['iterations']['mean']:.2f} | {pair['iterations']['maximum']:.0f} | {pair['generated_cuts']['mean']:.2f} | {pair['separation_seconds']['mean']:.4f} |",
+            "",
+            "Separation solves the complete small event-column integer master but never enumerates feasible worlds. Explicit enumeration is only the audit oracle. The next scale step replaces the complete-column separator with branch-and-price.",
+            "",
+        ]
+    )
+
+
+def self_test() -> None:
+    report = run(1, 1, 20260905)
+    assert report["usage_summary"]["exact_agreement_count"] == 9
+    assert report["pair_summary"]["exact_agreement_count"] == 3
+    print("selective disclosure constraint-generation self-test: PASS")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--usage-instances-per-capacity", type=int, default=100)
+    parser.add_argument("--pair-instances-per-capacity", type=int, default=30)
+    parser.add_argument("--base-seed", type=int, default=20260902)
+    parser.add_argument("--output-dir", type=Path)
+    parser.add_argument("--self-test", action="store_true")
+    args = parser.parse_args()
+    if args.self_test:
+        self_test()
+        return 0
+    if args.output_dir is None:
+        parser.error("--output-dir is required unless --self-test is used")
+    report = run(
+        args.usage_instances_per_capacity,
+        args.pair_instances_per_capacity,
+        args.base_seed,
+    )
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    compact = {
+        key: value
+        for key, value in report.items()
+        if key not in {"usage_cells", "pair_cells"}
+    }
+    (args.output_dir / "report.json").write_text(
+        json.dumps(compact, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    (args.output_dir / "REPORT.md").write_text(render(report), encoding="utf-8")
+    print(render(report))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
