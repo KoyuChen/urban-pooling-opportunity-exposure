@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit.py
+      - code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
       - code/ai_pilot/data_pipeline/production_audit/tests/test_live_chicago_release_operator_audit.py
       - code/ai_pilot/data_pipeline/chicago_release_adapter.py
       - code/ai_pilot/data_pipeline/tests/test_chicago_release_adapter.py
@@ -70,14 +71,14 @@ jobs:
       - name: Audit the live public release operator and identification boundary
         run: |
           python \
-            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit.py \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py \
             --output-dir tmp/chicago-release-operator-audit \
             --core-start 2026-01-13T17:30:00 \
-            --page-size 1000 \
+            --page-size 500 \
             --max-candidate-rows 5000 \
             --max-contributor-rows 100000 \
-            --request-timeout 90 \
-            --request-attempts 3 \
+            --request-timeout 60 \
+            --request-attempts 4 \
             --solver-time-limit 60
       - name: Enforce the fail-closed claim boundary
         run: |
@@ -98,6 +99,8 @@ jobs:
           assert report["extraction"]["candidate_count_closed"] is True
           assert report["extraction"]["all_public_contributors_count_closed"] is True
           assert report["extraction"]["candidate_null_start_or_end_rows"] == 0
+          assert report["extraction"]["broad_or_query_used"] is False
+          assert report["extraction"]["fetch_strategy"] == "PARTITIONED_COUNT_CLOSED_BRANCH_UNION_WITH_PUBLIC_TRIP_ID_DEDUPLICATION"
 
           masks = report["release_masks"]
           assert masks["mask_equalities_scope"] == "SNAPSHOT_SUBSET_DESCRIPTIVE_ONLY"
