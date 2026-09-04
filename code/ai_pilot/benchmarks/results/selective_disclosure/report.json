@@ -1,0 +1,236 @@
+{
+  "adaptive_usage_policy": {
+    "ambiguous_comparison_count": 1189,
+    "comparison_count": 1800,
+    "conditional_minimax_worst_case_queries": {
+      "count": 1189,
+      "maximum": 5.0,
+      "mean": 4.022708158116064,
+      "median": 4.0,
+      "p90": 5.0
+    },
+    "conditional_realized_queries": {
+      "count": 1189,
+      "maximum": 5.0,
+      "mean": 2.8040370058873,
+      "median": 3.0,
+      "p90": 4.0
+    }
+  },
+  "claim_boundary": {
+    "not_supported": "availability, cost, legality, or accuracy of private relation queries in Chicago, NYC, or an operational platform",
+    "supported": "exact realized-world and minimax query counts under the declared controlled generator, fixed support, audit atoms, and thresholds"
+  },
+  "design": {
+    "adaptive_instances_per_capacity": 200,
+    "capacities": [2, 3, 4],
+    "composition_task_conditioned_on_true_support_count": true,
+    "event_count_task_conditioned_on_complete_true_selected_set": true,
+    "instances_per_capacity": 1000,
+    "pair_atoms": "same latent event",
+    "partition_instances_per_capacity": 100,
+    "thresholds": [0.25, 0.5, 0.75],
+    "truth_used_only_for_oracle_answers_and_evaluation": true,
+    "usage_atoms": "selected in any event"
+  },
+  "partition_certificates": {
+    "ambiguous_instance_count": 272,
+    "by_capacity": [
+      {
+        "ambiguous_cells_resolvable_by_row_usage": 0,
+        "capacity": 2,
+        "conditional_minimum_pair_certificate": {
+          "count": 72,
+          "maximum": 2.0,
+          "mean": 1.1527777777777777,
+          "median": 1.0,
+          "p90": 2.0
+        },
+        "event_count_ambiguity_rate": 0.72,
+        "instance_count": 100,
+        "mean_event_count_width": 0.72
+      },
+      {
+        "ambiguous_cells_resolvable_by_row_usage": 0,
+        "capacity": 3,
+        "conditional_minimum_pair_certificate": {
+          "count": 100,
+          "maximum": 3.0,
+          "mean": 2.15,
+          "median": 2.0,
+          "p90": 3.0
+        },
+        "event_count_ambiguity_rate": 1.0,
+        "instance_count": 100,
+        "mean_event_count_width": 1.14
+      },
+      {
+        "ambiguous_cells_resolvable_by_row_usage": 0,
+        "capacity": 4,
+        "conditional_minimum_pair_certificate": {
+          "count": 100,
+          "maximum": 3.0,
+          "mean": 2.5,
+          "median": 2.5,
+          "p90": 3.0
+        },
+        "event_count_ambiguity_rate": 1.0,
+        "instance_count": 100,
+        "mean_event_count_width": 1.77
+      }
+    ],
+    "conditional_minimum_pair_certificate": {
+      "count": 272,
+      "maximum": 3.0,
+      "mean": 2.014705882352941,
+      "median": 2.0,
+      "p90": 3.0
+    },
+    "event_count_ambiguity_rate": 0.9066666666666666,
+    "instance_count": 300
+  },
+  "report_version": "eventfrontier-selective-disclosure/v1",
+  "usage_certificates": {
+    "ambiguity_rate": 0.6615555555555556,
+    "ambiguous_comparison_count": 5954,
+    "by_capacity_threshold": [
+      {
+        "ambiguity_rate": 0.565,
+        "capacity": 2,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.7716814159292036,
+        "conditional_certificate_at_most_2_rate": 1.0,
+        "conditional_certificate_at_most_3_rate": 1.0,
+        "conditional_certificate_count": 565,
+        "conditional_certificate_maximum": 2.0,
+        "conditional_certificate_mean": 1.2283185840707964,
+        "conditional_certificate_median": 1.0,
+        "conditional_certificate_p90": 2.0,
+        "threshold": 0.25
+      },
+      {
+        "ambiguity_rate": 0.906,
+        "capacity": 2,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.347682119205298,
+        "conditional_certificate_at_most_2_rate": 0.7792494481236203,
+        "conditional_certificate_at_most_3_rate": 0.9878587196467992,
+        "conditional_certificate_count": 906,
+        "conditional_certificate_maximum": 4.0,
+        "conditional_certificate_mean": 1.8852097130242826,
+        "conditional_certificate_median": 2.0,
+        "conditional_certificate_p90": 3.0,
+        "threshold": 0.5
+      },
+      {
+        "ambiguity_rate": 0.46,
+        "capacity": 2,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.8304347826086956,
+        "conditional_certificate_at_most_2_rate": 1.0,
+        "conditional_certificate_at_most_3_rate": 1.0,
+        "conditional_certificate_count": 460,
+        "conditional_certificate_maximum": 2.0,
+        "conditional_certificate_mean": 1.1695652173913043,
+        "conditional_certificate_median": 1.0,
+        "conditional_certificate_p90": 2.0,
+        "threshold": 0.75
+      },
+      {
+        "ambiguity_rate": 0.584,
+        "capacity": 3,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.7191780821917808,
+        "conditional_certificate_at_most_2_rate": 1.0,
+        "conditional_certificate_at_most_3_rate": 1.0,
+        "conditional_certificate_count": 584,
+        "conditional_certificate_maximum": 2.0,
+        "conditional_certificate_mean": 1.2808219178082192,
+        "conditional_certificate_median": 1.0,
+        "conditional_certificate_p90": 2.0,
+        "threshold": 0.25
+      },
+      {
+        "ambiguity_rate": 0.905,
+        "capacity": 3,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.3414364640883978,
+        "conditional_certificate_at_most_2_rate": 0.7723756906077348,
+        "conditional_certificate_at_most_3_rate": 0.9767955801104973,
+        "conditional_certificate_count": 905,
+        "conditional_certificate_maximum": 4.0,
+        "conditional_certificate_mean": 1.9093922651933701,
+        "conditional_certificate_median": 2.0,
+        "conditional_certificate_p90": 3.0,
+        "threshold": 0.5
+      },
+      {
+        "ambiguity_rate": 0.497,
+        "capacity": 3,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.738430583501006,
+        "conditional_certificate_at_most_2_rate": 1.0,
+        "conditional_certificate_at_most_3_rate": 1.0,
+        "conditional_certificate_count": 497,
+        "conditional_certificate_maximum": 2.0,
+        "conditional_certificate_mean": 1.261569416498994,
+        "conditional_certificate_median": 1.0,
+        "conditional_certificate_p90": 2.0,
+        "threshold": 0.75
+      },
+      {
+        "ambiguity_rate": 0.611,
+        "capacity": 4,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.6857610474631751,
+        "conditional_certificate_at_most_2_rate": 1.0,
+        "conditional_certificate_at_most_3_rate": 1.0,
+        "conditional_certificate_count": 611,
+        "conditional_certificate_maximum": 2.0,
+        "conditional_certificate_mean": 1.3142389525368248,
+        "conditional_certificate_median": 1.0,
+        "conditional_certificate_p90": 2.0,
+        "threshold": 0.25
+      },
+      {
+        "ambiguity_rate": 0.92,
+        "capacity": 4,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.31956521739130433,
+        "conditional_certificate_at_most_2_rate": 0.7456521739130435,
+        "conditional_certificate_at_most_3_rate": 0.9858695652173913,
+        "conditional_certificate_count": 920,
+        "conditional_certificate_maximum": 4.0,
+        "conditional_certificate_mean": 1.9489130434782609,
+        "conditional_certificate_median": 2.0,
+        "conditional_certificate_p90": 3.0,
+        "threshold": 0.5
+      },
+      {
+        "ambiguity_rate": 0.506,
+        "capacity": 4,
+        "comparison_count": 1000,
+        "conditional_certificate_at_most_1_rate": 0.7470355731225297,
+        "conditional_certificate_at_most_2_rate": 1.0,
+        "conditional_certificate_at_most_3_rate": 1.0,
+        "conditional_certificate_count": 506,
+        "conditional_certificate_maximum": 2.0,
+        "conditional_certificate_mean": 1.2529644268774704,
+        "conditional_certificate_median": 1.0,
+        "conditional_certificate_p90": 2.0,
+        "threshold": 0.75
+      }
+    ],
+    "comparison_count": 9000,
+    "conditional_certificate_at_most_1_rate": 0.5576083305340948,
+    "conditional_certificate_at_most_2_rate": 0.8925092374874034,
+    "conditional_certificate_at_most_3_rate": 0.9924420557608331,
+    "conditional_minimum_certificate": {
+      "count": 5954,
+      "maximum": 4.0,
+      "mean": 1.5574403762176687,
+      "median": 1.0,
+      "p90": 3.0
+    }
+  }
+}
