@@ -1,0 +1,96 @@
+{
+  "report_version": "chicago-release-operator-normalized-summary/v1",
+  "overall_status": "PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY",
+  "source": {
+    "source_report_version": "chicago-release-operator-live-audit/v2",
+    "source_commit": "b2e549e7e4cc674a7a880dc7789ee5f3c960d2b0",
+    "workflow_run_id": 33837186969,
+    "workflow_run_number": 164,
+    "artifact_id": 9923960043,
+    "artifact_zip_sha256": "98b7117b14c3150df655d88f171be6f05d0774449af18d354fac98f639e1226b",
+    "source_json_sha256": "26b682d967716cfc356cfc4d68a39446bdc85c941d676bb7bea5323e1f71dca3",
+    "source_json_self_hash": "79b8825ade529b41fbb144e44e0f6f61dec8126ed90ee87a328b8d6e43899fe6",
+    "source_markdown_sha256": "64adf8d544125433436b30fbc6e7c03e340c976b9f281e8327bea74e5fadaaad"
+  },
+  "dataset": {
+    "id": "6dvr-xwnh",
+    "name": "Transportation Network Providers - Trips (2025-)",
+    "public_linkage_fields_present": false,
+    "shared_trip_id_public": false,
+    "historical_rows_may_later_change": true,
+    "snapshot_stable_during_extraction": true,
+    "revision_fingerprint_sha256": "b807bfd2ef2216070d1d4b5deb1c5dbd14034f595540e081413eaf9ac7a43420"
+  },
+  "extraction": {
+    "core_start_local": "2026-01-13T17:30:00",
+    "core_rows": 60,
+    "candidate_rows": 611,
+    "candidate_null_start_or_end_rows": 0,
+    "all_trip_release_cell_contributor_rows": 50405,
+    "candidate_count_closed": true,
+    "all_public_contributors_count_closed": true,
+    "candidate_exact_start_partition_count": 14,
+    "contributor_start_partition_count": 14,
+    "contributor_end_partition_count": 13,
+    "candidate_api_paths": ["soda2", "soda3 narrow index"],
+    "contributor_api_paths": ["soda2"],
+    "fetch_strategy": "NARROW_OVERLAP_INDEX_THEN_EXACT_START_AND_ENDPOINT_BIN_SHARDS",
+    "broad_or_query_used": false,
+    "full_row_cross_column_range_query_used": false,
+    "narrow_cross_column_index_query_used": true,
+    "exact_endpoint_bin_full_row_shards_used": true,
+    "raw_rows_serialized": false,
+    "raw_trip_ids_serialized": false,
+    "snapshot_relative_only": true,
+    "candidate_id_set_sha256": "d1f9e0eb5648b73ccceab7dbb3dc08f5faf0030c380d32ce04e2de484f1f948e",
+    "candidate_raw_rows_sha256": "cf761f5442760d864eb743359aae258c7615cac0a8a4139770f7f422178da51e"
+  },
+  "released_time_envelope_graph_sensitivity": {
+    "conditional_on_positive_length_outer_released_time_envelope_graph": true,
+    "closed_outer_released_time_envelope_intersection_edge_count": 24274,
+    "positive_length_outer_released_time_envelope_intersection_edge_count": 18462,
+    "outer_released_time_envelope_boundary_touch_only_edge_count": 5812,
+    "outer_released_time_envelope_graph_core_cover_multiplicity_status": "CERTIFIED_TWO_DISTINCT_CORE_COVERS_IN_POSITIVE_LENGTH_OUTER_RELEASED_TIME_ENVELOPE_GRAPH",
+    "cover_a_selected_edge_count": 51,
+    "cover_b_selected_edge_count": 53,
+    "cores_changed_between_displayed_covers": 60,
+    "max_certified_mip_gap": 0.0,
+    "max_certified_replay_residual": 0.0,
+    "witnesses_serialized": false,
+    "spatially_unmeasured_edges_in_positive_length_graph": 9339,
+    "spatially_unmeasured_core_incidence_range_over_graph_covers": [15, 60],
+    "release_prunable_unmeasured_edges": 0
+  },
+  "documentation": {
+    "documented_time_rounding_minutes": 15,
+    "documented_tract_k": 3,
+    "documented_low_upper": 2,
+    "converse_licensed": false,
+    "city_implementation_validated": false,
+    "low_literals_emitted": 0,
+    "pins_are_versioned_reference_declarations_not_content_attestations": true,
+    "pins_sha256": "3f5d7bababef7f22788c944d59fbfc94d024ea9131e0a7421da8b47ca9a40f54"
+  },
+  "candidate_support_consequence": {
+    "status": "NO_NEW_NECESSARY_SPATIAL_EDGE_DELETIONS",
+    "finite_radius_policy": "RETAIN_ALL_SPATIALLY_UNMEASURED_EDGES",
+    "measured_centroid_radius_classification": "ANALYST_CANDIDATE_SUPPORT_SENSITIVITY_NOT_NECESSARY_COMPATIBILITY",
+    "release_prunable_unmeasured_edges": 0
+  },
+  "identification_boundary": {
+    "hidden_partner_identification_claim": "NONE",
+    "partner_recall_claim": "NONE",
+    "partner_recovery_status": "NOT_RECOVERED_FROM_PUBLIC_ROWS",
+    "hidden_run_closure": "NOT_CONSTRUCTED_AND_NOT_CLAIMED",
+    "full_hidden_worlds_constructed": false,
+    "shared_exact_timestamp_witness_constructed": false,
+    "remaining_buffer_run_completion_constructed": false,
+    "cohort_partner_nonidentification_certified": false,
+    "cohort_partner_identification_status": "NOT_ADJUDICATED_NO_FULL_WORLD_CERTIFICATE"
+  },
+  "claim_boundary": {
+    "supported": "snapshot-relative count closure of the public temporal candidate universe and all public rows contributing to its released endpoint bins; documented one-way release semantics; and conditional core-cover multiplicity in the positive-length outer released-time-envelope graph",
+    "not_supported": "City production-code fidelity, latent tract-cell reconstruction, blank-cause identification, hidden-run closure, partner identity or recall, realized capacity, or any finite spatial support rule for missing centroids"
+  },
+  "human_report": "REPORT.md"
+}

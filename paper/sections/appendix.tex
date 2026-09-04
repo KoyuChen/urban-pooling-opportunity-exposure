@@ -104,12 +104,98 @@ is weaker still: the true mean can fall between endpoints by coincidence even
 when the true joint world is absent. These nested validation concepts are
 reported separately.
 
+\section{Frozen NYC Decision-Panel Detail}
+The panel predeclares 20 eight-core windows and four 16-core stress windows.
+Seventeen eight-core and all four 16-core windows are eligible. The three
+outcome-blind ineligible labels are \texttt{jul\_weekend\_pm\_n8},
+\texttt{oct\_weekend\_am\_n8}, and \texttt{oct\_weekend\_pm\_n8}; each failed
+to produce an integrity- and cap-qualified core. All 24 terminal reports are
+observed and technical failures are zero.
+
+\begin{table*}[t]
+\caption{Frozen NYC panel by core size, outcome, and capacity. Ambiguity is at
+the candidate-median threshold; point split is disagreement among four
+feasible deterministic point methods.}
+\label{tab:paneldetail}
+\scriptsize
+\centering
+\begin{tabular}{@{}llrrrrrr@{}}
+\toprule
+Core & Outcome & $C$ & Cells & Exact & Ambig. & Point split & Median width \\
+\midrule
+8 & Miles   & 2 & 17 & 13 & 17 & 2 & 19.291 \\
+8 & Miles   & 3 & 17 & 16 & 17 & 2 & 20.441 \\
+8 & Miles   & 4 & 17 & 17 & 17 & 2 & 20.058 \\
+8 & Minutes & 2 & 17 & 14 & 17 & 6 & 60.879 \\
+8 & Minutes & 3 & 17 & 14 & 17 & 6 & 62.657 \\
+8 & Minutes & 4 & 17 & 17 & 17 & 6 & 62.881 \\
+16 & Miles   & 2 & 4 & 2 & 3 & 0 & 19.626 \\
+16 & Miles   & 3 & 4 & 0 & 4 & 0 & -- \\
+16 & Miles   & 4 & 4 & 2 & 4 & 0 & 17.889 \\
+16 & Minutes & 2 & 4 & 2 & 4 & 0 & 68.202 \\
+16 & Minutes & 3 & 4 & 2 & 4 & 0 & 68.321 \\
+16 & Minutes & 4 & 4 & 2 & 4 & 0 & 68.321 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+A cell is certified ambiguous when attained inner feasible values lie on both
+sides of the threshold; exact endpoints are not required for that conclusion.
+The sole unresolved median-threshold decision is the 16-core miles cell at
+$C=2$. Candidate-quartile and transparent 5-mile/30-minute references are
+reported in the artifact and are not claimed operational policy thresholds.
+
+\section{Frozen Branch-and-Price Scale Detail}
+\begin{table*}[t]
+\caption{All 18 predeclared NYC integer scale cells. A bracket is the valid
+[integer incumbent, global upper bound] interval at termination.}
+\label{tab:scaledetail}
+\scriptsize
+\centering
+\begin{tabular}{@{}rrrrlrrr@{}}
+\toprule
+Core & Buffer & $C$ & Root LP & Status & Bracket & Nodes & Seconds \\
+\midrule
+4  & 12 & 2 & 4  & Exact & [4,4]   & 1 & 0.48 \\
+4  & 12 & 3 & 8  & Exact & [8,8]   & 4 & 6.98 \\
+4  & 12 & 4 & 12 & Exact & [12,12] & 2 & 6.22 \\
+6  & 18 & 2 & 8  & Exact & [8,8]   & 1 & 4.04 \\
+6  & 18 & 3 & 14 & Exact & [14,14] & 8 & 56.32 \\
+6  & 18 & 4 & 18 & Exact & [18,18] & 1 & 15.26 \\
+8  & 24 & 2 & 12 & Exact & [12,12] & 1 & 12.21 \\
+8  & 24 & 3 & 20 & Exact & [20,20] & 3 & 62.05 \\
+8  & 24 & 4 & 24 & Exact & [24,24] & 4 & 79.94 \\
+10 & 30 & 2 & 16 & Exact & [16,16] & 1 & 52.47 \\
+10 & 30 & 3 & 26 & Exact & [26,26] & 1 & 86.36 \\
+10 & 30 & 4 & 30 & Open  & [27,30] & 4 & 180.50 \\
+12 & 36 & 2 & 20 & Exact & [20,20] & 1 & 145.94 \\
+12 & 36 & 3 & 32 & Exact & [32,32] & 1 & 198.91 \\
+12 & 36 & 4 & 36 & Open  & [32,36] & 1 & 188.41 \\
+16 & 48 & 2 & 28 & Exact & [28,28] & 1 & 415.59 \\
+16 & 48 & 3 & 44 & Open  & [43,44] & 1 & 640.17 \\
+16 & 48 & 4 & 48 & Open  & [45,48] & 1 & 758.75 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\section{Chicago Transport and Graph-Cover Pin}
+The successful live audit is workflow run \texttt{33837186969}, source commit
+\nolinkurl{b2e549e7e4cc674a7a880dc7789ee5f3c960d2b0}. The ZIP artifact SHA-256 is
+\nolinkurl{98b7117b14c3150df655d88f171be6f05d0774449af18d354fac98f639e1226b};
+the JSON report SHA-256 is
+\nolinkurl{26b682d967716cfc356cfc4d68a39446bdc85c941d676bb7bea5323e1f71dca3}.
+The extraction strategy is
+\nolinkurl{NARROW_OVERLAP_INDEX_THEN_EXACT_START_AND_ENDPOINT_BIN_SHARDS}.
+Duplicate public identifiers with inconsistent payloads fail closed, and each
+shard is counted before and after retrieval. The graph certificate remains
+conditional on outer released-time envelopes and is not a hidden-run closure
+certificate.
+
 \section{Artifact Claim Boundary}
-The repository contains deterministic small-instance oracles, exact fixed-time
-frontiers, numerical existential-time programs, branch-and-price status
-validators, controlled-truth benchmarks, public-data snapshot and count
-contracts, and aggregate evidence manifests. Supported claims are limited to
-the declared candidate universes and models. No artifact output should be
-interpreted as recovered partner identity, a complete private event, an
-estimate of realized capacity, or a statement about a city's proprietary
-production system.
+The repository contains deterministic fixed-time oracles, numerical
+existential-time programs, branch-and-price validators, controlled-truth
+benchmarks, public-data snapshot/count contracts, and aggregate evidence
+manifests. Supported claims are limited to declared candidate universes and
+models. No artifact output should be interpreted as recovered partner identity,
+a complete private event, an estimate of realized capacity, or a statement
+about a city's proprietary production system.

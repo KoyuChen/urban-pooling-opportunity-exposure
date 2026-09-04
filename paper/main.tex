@@ -45,15 +45,19 @@ support expansion and capacity relaxation. For a fixed root and span,
 connectivity and occupancy have a consecutive-ones formulation, yielding an
 integral LP pricing oracle. Dantzig--Wolfe decomposition closes the full LP;
 branching on row usage and Ryan--Foster co-membership, while reusing exact
-branch-compatible pricing, gives a certified integer algorithm on medium
-instances. In 3,000 controlled-truth experiments, full candidate support covers
-the true aggregate in every instance, while a feasible temporal point rule
-makes threshold errors in 17.4--19.0\% of cases; every such error is flagged by
-a frontier that crosses the threshold. Retaining about 84\% of true members
-leaves the complete true event world representable only 31--33\% of the time.
-Public Chicago and NYC audits then separate hidden-linkage, timestamp-support,
-and capacity ambiguity. These are conditional feasible-world claims: we do not
-recover operational event identities, realized capacity, or population effects.
+branch-compatible pricing, gives a certified integer algorithm. In 3,000
+controlled-truth experiments, full candidate support covers the true aggregate
+in every instance, while a feasible temporal point rule makes threshold errors
+in 17.4--19.0\% of cases; every such error is flagged by a frontier crossing the
+threshold. Retaining about 84\% of true members leaves the complete true event
+world representable only 31--33\% of the time. A predeclared NYC audit yields 21
+eligible windows and 126 outcome--capacity cells: 125 are certified ambiguous
+at the candidate-median threshold, and four feasible point methods disagree in
+19.0\% of cells. Branch-and-price certifies 14 of 18 predeclared scale cells and
+reports valid gaps for the rest. A Chicago audit count-closes 60 cores, 611
+temporal candidates, and 50,405 endpoint-bin contributors. These are
+conditional feasible-world claims, not recovered operational event identities,
+realized capacities, or population effects.
 \end{abstract}
 
 \ccsdesc[500]{Information systems~Data provenance}

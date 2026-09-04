@@ -1,0 +1,74 @@
+{
+  "report_version": "nyc-hvfhv-branch-and-price-scale-summary/v1",
+  "source": {
+    "workflow": "nyc-hvfhv-branch-and-price-scale",
+    "run_id": 33837187046,
+    "artifact_id": 9897266899,
+    "source_commit": "b2e549e7e4cc674a7a880dc7789ee5f3c960d2b0",
+    "artifact_zip_sha256": "603fd059d600176e178ddcbdd6d1d40c36cf2d59d9c11e9c3130a81eae32a4cf",
+    "source_report_json_sha256": "1056ee441a4cd91b518b43f7c0565f5e4f349c3206d3ba9a027d64ce5c6800ed",
+    "source_report_markdown_sha256": "53055ec7b2a0f2093a1c00db29dacfe3173438c28175dc157be0a8613748a60d"
+  },
+  "design": {
+    "provider": "HV0005",
+    "capacities": [2, 3, 4],
+    "sizes": [
+      {"core_rows": 4, "buffer_rows": 12},
+      {"core_rows": 6, "buffer_rows": 18},
+      {"core_rows": 8, "buffer_rows": 24},
+      {"core_rows": 10, "buffer_rows": 30},
+      {"core_rows": 12, "buffer_rows": 36},
+      {"core_rows": 16, "buffer_rows": 48}
+    ],
+    "predeclared_cell_count": 18,
+    "integer_status_rule": "optimal only when the branch queue closes; otherwise retain incumbent and open-node upper bound"
+  },
+  "summary": {
+    "completed_cell_count": 18,
+    "integer_optimum_certified_count": 14,
+    "bounded_unresolved_count": 4,
+    "skipped_insufficient_public_rows_count": 0,
+    "all_capacities_closed_through": {"core_rows": 8, "buffer_rows": 24},
+    "maximum_certified_size": {"core_rows": 16, "buffer_rows": 48, "capacity": 2},
+    "open_cells": [
+      {
+        "core_rows": 10,
+        "buffer_rows": 30,
+        "capacity": 4,
+        "integer_lower_bound": 27,
+        "global_upper_bound": 30,
+        "absolute_gap": 3
+      },
+      {
+        "core_rows": 12,
+        "buffer_rows": 36,
+        "capacity": 4,
+        "integer_lower_bound": 32,
+        "global_upper_bound": 36,
+        "absolute_gap": 4
+      },
+      {
+        "core_rows": 16,
+        "buffer_rows": 48,
+        "capacity": 3,
+        "integer_lower_bound": 43,
+        "global_upper_bound": 44,
+        "absolute_gap": 1
+      },
+      {
+        "core_rows": 16,
+        "buffer_rows": 48,
+        "capacity": 4,
+        "integer_lower_bound": 45,
+        "global_upper_bound": 48,
+        "absolute_gap": 3
+      }
+    ]
+  },
+  "claim_boundary": {
+    "supported": "certified integer optima or valid global intervals for one deterministic public exact-second cohort under the declared ordered-event model",
+    "not_supported": "city-scale runtime, operational event recovery, population prevalence, or provider production-logic validation"
+  },
+  "cell_table": "BRANCH_AND_PRICE_SCALE_CELLS.csv",
+  "human_report": "BRANCH_AND_PRICE_SCALE_REPORT.md"
+}
