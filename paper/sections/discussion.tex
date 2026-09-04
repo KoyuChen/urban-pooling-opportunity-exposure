@@ -2,14 +2,13 @@
 
 \paragraph{Knowledge discovery under missing relations.}
 The method changes the target from ``recover one plausible relation'' to
-``certify which downstream statements are invariant to the admissible
-relations.'' The controlled experiments show why this is not a semantic
-distinction: a fully feasible point reconstruction can cross the wrong policy
-threshold, while the frontier correctly marks the conclusion as ambiguous.
-Conversely, when the entire frontier lies on one side, every feasible world
-agrees. This certified-decision view is portable to referral episodes,
-household or field visits, service tours, and other row-complete streams with
-hidden temporal grouping.
+``certify which downstream statements are invariant to admissible relations.''
+The controlled experiments show why this is substantive: a fully feasible point
+world can cross the wrong threshold, while the frontier marks the conclusion as
+ambiguous. Conversely, when the entire frontier lies on one side, every feasible
+world agrees. This certified-decision view is portable to referrals, household
+or field visits, service tours, and other row-complete streams with hidden
+temporal grouping.
 
 \paragraph{What is identified.}
 Endpoints are sharp or certified only relative to the declared candidate
@@ -22,51 +21,56 @@ certification cannot restore it. The controlled benchmark demonstrates that
 high member recall, a nonempty frontier, and even scalar coverage can coexist
 with omission of the true joint world.
 
+\paragraph{Decision ambiguity is not point-estimator accuracy.}
+In the NYC panel, four feasible point methods disagree in 19.0\% of
+outcome--capacity cells, while 494 of their 498 capacity-indexed decisions are
+made inside certified-ambiguous cells. These facts show instability across
+admissible point summaries; they do not reveal which point answer is correct,
+because public memberships are absent. The frontier's role is to separate a
+relation-invariant decision from a forced choice, not to retrospectively score
+an unobserved ground truth.
+
 \paragraph{Algorithmic boundary.}
 Theorem~\ref{thm:oracle} makes fixed-span event pricing polynomial, and
 Proposition~\ref{prop:cg} certifies the full LP without enumerating all columns.
 Proposition~\ref{prop:bp} supplies an exact integer path through
 branch-compatible row and pair disjunctions. The full algorithm is not claimed
-polynomial: the number of forced-in/forced-out pricing cases can grow
-exponentially with branch depth. The public 4+12 audit is an independent
-correctness check, not evidence of city-scale closure. The next scaling
-question is empirical---how root gap, branching, and generated columns evolve
-with temporal density and core size---and can be reported honestly through
-anytime global gaps when optimality is not reached.
+polynomial: forced-in/forced-out pricing cases can grow exponentially with
+branch depth. The scale lattice closes all capacities through $8+24$ and 14 of
+18 cells overall. The four larger unresolved cells keep valid gaps of one to
+four. This is stronger than a toy correctness check but remains a
+medium-instance result, not city-scale closure.
 
-\paragraph{Baselines and external validity.}
-Our point rules are deliberately simple and interpretable. They establish that
-feasibility or temporal plausibility does not guarantee a relation-invariant
-decision, but they are not a final contest against modern learned linkage. A
-stronger application study would train a scoring model on a separate
-ground-truth source, calibrate candidate recall without using target outcomes,
-and compare its point answer with the certified frontier. Public Chicago and
-NYC data cannot supply that operational ground truth. Their role is to audit
-the ambiguity geometry induced by real release operators, not to estimate
-partner-recovery accuracy.
+\paragraph{Public-release boundary.}
+Chicago and NYC play complementary roles. NYC's second-level timestamps show
+that fine time does not identify event membership. Chicago's successful sharded
+transport establishes snapshot-relative count closure for candidates and all
+endpoint-bin contributors. The two Chicago graph covers establish multiplicity
+only inside the positive-length outer-envelope graph; they are not two fully
+constructed operational worlds. Neither release validates provider matching
+logic, hidden-run closure, realized capacity, or partner recall outside the
+declared candidate universe.
 
 \section{Limitations and Ethical Considerations}
 
-Neither city release exposes a public vehicle-run key. We therefore do not
-claim actual co-riders, partner recall outside a declared candidate universe,
-production matching logic, realized pool size, or physical vehicle capacity.
-The artificial 15-minute NYC supports are an information-loss intervention,
-not an assertion about the TLC observation operator. The six-window panel is
-purposive and too small for a citywide prevalence or causal estimate. The
-controlled generator validates method logic under known truth but does not
-turn its error rates into operational accuracy estimates.
+The 24-window NYC design is predeclared but purposive rather than probabilistic;
+21 windows are eligible and three fail an outcome-blind integrity/cap screen.
+The 16-core stress cells close only 10 of 24 endpoint pairs exactly, and one
+median-threshold decision remains unresolved. These are disclosed computational
+and design boundaries, not population estimates. The controlled generator
+validates logic under known truth but does not turn its error rates into city
+accuracy estimates.
 
 Numerical claims retain their certificate class. Complete enumeration is used
-only where explicitly stated; branch-and-price optima require an exhausted
-node queue; time-limited runs keep valid incumbent and open-node bounds.
-Candidate support remains an analyst-facing assumption rather than a hidden
-modeling choice.
+only where stated; branch-and-price optima require an exhausted node queue;
+time-limited runs keep valid incumbents and open-node bounds. Candidate support
+remains an analyst-facing assumption rather than hidden preprocessing.
 
 The unit of analysis is a released transaction, not a stable person. Zones and
 neighborhood attributes describe context, not individual socioeconomic status
-or preferences. Extremal event assignments can create reidentification risk,
-so the public artifact suppresses row identifiers, event columns, and latent
-world witnesses and reports aggregate results and provenance metadata only.
+or preferences. Extremal assignments can create reidentification risk, so the
+artifact suppresses row identifiers, event columns, and latent-world witnesses
+and reports only aggregate results and provenance metadata.
 
 \section{Generative AI Usage}
 Generative AI assisted drafting, code review, counterexample search, and
@@ -75,15 +79,14 @@ states remain author-verified; generated text is not treated as city evidence.
 
 \section{Conclusion}
 Row-complete data can remain relation-incomplete enough to reverse downstream
-decisions. \methodname{} represents every admissible ordered temporal event,
-then reports only aggregate conclusions that survive that uncertainty. The
-identification geometry separates candidate support, timestamp support, and
-capacity. The optimization geometry separates an integral local pricing
-problem, a nonintegral global master, and an exact branch-and-price certificate.
-Across 3,000 controlled instances, plausible feasible point answers make
-systematic threshold errors that the frontier consistently flags as ambiguous;
-candidate truncation further shows that row recall is not relational-world
-coverage. Chicago and NYC audits demonstrate that these issues persist in
-public event streams with complementary release regimes. The resulting object
-is not a recovered partner graph, but a certified boundary between discoverable
-and relation-dependent aggregate knowledge.
+decisions. \methodname{} represents admissible ordered temporal events and
+reports only aggregate conclusions that survive that uncertainty. Across 3,000
+controlled instances, feasible point answers make threshold errors that the
+frontier always flags as ambiguous, while candidate truncation shows that row
+recall is not relational-world coverage. In the NYC panel, 125 of 126
+outcome--capacity cells are certified ambiguous at the candidate median and
+point methods disagree in 19.0\% of cells; the scale lattice certifies 14 of 18
+integer optima and bounds the rest. Chicago adds a repeatable count-closed
+public extraction without converting graph-cover multiplicity into recovered
+partners. The resulting object is not a preferred hidden graph, but a certified
+boundary between discoverable and relation-dependent aggregate knowledge.

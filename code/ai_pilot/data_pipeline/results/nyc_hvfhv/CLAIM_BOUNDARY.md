@@ -2,60 +2,49 @@
 
 ## Supported
 
-- The public HVFHV releases contain shared-match flags, second-level
-  pickup/drop-off timestamps, Taxi Zones, and trip outcomes, but no public
-  co-rider key, shared-run key, or realized pool size in the audited schema.
-- Candidate multiplicity under provider/time overlap is large even at exact
-  second-level resolution.
-- Conditional on declared `C in {2,3,4}`, feasible worlds may be represented as
-  connected positive-overlap interval runs with simultaneous occupancy bounded
-  by `C`; total run membership may exceed `C` through sequential turnover.
-- Within a fixed time-support model, capacity relaxation is nested and the
-  reported common-support endpoint audits obey the implied monotonicity.
-- A correct coarse-time partial-identification world uses an existential latent
-  timestamp completion inside each declared support. Exact singleton supports
-  are contained in the artificial coarse supports.
-- Complete fixed-time run-column enumeration provides exact feasibility and
-  infeasibility certificates for the frozen 16-row audit cohorts.
-- In the base audit cohort, artificial time support expands reachable support
-  at low `C`; at fixed feasible support counts `q=4,6,8`, compared outcome
-  endpoint pairs coincide.
-- In six predeclared purposive audit windows, artificial time support has a
-  positive certified support-gain lower bound at both `C=2` and `C=3` in every
-  window. The six-window aggregate audit passes.
-- Unresolved coarse counts are retained as unresolved and never converted to
-  infeasibility. Same-zone restrictions remain analyst sensitivity screens.
+- Public HVFHV rows expose exact-second pickup/drop-off timestamps, Taxi Zones,
+  trip outcomes, and shared-match flags, but no public co-rider or run key in the
+  audited schema.
+- Conditional on a declared candidate universe and `C in {2,3,4}`, feasible
+  worlds are connected positive-overlap interval runs with simultaneous
+  occupancy bounded by `C`; sequential membership can exceed `C`.
+- The 24-window panel predeclares its windows and applies an outcome-blind
+  eligibility screen. It reports 21 eligible and three ineligible windows, with
+  zero technical failures and no missing terminal reports.
+- Of 126 outcome-capacity cells, 101 have exact endpoint pairs, 125 have
+  certified ambiguity at the candidate-median threshold, and one decision is
+  unresolved.
+- Four feasible deterministic point methods disagree with one another in 24
+  cells. Across capacities, 494/498 point decisions occur inside
+  certified-ambiguous cells.
+- The branch-and-price scale lattice certifies 14/18 integer optima and reports
+  valid incumbent/open-node intervals for all four unresolved cells.
+- Artificial 15-minute supports, same-zone screens, common-support capacity
+  comparisons, and fixed thresholds are explicitly labeled sensitivity or
+  reference analyses.
 
 ## Not supported
 
 - Actual co-rider, vehicle, or shared-run reconstruction.
+- Point-method accuracy or error on public NYC data, because membership truth is
+  absent.
 - Hidden-run closure or partner recall outside the declared candidate universe.
-- Any assertion that a public NYC shared trip had realized pool size or
-  occupancy two, three, four, or another value.
-- Interpreting declared `C` as an estimate of the platform's true vehicle
-  capacity.
-- TLC production matching logic or provider implementation fidelity.
-- Treating the artificial nearest-15-minute timestamp supports as TLC's actual
-  release operator.
-- A universal statement that timestamp uncertainty equals exactly one capacity
-  step. The observed substitution magnitude is heterogeneous across audit
-  windows.
-- Interpreting `C=4` panel saturation as structural: the audit has only twelve
-  candidate buffers and is right-censored at that ceiling.
-- NYC population prevalence, sampling inference, causal effects, policy
-  effects, or validation of provider-submitted records beyond the public
-  release.
+- Any assertion that a public shared trip had realized pool size or occupancy
+  two, three, four, or another value.
+- Treating declared `C` as an estimate of a provider's true capacity.
+- TLC or provider production matching logic, implementation fidelity, or an
+  assertion that artificial 15-minute supports are the actual release operator.
+- NYC population prevalence, sampling inference, causal effects, or policy
+  effects.
 
-## Current model boundary
+## Interpretation
 
-Chicago remains the public known-`K=2` matching benchmark. NYC is the
-unknown-capacity ordered-run extension. The strongest current NYC result is a
-conditional, release-support-indexed statement:
+The strongest current public-data statement is conditional:
 
-> Under an artificial existential timestamp-support experiment, reachable
-> latent-run membership expands at low simultaneous capacity in every one of
-> six predeclared purposive audit windows, while the capacity-equivalent
-> magnitude varies with local temporal structure.
+> Under the declared candidate, support, and capacity contracts, almost every
+> candidate-median outcome cell admits feasible relation completions on both
+> sides of the decision threshold, while deterministic feasible point methods
+> sometimes choose different sides.
 
-This is a feasible-world possibility result, not evidence that any particular
-latent world occurred.
+This is a result about relation-dependent aggregate knowledge, not evidence that
+any particular latent event world occurred.

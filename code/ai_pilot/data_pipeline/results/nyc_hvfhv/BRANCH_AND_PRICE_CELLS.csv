@@ -1,4 +1,0 @@
-capacity,full_run_column_count,root_lp_upper_bound,integer_maximum_selected_buffers,root_integrality_gap,nodes_processed,nodes_infeasible,nodes_bound_pruned,buffer_branches,pair_branches,maximum_depth,total_generated_columns_across_nodes,total_oracle_lp_solve_count,total_pricing_case_count,maximum_pricing_cases_for_one_root,elapsed_seconds,exhaustive_integer_maximum_selected_buffers,exhaustive_master_state_count,status
-2,54,4.0,4.0,0.0,1,0,1,0,0,0,54,450,8,1,0.7477863659999997,4,888,INTEGER_OPTIMUM_CERTIFIED
-3,394,8.0,8.0,0.0,4,0,4,0,3,2,303,6552,127,4,10.525570865000006,8,7506,INTEGER_OPTIMUM_CERTIFIED
-4,1719,12.000000000000002,12.0,1.7763568394002505e-15,2,0,2,0,1,1,208,5400,96,2,9.280678511000005,12,12679,INTEGER_OPTIMUM_CERTIFIED

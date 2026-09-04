@@ -33,6 +33,26 @@ python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
 The local build directory is ignored. CI uploads the compiled PDF instead of
 committing generated binaries.
 
+## Frozen NYC artifacts
+
+The integrated summaries are:
+
+```text
+code/ai_pilot/data_pipeline/results/nyc_hvfhv/
+  ORDERED_DECISION_PANEL_REPORT.md
+  ORDERED_DECISION_PANEL_SUMMARY.json
+  ORDERED_DECISION_PANEL_GROUPS.csv
+  ORDERED_DECISION_THRESHOLD_GROUPS.csv
+  BRANCH_AND_PRICE_SCALE_REPORT.md
+  BRANCH_AND_PRICE_SCALE_CELLS.csv
+  BRANCH_AND_PRICE_SCALE_MANIFEST.json
+```
+
+The original panel artifact is `9903823780` from run `33760441027`; the original
+scale artifact is `9897266899` from run `33837187046`. Hashes and claim licenses
+are recorded in `ARTIFACT_MANIFEST.md`. Expensive frozen NYC workflows are not
+run on ordinary commits.
+
 ## Chicago live release audit
 
 ```bash
@@ -47,6 +67,9 @@ python \
   --request-attempts 4 \
   --solver-time-limit 60
 ```
+
+The integrated run-164 report is under
+`code/ai_pilot/data_pipeline/results/chicago_release_operator_audit/`.
 
 ## Chicago K=2 boundary audit
 

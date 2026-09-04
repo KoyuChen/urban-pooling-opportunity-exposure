@@ -77,23 +77,27 @@ feasible temporal point rule makes the wrong decision at predeclared thresholds
 in 17.4--19.0\% of cases across capacities two through four. Every error occurs
 when the certified frontier crosses the threshold, so \methodname{} correctly
 refuses to present that decision as relation-invariant. Candidate completeness
-is a distinct Gate: keeping roughly 84\% of true members leaves the full true
+is a distinct gate: keeping roughly 84\% of true members leaves the full true
 event world representable only 31--33\% of the time, although a nonempty
 frontier at the true support count usually still exists. Row-level recall can
 therefore substantially overstate relational coverage.
 
-The public audits provide complementary geometry rather than recovery accuracy.
-In a fixed NYC pairwise benchmark, artificial 15-minute time coarsening raises
-candidate edges by 79.5\% and several identified widths by 12--15\%. In an
-ordered-event common-support comparison, most of the $C=2$ to $C=4$ widening
-occurs at the first capacity relaxation. Across six predeclared audit windows,
-artificial timestamp supports increase certified reachable support at both
-$C=2$ and $C=3$ in every window, with regime-dependent magnitude. On a small
-exact-time public cohort, column generation needs 102 of 1,719 feasible
-capacity-four event columns to close the LP, and branch-and-price independently
-certifies the integer optimum. Fine temporal resolution therefore does not
-imply fine relational resolution, while tractable local event structure does
-not imply an integral global partition.
+The public audits show that fine timestamps and feasible point outputs do not
+resolve the missing relation. A 24-window exact-second NYC design yields 21
+eligible windows and 126 outcome--capacity cells. At the candidate-median
+threshold, 125 cells are certified ambiguous and one remains unresolved; four
+feasible deterministic point methods nevertheless output 498
+capacity-indexed decisions, 494 of them inside ambiguous cells, and disagree
+with one another in 24 cells. A separate scale lattice closes all three
+capacities through 8 core plus 24 buffer rows and 14 of 18 cells overall; the
+remaining cells retain global gaps of one to four. In Chicago, a
+snapshot-stable sharded extraction count-closes 60 cores, 611 temporal
+candidates, and 50,405 endpoint-bin contributors. Its positive-length outer
+time-envelope graph admits two distinct core covers that differ on all 60 core
+assignments, but this is graph-cover multiplicity rather than a completed pair
+of operational hidden-run worlds. Thus increasingly exact computation sharpens
+the boundary between what is and is not relation-invariant; it does not invent
+missing identities.
 
 \begin{figure*}[t]
 \centering
