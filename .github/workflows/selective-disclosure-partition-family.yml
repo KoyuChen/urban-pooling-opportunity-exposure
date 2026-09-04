@@ -39,7 +39,7 @@ jobs:
               .read_text(encoding="utf-8")
           )
           assert report["design"]["max_exact_n"] == 7
-          assert report["verified_cell_count"] == 91
+          assert report["verified_cell_count"] == 112
           assert report["full_recovery_formula"] == "n-K+binom(K,2)"
           assert report["decision_formula"]["K_gt_k"] == "binom(k+1,2)"
           PY
