@@ -1,0 +1,12 @@
+{
+  "artifact_id": 9927861204,
+  "artifact_name": "selective-disclosure-exploration",
+  "artifact_zip_sha256": "dca20131bfdd27585691cbf89934c7ab4fba61eec86e13da9b8b50d03c011ea0",
+  "branch": "explore-selective-disclosure-20260904",
+  "claim_status": "CONTROLLED_TRUTH_EXPLORATION_ONLY",
+  "report_markdown_sha256": "fd097ae10e8e38926858a79c7b069b1b56ed664e8dd9125cebdbf369f71fc00e",
+  "report_version": "eventfrontier-selective-disclosure/v1",
+  "report_json_sha256": "08cca4757b1802478fd7d84f685cf4c8932a6f6763d5dc7e62604d0319abcb1b",
+  "source_commit": "e54f04a1107b8e1b5a3801a8e16353b0a28eb906",
+  "workflow_run_id": 33849637307
+}
