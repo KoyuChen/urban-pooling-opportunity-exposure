@@ -1,9 +1,10 @@
 cff-version: 1.2.0
 message: "If you use this research artifact, please cite the working paper."
-title: "Learning-Augmented Aggregate Bounds over Hidden Matchings and Privacy-Coarsened Attributes"
+title: "Visible Rows, Hidden Events: Certified Aggregates for Relation-Incomplete Event Streams"
 type: software
 authors:
   - family-names: Chen
     given-names: Keyu
-version: 0.2.0
-date-released: 2026-08-26
+version: 0.4.0
+date-released: 2026-09-04
+repository-code: "https://github.com/KoyuChen/urban-pooling-opportunity-exposure"

@@ -1,82 +1,140 @@
-# Artifact manifest — Certified Temporal Frontiers over Hidden Matchings
+# Evidence manifest
 
-This manifest separates current KDD Research evidence, legacy pilot provenance,
-and open submission gates. No synthetic or prefix-sample result is presented as
-a Chicago estimate.
+This file is the authoritative map from repository objects to licensed
+scientific claims. CI output and committed aggregate manifests are evidence;
+working prose, exploratory notebooks, and archived pilots are not.
 
-## Current KDD Research artifacts
+## Canonical paper and method
 
-| Artifact | Status | Licensed scientific role |
+| Object | Canonical path | Licensed role |
 |---|---|---|
-| Anonymous ACM manuscript | Working draft | Theory, reference implementation, calibrated-set result, and explicit evidence gates |
-| Joint matching--label solver | Implemented | Exact small-world and numerical endpoints for one label/cell, core/buffer/context roles, count bounds, compatibility, Gamma, and score floors |
-| Exact temporal-frontier solver | Implemented | Sparse active record/factor states, exact rational endpoints, Gamma, score floors, and complete witnesses |
-| Exact incidence-component convolution | Implemented and independently audited | Splits only the joint record--release-factor incidence graph and exactly convolves global Gamma/score/query resources; standard algorithm engineering, not standalone novelty |
-| Explicit-DNF release compiler | Implemented and independently audited | Provenance-bearing LOW/HIGH clauses, exact projection/restoration, lifted edge maps, support expansion, and lifecycle certificates |
-| Certified score relaxation | Implemented | Outward query endpoints with score slack at most eta times the core count; not a query FPTAS |
-| Declared-input unit suites | 150 discovered; 150/150 with pinned UCI cache, 149 executed plus one expected cache skip in hosted CI | 87 bounds, 14 Chicago-adapter, 23 production-audit, 22 external, and four runtime-profile tests; not external operator validation |
-| Temporal frontier benchmark | 34/34 locked cases pass | 32 exhaustive, 24 analytic, 16 resolved HiGHS, and one outward-relaxation agreement |
-| Seeded solver agreement audit | 250/250 statuses agree | Exact fallback versus numerical HiGHS; endpoints agree on all 185 feasible instances |
-| Matching-level conformal module | Implemented | Positive-affine-invariant regret and finite-sample market-level radius |
-| Deterministic conformal benchmark | Implemented | Directly edge-supervised calibration stress test; exact decimal-rational membership over all six-pair matchings |
-| Exact conformal frontier | 10,395 matchings/market | Separately reconstructs all radii and headline metrics by exhaustive enumeration; 44 radius/scorer rows |
-| Query-leaking diagnostic | Stress test only | Uses the exact same-SES edge contribution; demonstrates circular false precision under shift |
-| Exact/adversarial checks | Implemented | Node nonidentification, incoherent marginal products, score-origin instability, discrete ranges, and count coupling |
-| Vector trade-off figure | Generated from exact frontier CSV | Editable SVG and Type-42 PDF; no manually entered results |
-| Bounded runtime profile | 22/23 resolved; one explicit timeout | Synthetic capacity diagnostics across six axes; no production speed claim |
-| Component-frontier audit | 160/160 same-kernel and 192/192 independent-oracle agreements | Exact endpoints, shared-factor counterexample, 682 decomposed witness replays, and an operational profile; no universal speedup claim |
-| Chicago declared release adapter | 14/14 tests | Fail-closed compiler handoff under declared contracts; no live extraction, City implementation, latent-label, or candidate-edge coverage claim |
-| Chicago `K=2` production audit | 23/23 tests on synthetic contracts | Literal field, scope, boundary, logical/heuristic graph, and cover-status checks; partner recall and hidden-run closure remain unidentified |
-| UCI all-ten relation audit | Executed on ten pinned official inner caches | Real adjudicated topology is not a matching; truth-conditioned upper dyad endpoint exact, lower/full frontier unresolved |
-| FEBRL4 method-fit audit | Executed; 6-pair exact and 20-pair numerical | External synthetic complete-matching mechanics; not realism or calibrated learning |
+| Working manuscript | `paper/main.tex` | Current EventFrontier model, theorem, algorithm, and experiment narrative |
+| Fixed-time master and pricing | `code/ai_pilot/data_pipeline/production_audit/ordered_run_fixed_time_master.py`, `ordered_run_interval_oracle.py` | Exact local pricing and complete-column reference objects |
+| Column generation | `code/ai_pilot/data_pipeline/production_audit/ordered_run_column_generation.py` | Full-master LP closure after exact pricing termination |
+| Branch-and-price | `code/ai_pilot/data_pipeline/production_audit/ordered_run_branch_and_price.py` | Certified integer optimum when the queue closes; incumbent/open-node gap otherwise |
+| Controlled truth | `code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py` and committed aggregate outputs | Coverage and decision-risk validation with observed synthetic event truth |
+| Public-data audits | `code/ai_pilot/data_pipeline/production_audit/` | Conditional feasible-world evidence; never partner recovery |
 
-The current compiled paper is `paper/KDD_Research_Working_Draft.pdf`. The
-joint reference solver is `code/ai_pilot/bounds/joint_label_matching.py`; its
-tests are in `code/ai_pilot/bounds/tests/test_joint_label_matching.py`. The
-exact temporal solver and relaxation are in
-`code/ai_pilot/bounds/path_frontier_dp.py`, with locked outputs under
-`code/ai_pilot/benchmarks/results/path_frontier/`. The
-calibration benchmark and generated outputs are under
-`code/ai_pilot/benchmarks/`.
-The primary conformal JSON records numerical-library versions and SHA-256
-hashes of every declared calibration/test edge score; the reconstruction audit
-fails if either score array drifts.
+## Current locked evidence
 
-## Theory versus implementation boundary
+### Controlled truth
 
-The paired pickup/drop-off suppression NP-completeness theorem is proved for
-an explicit abstract operator. The generic compiler now executes explicit DNF
-LOW/HIGH semantics and records clause support blowup, but it does not infer or
-verify a Chicago null cause. The exact state bound depends on measured live
-record width, active factors, Gamma, a pseudo-polynomial integer score target,
-and compiled label support. The current Python implementation copies partial
-witnesses; it is a correctness-oriented reference rather than a full-day
-performance claim.
+- 3,000 instances across capacity values `C=2,3,4`.
+- Full candidate support contains the true aggregate in every instance.
+- A feasible temporal point reconstruction makes threshold errors in
+  17.4--19.0% of cases; every such error is relation-ambiguous under the
+  frontier.
+- Candidate retention near 84% preserves the complete true event world only
+  31--33% of the time.
 
-## Legacy pilot provenance
+These results license a decision-risk and candidate-retention claim. They do
+not license transfer to Chicago or NYC.
 
-The earlier weak-node-score pipeline, two-day synthetic validation, and
-geography-equality ablation remain in the repository to document the failed
-AI4Sciences route. The superseded `paper/Thicker_But_Narrower_Draft.pdf` is
-retained only in Git history, not in the active `paper/` directory. None of
-these artifacts is headline KDD evidence. In particular, the Weak-MIL scorer receives node match
-labels, whereas the current conformal benchmark directly supervises source
-edge scores with synthetic pair truth. These are different experiments and
-must not be conflated.
+### NYC public panel
 
-## Open gates
+- Frozen 24-window exact-second design spanning four seasons, weekday/weekend
+  regimes, and multiple dayparts.
+- 21 scientifically eligible windows and three outcome-blind ineligible
+  windows; no technical failures in the successful frozen panel.
+- 126 outcome-capacity cells, 80.2% exact endpoint-pair closure, 99.2%
+  certified ambiguity at the candidate median threshold, and 19.0% point-rule
+  disagreement with the certified decision.
+- Latest retained successful summary: workflow
+  `nyc-hvfhv-ordered-decision-panel`, run `33760441027`, artifact
+  `9903823780`.
 
-| Required item | Current status |
-|---|---|
-| Version-specific high-level Chicago rule | Documented by current-linked City sources; implementation/null causes unvalidated |
-| Explicit-DNF LOW/HIGH release compiler | Generic compiler and declared-input Chicago handoff implemented; City transformation semantics, real blank causes, and live extraction unvalidated |
-| Full-day temporal order and distributions of live width, factors, score | Not measured |
-| Necessary-condition candidate supergraph and omission audit | Not completed |
-| External non-Chicago relation-truth benchmark | All-ten UCI topology, exact upper dyad endpoint, and FEBRL4 method fit complete; lower/full UCI frontier, blocking recall, and natural independent calibration markets remain open |
-| Multi-seed/size/sparsity/coarsening benchmark sweeps | Not completed |
-| Complete-day, boundary-safe Chicago extraction and privacy cells | Not completed |
-| Institutional and data-terms determination | Required before nonpublic-data use |
+These figures are conditional on the declared public candidate universe. The
+public data do not contain event-membership truth.
 
-No row-level imputed partner link, trip identifier, or extremal fine-geography
-assignment is distributed. Synthetic hidden truth is distributed because it
-contains no human observations.
+### NYC branch-and-price scale lattice
+
+- Predeclared cells from 4 core + 12 buffer rows through 16 core + 48 buffer
+  rows at capacities `C=2,3,4`.
+- 14 of 18 cells close exactly; the remaining four retain valid incumbent and
+  open-node upper bounds.
+- Latest successful workflow at the cleanup pin:
+  `nyc-hvfhv-branch-and-price-scale`, run `33837187046`, source commit
+  `b2e549e7e4cc674a7a880dc7789ee5f3c960d2b0`.
+
+This licenses a certified medium-instance algorithmic path, not a city-scale
+runtime guarantee.
+
+### Chicago live release-operator audit
+
+Pinned successful run:
+
+- source commit: `b2e549e7e4cc674a7a880dc7789ee5f3c960d2b0`;
+- workflow run: `33837186969` (`chicago-release-operator-audit` run 164);
+- artifact: `9923960043`;
+- artifact ZIP SHA-256:
+  `98b7117b14c3150df655d88f171be6f05d0774449af18d354fac98f639e1226b`;
+- report file SHA-256:
+  `26b682d967716cfc356cfc4d68a39446bdc85c941d676bb7bea5323e1f71dca3`;
+- report self-hash:
+  `79b8825ade529b41fbb144e44e0f6f61dec8126ed90ee87a328b8d6e43899fe6`.
+
+The run reports:
+
+| Quantity | Result |
+|---|---:|
+| Core rows | 60 |
+| K=2 temporal candidates | 611 |
+| All-trip endpoint-bin contributors | 50,405 |
+| Candidate start shards | 14 |
+| Contributor start/end shards | 14 / 13 |
+| Snapshot stable during extraction | yes |
+| Candidate and contributor count closure | yes |
+| Positive-length graph cover multiplicity | two distinct core covers certified |
+| Certified MIP gap / replay residual | 0 / 0 |
+
+The transport strategy is
+`NARROW_OVERLAP_INDEX_THEN_EXACT_START_AND_ENDPOINT_BIN_SHARDS`. Full-row
+cross-column range queries and broad `OR` queries are not used.
+
+The licensed status remains
+`PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY`. This run does not validate City private
+production code, infer null causes, construct complete hidden runs, or recover
+partners.
+
+### Chicago K=2 boundary audit
+
+Committed aggregate evidence under
+`code/ai_pilot/data_pipeline/results/chicago_k2_frontier_boundary/` records:
+
+- 60 core rows, 551 boundary-complete buffers, and 24,274 temporal edges;
+- 96 certified endpoint pairs with zero reported MIP gap and replay residual;
+- no mathematical monotonicity violation on fully certified chains;
+- 15-minute boundary completion adding 92 buffers and 2,629 edges relative to
+  the unpadded extraction.
+
+This is a candidate-support and boundary sensitivity audit, not hidden-run
+closure.
+
+## Generated artifacts
+
+Generated PDFs, logs, temporary solver outputs, downloaded public rows, and
+workflow artifacts are not committed to active source paths. Local paper builds
+write to `paper/build/`; Actions uploads the PDF as an artifact. Committed
+aggregate result tables and manifests must contain no raw trip identifiers,
+matching witnesses, or row-level latent assignments.
+
+## Legacy material
+
+Earlier weak-node-score, hidden-matching, conformal-score, and release-compiler
+pilots are retained under `archive/legacy-ai4science/` and
+`archive/pre-eventfrontier-2026-09-04/`. Their old workflow definitions are
+stored under `archive/workflows/` with `.disabled` suffixes. They document the
+research path and falsified approaches but are not current paper evidence.
+
+## Open submission gates
+
+- integrate the frozen NYC panel, scale lattice, and Chicago run-164 evidence
+  into the manuscript without changing their estimands;
+- keep candidate-universe coverage separate from conditional endpoint
+  correctness;
+- verify every abstract/conclusion sentence against a pinned artifact or a
+  proved statement;
+- complete final double-blind, page-limit, bibliography, figure, and artifact
+  checks;
+- do not claim operational partner recovery, realized capacity, City
+  implementation fidelity, population prevalence, or causal effects.

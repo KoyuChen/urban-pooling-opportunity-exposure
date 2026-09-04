@@ -1,116 +1,109 @@
-# KDD 2027 Research Track checklist
+# KDD 2027 research-track checklist
 
-The live KDD website and submission form remain authoritative. This checklist
-records the current Research-track pivot and must be revalidated before
-submission.
+The live KDD call and submission form remain authoritative. This checklist
+covers the current EventFrontier paper only.
 
-## Format
+## Paper format
 
-- [x] Full paper in English.
-- [x] ACM `acmart` review layout.
-- [x] Double-blind source uses
-  `\documentclass[sigconf,anonymous,review,balance=false]{acmart}`.
-- [x] Author names, affiliations, acknowledgments, repository URLs, and other
-  direct identifiers removed from the review PDF.
-- [x] Main content occupies pages 1--8; references begin on page 9 and the
-  appendix on page 10.
-- [x] No overfull boxes, missing citations, undefined references, Type-3
-  fonts, clipped objects, or unreadable figures in the final visual audit.
-- [ ] Live template, dates, artifact policy, disclosure requirements, and
-  supplementary-material rules rechecked immediately before submission.
+- [x] English manuscript in anonymous ACM review layout.
+- [x] One canonical source at `paper/main.tex`.
+- [x] Main text currently fits the eight-page research-paper boundary before
+  references and appendix.
+- [x] CI compiles and checks the PDF; generated PDFs are not committed by a bot.
+- [ ] Revalidate the official 2027 template, dates, page policy, disclosure
+  language, artifact policy, and supplementary-material rules.
+- [ ] Run the final visual audit for fonts, clipping, overfull boxes, references,
+  and figure readability.
 
-## Research-track fit
+## Contribution chain
 
-- [x] General object is aggregate inference over hidden relations and
-  privacy-coarsened attributes, not one Chicago analysis.
-- [x] Chicago is framed as a flagship application.
-- [x] Point linkage, node classification, ordinary exact cover, and generic
-  MILP are explicitly treated as baselines rather than novelty.
-- [x] Learning is an optional, coverage-audited restriction rather than a
-  claim that the hidden graph has been recovered.
-- [x] Paired-suppression feasibility boundary has a complete adversarially
-  audited NP-completeness proof, with operator and compatibility limits stated.
-- [x] Exact temporal-frontier algorithm goes beyond the reference MILP on
-  declared bounded-frontier instances and returns replayable witnesses.
-- [x] Explicit-DNF LOW/HIGH release compiler returns exact projected/restored
-  witnesses and independently audited lifecycle metadata.
-- [x] Joint record--release-factor components are solved and convolved exactly;
-  candidate-graph-only splitting is rejected by a locked shared-factor
-  counterexample. This is treated as standard algorithm engineering.
-- [x] A declared-input Chicago adapter fails closed on node, role, support,
-  evidence, factor, and namespace drift without claiming live City validation.
-- [x] The synthetic `K=2` production harness separates logical temporal
-  candidates from heuristic screens and audits cross-midnight buffers.
-- [x] Bounded synthetic capacity profile reports width, factors, frontier,
-  runtime, memory, and unresolved cases across six structural axes.
-- [ ] Run-closed full-day temporal order and measured resource profile establish
-  production scalability.
-- [x] All ten UCI blocks supply reconciled real adjudicated relation topology;
-  FEBRL4 supplies an external synthetic one-to-one method-fit test.
-- [x] The all-ten audit reports the exact truth-conditioned UCI upper endpoint
-  without treating the block files as independent markets.
-- [ ] The truth-conditioned UCI lower/full frontier and a natural independent
-  market or calibration unit are resolved.
+- [x] General problem is row-complete, relation-incomplete temporal event data;
+  Chicago and NYC are applications rather than the definition of the method.
+- [x] Feasible worlds distinguish core rows, optional buffers, positive-overlap
+  connectivity, set-valued time, selected support, and simultaneous capacity.
+- [x] Timestamp-support expansion and capacity relaxation give a proved nesting
+  result.
+- [x] Fixed-root/fixed-span pricing has a consecutive-ones formulation and an
+  integral LP oracle.
+- [x] Dantzig--Wolfe column generation closes the full LP after exact pricing.
+- [x] Master nonintegrality is demonstrated, and row-usage plus Ryan--Foster
+  branching preserves branch-compatible exact pricing.
+- [x] Integer status is fail-closed: exact only when the node queue closes;
+  otherwise report an incumbent and open-node upper bound.
+- [ ] Ensure the abstract, theorem statements, and contribution paragraph use
+  exactly this chain and do not revive superseded matching/learning claims.
 
-## Method correctness gates
+## Correctness and reproducibility
 
-- [x] Current base-release metadata and linked City privacy note document the
-  at-most-two-trip threshold and paired endpoint coarsening.
-- [ ] Transformation implementation, null causes, contributing partitions,
-  tract vintage, DST handling, and late-row recomputation are validated.
-- [ ] Core/buffer/context-only population is boundary complete.
-- [x] Joint matching--label reference solver enforces supplied global count
-  bounds and attribute-conditioned compatibility; the DNF compiler consumes
-  documented one-way implications without treating blank tracts as LOW.
-- [x] Independent-support degeneration agrees with weighted matching on exact
-  declared-input tests.
-- [x] Exact small-instance oracle agrees with the numerical reference solver
-  on the deterministic 250-instance audit.
-- [x] Temporal frontier agrees with every applicable exact, analytic, and
-  resolved numerical comparator in the locked 34-case benchmark.
-- [x] Incidence-component convolution agrees with 160 same-kernel and 192
-  independent exhaustive-oracle configurations and replays attained witnesses.
-- [x] Certified score relaxation is checked for exact-set containment,
-  score slack, and sufficient a-posteriori endpoint certificates.
-- [x] Conformal normalization is frozen across the Gamma path and uses the same
-  exact rationalized score map as the endpoint solver.
-- [x] Every result distinguishes attained endpoints, their convex-hull range,
-  and any sampling uncertainty.
-- [ ] Candidate graph is a necessary-condition supergraph or its omissions are
-  separately quantified; support is never inferred from node degree alone.
-- [x] Controlled score calibration uses complete markets with observed true
-  relations, separated from scorer training. (No Chicago transfer is claimed.)
-- [x] Candidate-support and score-calibration errors are reported separately.
+- [x] Exact small instances agree with exhaustive/reference comparators.
+- [x] Witness replay, MIP gaps, unresolved cells, and technical errors are
+  reported separately.
+- [x] Controlled-truth evaluation separates scalar coverage, true-world
+  representability, and existence of an alternative frontier.
+- [x] CI runs deterministic unit tests, adversarial counterexamples, locked
+  solver audits, and the paper build.
+- [x] Expensive live audits are manually dispatched rather than restarted on
+  every manuscript commit.
+- [ ] Freeze one final evidence manifest with commit, run, artifact, and hash
+  pins for every headline number.
 
-## Experiment gates
+## Controlled validation
 
-- [x] Controlled source/calibration/test split is deterministic and
-  reproducible; its directly edge-supervised and query-leaking design is
-  disclosed.
-- [x] Proxy-shift diagnostic shows the coverage cost of arbitrary sharpening.
-- [x] Structural benchmark varies record order, active-factor overlap,
-  score encoding, Gamma, and graph scale with exact references.
-- [ ] Application-facing benchmark additionally varies verified suppression
-  rules, boundary edges, candidate omissions, and operator misspecification.
-- [x] Executed all-ten UCI audit reports relation topology, eligibility
-  boundary, query truth, hashes, leakage controls, exact upper status, and
-  unresolved lower status; FEBRL4 reports its separate method-fit checks.
-- [ ] A complete external dyad frontier, blocking-recall evidence, and a
-  natural market sampling unit remain.
-- [ ] Baselines include maximum-score point matching, complete cases,
-  independent supports, single imputation, linkage-range queries, DBSCAN proxy
-  grouping, and score-free coupled endpoints.
-- [ ] Full-day Chicago extraction and all-trip privacy cells pass the locked
-  audit protocol.
-- [ ] Chicago results are limited to customer-transaction neighborhood
-  context; no rider-level or social-network interpretation remains.
+- [x] 3,000 controlled-truth instances cover `C=2,3,4`.
+- [x] Full candidate support covers the generated true aggregate in every
+  instance.
+- [x] Feasible point-rule threshold errors are quantified and shown to lie in
+  the frontier's ambiguity region.
+- [x] Candidate truncation reports retained true members and complete-world
+  representability separately.
+- [ ] Keep generator mechanics, parameter ranges, baselines, and all evaluation
+  denominators explicit in the appendix and artifact.
+
+## NYC public evidence
+
+- [x] Frozen 24-window design is outcome-blind and spans seasons, dayparts, and
+  weekday/weekend regimes.
+- [x] Scientific ineligibility is distinct from technical failure.
+- [x] Outcome-capacity cells report exact, bounded, and unresolved statuses
+  without coercion.
+- [x] Branch-and-price scale lattice reports 14/18 exact closures and valid gaps
+  for the remainder.
+- [ ] Replace the obsolete six-window and 4+12-only exposition in the manuscript
+  with the frozen panel and scale-lattice evidence.
+- [ ] State throughout that public NYC rows provide no event-membership truth.
+
+## Chicago public evidence
+
+- [x] Current live extraction is snapshot-stable and count-closed for 60 cores,
+  611 candidates, and 50,405 all-trip endpoint-bin contributors.
+- [x] Full rows are fetched through exact start/end-bin shards after a narrow
+  overlap index; broad `OR` and full-row cross-column range queries are absent.
+- [x] Fail-closed assertions preserve the status
+  `PARTIAL_DOCUMENTED_PUBLIC_CONSISTENCY`.
+- [x] Boundary-padding and candidate-support sensitivity are retained as
+  separate audits.
+- [ ] Do not convert documented one-way release semantics into a claim about the
+  City's private implementation.
+- [ ] Do not infer null causes, finite spatial exclusions for unmeasured
+  centroids, hidden-run closure, or partner recall.
+
+## Claim boundary
+
+- [x] Endpoint claims are conditional on the declared candidate universe,
+  timestamp support, capacity, support count, and solver status.
+- [x] A nonempty frontier is not treated as evidence that the true joint world
+  survived candidate construction.
+- [ ] Every headline sentence must be supported by a theorem, a controlled-truth
+  result, or a pinned public-data artifact.
+- [ ] No partner-recovery, realized-capacity, population, causal, or proprietary
+  implementation claim appears in the title, abstract, introduction, or
+  conclusion.
 
 ## Submission decision
 
-- [ ] **GO only if:** operator verification, method theorem, scalable certified
-  algorithm, independent matching-level calibration, multi-benchmark evidence,
-  and complete Chicago application all pass.
-- [ ] If the method gates fail but the Chicago evidence is complete and
-  material, remove KDD branding and use the transportation fallback.
-- [ ] If prefix/incomplete data, unverified suppression rules, or node fit are
-  still carrying the central claim, do not submit.
+- [ ] **GO** only after the latest frozen evidence is integrated, the manuscript
+  and artifact manifest agree numerically, and all format/claim checks pass.
+- [ ] If candidate-support assumptions carry an unconditional conclusion,
+  revise the claim rather than hiding the condition.
+- [ ] If an expensive cell remains unresolved, report the valid gap; never
+  relabel it infeasible or exact.
