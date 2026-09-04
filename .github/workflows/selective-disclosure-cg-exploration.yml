@@ -26,25 +26,46 @@ jobs:
           cache-dependency-path: code/ai_pilot/requirements.txt
       - name: Install pinned dependencies
         run: python -m pip install -r code/ai_pilot/requirements.txt
-      - name: Run exact constraint-generation audit
+      - name: Run constraint-generation audit against exact oracle
         run: |
-          python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \
-            --usage-instances-per-capacity 100 \
-            --pair-instances-per-capacity 30 \
-            --base-seed 20260902 \
-            --output-dir tmp/selective-disclosure-cg
           python - <<'PY'
           import json
           from pathlib import Path
-          report = json.loads(
-              Path("tmp/selective-disclosure-cg/report.json").read_text(
-                  encoding="utf-8"
-              )
+          import sys
+
+          sys.path.insert(0, "code/ai_pilot/benchmarks")
+          import selective_disclosure_constraint_generation as benchmark
+
+          # HiGHS may return status=optimal with a residual reported MIP gap on
+          # the order of 1e-7. The discrete certificate size is still audited
+          # cell-by-cell against explicit enumeration. This run uses a declared
+          # numerical acceptance tolerance of 1e-6 for the separation MILPs.
+          benchmark.TOL = 1e-6
+          report = benchmark.run(
+              usage_instances_per_capacity=100,
+              pair_instances_per_capacity=30,
+              base_seed=20260902,
+          )
+          report["design"]["separation_mip_gap_tolerance"] = 1e-6
+          output = Path("tmp/selective-disclosure-cg")
+          output.mkdir(parents=True, exist_ok=True)
+          compact = {
+              key: value
+              for key, value in report.items()
+              if key not in {"usage_cells", "pair_cells"}
+          }
+          (output / "report.json").write_text(
+              json.dumps(compact, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          (output / "REPORT.md").write_text(
+              benchmark.render(report), encoding="utf-8"
           )
           assert report["usage_summary"]["cell_count"] == 900
           assert report["usage_summary"]["exact_agreement_count"] == 900
           assert report["pair_summary"]["cell_count"] == 90
           assert report["pair_summary"]["exact_agreement_count"] == 90
+          print(benchmark.render(report))
           PY
       - name: Upload aggregate exploration evidence
         uses: actions/upload-artifact@v4
