@@ -1,19 +1,13 @@
-# Public-data pipeline and claim boundary
+# Public-data pipeline
 
-This directory separates reusable adapters from live production audits.
+`production_audit/` is the only active pipeline. It contains the Chicago and NYC
+extractors, ordered-event solvers, panel/scale drivers, tests, fixtures, and
+protocols used by the current paper.
 
-- `chicago_release_adapter.py` is an offline, fail-closed handoff from declared
-  Chicago release inputs to the generic release-constraint machinery. It does
-  not perform network requests or infer semantics from blank values.
-- `production_audit/` contains the current Chicago and NYC public-data
-  extraction, temporal-candidate, fixed-support, column-generation, and
-  branch-and-price audits.
-- `LIVE_DATA_STATUS.md` records the current live Chicago transport pin and the
-  remaining scientific limits.
+`results/` contains only redacted aggregate evidence. Raw public rows and trip
+identifiers are never committed.
 
-## Chicago live extraction
-
-The current release-operator entrypoint is:
+## Chicago live audit
 
 ```bash
 python \
@@ -28,45 +22,18 @@ python \
   --solver-time-limit 60
 ```
 
-It first retrieves a narrow overlap index and then fetches complete rows through
+The extractor obtains a narrow overlap index and then fetches complete rows in
 exact released-start and endpoint-bin shards. Every shard is count-checked and
-reconciled by public `trip_id`; duplicate IDs with inconsistent public payloads
-fail closed. Broad `OR` pulls and full-row cross-column range queries are not
-used.
+reconciled by public `trip_id`; inconsistent duplicate payloads fail closed.
+Broad `OR` pulls and full-row cross-column range queries are not used.
 
 The successful run-164 contract is snapshot-stable and count-closed for 60
-cores, 611 K=2 temporal candidates, and 50,405 all-trip contributors.
+cores, 611 K=2 temporal candidates, and 50,405 all-trip endpoint-bin
+contributors.
 
-## Release semantics
+## Claim boundary
 
-Only documented one-way implications are licensed. A visible fine tract may
-imply that applicable endpoint cells are above the documented threshold. A
-blank does not identify a LOW cell, because privacy coarsening, outside-city
-locations, source missingness, and other null causes are not distinguished by
-the public row alone.
-
-The adapter and live audit therefore do not:
-
-- infer a blank's cause;
-- validate the City's private production implementation;
-- recover Shared Trip IDs, vehicles, drivers, or partners;
-- establish a finite spatial exclusion for an unmeasured centroid; or
-- construct complete hidden runs.
-
-## Candidate and boundary semantics
-
-Core rows are covered exactly once; boundary buffers are optional. A temporal
-candidate edge expresses possible compatibility under the declared released
-support, not realized co-membership. Radius and omission-budget curves are
-candidate-support sensitivities, not estimated partner-recall guarantees.
-
-All committed outputs are aggregate and redacted. Raw rows and trip identifiers
-must remain outside the repository.
-
-## Tests
-
-```bash
-python -m unittest discover -s code/ai_pilot/data_pipeline/tests -v
-python -m unittest discover \
-  -s code/ai_pilot/data_pipeline/production_audit/tests -v
-```
+Candidate edges encode possible compatibility under the declared public
+support, not realized co-membership. The pipeline does not infer null causes,
+validate a city's private transformation code, recover vehicles or partners,
+establish hidden-run closure, or license population/causal conclusions.

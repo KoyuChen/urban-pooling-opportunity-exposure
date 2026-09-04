@@ -1,3 +1,0 @@
-city,status,cohort_rows,fetched,usable,max_bin,pair_size_known,temporal_worlds,route_edges,route_worlds
-Chicago,ok,853,853,619,52,True,10395,34,135
-New York City,ok,823,823,823,70,False,10395,30,0

@@ -1,4 +1,0 @@
-# External benchmark loader; the core repository supplies numpy/pandas/scipy.
-recordlinkage==0.16
-# Exact general-graph weighted perfect matching for the all-ten UCI dyad audit.
-rustworkx==0.17.1

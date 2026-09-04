@@ -1,26 +1,25 @@
 # Reproducibility
 
-## Deterministic CI-equivalent checks
+## Environment
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-python -m pip install -r code/ai_pilot/requirements-ci.txt
+python -m pip install -r code/ai_pilot/requirements.txt
+```
 
+## Deterministic checks
+
+```bash
 python -m py_compile \
   code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
 python \
   code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
   --self-test
-
-python -m unittest discover -s code/ai_pilot/bounds/tests -v
-python -m unittest discover -s code/ai_pilot/data_pipeline/tests -v
 python -m unittest discover \
   -s code/ai_pilot/data_pipeline/production_audit/tests -v
-python -m unittest discover -s code/ai_pilot/external_benchmarks/tests -v
-python -m unittest discover \
-  -s code/ai_pilot/benchmarks/runtime_profile -p 'test_*.py' -v
-python adversarial_review/counterexamples.py
+python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
+  --self-test
 ```
 
 ## Paper
@@ -31,8 +30,8 @@ python adversarial_review/counterexamples.py
   paper/build/KDD_Research_Working_Draft.pdf
 ```
 
-The local build directory is ignored. The `ci` workflow uploads the authoritative
-compiled PDF artifact.
+The local build directory is ignored. CI uploads the compiled PDF instead of
+committing generated binaries.
 
 ## Chicago live release audit
 
@@ -49,35 +48,13 @@ python \
   --solver-time-limit 60
 ```
 
-The command is also available through the manually dispatched
-`chicago-live-audits` workflow. Use a Socrata app token when available.
-
-## Chicago K=2 boundary and support curves
+## Chicago K=2 boundary audit
 
 ```bash
-python \
-  code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
-  --output-dir tmp/chicago-k2-frontier-boundary \
-  --scan-start 2026-01-13T17:00:00 \
-  --scan-end 2026-01-13T21:00:00 \
-  --min-core-rows 12 \
-  --max-core-rows 60 \
-  --max-candidate-rows 5000 \
-  --page-size 100 \
-  --request-timeout 90 \
-  --request-attempts 3 \
-  --base-radius-km 2 \
-  --solver-time-limit 60 \
-  --boundary-padding-minutes 0,5,10,15,30
+./scripts/run_chicago_k2_boundary_local.sh
 ```
 
-## Frozen NYC panels
-
-The exact YAML used for the 24-window decision panel, fixed-support audits,
-coarsening/capacity studies, column generation, and branch-and-price scale runs
-is retained under `archive/workflows/` with a `.disabled` suffix. Restore a
-workflow only for an explicit rerun with the same estimand; do not launch those
-panels on ordinary paper commits.
-
-All public-data outputs must remain aggregate and redacted. Do not commit raw
-rows, trip IDs, partner assignments, event columns, or latent timestamps.
+Live jobs are also available through the manually dispatched
+`chicago-live-audits` workflow. All outputs belong in ignored directories such
+as `tmp/`; do not commit raw rows, identifiers, event columns, reconstructed
+partners, or latent timestamps.
