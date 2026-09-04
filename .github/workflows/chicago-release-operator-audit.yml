@@ -39,6 +39,8 @@ jobs:
             scipy==1.17.0
       - name: Run release-operator and bridge tests
         run: |
+          python -m py_compile \
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
           python -m unittest discover \
             -s code/ai_pilot/data_pipeline/production_audit/tests \
             -p 'test_live_chicago_release_operator_audit.py' -v
@@ -51,7 +53,7 @@ jobs:
 
   live:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     env:
       PYTHONHASHSEED: "0"
       OPENBLAS_NUM_THREADS: "1"
@@ -77,7 +79,7 @@ jobs:
             --page-size 500 \
             --max-candidate-rows 5000 \
             --max-contributor-rows 100000 \
-            --request-timeout 60 \
+            --request-timeout 90 \
             --request-attempts 4 \
             --solver-time-limit 60
       - name: Enforce the fail-closed claim boundary
@@ -100,7 +102,10 @@ jobs:
           assert report["extraction"]["all_public_contributors_count_closed"] is True
           assert report["extraction"]["candidate_null_start_or_end_rows"] == 0
           assert report["extraction"]["broad_or_query_used"] is False
-          assert report["extraction"]["fetch_strategy"] == "PARTITIONED_COUNT_CLOSED_BRANCH_UNION_WITH_PUBLIC_TRIP_ID_DEDUPLICATION"
+          assert report["extraction"]["full_row_cross_column_range_query_used"] is False
+          assert report["extraction"]["narrow_cross_column_index_query_used"] is True
+          assert report["extraction"]["exact_endpoint_bin_full_row_shards_used"] is True
+          assert report["extraction"]["fetch_strategy"] == "NARROW_OVERLAP_INDEX_THEN_EXACT_START_AND_ENDPOINT_BIN_SHARDS"
 
           masks = report["release_masks"]
           assert masks["mask_equalities_scope"] == "SNAPSHOT_SUBSET_DESCRIPTIVE_ONLY"
