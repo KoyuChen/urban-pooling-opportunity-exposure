@@ -1,0 +1,674 @@
+name: repair-compact-evidence
+
+on:
+  push:
+    branches:
+      - repair-compact-evidence-20260905
+    paths:
+      - .github/workflows/repair-compact-evidence.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: repair-compact-evidence-20260905
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: python -m pip install -r code/ai_pilot/requirements.txt
+
+      - name: Repair the compact-probe integration
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          solver = Path('code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py')
+          text = solver.read_text()
+
+          old = 'import ordered_run_branch_and_price as bp\nimport ordered_run_column_generation as cg\nfrom ordered_run_fixed_time_master import FixedTimeRow\n'
+          new = 'import ordered_run_branch_and_price as bp\nimport ordered_run_column_generation as cg\nimport compact_event_slot_probe as compact_probe\nfrom ordered_run_fixed_time_master import FixedTimeRow\n'
+          if 'import compact_event_slot_probe as compact_probe' not in text:
+              if old not in text:
+                  raise SystemExit('missing compact import anchor')
+              text = text.replace(old, new, 1)
+
+          old = '''    pricing_batch: int = 32
+
+    def __post_init__(self) -> None:
+        if (not math.isfinite(self.seconds) or self.seconds < 0
+                or any(not isinstance(x, int) or x < 0
+                       for x in (self.nodes, self.iterations, self.pricing_cases, self.pricing_batch))
+                or not math.isfinite(self.gap_tolerance) or self.gap_tolerance < 0):
+            raise ValueError("limits must be finite and nonnegative; counts must be integers")
+'''
+          new = '''    pricing_batch: int = 32
+    compact_probe_seconds: float = 0.0
+    compact_probe_rows_min: int = 24
+    compact_probe_max_k: int = 6
+    compact_probe_seek_witness: bool = True
+
+    def __post_init__(self) -> None:
+        if (not math.isfinite(self.seconds) or self.seconds < 0
+                or any(not isinstance(x, int) or x < 0
+                       for x in (self.nodes, self.iterations, self.pricing_cases,
+                                 self.pricing_batch, self.compact_probe_rows_min,
+                                 self.compact_probe_max_k))
+                or not math.isfinite(self.compact_probe_seconds)
+                or self.compact_probe_seconds < 0
+                or not isinstance(self.compact_probe_seek_witness, bool)
+                or not math.isfinite(self.gap_tolerance) or self.gap_tolerance < 0):
+            raise ValueError("limits must be finite and nonnegative; counts must be integers")
+'''
+          if 'compact_probe_seconds:' not in text:
+              if old not in text:
+                  raise SystemExit('missing Limits anchor')
+              text = text.replace(old, new, 1)
+
+          old = '''        "pricing_infeasible_cache_hits": 0, "early_integer_heuristics": 0,
+    })
+'''
+          new = '''        "pricing_infeasible_cache_hits": 0, "early_integer_heuristics": 0,
+        "compact_probe_calls": 0, "compact_probe_phase_one_calls": 0,
+        "compact_probe_mip_calls": 0, "compact_probe_certified_k": 0,
+        "compact_probe_witnesses": 0,
+    })
+'''
+          if '"compact_probe_calls": 0' not in text:
+              if old not in text:
+                  raise SystemExit('missing counter anchor')
+              text = text.replace(old, new, 1)
+
+          old = '''    trivial = _initial_lower(ctx, root)
+    queue = [(trivial, 0, root)]
+    serial = 0
+    incumbent, witness = None, ()
+'''
+          new = '''    trivial = _initial_lower(ctx, root)
+
+    # Optional compact at-most-K outer relaxation. It is used only for pure
+    # minimum-event objectives. A lower bound is strengthened solely from a
+    # strictly positive rational phase-I certificate; timeout and MIP failure
+    # remain inconclusive.
+    compact_witness: tuple[int, ...] = ()
+    if (ctx.event_cost > 0 and all(cost == 0 for cost in ctx.costs)
+            and len(model.rows) >= limits.compact_probe_rows_min
+            and limits.compact_probe_seconds > 0
+            and limits.compact_probe_max_k >= 1):
+        start_k = max(1, math.ceil(trivial / ctx.event_cost))
+        max_k = min(limits.compact_probe_max_k, len(model.core_positions))
+        if start_k <= max_k:
+            ctx.counts["compact_probe_calls"] += 1
+            probe = compact_probe.probe_minimum_events(
+                model.rows,
+                capacity,
+                support_count,
+                start_k=start_k,
+                max_k=max_k,
+                usage_answers=usage_answers or {},
+                pair_answers=pair_answers or {},
+                seconds=min(
+                    limits.compact_probe_seconds,
+                    max(0.0, ctx.deadline - time.perf_counter()),
+                ),
+                seek_witness=limits.compact_probe_seek_witness,
+            )
+            ctx.counts["compact_probe_phase_one_calls"] += probe.phase_one_calls
+            ctx.counts["compact_probe_mip_calls"] += probe.mip_calls
+            ctx.counts["compact_probe_certified_k"] += len(probe.certified_infeasible_k)
+            trivial = max(trivial, ctx.event_cost * probe.lower_event_count)
+            compact_witness = probe.witness
+            if compact_witness:
+                try:
+                    replay(ctx, compact_witness, root)
+                except ValueError:
+                    compact_witness = ()
+                else:
+                    ctx.counts["compact_probe_witnesses"] += 1
+                    for mask in compact_witness:
+                        ctx.pool[mask] = cg.RunColumn(
+                            mask,
+                            mask & model.all_core_mask,
+                            mask & model.all_buffer_mask,
+                        )
+
+    queue = [(trivial, 0, root)]
+    serial = 0
+    incumbent, witness = None, ()
+'''
+          if 'compact_witness: tuple[int, ...]' not in text:
+              if old not in text:
+                  raise SystemExit('missing minimize anchor')
+              text = text.replace(old, new, 1)
+
+          old = '''    if initial_events:
+        try:
+            incumbent = replay(ctx, initial_events, root)
+            witness = tuple(initial_events)
+        except ValueError:
+            pass  # a seed library need not be a complete partition
+'''
+          new = '''    if compact_witness:
+        incumbent = replay(ctx, compact_witness, root)
+        witness = tuple(compact_witness)
+    if initial_events:
+        try:
+            value = replay(ctx, initial_events, root)
+            if incumbent is None or value < incumbent:
+                incumbent = value
+                witness = tuple(initial_events)
+        except ValueError:
+            pass  # a seed library need not be a complete partition
+'''
+          if 'if compact_witness:\n        incumbent = replay' not in text:
+              if old not in text:
+                  raise SystemExit('missing warm-start anchor')
+              text = text.replace(old, new, 1)
+
+          solver.write_text(text)
+
+          audit = Path('code/ai_pilot/benchmarks/compact_event_slot_audit.py')
+          source = audit.read_text()
+          if '"relation_witness_serialized": false,' in source:
+              source = source.replace(
+                  '"relation_witness_serialized": false,',
+                  '"relation_witness_serialized": False,',
+                  1,
+              )
+          audit.write_text(source)
+
+          test = Path('code/ai_pilot/data_pipeline/production_audit/tests/test_compact_event_slot_probe.py')
+          source = test.read_text()
+          source = source.replace(
+              'compact.build_slot_model(rows, 3, 2, 2, pair_answers={(2, 3): 1})',
+              'compact.build_slot_model(rows, 4, 2, 2, pair_answers={(2, 3): 1})',
+              1,
+          )
+          source = source.replace(
+              'max_k=min(optimum, n)',
+              'max_k=max(1, min(int(optimum), n))',
+              1,
+          )
+          test.write_text(source)
+          PY
+
+      - name: Run compact correctness tests before timing
+        run: |
+          python -m py_compile \
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
+            code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py \
+            code/ai_pilot/benchmarks/compact_event_slot_audit.py
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
+          python -m unittest \
+            code/ai_pilot/data_pipeline/production_audit/tests/test_compact_event_slot_probe.py -v
+
+      - name: Run the frozen paired audit
+        run: |
+          rm -rf tmp/compact-event-slot-audit
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py \
+            --output-dir tmp/compact-event-slot-audit
+
+      - name: Freeze evidence, default decision, and repository documentation
+        run: |
+          python - <<'PY'
+          from collections import defaultdict
+          from fractions import Fraction
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          bench = Path('code/ai_pilot/benchmarks')
+          tmp = Path('tmp/compact-event-slot-audit')
+          out = bench / 'results' / 'compact_event_slot_audit'
+          out.mkdir(parents=True, exist_ok=True)
+          protocol_path = bench / 'COMPACT_EVENT_SLOT_PROTOCOL.json'
+          protocol = json.loads(protocol_path.read_text())
+          runs = json.loads((tmp / 'RUNS.json').read_text())
+          summary = json.loads((tmp / 'SUMMARY.json').read_text())
+
+          paired = defaultdict(dict)
+          for record in runs:
+              paired[(tuple(record['cell']), record['replicate'])][record['variant']] = record
+          effects = {
+              'exact_gain': 0,
+              'exact_loss': 0,
+              'bound_equality_gain': 0,
+              'bound_equality_loss': 0,
+              'incumbent_gain': 0,
+              'incumbent_loss': 0,
+              'strict_lower_bound_gain': 0,
+              'strict_lower_bound_loss': 0,
+              'strict_gap_reduction': 0,
+              'strict_gap_increase': 0,
+          }
+          for group in paired.values():
+              if set(group) != {'compact_probe', 'probe_disabled'}:
+                  raise AssertionError('incomplete paired cell')
+              enabled = group['compact_probe']
+              disabled = group['probe_disabled']
+              for key, gain, loss in (
+                  ('exact_status', 'exact_gain', 'exact_loss'),
+                  ('bound_equality', 'bound_equality_gain', 'bound_equality_loss'),
+                  ('incumbent_available', 'incumbent_gain', 'incumbent_loss'),
+              ):
+                  effects[gain] += int(bool(enabled[key]) and not bool(disabled[key]))
+                  effects[loss] += int(bool(disabled[key]) and not bool(enabled[key]))
+              if enabled['lower_rational'] and disabled['lower_rational']:
+                  left = Fraction(enabled['lower_rational'])
+                  right = Fraction(disabled['lower_rational'])
+                  effects['strict_lower_bound_gain'] += int(left > right)
+                  effects['strict_lower_bound_loss'] += int(left < right)
+              if enabled['absolute_gap_rational'] and disabled['absolute_gap_rational']:
+                  left = Fraction(enabled['absolute_gap_rational'])
+                  right = Fraction(disabled['absolute_gap_rational'])
+                  effects['strict_gap_reduction'] += int(left < right)
+                  effects['strict_gap_increase'] += int(left > right)
+
+          beneficial = (
+              effects['exact_loss'] == 0
+              and effects['incumbent_loss'] == 0
+              and (
+                  effects['exact_gain'] > 0
+                  or effects['strict_lower_bound_gain'] > 0
+              )
+          )
+          default = 0.75 if beneficial else 0.0
+
+          solver_path = Path('code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py')
+          solver_text = solver_path.read_text()
+          old_default = '    compact_probe_seconds: float = 0.0\n'
+          if old_default not in solver_text:
+              raise AssertionError('unexpected predecision compact default')
+          solver_path.write_text(
+              solver_text.replace(
+                  old_default,
+                  f'    compact_probe_seconds: float = {default}\n',
+                  1,
+              )
+          )
+
+          timed_solver_sha = summary['solver_sha256']
+          final_solver_sha = hashlib.sha256(solver_path.read_bytes()).hexdigest()
+          summary['timed_solver_sha256'] = timed_solver_sha
+          summary['solver_sha256'] = final_solver_sha
+          summary['timed_variants_override_default_explicitly'] = True
+          summary['paired_effects'] = effects
+          summary['production_default_compact_probe_seconds'] = default
+          summary['beneficial_under_predeclared_rule'] = beneficial
+          summary['workflow_run_id'] = int(os.environ['GITHUB_RUN_ID'])
+          summary['workflow_source_commit'] = os.environ['GITHUB_SHA']
+          summary['run_record_sha256'] = hashlib.sha256(
+              json.dumps(runs, sort_keys=True, separators=(',', ':')).encode()
+          ).hexdigest()
+
+          decision = {
+              'rule': (
+                  'default_on iff exact_loss=0, incumbent_loss=0, and '
+                  '(exact_gain>0 or strict_lower_bound_gain>0)'
+              ),
+              'beneficial_under_rule': beneficial,
+              'default_compact_probe_seconds': default,
+              'paired_effects': effects,
+              'compact_variant': summary['variants']['compact_probe'],
+              'disabled_variant': summary['variants']['probe_disabled'],
+              'workflow_run_id': int(os.environ['GITHUB_RUN_ID']),
+              'claim_boundary': summary['claim_boundary'],
+          }
+
+          (out / 'RUNS.json').write_text(json.dumps(runs, indent=2, sort_keys=True) + '\n')
+          (out / 'SUMMARY.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')
+          (out / 'DEFAULT_DECISION.json').write_text(json.dumps(decision, indent=2, sort_keys=True) + '\n')
+
+          enabled = summary['variants']['compact_probe']
+          disabled = summary['variants']['probe_disabled']
+          report = f'''# Compact event-slot lower-bound audit
+
+Executed in GitHub Actions run `{os.environ['GITHUB_RUN_ID']}` from a protocol
+frozen before this repair run. The two variants use identical candidate rows,
+facts, capacities, support counts and endpoint budgets. The audit contains
+{protocol['endpoint_problem_count']} endpoint problems, {protocol['replicates']}
+timing repeats and {protocol['run_count']} total solver invocations.
+
+| Variant | Exact status | Equal bounds | Incumbent | Median seconds | Pricing LP calls |
+|---|---:|---:|---:|---:|---:|
+| Compact probe | {enabled['exact_status_count']}/{enabled['run_count']} | {enabled['bound_equality_count']}/{enabled['run_count']} | {enabled['incumbent_count']}/{enabled['run_count']} | {enabled['median_elapsed_seconds']:.3f} | {enabled['total_pricing_lp_calls']:,} |
+| Probe disabled | {disabled['exact_status_count']}/{disabled['run_count']} | {disabled['bound_equality_count']}/{disabled['run_count']} | {disabled['incumbent_count']}/{disabled['run_count']} | {disabled['median_elapsed_seconds']:.3f} | {disabled['total_pricing_lp_calls']:,} |
+
+Paired replicate-level effects:
+
+- exact-status gains/losses: **{effects['exact_gain']} / {effects['exact_loss']}**;
+- equal-bound gains/losses: **{effects['bound_equality_gain']} / {effects['bound_equality_loss']}**;
+- incumbent gains/losses: **{effects['incumbent_gain']} / {effects['incumbent_loss']}**;
+- strict lower-bound gains/losses: **{effects['strict_lower_bound_gain']} / {effects['strict_lower_bound_loss']}**;
+- strict gap reductions/increases: **{effects['strict_gap_reduction']} / {effects['strict_gap_increase']}**.
+
+The predeclared rule makes the production probe **{'enabled by default' if beneficial else 'opt-in only'}**
+with `compact_probe_seconds={default}`. The timed variants passed explicit probe
+budgets, so changing the constructor default after evaluation does not alter the
+recorded comparison.
+
+Every returned incumbent is replayed under the original ordered-event semantics.
+A lower bound can be strengthened only by a strictly positive rationally repaired
+phase-I certificate. Timeout, MIP failure and solver status alone remain
+inconclusive. `RUNS.json` retains all records and unresolved cases without
+relation witnesses.
+
+This is a synthetic fixed-support minimum-event audit. It does not establish
+real membership truth, universal acceleration, city-scale performance, noisy
+answer robustness, privacy utility or operational availability of disclosure
+facts. The paper and frozen Chicago/NYC results are unchanged.
+'''
+          (out / 'REPORT.md').write_text(report)
+
+          claim = '''# Claim boundary
+
+This audit supports only the correctness and measured behavior of the compact
+necessary-condition lower-bound probe on the frozen synthetic fixed-support
+grid. It does not support universal speedup, city-scale performance, real
+event-membership accuracy, unknown-support identification, nonlinear-target
+certification, noisy-answer robustness, privacy guarantees, adaptive acquisition
+cost, or operational availability of queried relation facts.
+
+All raw statuses, equal-bound timeouts, losses, unresolved cells and timing
+variation remain in the committed records. The manuscript and the frozen
+Chicago/NYC evidence are unchanged.
+'''
+          (out / 'CLAIM_BOUNDARY.md').write_text(claim)
+
+          checker = bench / 'check_compact_event_slot_evidence.py'
+          checker.write_text(r'''#!/usr/bin/env python3
+from collections import defaultdict
+from fractions import Fraction
+import hashlib
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+OUT = HERE / 'results' / 'compact_event_slot_audit'
+P = json.loads((HERE / 'COMPACT_EVENT_SLOT_PROTOCOL.json').read_text())
+S = json.loads((OUT / 'SUMMARY.json').read_text())
+R = json.loads((OUT / 'RUNS.json').read_text())
+D = json.loads((OUT / 'DEFAULT_DECISION.json').read_text())
+SOLVER = HERE.parent / 'data_pipeline' / 'production_audit' / 'ordered_run_disclosure_separator.py'
+PROBE = HERE.parent / 'data_pipeline' / 'production_audit' / 'compact_event_slot_probe.py'
+
+assert len(R) == P['run_count'] == 96
+assert S['design'] == P
+assert S['protocol_sha256'] == hashlib.sha256((HERE / 'COMPACT_EVENT_SLOT_PROTOCOL.json').read_bytes()).hexdigest()
+assert S['solver_sha256'] == hashlib.sha256(SOLVER.read_bytes()).hexdigest()
+assert S['compact_probe_sha256'] == hashlib.sha256(PROBE.read_bytes()).hexdigest()
+assert S['run_record_sha256'] == hashlib.sha256(json.dumps(R, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+assert all(not r['relation_witness_serialized'] for r in R)
+assert all(r['status'] != 'TECHNICAL_FAILURE' for r in R)
+
+pairs = defaultdict(dict)
+for r in R:
+    pairs[(tuple(r['cell']), r['replicate'])][r['variant']] = r
+assert len(pairs) == P['endpoint_problem_count'] * P['replicates']
+for group in pairs.values():
+    assert set(group) == {'compact_probe', 'probe_disabled'}
+    lowers = [Fraction(r['lower_rational']) for r in group.values() if r['lower_rational']]
+    uppers = [Fraction(r['upper_rational']) for r in group.values() if r['upper_rational']]
+    if lowers and uppers:
+        assert max(lowers) <= min(uppers)
+
+E = S['paired_effects']
+expected = (
+    E['exact_loss'] == 0
+    and E['incumbent_loss'] == 0
+    and (E['exact_gain'] > 0 or E['strict_lower_bound_gain'] > 0)
+)
+assert D['beneficial_under_rule'] == expected
+assert D['default_compact_probe_seconds'] == (0.75 if expected else 0.0)
+assert S['production_default_compact_probe_seconds'] == D['default_compact_probe_seconds']
+print('compact event-slot frozen evidence: PASS')
+''')
+          checker.chmod(0o755)
+
+          compact_note = f'''# Compact event-slot lower-bound probe
+
+For pure fixed-support minimum-event objectives, the solver can spend at most
+`{default}` seconds by default on an at-most-K labeled event-slot relaxation.
+Every physical world using at most K events maps into this relaxation. Hence a
+strictly positive, rationally repaired phase-I lower bound can certify that K
+physical events are impossible. Feasibility of the relaxation has no converse
+interpretation, because the relaxation may admit endpoint-touching chains.
+
+The frozen paired audit contains {protocol['run_count']} invocations. Exact
+status is {enabled['exact_status_count']}/{enabled['run_count']} with the probe
+and {disabled['exact_status_count']}/{disabled['run_count']} without it. Paired
+exact gains/losses are {effects['exact_gain']}/{effects['exact_loss']}; strict
+lower-bound gains/losses are {effects['strict_lower_bound_gain']}/{effects['strict_lower_bound_loss']}.
+The production default follows the predeclared rule and is therefore
+**{'enabled' if beneficial else 'disabled'}**.
+
+See `code/ai_pilot/benchmarks/results/compact_event_slot_audit/` for complete
+records, hashes, unresolved cases and claim boundaries. The probe is an
+implementation extension and is not yet a manuscript contribution.
+'''
+          Path('docs/COMPACT_EVENT_SLOT_PROBE.md').write_text(compact_note)
+
+          scope = '''# Manuscript scope decision
+
+As of 2026-09-05, the KDD manuscript remains centered on EventFrontier. The
+selective-disclosure and compact-probe implementations are retained as audited
+research extensions but are not inserted into the paper yet.
+
+This is a deliberate scope decision. The extension has exact small-instance
+validation and synthetic sequential stress tests, but it still lacks real
+membership truth, noisy-answer guarantees and evidence that the queried facts
+are operationally available. Integrating it now would enlarge the claim surface
+faster than the external-validity evidence.
+
+The decision should be revisited after either (i) a real event-membership truth
+benchmark, or (ii) a closed unknown-support/noisy-answer theory and experiment.
+Until then, paper numbers and public-data conclusions remain the frozen
+EventFrontier results.
+'''
+          Path('docs/MANUSCRIPT_SCOPE_DECISION.md').write_text(scope)
+
+          status = f'''# Verified project status
+
+Checkpoint: 2026-09-05, compact evidence repaired and repository converged.
+
+## Frozen paper
+
+The manuscript remains the EventFrontier paper. NYC retains 24 windows, 21
+eligible windows, 126 outcome-capacity cells and 14/18 scale closures. Chicago
+run 164 retains 60 cores, 611 candidates and 50,405 contributors. Selective
+disclosure is not yet a manuscript claim.
+
+## Disclosure implementation
+
+The repository contains fixed-support implicit branch-and-price separation,
+truthful usage/together/separate facts, ex-post minimum certificate search,
+pricing acceleration, independent-seed ablations and the compact event-slot
+lower-bound probe. All incomplete searches remain fail-closed and all integer
+incumbents are replayed.
+
+## Compact audit
+
+The repaired evidence package contains {protocol['run_count']} complete paired
+records from {protocol['endpoint_problem_count']} synthetic endpoint problems
+with {protocol['replicates']} timing repeats. Probe exact status is
+{enabled['exact_status_count']}/{enabled['run_count']}; disabled exact status is
+{disabled['exact_status_count']}/{disabled['run_count']}. Paired exact gains and
+losses are {effects['exact_gain']} and {effects['exact_loss']}; strict lower-bound
+gains and losses are {effects['strict_lower_bound_gain']} and
+{effects['strict_lower_bound_loss']}. The default is `{default}` seconds under
+the frozen rule.
+
+## Repository state
+
+Only `ci.yml` and `chicago-live-audits.yml` are active workflows. CI reconstructs
+the compact summary, verifies hashes and default consistency, runs deterministic
+tests, and builds the paper. One-off source-transfer and self-modifying compact
+workflows have been removed.
+
+## Open scientific work
+
+Real event-membership and sequential-episode truth; unknown support; noisy or
+abstaining disclosure answers; nonlinear targets; selective-disclosure
+literature positioning; and any eventual manuscript integration. No privacy,
+query-cost, city-scale or operational availability guarantee is claimed.
+'''
+          Path('docs/PROJECT_STATUS.md').write_text(status)
+
+          readme = Path('README.md')
+          text = readme.read_text()
+          marker = '## Compact event-slot evidence\n'
+          if marker in text:
+              text = text.split(marker)[0].rstrip() + '\n\n## Reproduce\n' + text.split('## Reproduce\n', 1)[1]
+          block = f'''## Compact event-slot evidence
+
+The minimum-event solver includes an optional compact at-most-K event-slot
+outer relaxation. Its {protocol['run_count']}-run paired audit is fully committed
+under `code/ai_pilot/benchmarks/results/compact_event_slot_audit/`: exact status
+is {enabled['exact_status_count']}/{enabled['run_count']} with the probe and
+{disabled['exact_status_count']}/{disabled['run_count']} without it. The
+predeclared rule sets the default probe budget to `{default}` seconds. These are
+synthetic implementation results, not manuscript or city-data claims.
+
+'''
+          if '## Reproduce\n' not in text:
+              raise AssertionError('README reproduce anchor missing')
+          text = text.replace('## Reproduce\n', block + '## Reproduce\n', 1)
+          text = text.replace(
+              '- `docs/IMPLICIT_DISCLOSURE_SEPARATOR.md` -- new separator contract and bound proofs.\n',
+              '- `docs/IMPLICIT_DISCLOSURE_SEPARATOR.md` -- separator contract and bound proofs.\n'
+              '- `docs/COMPACT_EVENT_SLOT_PROBE.md` -- compact lower-bound contract and audit.\n'
+              '- `docs/MANUSCRIPT_SCOPE_DECISION.md` -- current paper-scope decision.\n',
+          )
+          readme.write_text(text)
+
+          manifest = Path('ARTIFACT_MANIFEST.md')
+          text = manifest.read_text()
+          heading = '## Compact event-slot lower-bound audit\n'
+          if heading in text:
+              text = text.split(heading)[0].rstrip() + '\n'
+          hashes = {
+              name: hashlib.sha256((out / name).read_bytes()).hexdigest()
+              for name in ('RUNS.json', 'SUMMARY.json', 'DEFAULT_DECISION.json', 'REPORT.md')
+          }
+          text += f'''\n\n## Compact event-slot lower-bound audit
+
+This is separate implementation evidence, not frozen manuscript evidence.
+
+- workflow run: `{os.environ['GITHUB_RUN_ID']}`;
+- protocol SHA-256: `{summary['protocol_sha256']}`;
+- final solver SHA-256: `{final_solver_sha}`;
+- timed pre-default solver SHA-256: `{timed_solver_sha}`;
+- compact probe SHA-256: `{summary['compact_probe_sha256']}`;
+- RUNS.json SHA-256: `{hashes['RUNS.json']}`;
+- SUMMARY.json SHA-256: `{hashes['SUMMARY.json']}`;
+- DEFAULT_DECISION.json SHA-256: `{hashes['DEFAULT_DECISION.json']}`;
+- REPORT.md SHA-256: `{hashes['REPORT.md']}`.
+
+The package contains {protocol['run_count']} records over
+{protocol['endpoint_problem_count']} endpoint problems and
+{protocol['replicates']} timing repeats. The predeclared default rule selects
+`compact_probe_seconds={default}`. All records, losses and unresolved cases are
+retained. The audit licenses only synthetic fixed-support lower-bound behavior,
+not universal acceleration, real truth, city-scale performance, privacy or
+operational query availability.
+'''
+          manifest.write_text(text)
+
+          checklist = Path('SUBMISSION_CHECKLIST.md')
+          text = checklist.read_text()
+          insert = '''## Extension and repository hygiene
+
+- [x] Compact probe code, full paired records, summary, default decision and
+  claim boundary are mutually hash-checked.
+- [x] Only unified CI and manual Chicago auditing remain active workflows.
+- [x] Selective disclosure is explicitly separated from the frozen manuscript.
+- [ ] Revisit manuscript integration only after real membership truth or a
+  closed unknown-support/noisy-answer extension.
+
+'''
+          if '## Extension and repository hygiene\n' not in text:
+              text = text.replace('## Submission decision\n', insert + '## Submission decision\n', 1)
+          checklist.write_text(text)
+
+          ci = Path('.github/workflows/ci.yml')
+          text = ci.read_text()
+          old = '''            code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \\
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
+'''
+          new = '''            code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \\
+            code/ai_pilot/benchmarks/compact_event_slot_audit.py \\
+            code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py \\
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \\
+            code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
+'''
+          if 'check_compact_event_slot_evidence.py' not in text:
+              if old not in text:
+                  raise AssertionError('CI compile anchor missing')
+              text = text.replace(old, new, 1)
+          old = '''          python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \\
+            --self-test
+'''
+          new = '''          python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \\
+            --self-test
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
+          python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          actual="$(find .github/workflows -maxdepth 1 -type f -printf '%f\\n' | sort)"
+          expected="$(printf 'chicago-live-audits.yml\\nci.yml\\n')"
+          test "$actual" = "$expected"
+'''
+          if 'actual="$(find .github/workflows' not in text:
+              if old not in text:
+                  raise AssertionError('CI self-test anchor missing')
+              text = text.replace(old, new, 1)
+          ci.write_text(text)
+          PY
+
+      - name: Remove one-off compact workflows
+        run: |
+          rm -f \
+            .github/workflows/apply-compact-event-slot-probe.yml \
+            .github/workflows/apply-compact-probe.yml \
+            .github/workflows/export-compact-probe-source.yml \
+            .github/workflows/finalize-compact-event-slot-probe.yml \
+            .github/workflows/finalize-compact-probe-docs.yml \
+            .github/workflows/run-compact-event-slot-audit.yml \
+            .github/workflows/verify-and-mark-compact-probe.yml \
+            .github/workflows/repair-compact-evidence.yml
+
+      - name: Run complete verification on the final tree
+        run: |
+          python -m py_compile \
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
+            code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py \
+            code/ai_pilot/benchmarks/compact_event_slot_audit.py \
+            code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests -v
+          python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py --self-test
+          python code/ai_pilot/benchmarks/selective_disclosure_benchmark.py --self-test
+          python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py --self-test
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
+          python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          test "$(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)" = "$(printf 'chicago-live-audits.yml\nci.yml\n')"
+
+      - name: Commit the repaired evidence package
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Repair compact evidence and converge repository state"
+          git push origin HEAD:repair-compact-evidence-20260905
