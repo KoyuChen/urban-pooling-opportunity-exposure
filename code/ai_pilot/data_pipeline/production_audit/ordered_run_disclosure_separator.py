@@ -68,11 +68,12 @@ class Limits:
     iterations: int = 100
     pricing_cases: int = 4096
     gap_tolerance: float = 1e-8
+    pricing_batch: int = 32
 
     def __post_init__(self) -> None:
         if (not math.isfinite(self.seconds) or self.seconds < 0
                 or any(not isinstance(x, int) or x < 0
-                       for x in (self.nodes, self.iterations, self.pricing_cases))
+                       for x in (self.nodes, self.iterations, self.pricing_cases, self.pricing_batch))
                 or not math.isfinite(self.gap_tolerance) or self.gap_tolerance < 0):
             raise ValueError("limits must be finite and nonnegative; counts must be integers")
 
@@ -95,9 +96,31 @@ class Context:
         "master_lp_calls": 0, "integer_heuristic_calls": 0,
         "buffer_branches": 0, "pair_branches": 0,
         "pricing_cases": 0, "unique_generated_columns": 0,
+        "phase_one_feasible_skips": 0, "pricing_batch_stops": 0,
+        "pricing_roots_box_pruned": 0, "anytime_bound_updates": 0,
+        "pricing_infeasible_cache_hits": 0, "early_integer_heuristics": 0,
     })
     pool: dict[int, Any] = field(default_factory=dict)
     span_cache: dict[tuple[int, int], tuple[np.ndarray, np.ndarray]] = field(default_factory=dict)
+
+    node_lower: Fraction | None = None
+    candidate_value: Fraction | None = None
+    candidate_witness: tuple[int, ...] = ()
+    infeasible_boxes: set[tuple] = field(default_factory=set)
+    objective_step: Fraction = Fraction(0)
+
+    def __post_init__(self) -> None:
+        coefficients = self.costs + (self.event_cost,)
+        denominator = math.lcm(*(x.denominator for x in coefficients))
+        numerator = math.gcd(*(x.numerator * (denominator // x.denominator) for x in coefficients))
+        self.objective_step = Fraction(numerator, denominator)
+
+    def lattice_lower(self, lower: Fraction) -> Fraction:
+        # Every integer world's objective is a multiple of this rational step.
+        # Ceil in exact arithmetic, never by an LP/MIP gap tolerance.
+        if not self.objective_step:
+            return max(lower, Fraction(0))
+        return math.ceil(lower / self.objective_step) * self.objective_step
 
     def remaining(self) -> float:
         seconds = self.deadline - time.perf_counter()
@@ -234,10 +257,18 @@ def _box_dual_upper(a: np.ndarray, b: np.ndarray, lower: Sequence[int],
     Multipliers can be arbitrary. Project onto nonnegative values and repair
     every coefficient residual using the finite variable bounds.
     """
-    lam = [max(Fraction(0), _dual(v)) for v in multipliers]
-    bound = sum((int(rhs) * v for rhs, v in zip(b, lam)), Fraction(0))
-    for j, w in enumerate(weights):
-        residual = w - sum((int(a[k, j]) * v for k, v in enumerate(lam) if a[k, j]), Fraction(0))
+    # Work only on nonzero multiplier rows. Arithmetic is still rational;
+    # omitting zeros changes the cost of evaluation, not the bound.
+    residuals = list(weights)
+    bound = Fraction(0)
+    for k, value in enumerate(multipliers):
+        multiplier = max(Fraction(0), _dual(value))
+        if not multiplier:
+            continue
+        bound += int(b[k]) * multiplier
+        for j in np.flatnonzero(a[k]):
+            residuals[j] -= int(a[k, j]) * multiplier
+    for j, residual in enumerate(residuals):
         bound += max(lower[j] * residual, upper[j] * residual)
     return bound
 
@@ -251,12 +282,19 @@ def _fixed_span(ctx: Context, intervals: Sequence[Any], weights: Sequence[Fracti
     upper = [int(i not in forced_out and allowed_in_span(intervals[i], span)) for i in range(n)]
     if any(lo > hi for lo, hi in zip(lower, upper)):
         return None, None
+    key = (span, tuple(lower), tuple(upper))
+    if key in ctx.infeasible_boxes:
+        ctx.counts['pricing_infeasible_cache_hits'] += 1
+        return None, None
     a, b = _span_matrix(ctx, intervals, span)
     # Exact infeasibility precheck: a row cannot meet its RHS even at its
     # most favorable box point.
-    for row, rhs in zip(a, b):
-        if sum(int(x) * (lower[i] if x >= 0 else upper[i]) for i, x in enumerate(row)) > rhs:
-            return None, None
+    # All entries and box limits are small integers; these dot products are
+    # exact here (dimensions are far below binary64's exact integer range).
+    best_lhs = np.maximum(a, 0) @ np.asarray(lower) + np.minimum(a, 0) @ np.asarray(upper)
+    if np.any(best_lhs > b):
+        ctx.infeasible_boxes.add(key)
+        return None, None
     ctx.counts["pricing_lp_calls"] += 1
     res = linprog(-np.asarray([float(w) for w in weights]), A_ub=a, b_ub=b,
                   bounds=list(zip(lower, upper)), method="highs",
@@ -274,6 +312,7 @@ def _fixed_span(ctx: Context, intervals: Sequence[Any], weights: Sequence[Fracti
             bound = _box_dual_upper(a, b, lower, upper, [Fraction(0)] * n,
                                     -np.asarray(phase.ineqlin.marginals))
             if bound < 0:
+                ctx.infeasible_boxes.add(key)
                 return None, None  # feasible point would imply 0 < 0
         raise BudgetStop("PRICING_INFEASIBILITY_NOT_CERTIFIED")
     if not res.success or res.x is None:
@@ -291,7 +330,15 @@ def _fixed_span(ctx: Context, intervals: Sequence[Any], weights: Sequence[Fracti
 def _price(ctx: Context, node: Any, eq_duals: Sequence[Fraction],
            ub_duals: Sequence[Fraction], mandatory: Sequence[int], free: Sequence[int],
            phase_one: bool):
-    duals = {i: d for i, d in zip(mandatory, eq_duals[:-1])}
+    """Canonical-root pricing with valid bounds even before a full scan.
+
+    Assign each column to its least core position. Each root class has mass
+    at most one, so d + sum_r min(0, rho_r) bounds the full master. Before a
+    root is scanned, a box relaxation bounds its pricing value. Completed
+    roots replace that bound with residual-repaired interval-LP bounds.
+    An early batch return is for column discovery only, never LP closure.
+    """
+    duals = dict(zip(mandatory, eq_duals[:-1]))
     duals.update(zip(free, ub_duals))
     sigma = eq_duals[-1]
     weights = [duals.get(i, Fraction(0)) + (sigma if i in ctx.model.buffer_positions else 0)
@@ -299,16 +346,49 @@ def _price(ctx: Context, node: Any, eq_duals: Sequence[Fraction],
     offset = Fraction(0) if phase_one else ctx.event_cost
     intervals = cg.compress_endpoints(ctx.model.rows)
     excluded = {i for i, y in node.buffer_status if y == 0}
-    min_rc = None
+    roots = ctx.model.core_positions
+    dual_value = sum(eq_duals[:-1], Fraction(0)) + ctx.q * sigma + sum(ub_duals, Fraction(0))
+    root_boxes = {}
+    root_fixes = {}
+    earlier = set()
+    for root in roots:
+        fixes = bp._propagate_case({root}, excluded | earlier,
+                                   node.together_pairs, node.separate_pairs)
+        earlier.add(root)
+        if fixes is None:
+            root_boxes[root] = None
+            continue
+        fi, fo = map(frozenset, fixes)
+        root_fixes[root] = (fi, fo)
+        root_boxes[root] = sum((weights[i] if i in fi else max(Fraction(0), weights[i])
+                                for i in range(len(weights)) if i not in fo), Fraction(0))
+    corrections = {r: min(Fraction(0), offset-u) if u is not None else Fraction(0)
+                   for r, u in root_boxes.items()}
+
+    def publish_bound():
+        lower = dual_value + sum(corrections.values(), Fraction(0))
+        if not phase_one:
+            lower = ctx.lattice_lower(lower)
+        if not phase_one and (ctx.node_lower is None or lower > ctx.node_lower):
+            ctx.node_lower = lower
+            ctx.counts['anytime_bound_updates'] += 1
+        return lower
+
+    publish_bound()
     improved = []
-    for root in ctx.model.core_positions:
+    for root in roots:
         ctx.remaining()
+        if root_boxes[root] is None or root_boxes[root] <= offset:
+            ctx.counts['pricing_roots_box_pruned'] += 1
+            continue
+        _fi, canonical_out = root_fixes[root]
         try:
-            cases = bp.enumerate_pricing_cases(len(intervals), root, node, excluded,
+            cases = bp.enumerate_pricing_cases(len(intervals), root, node, canonical_out,
                                                max_cases=ctx.limits.pricing_cases)
         except RuntimeError as error:
             raise BudgetStop(str(error)) from error
-        ctx.counts["pricing_cases"] += len(cases)
+        ctx.counts['pricing_cases'] += len(cases)
+        root_rc = None
         for forced_in, forced_out in cases:
             earliest = min(intervals[i].start for i in forced_in)
             latest = max(intervals[i].end for i in forced_in)
@@ -328,9 +408,6 @@ def _price(ctx: Context, node: Any, eq_duals: Sequence[Fraction],
                         candidates = [(mask, bound)]
                     else:
                         candidates = []
-                        # Exclude singleton solutions by a union of forced-
-                        # companion LPs; a cardinality inequality would break
-                        # the inherited consecutive-ones proof.
                         for companion, interval in enumerate(intervals):
                             if (companion in forced_in or companion in forced_out
                                     or not allowed_in_span(interval, span)):
@@ -346,9 +423,9 @@ def _price(ctx: Context, node: Any, eq_duals: Sequence[Fraction],
                                 candidates.append((candidate, upper))
                     for candidate, upper in candidates:
                         rc_lower = offset - upper
-                        min_rc = rc_lower if min_rc is None else min(min_rc, rc_lower)
+                        root_rc = rc_lower if root_rc is None else min(root_rc, rc_lower)
                         if not _valid_column(ctx, candidate, node):
-                            raise BudgetStop("PRICED_COLUMN_REPLAY_FAILED")
+                            raise BudgetStop('PRICED_COLUMN_REPLAY_FAILED')
                         value = sum((weights[i] for i in range(len(weights))
                                      if candidate & (1 << i)), Fraction(0))
                         if offset - value < 0 and candidate not in ctx.pool:
@@ -356,8 +433,13 @@ def _price(ctx: Context, node: Any, eq_duals: Sequence[Fraction],
                                                candidate & ctx.model.all_buffer_mask)
                             ctx.pool[candidate] = col
                             improved.append(col)
-    ctx.counts["unique_generated_columns"] = len(ctx.pool)
-    return min_rc, improved
+                            if ctx.limits.pricing_batch and len(improved) >= ctx.limits.pricing_batch:
+                                ctx.counts['pricing_batch_stops'] += 1
+                                return publish_bound(), improved
+        corrections[root] = min(Fraction(0), root_rc) if root_rc is not None else Fraction(0)
+        publish_bound()
+    ctx.counts['unique_generated_columns'] = len(ctx.pool)
+    return publish_bound(), improved
 
 
 def _node_lp(ctx: Context, node: Any):
@@ -386,14 +468,22 @@ def _node_lp(ctx: Context, node: Any):
                           bounds=(0, None), method="highs", options={"time_limit": ctx.remaining()})
             if not res.success or res.x is None:
                 raise BudgetStop("RESTRICTED_MASTER_UNRESOLVED")
+            # Zero artificial mass supplies a feasible restricted LP. Move to
+            # the real objective without proving phase-one optimality by a
+            # full pricing scan. All final claims still use phase-two bounds.
+            if phase_one and np.all(res.x[len(cols):] == 0):
+                ctx.counts['phase_one_feasible_skips'] += 1
+                _early_primal(ctx, node, cols)
+                break
             pi = [_dual(x) for x in res.eqlin.marginals]
             nu = [min(Fraction(0), _dual(x)) for x in res.ineqlin.marginals]
-            rc, new = _price(ctx, node, pi, nu, mandatory, free, phase_one)
-            dual = sum((int(b) * d for b, d in zip(be, pi)), Fraction(0)) + sum(nu, Fraction(0))
-            # Every physical column covers at least one core, hence any
-            # feasible original (non-artificial) master has sum x <= n_core.
-            lower = dual + len(ctx.model.core_positions) * min(Fraction(0), rc or Fraction(0))
+            lower, new = _price(ctx, node, pi, nu, mandatory, free, phase_one)
             if new:
+                if not phase_one:
+                    _early_primal(ctx, node, bp._filter_columns(ctx.pool.values(), node))
+                    if (ctx.candidate_value is not None and ctx.node_lower is not None
+                            and ctx.node_lower >= ctx.candidate_value):
+                        return "BOUND_CLOSED", ctx.node_lower, (), ()
                 continue
             if phase_one:
                 if lower > 0:
@@ -423,6 +513,54 @@ def _heuristic(ctx: Context, node: Any, cols: Sequence[Any]):
         return replay(ctx, events, node), events
     except ValueError:
         return None, None
+
+
+def _early_primal(ctx: Context, node: Any, cols: Sequence[Any]) -> None:
+    """Retain feasible integer worlds before complete pricing finishes."""
+    ctx.counts['early_integer_heuristics'] += 1
+    value, witness = _heuristic(ctx, node, cols)
+    if value is not None and (ctx.candidate_value is None or value < ctx.candidate_value):
+        ctx.candidate_value, ctx.candidate_witness = value, witness
+
+
+def _initial_lower(ctx: Context, node: Any) -> Fraction:
+    """A geometry/support bound available even if root pricing is interrupted.
+
+    A single event's summed durations cannot exceed C times the full horizon.
+    Its cardinality is therefore bounded by fitting the globally shortest
+    durations into that envelope. This is an outer relaxation, not a claim
+    that event cardinality equals simultaneous capacity.
+    """
+    statuses = node.status_map()
+    required = [i for i, y in statuses.items() if y == 1]
+    free = [i for i in ctx.model.buffer_positions if i not in statuses]
+    need = ctx.q - len(required)
+    if need < 0 or need > len(free):
+        # Infeasibility is handled at the node. Keep an unconditional bound.
+        required = []
+        free = list(ctx.model.buffer_positions)
+        need = ctx.q
+    bound = sum((ctx.costs[i] for i in ctx.model.core_positions), Fraction(0))
+    bound += sum((ctx.costs[i] for i in required), Fraction(0))
+    bound += sum(sorted(ctx.costs[i] for i in free)[:need], Fraction(0))
+    n_selected = len(ctx.model.core_positions) + ctx.q
+    rows = ctx.model.rows
+    horizon = rational(max(r.end for r in rows)) - rational(min(r.start for r in rows))
+    duration_budget = ctx.capacity * horizon
+    used, max_members = Fraction(0), 0
+    for duration in sorted(rational(r.end) - rational(r.start) for r in rows):
+        if used + duration > duration_budget:
+            break
+        used += duration
+        max_members += 1
+    min_events = max(1, (n_selected + max_members - 1) // max_members)
+    mandatory = set(ctx.model.core_positions) | set(required)
+    peak = max(sum(rows[i].start <= t < rows[i].end for i in mandatory)
+               for t in {rows[i].start for i in mandatory})
+    min_events = max(min_events, (peak + ctx.capacity - 1) // ctx.capacity)
+    max_events = min(len(ctx.model.core_positions), n_selected // 2)
+    bound += ctx.event_cost * (min_events if ctx.event_cost >= 0 else max_events)
+    return ctx.lattice_lower(bound)
 
 
 def _clique_seed(ctx: Context, node: Any) -> tuple[int, ...]:
@@ -496,9 +634,7 @@ def minimize(rows: Sequence[FixedTimeRow], capacity: int, support_count: int,
             raise ValueError("invalid warm-start column")
         ctx.pool[mask] = cg.RunColumn(mask, mask & model.all_core_mask, mask & model.all_buffer_mask)
     # Unconditional, exact lower bound before any optimization succeeds.
-    trivial = sum((costs[i] for i in model.core_positions), Fraction(0))
-    trivial += sum(sorted(costs[i] for i in model.buffer_positions)[:support_count], Fraction(0))
-    trivial += ctx.event_cost * (1 if ctx.event_cost >= 0 else len(model.core_positions))
+    trivial = _initial_lower(ctx, root)
     queue = [(trivial, 0, root)]
     serial = 0
     incumbent, witness = None, ()
@@ -517,18 +653,30 @@ def minimize(rows: Sequence[FixedTimeRow], capacity: int, support_count: int,
             witness = tuple(initial_events)
         except ValueError:
             pass  # a seed library need not be a complete partition
+    ctx.candidate_value, ctx.candidate_witness = incumbent, witness
     while queue:
+        if not limits.iterations:
+            reason = "COLUMN_GENERATION_ITERATION_LIMIT"; break
+        if not limits.pricing_cases:
+            reason = "PRICING_CASE_LIMIT"; break
         if ctx.counts["nodes"] >= limits.nodes:
             reason = "NODE_LIMIT"; break
         if time.perf_counter() >= ctx.deadline:
             reason = "TIME_LIMIT"; break
         inherited, _, node = heapq.heappop(queue)
         interrupted = inherited
+        ctx.node_lower = None
         if incumbent is not None and inherited >= incumbent:
             closed_lowers.append(inherited); interrupted = None; continue
         try:
             ctx.counts["nodes"] += 1
             status, lower, columns, values = _node_lp(ctx, node)
+            if ctx.candidate_value is not None and (incumbent is None or ctx.candidate_value < incumbent):
+                incumbent, witness = ctx.candidate_value, ctx.candidate_witness
+            if status == "BOUND_CLOSED":
+                closed_lowers.append(max(inherited, lower))
+                interrupted = None
+                continue
             if status == "INFEASIBLE":
                 interrupted = None; continue
             lower = max(inherited, lower)
@@ -536,6 +684,7 @@ def minimize(rows: Sequence[FixedTimeRow], capacity: int, support_count: int,
             value, events = _heuristic(ctx, node, columns)
             if value is not None and (incumbent is None or value < incumbent):
                 incumbent, witness = value, events
+                ctx.candidate_value, ctx.candidate_witness = incumbent, witness
             if value is not None and lower > value:
                 raise AssertionError("repaired lower bound exceeds replayed node incumbent")
             if incumbent is not None and incumbent - lower <= rational(limits.gap_tolerance):
@@ -546,6 +695,7 @@ def minimize(rows: Sequence[FixedTimeRow], capacity: int, support_count: int,
                 value = replay(ctx, events, node)
                 if incumbent is None or value < incumbent:
                     incumbent, witness = value, events
+                    ctx.candidate_value, ctx.candidate_witness = incumbent, witness
                 if value - lower <= rational(limits.gap_tolerance):
                     closed_lowers.append(lower); interrupted = None; continue
                 raise BudgetStop("INTEGRAL_LP_WITH_OPEN_REPAIRED_BOUND")
@@ -568,6 +718,10 @@ def minimize(rows: Sequence[FixedTimeRow], capacity: int, support_count: int,
                     heapq.heappush(queue, (lower, serial, child))
             interrupted = None
         except BudgetStop as error:
+            if ctx.candidate_value is not None and (incumbent is None or ctx.candidate_value < incumbent):
+                incumbent, witness = ctx.candidate_value, ctx.candidate_witness
+            if ctx.node_lower is not None:
+                interrupted = max(interrupted, ctx.node_lower)
             reason = str(error); break
     ctx.counts["unique_generated_columns"] = len(ctx.pool)
     remaining_bounds = [item[0] for item in queue] + closed_lowers
@@ -725,7 +879,8 @@ def minimum_certificate(rows: Sequence[FixedTimeRow], capacity: int, support_cou
             limits = Limits(seconds=min(separator_limits.seconds, deadline-time.perf_counter()),
                             nodes=separator_limits.nodes, iterations=separator_limits.iterations,
                             pricing_cases=separator_limits.pricing_cases,
-                            gap_tolerance=separator_limits.gap_tolerance)
+                            gap_tolerance=separator_limits.gap_tolerance,
+                            pricing_batch=separator_limits.pricing_batch)
             result = separate(rows, capacity, support_count, row_costs, threshold, reference_events,
                               event_cost=event_cost, usage_positions=usage, pair_positions=pairs,
                               limits=limits)

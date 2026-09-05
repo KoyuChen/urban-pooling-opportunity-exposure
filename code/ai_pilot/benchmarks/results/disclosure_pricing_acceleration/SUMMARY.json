@@ -1,0 +1,25 @@
+{
+  "report_version": "disclosure-pricing-acceleration/v1",
+  "date": "2026-09-05",
+  "execution": "local; GitHub independently reruns tests, not this full benchmark",
+  "baseline_commit": "23963d5dfb6600a20bf63a773a410ac200bf711b",
+  "baseline_source_sha256": "c4dcdc716b3601ef91ee85377f721c1c1c3d85bf084553a6580167d285f544ef",
+  "source_sha256": "f520a5e0d047ae0d6ebe3b3435f8577aed1a1247401cd403622e89ff2bf316f4",
+  "environment": {"python": "3.13.5", "numpy": "2.3.5", "scipy": "1.17.0", "platform": "Linux-6.18.35-x86_64-with-glibc2.41"},
+  "paired_design": {"endpoint_cells": 24, "solves": 48, "seconds_per_endpoint": 5, "nodes": 500, "replicates": 1, "external_warm_start": false, "complete_column_builder_blocked": true},
+  "paired_summary": {
+    "baseline": {"cells": 24, "exact_closed": 5, "bounded_unresolved": 19, "has_replayed_incumbent": 7, "technical_failures": 0, "infeasible": 0, "within_tolerance": 0, "median_seconds": 5.002380931499999, "total_seconds": 108.34367420700005, "total_pricing_lp_calls": 20937},
+    "accelerated": {"cells": 24, "exact_closed": 19, "bounded_unresolved": 5, "has_replayed_incumbent": 24, "technical_failures": 0, "infeasible": 0, "within_tolerance": 0, "median_seconds": 0.5055050044999234, "total_seconds": 43.24051283499978, "total_pricing_lp_calls": 9900},
+    "closure_gains": [0,2,4,5,7,8,9,11,14,16,17,19,21,23],
+    "closure_regressions": []
+  },
+  "certificate_design": {"base_seed": 20260905, "capacities": [2,3,4], "instances_per_capacity": 20, "thresholds": [0.25,0.5,0.75], "certificate_is_ex_post_not_adaptive": true, "explicit_builder_blocked_inside_separator": true, "threshold_comparator": "exact rational >=, no tolerance shift"},
+  "certificate_summary": {
+    "member_mean": {"cells": 180, "exact_size_agreements": 180, "minimum_certificate_certified": 180, "unresolved": 0, "mean_iterations": 5.222222222222222, "mean_seconds": 2.318409171800002, "max_seconds": 15.836483405999843},
+    "event_count": {"cells": 60, "exact_size_agreements": 60, "minimum_certificate_certified": 60, "unresolved": 0, "mean_iterations": 6.083333333333333, "mean_seconds": 1.2469470376500111, "max_seconds": 6.691551263999827}
+  },
+  "regression_tests_before_evidence_check": 113,
+  "full_record_sha256": {"paired_report.json": "7cf2758a4b47c9dbd251f507224e7ef5026489082301b070c8fb7c813dc1c756", "certificates/report.json": "0049d85c486a1699ca1e24ac3f7db62f08e63ebd3dc984edf7bbacfa32fcf00c", "all_tests.log": "3c79c7d7a26087706ed58958b454d8af25ad9099fde0efd0c2f2a2dc900c048a", "PAIRED_CELLS.csv": "c79a804379b23236bd3367557839bfec343e9805431b19c0d39749d629e08e1c"},
+  "runner_note": "The local paired run used an initial harness before portable wrapper consolidation; generator, budgets, replay and input hashes are preserved. The existing certificate runner produced the expanded audit. Full logs and original harness accompany the downloadable evidence bundle.",
+  "claim_boundary": ["constructed development grid; not held-out", "single paired replicate; hardware-dependent time limits", "not real membership truth", "not city-scale performance", "no per-component ablation", "certificates are ex-post not adaptive query costs", "paper and frozen NYC 14/18 evidence unchanged"]
+}

@@ -123,11 +123,12 @@ class DisclosureSeparatorTests(unittest.TestCase):
             self.assertIsNone(result.upper)
 
     def test_interrupted_popped_node_not_lost(self):
-        rows = [exact.FixedTimeRow(i, 'core' if i == 0 else 'buffer', 0, 2+i) for i in range(3)]
+        rows = [exact.FixedTimeRow(0, 'core', 0, 2), exact.FixedTimeRow(1, 'buffer', 1, 3),
+                exact.FixedTimeRow(2, 'buffer', 2, 4)]
         with patch.object(new, '_fixed_span', side_effect=new.BudgetStop('INJECTED_TIMEOUT')):
-            result = new.minimize(rows, 2, 1, {1: -4, 2: 3})
+            result = new.minimize(rows, 2, 2, {1: -4, 2: 3})
         self.assertEqual(result.status, 'BOUNDED_UNRESOLVED')
-        self.assertEqual(result.lower, -4)
+        self.assertEqual(result.lower, -1)
         self.assertEqual(result.reason, 'INJECTED_TIMEOUT')
 
     def test_exact_threshold_tie_is_positive(self):
