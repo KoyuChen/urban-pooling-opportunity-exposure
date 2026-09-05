@@ -1,0 +1,149 @@
+name: finalize-compact-probe-docs
+on:
+  push:
+    branches: [compact-event-slot-probe-20260905]
+    paths: [.github/workflows/finalize-compact-probe-docs.yml]
+permissions:
+  contents: write
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compact-event-slot-probe-20260905
+          fetch-depth: 0
+      - name: Synchronize README, status and manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = Path("code/ai_pilot/benchmarks/results/compact_event_slot_audit")
+          summary = json.loads((result / "SUMMARY.json").read_text(encoding="utf-8"))
+          decision = json.loads((result / "DEFAULT_DECISION.json").read_text(encoding="utf-8"))
+          disabled = summary["variants"]["disabled"]
+          probe = summary["variants"]["probe"]
+          effects = summary["paired_effects"]
+          provenance = summary["provenance"]
+
+          def replace_block(path: str, start: str, end: str, body: str) -> None:
+              file = Path(path)
+              text = file.read_text(encoding="utf-8")
+              block = start + "\n" + body.rstrip() + "\n" + end
+              if start in text:
+                  before, rest = text.split(start, 1)
+                  if end not in rest:
+                      raise SystemExit(f"missing closing marker in {path}")
+                  _, after = rest.split(end, 1)
+                  text = before.rstrip() + "\n\n" + block + after
+              else:
+                  text = text.rstrip() + "\n\n" + block + "\n"
+              file.write_text(text, encoding="utf-8")
+
+          state = "enabled by default" if decision["beneficial_under_rule"] else "retained as opt-in"
+          readme = f'''## Certified compact lower-bound probe
+
+A compact at-most-K event-slot LP is now available for difficult minimum-event
+endpoints. It is an outer relaxation and can strengthen a lower bound only from
+a strictly positive, exact residual-repaired phase-I dual certificate; timeout
+or a numerical infeasibility flag alone never changes the bound.
+
+A predeclared GitHub Actions audit used {summary["unique_paired_cells"]} paired
+new-seed sequential-turnover cells ({summary["record_count"]} runs). Exact-status
+closures were {disabled["exact_status_count"]}/{disabled["run_count"]} with the
+probe disabled and {probe["exact_status_count"]}/{probe["run_count"]} with it
+enabled; replayed incumbents were {disabled["incumbent_count"]}/{disabled["run_count"]}
+and {probe["incumbent_count"]}/{probe["run_count"]}. The paired audit recorded
+{effects["exact_gain"]} exact gains and {effects["exact_loss"]} exact losses,
+with {effects["strict_lower_bound_gain"]} strict lower-bound gains and
+{effects["strict_lower_bound_loss"]} losses. Under the frozen rule the probe is
+**{state}** with default budget `{decision["default_compact_probe_seconds"]}`
+seconds. This is synthetic evidence, not a real-data or universal runtime claim.
+'''
+          replace_block(
+              "README.md",
+              "<!-- COMPACT_EVENT_SLOT_PROBE:START -->",
+              "<!-- COMPACT_EVENT_SLOT_PROBE:END -->",
+              readme,
+          )
+
+          status = f'''## Compact event-slot lower-bound checkpoint
+
+The implementation and frozen audit are committed. The safe probe tests
+infeasibility of an at-most-K labelled-slot LP outer relaxation using an exact
+residual-repaired phase-I dual lower bound. Its current production state is
+**{state}** with a `{decision["default_compact_probe_seconds"]}`-second default
+budget. The predeclared audit contains {summary["unique_paired_cells"]} paired
+cells and {summary["record_count"]} runs; enabled/disabled exact-status closure
+is {probe["exact_status_count"]}/{probe["run_count"]} versus
+{disabled["exact_status_count"]}/{disabled["run_count"]}. Paired exact gains and
+losses are {effects["exact_gain"]} and {effects["exact_loss"]}; strict lower-bound
+gains and losses are {effects["strict_lower_bound_gain"]} and
+{effects["strict_lower_bound_loss"]}. All records pass reconstruction, exact
+interval-intersection, incumbent replay and witness-redaction checks.
+
+Execution was GitHub Actions run `{provenance["github_run_id"]}` on the frozen
+source recorded in `SUMMARY.json`. This checkpoint does not change the paper,
+NYC 14/18 scale result, Chicago run 164, or any real-event-truth claim. The next
+scientific priorities remain real sequential membership truth, unknown-support
+or nonlinear targets, noisy-answer robustness, and manuscript integration.
+'''
+          replace_block(
+              "docs/PROJECT_STATUS.md",
+              "<!-- COMPACT_EVENT_SLOT_PROBE:START -->",
+              "<!-- COMPACT_EVENT_SLOT_PROBE:END -->",
+              status,
+          )
+
+          hashes = provenance["source_sha256"]
+          manifest = f'''### Compact event-slot lower-bound audit
+
+- protocol: `code/ai_pilot/benchmarks/COMPACT_EVENT_SLOT_PROTOCOL.json`;
+- raw records: `code/ai_pilot/benchmarks/results/compact_event_slot_audit/RUNS.json`;
+- summary/default decision: adjacent `SUMMARY.json` and `DEFAULT_DECISION.json`;
+- execution: GitHub Actions run `{provenance["github_run_id"]}`;
+- recorded source commit: `{provenance["github_source_commit"]}`;
+- solver SHA-256: `{hashes["solver"]}`;
+- compact-probe SHA-256: `{hashes["probe"]}`;
+- runner SHA-256: `{hashes["runner"]}`;
+- protocol SHA-256: `{hashes["protocol"]}`;
+- accounting: {summary["unique_paired_cells"]} paired cells,
+  {summary["record_count"]} runs;
+- disabled/enabled exact-status closure:
+  {disabled["exact_status_count"]}/{disabled["run_count"]} and
+  {probe["exact_status_count"]}/{probe["run_count"]};
+- paired exact gains/losses: {effects["exact_gain"]}/{effects["exact_loss"]};
+- paired strict lower-bound gains/losses:
+  {effects["strict_lower_bound_gain"]}/{effects["strict_lower_bound_loss"]};
+- predeclared decision: **{state}**, default probe seconds
+  `{decision["default_compact_probe_seconds"]}`.
+
+Licensed claim: on this predeclared synthetic sequential-turnover grid, the
+outer-relaxation phase-I probe has the recorded paired effect while preserving
+valid interval reporting. Not licensed: real membership truth, universal
+speedup, exact wall-clock compliance, city-scale performance, operational
+query availability, or privacy utility.
+'''
+          replace_block(
+              "ARTIFACT_MANIFEST.md",
+              "<!-- COMPACT_EVENT_SLOT_PROBE:START -->",
+              "<!-- COMPACT_EVENT_SLOT_PROBE:END -->",
+              manifest,
+          )
+          PY
+      - name: Verify evidence and documentation
+        run: |
+          python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          grep -q 'COMPACT_EVENT_SLOT_PROBE:START' README.md
+          grep -q 'COMPACT_EVENT_SLOT_PROBE:START' docs/PROJECT_STATUS.md
+          grep -q 'COMPACT_EVENT_SLOT_PROBE:START' ARTIFACT_MANIFEST.md
+      - name: Commit and remove this workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md docs/PROJECT_STATUS.md ARTIFACT_MANIFEST.md
+          git rm .github/workflows/finalize-compact-probe-docs.yml
+          git commit -m "Document frozen compact event-slot probe decision"
+          git push origin HEAD:compact-event-slot-probe-20260905
