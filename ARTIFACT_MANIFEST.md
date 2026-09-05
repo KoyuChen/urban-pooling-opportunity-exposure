@@ -1,9 +1,10 @@
 # Evidence manifest
 
 Only current EventFrontier evidence is listed here. Generated PDFs, raw public
-rows, and superseded experiments are excluded from the active tree. Repository
-JSON files are normalized summaries checked by CI; the SHA-256 values below pin
-the original workflow artifacts from which they were transcribed.
+rows, and superseded experiments are excluded from the active tree. Manuscript
+JSON files are normalized summaries checked by CI; the manuscript SHA-256 pins
+refer to their original workflow artifacts. The final section separately
+identifies local exploration provenance and does not label it as workflow execution.
 
 ## Canonical source
 
@@ -138,3 +139,28 @@ Committed evidence is aggregate and redacted. Raw identifiers, public-row
 extracts, event columns, reconstructed partners, matching witnesses, latent
 timestamps, generated PDFs, caches, and workflow ZIPs are excluded from the
 active tree.
+
+
+## Separate local disclosure exploration (not frozen manuscript evidence)
+
+The independent-seed ablation is recorded under
+`code/ai_pilot/benchmarks/results/disclosure_independent_ablation/`.
+Unlike the manuscript artifacts above, these measurements were executed locally,
+not in GitHub Actions. A source-export workflow was transport only and is removed.
+
+- Frozen solver commit: `faff620fe2ca867d6861b0ac3e8d0c590589fd80`.
+- Solver SHA-256: `f520a5e0d047ae0d6ebe3b3435f8577aed1a1247401cd403622e89ff2bf316f4`.
+- Pre-performance protocol commit: `2e70d1663cf6f1d427e6a470274fa5b36297dbf3`.
+- Runner commit: `847b0e867be9346abd8adc645d6bc80958d8aab3`.
+- Protocol SHA-256: `7190914c7b106128f8fc548dc3d6f1eeb5b17224113d7c832f4a96e02ea69e46`.
+- Runner SHA-256: `57cde6160ce4f6ef44bbf4e3b5433e2b0d6c430026f569b3172a6743a9affcc4`.
+- Committed RUNS.json SHA-256: `0672c8f1dbacf77d7ef62827bdb1886291e43791650a49546fd7451f30405c47`.
+- Original detailed local report SHA-256: `980fb4ba0f42b19f2966cd53f9095044cfee39f06c50dff4285350cc3eebaf70`.
+
+All 208 endpoint records are retained in compact form. SUMMARY.json is derived
+from these records, not from selected successful runs. The full solver closes
+24/32 primary and 6/16 larger stress replicate runs, with incumbents in all
+48 full-solver invocations. Two no-canonical records retain equal exact bounds
+but an unresolved timeout label; raw labels are preserved. This licenses a
+small seeded synthetic, conditional component comparison, not a universal
+speedup, city-scale, real-truth, operational-query or privacy guarantee.
