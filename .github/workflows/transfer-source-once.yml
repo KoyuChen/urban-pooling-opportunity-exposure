@@ -1,0 +1,21 @@
+name: transfer-source-once
+on:
+  push:
+    branches: [audit-sequential-bounds-20260905]
+    paths: [.github/workflows/transfer-source-once.yml]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: faff620fe2ca867d6861b0ac3e8d0c590589fd80
+      - run: git archive --format=zip --output=source.zip HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pinned-source-faff620
+          path: source.zip
+          retention-days: 3
