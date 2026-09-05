@@ -33,6 +33,7 @@ jobs:
       - name: Repair integration and run pre-evidence checks
         run: |
           python scripts/repair_compact_integration.py
+          python scripts/repair_compact_json.py
           python -m py_compile \
             code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
             code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py \
@@ -60,6 +61,7 @@ jobs:
             .github/workflows/verify-and-mark-compact-probe.yml \
             .github/workflows/repair-compact-evidence.yml \
             scripts/repair_compact_integration.py \
+            scripts/repair_compact_json.py \
             scripts/finalize_compact_evidence.py
       - name: Verify the final tree
         run: |
