@@ -1,0 +1,19 @@
+name: export-independent-audit-source
+on:
+  push:
+    branches: [audit-independent-disclosure-20260905]
+    paths: [.github/workflows/export-independent-audit-source.yml]
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Package tracked source, not benchmark results
+        run: git archive --format=zip HEAD -o "$RUNNER_TEMP/source.zip"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: independent-audit-source
+          path: ${{ runner.temp }}/source.zip
+          retention-days: 7
