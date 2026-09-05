@@ -1,0 +1,127 @@
+name: apply-compact-event-slot-probe
+on:
+  push:
+    branches: [compact-event-slot-probe-20260905]
+    paths: [.github/workflows/apply-compact-probe.yml]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compact-event-slot-probe-20260905
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Integrate probe into production separator
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path("code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py")
+          text = path.read_text(encoding="utf-8")
+
+          import_needle = "import ordered_run_branch_and_price as bp\n"
+          import_insert = import_needle + "import compact_event_slot_probe as compact_probe\n"
+          if "import compact_event_slot_probe as compact_probe" not in text:
+              if import_needle not in text:
+                  raise SystemExit("import insertion point not found")
+              text = text.replace(import_needle, import_insert, 1)
+
+          field_needle = "    pricing_batch: int = 32\n"
+          field_insert = field_needle + (
+              "    compact_probe_seconds: float = 0.0\n"
+              "    compact_probe_min_rows: int = 24\n"
+              "    compact_probe_max_slots: int = 8\n"
+          )
+          if "compact_probe_seconds" not in text:
+              if field_needle not in text:
+                  raise SystemExit("Limits field insertion point not found")
+              text = text.replace(field_needle, field_insert, 1)
+
+          post_needle = "    def __post_init__(self) -> None:\n"
+          post_insert = post_needle + (
+              "        if (not math.isfinite(self.compact_probe_seconds)\n"
+              "                or self.compact_probe_seconds < 0\n"
+              "                or not isinstance(self.compact_probe_min_rows, int)\n"
+              "                or self.compact_probe_min_rows < 0\n"
+              "                or not isinstance(self.compact_probe_max_slots, int)\n"
+              "                or self.compact_probe_max_slots < 0):\n"
+              "            raise ValueError(\"compact probe limits must be finite and nonnegative\")\n"
+          )
+          marker = "compact probe limits must be finite and nonnegative"
+          if marker not in text:
+              if post_needle not in text:
+                  raise SystemExit("Limits validation insertion point not found")
+              text = text.replace(post_needle, post_insert, 1)
+
+          queue_needle = "    queue = [(trivial, 0, root)]\n"
+          probe_block = '''    if (limits.compact_probe_seconds > 0
+            and len(model.rows) >= limits.compact_probe_min_rows
+            and ctx.event_cost > 0
+            and all(cost == 0 for cost in ctx.costs)):
+        available = max(0.0, min(limits.compact_probe_seconds,
+                                 ctx.deadline - time.perf_counter()))
+        initial_events = max(1, math.ceil(trivial / ctx.event_cost))
+        compact = compact_probe.probe_lower_bound(
+            model, capacity, support_count, initial_events,
+            usage_answers=usage_answers or {},
+            pair_answers=pair_answers or {},
+            limits=compact_probe.ProbeLimits(
+                seconds=available,
+                max_slots=limits.compact_probe_max_slots,
+            ),
+        )
+        strengthened = ctx.event_cost * compact.lower_events
+        trivial = max(trivial, strengthened)
+        ctx.counts["compact_probe_lp_calls"] = compact.lp_calls
+        ctx.counts["compact_probe_certified_slots"] = len(
+            compact.certified_infeasible_slots
+        )
+        ctx.counts["compact_probe_lower_gain"] = max(
+            0, compact.lower_events - initial_events
+        )
+        ctx.counts["compact_probe_milliseconds"] = round(
+            1000 * compact.seconds
+        )
+    queue = [(trivial, 0, root)]
+'''
+          if "compact_probe_lower_gain" not in text:
+              if queue_needle not in text:
+                  raise SystemExit("queue insertion point not found")
+              text = text.replace(queue_needle, probe_block, 1)
+
+          path.write_text(text, encoding="utf-8")
+          PY
+      - name: Install and run full regression suite
+        run: |
+          python -m pip install -r code/ai_pilot/requirements.txt
+          python -m py_compile \
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
+            code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests -v
+          python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py --self-test
+          python code/ai_pilot/benchmarks/selective_disclosure_benchmark.py --self-test
+          python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py --self-test
+      - name: Commit verified integration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
+            code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py \
+            code/ai_pilot/data_pipeline/production_audit/tests/test_compact_event_slot_probe.py
+          git rm .github/workflows/apply-compact-probe.yml
+          git commit -m "Integrate certified compact event-slot lower-bound probe"
+          git push origin HEAD:compact-event-slot-probe-20260905
