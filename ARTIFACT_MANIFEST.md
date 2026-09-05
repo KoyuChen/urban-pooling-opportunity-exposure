@@ -164,3 +164,19 @@ from these records, not from selected successful runs. The full solver closes
 but an unresolved timeout label; raw labels are preserved. This licenses a
 small seeded synthetic, conditional component comparison, not a universal
 speedup, city-scale, real-truth, operational-query or privacy guarantee.
+
+
+## Compact event-slot lower-bound audit
+
+Separate implementation evidence, not frozen manuscript evidence:
+
+- workflow run: `33951594827`;
+- protocol SHA-256: `73276660d440342ce818dcbf00d0cb30aa8b9ffb2ba4a1cb16904c52f0077b8a`;
+- final solver SHA-256: `9b9c47ec2e5261ea09f5c2871dcfa39c4e51fa055ccdcd6ac117ba763a5c0a61`;
+- timed pre-default solver SHA-256: `8442dbcd55a39cdf3679dd890562086bb1dc16fda38d20fe76451e76f4361207`;
+- compact probe SHA-256: `35672478815ac8de36de1982df0a68035660bc7f0a553c684c55d1bb69d47d52`;
+- RUNS/SUMMARY/DEFAULT/REPORT SHA-256: `9460bd40ce95eb6f8f46686c883ff55d951e9828d5f1fe848408154c81fe592c`, `a4d25be6f490040174b248f4fac5775b8ade0879ec1dfa86136490f177f6b321`, `8ad50d535d48489bdd18e5fb7665d7d9427b8bb40722dd8392f9955fc44689e9`, `677fc54a97b06304d195c7e9b53dd054bf46c869a2630a4901430b7352b096c9`.
+
+The package retains all 96 records and selects
+`compact_probe_seconds=0.75` under the predeclared no-loss rule. It licenses
+only synthetic fixed-support lower-bound behavior.

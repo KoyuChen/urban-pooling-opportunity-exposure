@@ -21,7 +21,9 @@ universe, and a simultaneous-capacity bound.
 - `ARTIFACT_MANIFEST.md` -- frozen manuscript run, artifact, file-hash, and claim pins.
 - `docs/REPRODUCIBILITY.md` -- local and live rerun commands.
 - `docs/PROJECT_STATUS.md` -- verified manuscript versus exploration status.
-- `docs/IMPLICIT_DISCLOSURE_SEPARATOR.md` -- new separator contract and bound proofs.
+- `docs/IMPLICIT_DISCLOSURE_SEPARATOR.md` -- separator contract and bound proofs.
+- `docs/COMPACT_EVENT_SLOT_PROBE.md` -- compact lower-bound contract and audit.
+- `docs/MANUSCRIPT_SCOPE_DECISION.md` -- current paper-scope decision.
 
 The historical path name `code/ai_pilot/` is retained to avoid a non-scientific
 mass rename. No legacy AI/weak-linkage pipeline remains in the active tree.
@@ -81,6 +83,17 @@ None of these figures replaces the NYC 14/18 scale lattice. Real membership
 truth, unknown support, noise robustness and selective-disclosure manuscript
 integration remain open. Abstract all-partitions formulas require their stated
 singleton-allowing model or conditional known-buddy-bundle interpretation.
+
+## Compact event-slot evidence
+
+The minimum-event solver includes an optional compact at-most-K event-slot
+outer relaxation. Its 96-run paired audit is committed under
+`code/ai_pilot/benchmarks/results/compact_event_slot_audit/`: exact status is
+38/48 with the probe and
+16/48 without it. Paired
+exact gains/losses are 22/0; the
+predeclared rule sets the default probe budget to `0.75` seconds. These are
+synthetic implementation results, not manuscript or city-data claims.
 
 ## Reproduce
 

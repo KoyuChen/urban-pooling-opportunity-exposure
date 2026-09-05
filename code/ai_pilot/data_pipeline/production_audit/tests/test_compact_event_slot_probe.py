@@ -49,7 +49,7 @@ class CompactEventSlotProbeTests(unittest.TestCase):
 
     def test_positive_pair_makes_optional_endpoints_mandatory(self):
         rows = [row(0, "core", 0, 3), row(1, "core", 0, 3), row(2, "buffer", 0, 3), row(3, "buffer", 0, 3), row(4, "buffer", 0, 3)]
-        model = compact.build_slot_model(rows, 3, 2, 2, pair_answers={(2, 3): 1})
+        model = compact.build_slot_model(rows, 4, 2, 2, pair_answers={(2, 3): 1})
         witness = compact._mip_witness(model, 5)
         self.assertTrue(witness)
         used = 0
@@ -65,7 +65,7 @@ class CompactEventSlotProbeTests(unittest.TestCase):
             rows, _, usage, pairs = independent.generate(n, seed, regime)
             q = 2 * n
             optimum = self.exact_minimum(rows, capacity, q, usage, pairs)
-            result = compact.probe_minimum_events(rows, capacity, q, start_k=1, max_k=min(optimum, n), usage_answers=usage, pair_answers=pairs, seconds=5)
+            result = compact.probe_minimum_events(rows, capacity, q, start_k=1, max_k=max(1, min(int(optimum), n)), usage_answers=usage, pair_answers=pairs, seconds=5)
             self.assertLessEqual(result.lower_event_count, optimum)
             if result.witness:
                 value = independent.replay(rows, capacity, q, usage, pairs, result.witness)

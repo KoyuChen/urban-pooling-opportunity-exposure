@@ -1,0 +1,47 @@
+{
+  "beneficial_under_rule": true,
+  "claim_boundary": "synthetic seeded sequential audit; no universal speedup, real membership truth, city-scale, or operational disclosure claim",
+  "compact_variant": {
+    "bound_equality_count": 40,
+    "exact_status_count": 38,
+    "incumbent_count": 48,
+    "median_elapsed_seconds": 0.4173879315000022,
+    "median_gap": 0.0,
+    "run_count": 48,
+    "technical_failure_count": 0,
+    "total_compact_certified_k": 14,
+    "total_compact_probe_calls": 32,
+    "total_compact_witnesses": 22,
+    "total_elapsed_seconds": 44.99176464599989,
+    "total_pricing_lp_calls": 11594
+  },
+  "default_compact_probe_seconds": 0.75,
+  "disabled_variant": {
+    "bound_equality_count": 16,
+    "exact_status_count": 16,
+    "incumbent_count": 48,
+    "median_elapsed_seconds": 3.0014264429999997,
+    "median_gap": 1.5,
+    "run_count": 48,
+    "technical_failure_count": 0,
+    "total_compact_certified_k": 0,
+    "total_compact_probe_calls": 0,
+    "total_compact_witnesses": 0,
+    "total_elapsed_seconds": 105.25003476000012,
+    "total_pricing_lp_calls": 30639
+  },
+  "paired_effects": {
+    "bound_equality_gain": 24,
+    "bound_equality_loss": 0,
+    "exact_gain": 22,
+    "exact_loss": 0,
+    "incumbent_gain": 0,
+    "incumbent_loss": 0,
+    "strict_gap_increase": 2,
+    "strict_gap_reduction": 24,
+    "strict_lower_bound_gain": 10,
+    "strict_lower_bound_loss": 0
+  },
+  "rule": "default_on iff exact_loss=0, incumbent_loss=0, and (exact_gain>0 or strict_lower_bound_gain>0)",
+  "workflow_run_id": 33951594827
+}

@@ -99,7 +99,7 @@ def run_one(protocol, core_count, capacity, seed, regime, variant, replicate):
         "exact_status": endpoint.status in EXACT,
         "bound_equality": endpoint.lower is not None and endpoint.lower == endpoint.upper,
         "incumbent_available": endpoint.upper is not None,
-        "replayed_event_count": replay_value,
+        "replayed_event_count": None if replay_value is None else int(replay_value),
         "elapsed_seconds": elapsed,
         "solver_seconds": endpoint.seconds,
         "nodes": endpoint.counts.get("nodes", 0),
@@ -110,7 +110,7 @@ def run_one(protocol, core_count, capacity, seed, regime, variant, replicate):
         "compact_probe_mip_calls": endpoint.counts.get("compact_probe_mip_calls", 0),
         "compact_probe_certified_k": endpoint.counts.get("compact_probe_certified_k", 0),
         "compact_probe_witnesses": endpoint.counts.get("compact_probe_witnesses", 0),
-        "relation_witness_serialized": false,
+        "relation_witness_serialized": False,
     }
 
 

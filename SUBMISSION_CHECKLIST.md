@@ -93,6 +93,15 @@ covers the current EventFrontier paper only.
   conclusion.
 - [ ] Complete the final sentence-by-sentence theorem/artifact citation audit.
 
+## Extension and repository hygiene
+
+- [x] Compact code, paired records, summary, default decision and claim boundary
+  are mutually hash-checked.
+- [x] Only unified CI and manual Chicago auditing remain active workflows.
+- [x] Selective disclosure is explicitly separated from the frozen manuscript.
+- [ ] Revisit integration only after real membership truth or a closed
+  unknown-support/noisy-answer extension.
+
 ## Submission decision
 
 - [ ] **GO** only after the integrated manuscript passes CI, the visual PDF
