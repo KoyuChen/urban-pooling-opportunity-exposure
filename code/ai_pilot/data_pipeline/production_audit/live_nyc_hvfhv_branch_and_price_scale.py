@@ -48,6 +48,17 @@ def parse_scale_pairs(values: Iterable[str]) -> tuple[tuple[int, int], ...]:
     return tuple(pairs)
 
 
+def parse_capacities(values: Iterable[int]) -> tuple[int, ...]:
+    capacities = tuple(int(value) for value in values)
+    if not capacities:
+        raise ValueError("at least one capacity is required")
+    if len(set(capacities)) != len(capacities):
+        raise ValueError("capacities must be unique")
+    if any(value not in CAPACITIES for value in capacities):
+        raise ValueError(f"capacities must be drawn from {CAPACITIES}")
+    return capacities
+
+
 def safe_result(result: dict[str, Any]) -> dict[str, Any]:
     forbidden = {
         "selected_member_masks",
@@ -82,6 +93,7 @@ def audit_result(result: dict[str, Any]) -> None:
 
 def run(args: argparse.Namespace) -> dict[str, Any]:
     scale_pairs = parse_scale_pairs(args.scale_pairs)
+    capacities = parse_capacities(args.capacities)
     before = base.snapshot()
     selected = base.choose_and_fetch(args)
     after = base.snapshot()
@@ -107,7 +119,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         try:
             reduced = existential.reduced_cohort(trips, core_count, buffer_count)
         except base.LiveDataError as error:
-            for capacity in CAPACITIES:
+            for capacity in capacities:
                 cells.append(
                     {
                         "core_rows": core_count,
@@ -121,7 +133,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         origin = existential.support_origin(reduced)
         fixed_rows = hybrid._fixed_rows(reduced, origin)
 
-        for capacity in CAPACITIES:
+        for capacity in capacities:
             started = time.perf_counter()
             if (core_count, buffer_count) == scale_pairs[0]:
                 result = branch_and_price.compare_with_exhaustive(
@@ -186,7 +198,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         },
         "design": {
             "scale_pairs": [list(pair) for pair in scale_pairs],
-            "capacities": list(CAPACITIES),
+            "capacities": list(capacities),
             "max_nodes_per_cell": args.bp_max_nodes,
             "time_limit_seconds_per_cell": args.bp_time_limit_seconds,
             "max_pricing_cases_per_root": args.bp_max_pricing_cases,
@@ -288,6 +300,7 @@ def self_test() -> None:
     audit_result(result)
     assert result["integer_maximum_selected_buffers"] == 2.0
     assert parse_scale_pairs(["4:12", "8:24"]) == ((4, 12), (8, 24))
+    assert parse_capacities([4, 2]) == (4, 2)
     print("NYC branch-and-price scale self-test: PASS")
 
 
@@ -300,6 +313,7 @@ def parser() -> argparse.ArgumentParser:
         existential_buffers=48,
     )
     p.add_argument("--scale-pairs", nargs="+", default=list(DEFAULT_SCALE_PAIRS))
+    p.add_argument("--capacities", nargs="+", type=int, default=list(CAPACITIES))
     p.add_argument("--bp-max-nodes", type=int, default=3000)
     p.add_argument("--bp-time-limit-seconds", type=float, default=180.0)
     p.add_argument("--bp-max-pricing-cases", type=int, default=4096)
@@ -310,6 +324,7 @@ def parser() -> argparse.ArgumentParser:
 def validate(args: argparse.Namespace) -> None:
     existential.validate(args)
     parse_scale_pairs(args.scale_pairs)
+    parse_capacities(args.capacities)
     if args.bp_max_nodes <= 0:
         raise ValueError("--bp-max-nodes must be positive")
     if args.bp_time_limit_seconds <= 0:

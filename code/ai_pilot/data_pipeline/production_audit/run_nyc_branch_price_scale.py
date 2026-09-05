@@ -62,6 +62,8 @@ def build_target_cli(args: argparse.Namespace) -> list[str]:
         str(buffer_rows),
         "--scale-pairs",
         *scale_pairs,
+        "--capacities",
+        *(str(value) for value in args.capacities),
         "--overlap-epsilon-seconds",
         "1.0",
         "--bp-max-nodes",
@@ -90,6 +92,7 @@ def self_test() -> None:
         solver_time_limit=30.0,
         bp_max_nodes=3000,
         bp_max_pricing_cases=4096,
+        capacities=list(CAPACITIES),
     )
     cli = build_target_cli(namespace)
     assert target_scale_pairs(4) == ("4:12",)
@@ -98,7 +101,8 @@ def self_test() -> None:
     assert cli[cli.index("--existential-buffers") + 1] == "24"
     start = cli.index("--scale-pairs") + 1
     stop = cli.index("--overlap-epsilon-seconds")
-    assert cli[start:stop] == ["4:12", "8:24"]
+    assert cli[start:cli.index("--capacities")] == ["4:12", "8:24"]
+    assert cli[cli.index("--capacities") + 1:stop] == ["2", "3", "4"]
     assert cli[cli.index("--bp-time-limit-seconds") + 1] == "30.0"
     print("NYC branch-and-price scaling driver self-test: PASS")
 
@@ -113,6 +117,7 @@ def parser() -> argparse.ArgumentParser:
     p.add_argument("--solver-time-limit", type=float, required=True)
     p.add_argument("--bp-max-nodes", type=int, default=3000)
     p.add_argument("--bp-max-pricing-cases", type=int, default=4096)
+    p.add_argument("--capacities", nargs="+", type=int, default=list(CAPACITIES))
     p.add_argument("--self-test", action="store_true")
     return p
 
@@ -126,6 +131,10 @@ def validate(args: argparse.Namespace) -> None:
         raise ValueError("--solver-time-limit must be positive")
     if args.bp_max_nodes <= 0 or args.bp_max_pricing_cases <= 0:
         raise ValueError("branch-and-price limits must be positive")
+    if not args.capacities or len(set(args.capacities)) != len(args.capacities):
+        raise ValueError("--capacities must be nonempty and unique")
+    if any(value not in CAPACITIES for value in args.capacities):
+        raise ValueError(f"--capacities must be drawn from {CAPACITIES}")
     if not TARGET.exists():
         raise FileNotFoundError(TARGET)
 
@@ -165,7 +174,7 @@ def main() -> int:
                 "scan_end": args.scan_end,
                 "ordered_core": args.ordered_core,
                 "ordered_buffers": 3 * args.ordered_core,
-                "capacities": list(CAPACITIES),
+                "capacities": list(args.capacities),
                 "solver_time_limit_per_capacity": args.solver_time_limit,
                 "target_wrapper": TARGET.name,
                 "target_scale_pairs": list(target_scale_pairs(args.ordered_core)),
@@ -193,7 +202,7 @@ def main() -> int:
                 "window_label": args.window_label,
                 "ordered_core": args.ordered_core,
                 "ordered_buffers": 3 * args.ordered_core,
-                "capacities": list(CAPACITIES),
+                "capacities": list(args.capacities),
                 "solver_time_limit_per_capacity": args.solver_time_limit,
                 "process_exit_status": 2,
                 "status": "DRIVER_FAILURE",
