@@ -1,0 +1,13 @@
+{
+  "artifact_id": 9928785830,
+  "artifact_name": "selective-disclosure-cg-exploration",
+  "artifact_zip_sha256": "84bd9572bc1589a0361726fd75600a7233850424c43ea9d5f6daccf9447e7791",
+  "branch": "explore-selective-disclosure-20260904",
+  "claim_status": "CONTROLLED_TRUTH_EXPLORATION_ONLY",
+  "report_json_sha256": "759fab668eba9f5ce557880a060dd03eedc707c42ed72bee137b6bb7f8645941",
+  "report_markdown_sha256": "05b200b5d6362990a5f054f33dcc2acd638002248ba771b0290b1b353511fdc7",
+  "report_version": "eventfrontier-selective-disclosure-separation/v1",
+  "separation_mip_gap_tolerance": 1e-06,
+  "source_commit": "291f5a50209fe57fd6a51b817288c7bf7e39104f",
+  "workflow_run_id": 33852005050
+}

@@ -1,0 +1,12 @@
+{
+  "artifact_id": 9928566517,
+  "artifact_name": "selective-disclosure-recovery-gap",
+  "artifact_zip_sha256": "b49f16c6d0e718b5c198c9800e3417e2ecdef446115d15a3a8462fafa82f6efa",
+  "branch": "explore-selective-disclosure-20260904",
+  "claim_status": "CONTROLLED_TRUTH_EXPLORATION_ONLY",
+  "report_json_sha256": "6969b003eb00d2fb219b60f4c755fdf7465fc1c45ea2c98dc999847b94a112f6",
+  "report_markdown_sha256": "f77e70d0a0f0aa9f546c03ea1b34330fa01ff89a803fc935af671ceb6c6f580f",
+  "report_version": "eventfrontier-selective-disclosure-recovery-gap/v1",
+  "source_commit": "65112dc2bf578dc14342501da37800c1fc43a92b",
+  "workflow_run_id": 33851588861
+}

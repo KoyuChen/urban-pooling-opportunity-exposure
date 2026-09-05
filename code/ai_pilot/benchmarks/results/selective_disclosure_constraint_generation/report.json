@@ -1,0 +1,60 @@
+{
+  "claim_boundary": {
+    "not_supported": "branch-and-price scaling, noisy answers, or operational disclosure",
+    "supported": "exact small-instance agreement of constraint generation and explicit certificates"
+  },
+  "design": {
+    "capacities": [2, 3, 4],
+    "explicit_enumeration_used_only_as_oracle": true,
+    "pair_instances_per_capacity": 30,
+    "separation_mip_gap_tolerance": 1e-06,
+    "usage_instances_per_capacity": 100,
+    "usage_thresholds": [0.25, 0.5, 0.75],
+    "world_enumeration_used_by_separation": false
+  },
+  "pair_summary": {
+    "cell_count": 90,
+    "exact_agreement_count": 90,
+    "generated_cuts": {
+      "count": 90,
+      "maximum": 16.0,
+      "mean": 5.9,
+      "median": 3.0
+    },
+    "iterations": {
+      "count": 90,
+      "maximum": 17.0,
+      "mean": 6.9,
+      "median": 4.0
+    },
+    "separation_seconds": {
+      "count": 90,
+      "maximum": 0.15162649300015119,
+      "mean": 0.03563306263332164,
+      "median": 0.020830526999930044
+    }
+  },
+  "report_version": "eventfrontier-selective-disclosure-separation/v1",
+  "usage_summary": {
+    "cell_count": 900,
+    "exact_agreement_count": 900,
+    "generated_cuts": {
+      "count": 900,
+      "maximum": 43.0,
+      "mean": 3.3666666666666667,
+      "median": 1.0
+    },
+    "iterations": {
+      "count": 900,
+      "maximum": 44.0,
+      "mean": 4.366666666666666,
+      "median": 2.0
+    },
+    "separation_seconds": {
+      "count": 900,
+      "maximum": 3.9295408209998186,
+      "mean": 0.20234606491110937,
+      "median": 0.09241157149998003
+    }
+  }
+}

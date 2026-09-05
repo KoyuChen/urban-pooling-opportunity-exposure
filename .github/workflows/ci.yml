@@ -34,6 +34,8 @@ jobs:
             code/ai_pilot/benchmarks/relation_incomplete_event_benchmark.py \
             code/ai_pilot/benchmarks/event_frontier_truth_benchmark.py \
             code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
+            code/ai_pilot/benchmarks/selective_disclosure_benchmark.py \
+            code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
           python \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
@@ -45,6 +47,12 @@ jobs:
       - name: Run controlled-truth self-test
         run: |
           python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
+            --self-test
+      - name: Run selective-disclosure self-tests
+        run: |
+          python code/ai_pilot/benchmarks/selective_disclosure_benchmark.py \
+            --self-test
+          python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \
             --self-test
       - name: Audit frozen headline evidence
         run: |
