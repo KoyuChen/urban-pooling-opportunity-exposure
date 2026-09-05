@@ -36,6 +36,9 @@ jobs:
             code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
             code/ai_pilot/benchmarks/selective_disclosure_benchmark.py \
             code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \
+            code/ai_pilot/benchmarks/compact_event_slot_audit.py \
+            code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py \
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py
           python \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
@@ -54,6 +57,11 @@ jobs:
             --self-test
           python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \
             --self-test
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
+          python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          actual="$(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)"
+          expected="$(printf 'chicago-live-audits.yml\nci.yml\n')"
+          test "$actual" = "$expected"
       - name: Audit frozen headline evidence
         run: |
           python - <<'PY'
