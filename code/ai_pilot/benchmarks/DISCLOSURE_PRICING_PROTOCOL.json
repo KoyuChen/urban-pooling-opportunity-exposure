@@ -1,0 +1,23 @@
+{
+  "protocol_version": "disclosure-pricing-paired/v1",
+  "date": "2026-09-05",
+  "baseline_commit": "23963d5dfb6600a20bf63a773a410ac200bf711b",
+  "comparison": "same machine, same inputs, one thread, same 5-second endpoint budget",
+  "shapes": ["regular_turnover", "jittered_turnover"],
+  "core_counts": [4, 6, 8],
+  "buffer_count": "3 * core_count",
+  "fixed_support": "2 * core_count",
+  "capacities": [2, 3],
+  "event_costs": [1, -1],
+  "endpoint_cell_count": 24,
+  "seconds_per_endpoint": 5,
+  "node_limit": 500,
+  "base_seed": 20260905,
+  "replicates": 1,
+  "ordering": "alternate baseline-first and accelerated-first by cell index",
+  "warm_start": "none externally; each implementation retains its own declared internal heuristics",
+  "optimization_development_case": "the prior regular 8-core, C=2 minimum was inspected during development; report this, do not call the grid held-out",
+  "predeclaration": "written after development-case tuning and before running this paired grid",
+  "report_all_cells": true,
+  "not_claimed": ["independent held-out performance", "real membership truth", "city-scale performance", "statistical runtime superiority"]
+}
