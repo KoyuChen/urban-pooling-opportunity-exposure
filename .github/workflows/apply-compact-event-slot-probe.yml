@@ -1,0 +1,95 @@
+name: apply-compact-event-slot-probe
+
+on:
+  push:
+    branches:
+      - compact-event-slot-probe-20260905
+    paths:
+      - .github/workflows/apply-compact-event-slot-probe.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compact-event-slot-probe-20260905
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: python -m pip install -r code/ai_pilot/requirements.txt
+      - name: Patch the solver and audit runner
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py')
+          s = p.read_text()
+          replacements = [
+              (
+                  'import ordered_run_branch_and_price as bp\nimport ordered_run_column_generation as cg\nfrom ordered_run_fixed_time_master import FixedTimeRow\n',
+                  'import ordered_run_branch_and_price as bp\nimport ordered_run_column_generation as cg\nimport compact_event_slot_probe as compact_probe\nfrom ordered_run_fixed_time_master import FixedTimeRow\n',
+              ),
+              (
+                  '    pricing_batch: int = 32\n\n    def __post_init__(self) -> None:\n        if (not math.isfinite(self.seconds) or self.seconds < 0\n                or any(not isinstance(x, int) or x < 0\n                       for x in (self.nodes, self.iterations, self.pricing_cases, self.pricing_batch))\n                or not math.isfinite(self.gap_tolerance) or self.gap_tolerance < 0):\n            raise ValueError("limits must be finite and nonnegative; counts must be integers")\n',
+                  '    pricing_batch: int = 32\n    compact_probe_seconds: float = 0.75\n    compact_probe_rows_min: int = 24\n    compact_probe_max_k: int = 6\n    compact_probe_seek_witness: bool = True\n\n    def __post_init__(self) -> None:\n        if (not math.isfinite(self.seconds) or self.seconds < 0\n                or any(not isinstance(x, int) or x < 0\n                       for x in (self.nodes, self.iterations, self.pricing_cases,\n                                 self.pricing_batch, self.compact_probe_rows_min,\n                                 self.compact_probe_max_k))\n                or not math.isfinite(self.compact_probe_seconds)\n                or self.compact_probe_seconds < 0\n                or not isinstance(self.compact_probe_seek_witness, bool)\n                or not math.isfinite(self.gap_tolerance) or self.gap_tolerance < 0):\n            raise ValueError("limits must be finite and nonnegative; counts must be integers")\n',
+              ),
+              (
+                  '        "pricing_infeasible_cache_hits": 0, "early_integer_heuristics": 0,\n    })\n',
+                  '        "pricing_infeasible_cache_hits": 0, "early_integer_heuristics": 0,\n        "compact_probe_calls": 0, "compact_probe_phase_one_calls": 0,\n        "compact_probe_mip_calls": 0, "compact_probe_certified_k": 0,\n        "compact_probe_witnesses": 0,\n    })\n',
+              ),
+              (
+                  '    trivial += ctx.event_cost * (1 if ctx.event_cost >= 0 else len(model.core_positions))\n    queue = [(trivial, 0, root)]\n    serial = 0\n    incumbent, witness = None, ()\n',
+                  '    trivial += ctx.event_cost * (1 if ctx.event_cost >= 0 else len(model.core_positions))\n\n    # A compact labeled-slot relaxation is used only for pure minimum-event\n    # objectives on medium/larger instances. Only a strictly positive rational\n    # phase-I lower bound can strengthen the global lower bound.\n    compact_witness: tuple[int, ...] = ()\n    if (ctx.event_cost > 0 and all(cost == 0 for cost in ctx.costs)\n            and len(model.rows) >= limits.compact_probe_rows_min\n            and limits.compact_probe_seconds > 0\n            and limits.compact_probe_max_k >= 1):\n        start_k = max(1, math.ceil(trivial / ctx.event_cost))\n        max_k = min(limits.compact_probe_max_k, len(model.core_positions))\n        if start_k <= max_k:\n            ctx.counts["compact_probe_calls"] += 1\n            probe = compact_probe.probe_minimum_events(\n                model.rows, capacity, support_count, start_k=start_k, max_k=max_k,\n                usage_answers=usage_answers or {}, pair_answers=pair_answers or {},\n                seconds=min(limits.compact_probe_seconds, max(0.0, ctx.deadline - time.perf_counter())),\n                seek_witness=limits.compact_probe_seek_witness,\n            )\n            ctx.counts["compact_probe_phase_one_calls"] += probe.phase_one_calls\n            ctx.counts["compact_probe_mip_calls"] += probe.mip_calls\n            ctx.counts["compact_probe_certified_k"] += len(probe.certified_infeasible_k)\n            trivial = max(trivial, ctx.event_cost * probe.lower_event_count)\n            compact_witness = probe.witness\n            if compact_witness:\n                try:\n                    replay(ctx, compact_witness, root)\n                except ValueError:\n                    compact_witness = ()\n                else:\n                    ctx.counts["compact_probe_witnesses"] += 1\n                    for mask in compact_witness:\n                        ctx.pool[mask] = cg.RunColumn(\n                            mask, mask & model.all_core_mask, mask & model.all_buffer_mask\n                        )\n\n    queue = [(trivial, 0, root)]\n    serial = 0\n    incumbent, witness = None, ()\n',
+              ),
+              (
+                  '    if initial_events:\n        try:\n            incumbent = replay(ctx, initial_events, root)\n            witness = tuple(initial_events)\n        except ValueError:\n            pass  # a seed library need not be a complete partition\n',
+                  '    if compact_witness:\n        incumbent = replay(ctx, compact_witness, root)\n        witness = tuple(compact_witness)\n    if initial_events:\n        try:\n            value = replay(ctx, initial_events, root)\n            if incumbent is None or value < incumbent:\n                incumbent = value\n                witness = tuple(initial_events)\n        except ValueError:\n            pass  # a seed library need not be a complete partition\n',
+              ),
+          ]
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'missing solver patch anchor: {old[:80]!r}')
+              s = s.replace(old, new, 1)
+          p.write_text(s)
+
+          runner = Path('code/ai_pilot/benchmarks/compact_event_slot_audit.py')
+          text = runner.read_text()
+          if '"relation_witness_serialized": false,' not in text:
+              raise SystemExit('missing runner typo anchor')
+          runner.write_text(text.replace('"relation_witness_serialized": false,', '"relation_witness_serialized": False,', 1))
+          PY
+      - name: Validate compact probe and full regression suite
+        run: |
+          python -m py_compile \
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
+            code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py \
+            code/ai_pilot/benchmarks/compact_event_slot_audit.py
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
+          python -m unittest \
+            code/ai_pilot/data_pipeline/production_audit/tests/test_compact_event_slot_probe.py -v
+          python -m unittest discover \
+            -s code/ai_pilot/data_pipeline/production_audit/tests -v
+      - name: Commit frozen implementation and protocol
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add \
+            code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
+            code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py \
+            code/ai_pilot/data_pipeline/production_audit/tests/test_compact_event_slot_probe.py \
+            code/ai_pilot/benchmarks/COMPACT_EVENT_SLOT_PROTOCOL.json \
+            code/ai_pilot/benchmarks/compact_event_slot_audit.py
+          git commit -m "Freeze compact event-slot probe and audit protocol"
+          git push origin HEAD:compact-event-slot-probe-20260905
