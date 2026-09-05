@@ -1,67 +1,74 @@
 # Verified project status
 
-Checkpoint: 2026-09-05, pricing acceleration. Implementation/evidence and
-manuscript claims remain separate.
+Checkpoint: 2026-09-05, independent-seed ablations completed. This document
+separates implemented code, executed experiments and manuscript claims.
 
-## Completed implementation
+## Current implementation
 
-PR #3 previously integrated the fixed-support implicit disclosure separator
-at `b38b9e33902b92f8f9e8ac1c59c040c297490dc7`. The next implementation adds
-canonical-core root classes, interruptible reduced-cost bounds, exact rational
-objective-lattice tightening, duration/occupancy initial bounds, early replayed
-incumbents, batched pricing, sparse dual repair, and certified infeasibility reuse.
-No complete-column builder or full-world enumeration is used inside the solver.
-
-The acceleration source SHA-256 is
+Implicit fixed-support disclosure branch-and-price and ex-post certificate
+search were integrated through PR #3. Pricing acceleration was merged at
+`faff620fe2ca867d6861b0ac3e8d0c590589fd80`, solver SHA-256
 `f520a5e0d047ae0d6ebe3b3435f8577aed1a1247401cd403622e89ff2bf316f4`.
-Mathematical justification is in `docs/DISCLOSURE_PRICING_ACCELERATION.md`.
+This audit leaves that production solver unchanged.
 
-## New executed evidence
+## New independent-seed audit
 
-Results: `code/ai_pilot/benchmarks/results/disclosure_pricing_acceleration/`.
-All benchmark execution was local, with GitHub source hashes verified; GitHub
-CI separately runs tests. Do not call a source-export job a benchmark execution.
+Protocol `2e70d1663cf6f1d427e6a470274fa5b36297dbf3` was committed before
+performance evaluation. New seeded, role-permuted sequential chains are used,
+not the older development grid. Evidence lives in
+`code/ai_pilot/benchmarks/results/disclosure_independent_ablation/`.
 
-- 24 paired constructed endpoints, 5 seconds each: exact closure 5/24 -> 19/24;
-  replayed incumbent availability 7/24 -> 24/24; zero closure regressions.
-- Pricing LP calls 20,937 -> 9,900 in that run. Single-replicate elapsed times
-  are hardware-dependent, not a statistical or universal speedup guarantee.
-- The old regular 32-row minimum-event development case now closes at two
-  events. Five other minimum-event cells remain unresolved with valid intervals.
-- Expanded implicit audit: 180/180 mean and 60/60 event-count certificates
-  certified and matching the exact small oracle. This reuses/extends earlier
-  seeds; it is not 240 new independent event worlds.
-- The 113-test production/regression suite passed before adding one evidence
-  consistency check. Twelve new algorithm tests target interruption, lattice,
-  sparse exact bounds, role interleaving, and batch/full-scan equivalence.
+- 208 local invocations: 192 primary and 16 stress, covering 24 endpoint
+  problems from six seeded row sets. Two timing repeats are not new worlds.
+- Full solver: 24/32 primary exact statuses and 32/32 replayed incumbents.
+- No batching: 19/32 exact statuses and 22/32 incumbents.
+- No lattice: 22/32 exact statuses; no early primal: 28/32 incumbents.
+- No canonical restriction and no cache: 24/32 exact statuses each; no clear
+  component improvement is established for either on this grid.
+- 48-row stress: 6/16 exact statuses and 16/16 incumbents. All larger minima
+  remain open: full solver closes 0/8 minimum runs at 32 rows and 0/8 at 48.
+- Two no-canonical runs have rational lower=upper=2 but TIME_LIMIT status.
+  They remain visible in raw records; secondary bound-equality count is 26/32.
+- Zero technical failures; every incumbent independently replayed; rational
+  intervals have nonempty intersections across common inputs.
+- All six instrumented variants pass 54 small exact-oracle comparisons.
 
-The constructed grid was declared after tuning on the regular 32-row case and
-before the grid run. It is not held-out and not real membership truth.
+The record checker reconstructs counts, exact intervals and summary from all
+208 compact records. These are local runs, not execution of the timing grid
+on GitHub Actions. Eight new regression/evidence checks are included in the
+unified CI test discovery. Source export is only transport, not an experiment.
 
-## Earlier controlled evidence, preserved
+## Previous evidence, not relabeled as new
 
-9,000 usage-threshold comparisons, 5,954 initially ambiguous, mean minimum
-ex-post certificate 1.5574 facts; 272/300 event-count instances ambiguous even
-with full usage known. Complete-column constraint generation had 900+90 small
-oracle agreements; implicit PR #3 had 45+15. Keep these experiments distinct.
-The all-partitions formulas are abstract singleton-allowing or conditional
-known-buddy-bundle results, not unconditioned physical-event results.
+The 24-cell pricing-development comparison had 5/24 -> 19/24 closures and
+7/24 -> 24/24 incumbents. It was tuned, single-replicate and constructed.
+The expanded implicit certificate audit had 180 mean and 60 event-count
+agreements with the small exact oracle. The initial implicit audit had 45+15;
+the older complete-column comparison had 900+90. Do not mix these denominators.
 
-## Frozen paper and public evidence
+Earlier ex-post disclosure experiments retain 9,000 usage-threshold comparisons,
+5,954 ambiguous cells and mean minimum certificate 1.5574 facts. This is not
+adaptive query cost. Full usage leaves 272/300 event-count instances ambiguous.
+All-partitions formulas concern the abstract singleton-allowing model or a
+conditional known-buddy-bundle embedding, not unconditioned physical events.
+
+## Frozen manuscript and public data
 
 Paper baseline remains `10108d088f8b70efc1d8d5c483690e385546ceea`.
-NYC: 24 windows, 21 eligible, 126 outcome-capacity cells, 14/18 scale closures.
+NYC: 24 windows, 21 eligible, 126 cells and 14/18 scale closures.
 Chicago: run 164, 60 cores, 611 candidates, 50,405 contributors.
-No manuscript source or frozen city result is changed by the pricing work.
-The new 19/24 constructed result must not replace the NYC 14/18 result.
+No new independent-ablation result replaces these figures. Selective-disclosure
+implementation/evidence is in the repository, not yet integrated into the paper.
+Earlier conversational email-Eu and learned-linkage claims remain withdrawn.
 
-## Open work
+## Next scientific bottlenecks
 
-Per-component ablations and independent larger/separate-seed performance;
-the five unresolved constructed minima; unknown support and nonlinear targets;
-real event-membership and sequential-episode truth; noise-robust auditing;
-selective-disclosure paper integration and literature audit.
+Minimum-event lower bounds and feasible solutions on new larger sequential
+instances remain weak. Canonical pricing is not uniformly better in this audit;
+future tuning needs a separate evaluation set. Correct the conservative timeout
+labeling separately, without changing this frozen experiment. Also open are
+unknown support, nonlinear objectives, noisy-answer guarantees, real membership
+and sequential-episode truth, literature audit and manuscript integration.
 
-Earlier conversational email-Eu/learned-linkage claims remain withdrawn.
-No privacy, operational-query availability/cost, or city-scale guarantee exists.
-Only unified CI and manual Chicago audits remain active after transfer cleanup.
+No city-scale, privacy, or operational query-availability/cost guarantee is
+established. Only unified CI and manual Chicago audits should remain active.

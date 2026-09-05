@@ -1,0 +1,228 @@
+{
+  "bound_intersection_check": "PASS",
+  "conservative_status_mismatches": [
+    16,
+    27
+  ],
+  "distinct_candidate_row_sets": 6,
+  "distinct_endpoint_problems": 24,
+  "environment": {
+    "numpy": "2.3.5",
+    "python": "3.13.5",
+    "scipy": "1.17.0"
+  },
+  "execution": "local isolated processes; not GitHub Actions benchmark execution",
+  "frozen_separator_commit": "faff620fe2ca867d6861b0ac3e8d0c590589fd80",
+  "full_local_report_sha256": "980fb4ba0f42b19f2966cd53f9095044cfee39f06c50dff4285350cc3eebaf70",
+  "full_solver_strata": [
+    {
+      "candidate_rows": 16,
+      "event_cost": 1,
+      "exact_status_count": 8,
+      "incumbent_count": 8,
+      "replicate_runs": 8,
+      "unique_endpoint_problems": 4
+    },
+    {
+      "candidate_rows": 16,
+      "event_cost": -1,
+      "exact_status_count": 8,
+      "incumbent_count": 8,
+      "replicate_runs": 8,
+      "unique_endpoint_problems": 4
+    },
+    {
+      "candidate_rows": 32,
+      "event_cost": 1,
+      "exact_status_count": 0,
+      "incumbent_count": 8,
+      "replicate_runs": 8,
+      "unique_endpoint_problems": 4
+    },
+    {
+      "candidate_rows": 32,
+      "event_cost": -1,
+      "exact_status_count": 8,
+      "incumbent_count": 8,
+      "replicate_runs": 8,
+      "unique_endpoint_problems": 4
+    },
+    {
+      "candidate_rows": 48,
+      "event_cost": 1,
+      "exact_status_count": 0,
+      "incumbent_count": 8,
+      "replicate_runs": 8,
+      "unique_endpoint_problems": 4
+    },
+    {
+      "candidate_rows": 48,
+      "event_cost": -1,
+      "exact_status_count": 6,
+      "incumbent_count": 8,
+      "replicate_runs": 8,
+      "unique_endpoint_problems": 4
+    }
+  ],
+  "protocol": {
+    "buffer_count": "3*n_core",
+    "capacities": [
+      2,
+      3
+    ],
+    "correctness": "block complete-column builder; independent exact combinatorial witness replay; lower<=known feasible reference; pairwise bound intersection; small exhaustive oracle tests for every variant",
+    "date": "2026-09-05",
+    "event_costs": [
+      1,
+      -1
+    ],
+    "execution": "sequential isolated local processes; numerical libraries limited to one thread; parent timeout 20 seconds",
+    "fixed_support": "2*n_core",
+    "generator": "planted positive-overlap three-member chains; per-station lengths 4,4,3.5 and offsets 0,2,4.5; random station increments from 2.5,3,3.5,4; distractor offset 0..6 in quarter steps and duration 2..5 in quarter steps; seeded row-role permutation",
+    "interpretation": "new seeded synthetic distribution, not real membership truth; two timing replicates are not independent worlds; missing-component ablation estimates conditional on all other components; no causal attribution to interaction terms",
+    "iteration_limit": 100,
+    "mixed_facts": "one true core/first-buffer co-membership, one false distinct-core co-membership, first distractor excluded; facts chosen without reference to objective",
+    "node_limit": 500,
+    "not_claimed": [
+      "universal speedup",
+      "city-scale solvability",
+      "real event truth",
+      "noisy-answer robustness",
+      "adaptive query cost",
+      "isolated fact-regime effect",
+      "performance comparison against the pre-acceleration baseline"
+    ],
+    "predeclaration": "frozen accelerated solver and this protocol before observing any performance output; no tuning or case dropping after observation",
+    "pricing_case_limit": 4096,
+    "primary_core_counts": [
+      4,
+      8
+    ],
+    "primary_run_count": 192,
+    "primary_unique_endpoint_count": 16,
+    "protocol_version": "disclosure-independent-ablation/v1",
+    "replicates": 2,
+    "run_order": "deterministic shuffle of complete primary and stress run list using seed 990731",
+    "seconds_per_endpoint": 3.0,
+    "seed_regimes": [
+      [
+        730001,
+        "none"
+      ],
+      [
+        730019,
+        "mixed"
+      ]
+    ],
+    "separator_sha256": "f520a5e0d047ae0d6ebe3b3435f8577aed1a1247401cd403622e89ff2bf316f4",
+    "source_commit": "faff620fe2ca867d6861b0ac3e8d0c590589fd80",
+    "source_policy": "instrumentation-only variants; no production default or existing city/paper result changes",
+    "stress_core_counts": [
+      12
+    ],
+    "stress_run_count": 16,
+    "stress_unique_endpoint_count": 8,
+    "variants": [
+      "full",
+      "no_canonical",
+      "no_batch",
+      "no_lattice",
+      "no_early_primal",
+      "no_infeasible_cache"
+    ],
+    "warm_start": "no external witness; generated reference used only for answer construction and validation, never passed to optimizer"
+  },
+  "protocol_commit": "2e70d1663cf6f1d427e6a470274fa5b36297dbf3",
+  "protocol_sha256": "7190914c7b106128f8fc548dc3d6f1eeb5b17224113d7c832f4a96e02ea69e46",
+  "record_count": 208,
+  "report_version": "disclosure-independent-ablation/v1",
+  "run_records_sha256": "0672c8f1dbacf77d7ef62827bdb1886291e43791650a49546fd7451f30405c47",
+  "runner_commit": "847b0e867be9346abd8adc645d6bc80958d8aab3",
+  "runner_sha256": "57cde6160ce4f6ef44bbf4e3b5433e2b0d6c430026f569b3172a6743a9affcc4",
+  "summary": {
+    "primary:full": {
+      "bounded_unresolved": 8,
+      "exact_closed": 24,
+      "median_gap": 0.0,
+      "median_seconds": 0.3962462334999941,
+      "pricing_lp_calls": 10367,
+      "replayed_incumbents": 32,
+      "runs": 32,
+      "technical_failures": 0,
+      "total_seconds": 36.369183673000066,
+      "within_tolerance": 0
+    },
+    "primary:no_batch": {
+      "bounded_unresolved": 13,
+      "exact_closed": 19,
+      "median_gap": 0.0,
+      "median_seconds": 2.468981936499972,
+      "pricing_lp_calls": 17210,
+      "replayed_incumbents": 22,
+      "runs": 32,
+      "technical_failures": 0,
+      "total_seconds": 57.9039067760001,
+      "within_tolerance": 0
+    },
+    "primary:no_canonical": {
+      "bounded_unresolved": 8,
+      "exact_closed": 24,
+      "median_gap": 0.0,
+      "median_seconds": 0.45396360800003777,
+      "pricing_lp_calls": 10551,
+      "replayed_incumbents": 32,
+      "runs": 32,
+      "technical_failures": 0,
+      "total_seconds": 37.24757232400009,
+      "within_tolerance": 0
+    },
+    "primary:no_early_primal": {
+      "bounded_unresolved": 8,
+      "exact_closed": 24,
+      "median_gap": 0.0,
+      "median_seconds": 0.3660589884999581,
+      "pricing_lp_calls": 11932,
+      "replayed_incumbents": 28,
+      "runs": 32,
+      "technical_failures": 0,
+      "total_seconds": 35.44197494299988,
+      "within_tolerance": 0
+    },
+    "primary:no_infeasible_cache": {
+      "bounded_unresolved": 8,
+      "exact_closed": 24,
+      "median_gap": 0.0,
+      "median_seconds": 0.39063691849997895,
+      "pricing_lp_calls": 9722,
+      "replayed_incumbents": 32,
+      "runs": 32,
+      "technical_failures": 0,
+      "total_seconds": 35.95981580600011,
+      "within_tolerance": 0
+    },
+    "primary:no_lattice": {
+      "bounded_unresolved": 10,
+      "exact_closed": 22,
+      "median_gap": 0.0,
+      "median_seconds": 0.4092640085000312,
+      "pricing_lp_calls": 11414,
+      "replayed_incumbents": 32,
+      "runs": 32,
+      "technical_failures": 0,
+      "total_seconds": 39.64708095300017,
+      "within_tolerance": 0
+    },
+    "stress:full": {
+      "bounded_unresolved": 10,
+      "exact_closed": 6,
+      "median_gap": 2.5,
+      "median_seconds": 3.0016662455000187,
+      "pricing_lp_calls": 7824,
+      "replayed_incumbents": 16,
+      "runs": 16,
+      "technical_failures": 0,
+      "total_seconds": 34.404705171999865,
+      "within_tolerance": 0
+    }
+  }
+}

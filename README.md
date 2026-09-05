@@ -49,26 +49,38 @@ mass rename. No legacy AI/weak-linkage pipeline remains in the active tree.
   positive-length outer-envelope core covers differ on all 60 assignments, but
   they are not two completed operational hidden worlds.
 
-## Disclosure exploration: implementation checkpoint, not manuscript claims
+## Disclosure exploration: implementation and validation, not paper claims
 
-The new `ordered_run_disclosure_separator.py` supports fixed support, signed
-additive row costs, event-count objectives, usage facts, and together/separate
-facts. It generates columns implicitly, replays integer witnesses, and repairs
-LP dual bounds in rational arithmetic. An exact hitting-set master invokes it
-to compute curator/ex-post minimum decision certificates. This is not an
-adaptive acquisition policy or an operational privacy guarantee.
+The implicit separator supports fixed support, signed additive row costs,
+event-count objectives, truthful usage and together/separate facts. Integer
+witnesses are replayed and residual-repaired bounds use rational arithmetic.
+The outer hitting-set procedure computes curator/ex-post minimum certificates,
+not the unknown-answer cost of an adaptive acquisition policy.
 
-The new local audit has 45/45 mean-certificate and 15/15 event-count-certificate
-agreements with the explicit small oracle. Constructed 16/32-row stress closes
-5/6 endpoints under the declared budget; the sequential 32-row minimum remains
-unresolved. Easy simultaneous stress uses a disclosed deterministic warm start.
-See `code/ai_pilot/benchmarks/results/selective_disclosure_branch_price/` for
-source hashes, environment, exact design, and the unresolved result.
+The initial 45+15 certificate audit was expanded to 180 mean and 60 event-count
+agreements with the small exact oracle. Pricing acceleration at `faff620`
+closed 19/24 endpoints on a constructed development grid, versus 5/24 before.
+That development grid is not independent validation.
 
-These results do not replace the frozen NYC 14/18 scale lattice. Real event-
-membership truth, noise robustness, broad scale validation, and manuscript
-integration remain open. The all-partitions formula audit is explicitly scoped
-to an abstract singleton-allowing model or a known-buddy-bundle embedding.
+The subsequent frozen-source, independent-seed ablation has 208 local runs:
+192 primary (16 endpoint problems, six variants, two repeats) and 16 stress.
+Full-solver primary closure is 24/32 with 32/32 replayed incumbents; without
+batch reoptimization these are 19/32 and 22/32. The 48-row stress closes 6/16,
+but none of the full-solver 32/48-row minimum-event runs closes in its budget.
+Canonical restriction and caching do not show a uniform advantage. Two
+no-canonical timeouts retain exact equal bounds, documented without relabeling
+the raw statuses. No production tuning followed these observations.
+
+See `code/ai_pilot/benchmarks/results/disclosure_independent_ablation/` for all
+208 compact endpoint records, hashes, denominators and the full report, and
+`docs/DISCLOSURE_INDEPENDENT_ABLATION.md` for the variant-validity arguments.
+The six seeded candidate row sets and timing repeats are not 208 independent
+worlds. These are local benchmark executions; CI checks tests and records.
+
+None of these figures replaces the NYC 14/18 scale lattice. Real membership
+truth, unknown support, noise robustness and selective-disclosure manuscript
+integration remain open. Abstract all-partitions formulas require their stated
+singleton-allowing model or conditional known-buddy-bundle interpretation.
 
 ## Reproduce
 
@@ -85,6 +97,8 @@ python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python \
   code/ai_pilot/benchmarks/selective_disclosure_branch_price_audit.py \
   --instances-per-capacity 5 --stress --output-dir tmp/disclosure-bp-audit
+
+python code/ai_pilot/benchmarks/check_disclosure_independent_evidence.py
 
 ./scripts/build_paper.sh
 ./scripts/check_submission_pdf.sh \
