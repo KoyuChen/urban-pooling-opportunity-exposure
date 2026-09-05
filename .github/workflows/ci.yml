@@ -62,7 +62,7 @@ jobs:
           python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
           python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
           actual="$(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)"
-          expected="$(printf 'chicago-live-audits.yml\nci.yml\n')"
+          expected="$(printf 'chicago-live-audits.yml\nci.yml\nnyc-bp-24h.yml\n')"
           test "$actual" = "$expected"
       - name: Audit frozen headline evidence
         run: |

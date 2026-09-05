@@ -14,7 +14,10 @@ status is 38/48; disabled exact
 status is 16/48. The frozen
 rule sets the default budget to `0.75` seconds.
 
-Only `ci.yml` and `chicago-live-audits.yml` are active workflows. CI verifies
-compact hashes/default consistency, deterministic tests and the paper build.
-Selective disclosure remains outside the manuscript pending real membership
-truth or unknown-support/noisy-answer closure.
+Only `ci.yml`, `chicago-live-audits.yml`, and the manual `nyc-bp-24h.yml`
+follow-up are active workflows. CI verifies compact hashes/default consistency,
+deterministic tests and the paper build. The NYC follow-up assigns 20,700 solver
+seconds independently to each of the four frozen open scale cells and preserves
+every timeout as an unresolved interval. Selective disclosure remains outside
+the manuscript pending real membership truth or unknown-support/noisy-answer
+closure.

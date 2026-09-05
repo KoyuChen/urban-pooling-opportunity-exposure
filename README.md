@@ -118,9 +118,10 @@ python code/ai_pilot/benchmarks/check_disclosure_independent_evidence.py
   paper/build/KDD_Research_Working_Draft.pdf
 ```
 
-Only `ci.yml` and `chicago-live-audits.yml` remain active. The unified CI runs
-deterministic tests and uploads the compiled paper. Expensive benchmark commands
-are explicit local/manual runs, not restarted by one-off workflows on every push.
+Only `ci.yml`, `chicago-live-audits.yml`, and the manual `nyc-bp-24h.yml`
+follow-up remain active. The unified CI runs deterministic tests and uploads the
+compiled paper. The NYC follow-up isolates the four frozen open scale cells in
+separate fail-closed jobs; it is not restarted by ordinary manuscript commits.
 
 ## Claim boundary
 
