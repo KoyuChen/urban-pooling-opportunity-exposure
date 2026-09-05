@@ -1,15 +1,11 @@
 # Claim boundary
 
-This audit supports only the correctness and measured behavior of a compact
+This audit supports only the correctness and measured behavior of the compact
 necessary-condition lower-bound probe on the frozen synthetic fixed-support
-grid.
+grid. It does not support universal speedup, city-scale performance, real
+event-membership accuracy, unknown-support identification, nonlinear-target
+certification, noisy-answer robustness, privacy guarantees, adaptive acquisition
+cost, or operational availability of queried relation facts.
 
-It does not support a universal speedup, a claim that every compact component
-helps, city-scale performance, real event-membership accuracy, unknown-support
-identification, nonlinear-target certification, noisy-answer robustness,
-privacy guarantees, adaptive acquisition cost, or operational availability of
-the queried relation facts.
-
-The manuscript and the frozen Chicago/NYC evidence are unchanged. Raw solver
-statuses, equal-bound timeouts, losses, unresolved cells, and timing variability
-remain in the committed records.
+All raw statuses, losses, unresolved cells and timing variation remain in the
+committed records. The manuscript and frozen Chicago/NYC evidence are unchanged.

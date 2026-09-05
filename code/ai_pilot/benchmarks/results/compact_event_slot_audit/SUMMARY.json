@@ -1,0 +1,118 @@
+{
+  "beneficial_under_predeclared_rule": true,
+  "claim_boundary": "synthetic seeded sequential audit; no universal speedup, real membership truth, city-scale, or operational disclosure claim",
+  "compact_probe_sha256": "35672478815ac8de36de1982df0a68035660bc7f0a553c684c55d1bb69d47d52",
+  "design": {
+    "capacities": [
+      2,
+      3
+    ],
+    "claim_boundary": "synthetic seeded sequential audit; no universal speedup, real membership truth, city-scale, or operational disclosure claim",
+    "compact_probe_max_k": 6,
+    "compact_probe_rows_min": 24,
+    "compact_probe_seconds": 0.75,
+    "compact_probe_seek_witness": true,
+    "core_counts": [
+      4,
+      8,
+      12
+    ],
+    "endpoint_problem_count": 24,
+    "event_cost": 1,
+    "frozen_base_commit": "84d4495d2b384c1af2c2707d9568dec26aced52e",
+    "node_limit": 500,
+    "planted_reference_used_as_optimizer_warm_start": false,
+    "pricing_batch": 32,
+    "pricing_case_limit": 4096,
+    "pricing_iteration_limit": 100,
+    "protocol_frozen_before_timed_evaluation": true,
+    "replicates": 2,
+    "report_version": "eventfrontier-compact-event-slot-audit/v1",
+    "run_count": 96,
+    "scientific_target": "minimum event count on sequential nonclique fixed-support worlds",
+    "seconds_per_endpoint": 3.0,
+    "seed_regimes": [
+      [
+        910001,
+        "none"
+      ],
+      [
+        910019,
+        "mixed"
+      ],
+      [
+        910043,
+        "none"
+      ],
+      [
+        910061,
+        "mixed"
+      ]
+    ],
+    "single_threaded": true,
+    "support_multiplier": 2,
+    "unique_candidate_world_count": 24,
+    "variants": [
+      "compact_probe",
+      "probe_disabled"
+    ]
+  },
+  "environment": {
+    "numpy": "2.3.5",
+    "omp_threads": "1",
+    "openblas_threads": "1",
+    "python": "3.12.14 (main, Aug 13 2026, 02:47:42) [GCC 13.3.0]",
+    "scipy": "1.17.0"
+  },
+  "paired_effects": {
+    "bound_equality_gain": 24,
+    "bound_equality_loss": 0,
+    "exact_gain": 22,
+    "exact_loss": 0,
+    "incumbent_gain": 0,
+    "incumbent_loss": 0,
+    "strict_gap_increase": 2,
+    "strict_gap_reduction": 24,
+    "strict_lower_bound_gain": 10,
+    "strict_lower_bound_loss": 0
+  },
+  "production_default_compact_probe_seconds": 0.75,
+  "protocol_sha256": "73276660d440342ce818dcbf00d0cb30aa8b9ffb2ba4a1cb16904c52f0077b8a",
+  "report_version": "eventfrontier-compact-event-slot-audit/v1",
+  "run_record_sha256": "3091ebbd30b3de4ad4af61a9657b026ce993253ead463e726ab11c6c26296941",
+  "solver_sha256": "9b9c47ec2e5261ea09f5c2871dcfa39c4e51fa055ccdcd6ac117ba763a5c0a61",
+  "timed_solver_sha256": "8442dbcd55a39cdf3679dd890562086bb1dc16fda38d20fe76451e76f4361207",
+  "timed_variants_override_default_explicitly": true,
+  "variants": {
+    "compact_probe": {
+      "bound_equality_count": 40,
+      "exact_status_count": 38,
+      "incumbent_count": 48,
+      "median_elapsed_seconds": 0.4173879315000022,
+      "median_gap": 0.0,
+      "run_count": 48,
+      "technical_failure_count": 0,
+      "total_compact_certified_k": 14,
+      "total_compact_probe_calls": 32,
+      "total_compact_witnesses": 22,
+      "total_elapsed_seconds": 44.99176464599989,
+      "total_pricing_lp_calls": 11594
+    },
+    "probe_disabled": {
+      "bound_equality_count": 16,
+      "exact_status_count": 16,
+      "incumbent_count": 48,
+      "median_elapsed_seconds": 3.0014264429999997,
+      "median_gap": 1.5,
+      "run_count": 48,
+      "technical_failure_count": 0,
+      "total_compact_certified_k": 0,
+      "total_compact_probe_calls": 0,
+      "total_compact_witnesses": 0,
+      "total_elapsed_seconds": 105.25003476000012,
+      "total_pricing_lp_calls": 30639
+    }
+  },
+  "workflow_run_id": 33951594827,
+  "workflow_source_commit": "82786b1ad4e32d98549ce909da87545777ebf6c5"
+}
