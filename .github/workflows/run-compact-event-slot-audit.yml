@@ -1,0 +1,196 @@
+name: run-compact-event-slot-audit
+
+on:
+  push:
+    branches:
+      - compact-event-slot-probe-20260905
+    paths:
+      - .github/workflows/run-compact-event-slot-audit.yml
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: compact-event-slot-probe-20260905
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: python -m pip install -r code/ai_pilot/requirements.txt
+      - name: Verify frozen implementation before evaluation
+        run: |
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
+          python -m unittest \
+            code/ai_pilot/data_pipeline/production_audit/tests/test_compact_event_slot_probe.py -v
+      - name: Run predeclared paired audit
+        run: |
+          rm -rf code/ai_pilot/benchmarks/results/compact_event_slot_audit
+          python code/ai_pilot/benchmarks/compact_event_slot_audit.py \
+            --output-dir code/ai_pilot/benchmarks/results/compact_event_slot_audit
+      - name: Generate report and frozen-evidence checker
+        run: |
+          python - <<'PY'
+          from collections import defaultdict
+          from fractions import Fraction
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('code/ai_pilot/benchmarks')
+          out = root / 'results' / 'compact_event_slot_audit'
+          protocol = json.loads((root / 'COMPACT_EVENT_SLOT_PROTOCOL.json').read_text())
+          summary = json.loads((out / 'SUMMARY.json').read_text())
+          runs = json.loads((out / 'RUNS.json').read_text())
+
+          paired = defaultdict(dict)
+          for r in runs:
+              paired[(tuple(r['cell']), r['replicate'])][r['variant']] = r
+          effects = {
+              'exact_gain': 0, 'exact_loss': 0,
+              'bound_equality_gain': 0, 'bound_equality_loss': 0,
+              'incumbent_gain': 0, 'incumbent_loss': 0,
+              'strict_lower_bound_gain': 0, 'strict_lower_bound_loss': 0,
+              'strict_gap_reduction': 0, 'strict_gap_increase': 0,
+          }
+          for pair in paired.values():
+              a = pair['compact_probe']; b = pair['probe_disabled']
+              for key, gain, loss in [
+                  ('exact_status', 'exact_gain', 'exact_loss'),
+                  ('bound_equality', 'bound_equality_gain', 'bound_equality_loss'),
+                  ('incumbent_available', 'incumbent_gain', 'incumbent_loss'),
+              ]:
+                  effects[gain] += int(bool(a[key]) and not bool(b[key]))
+                  effects[loss] += int(bool(b[key]) and not bool(a[key]))
+              if a['lower_rational'] and b['lower_rational']:
+                  la, lb = Fraction(a['lower_rational']), Fraction(b['lower_rational'])
+                  effects['strict_lower_bound_gain'] += int(la > lb)
+                  effects['strict_lower_bound_loss'] += int(la < lb)
+              if a['absolute_gap_rational'] and b['absolute_gap_rational']:
+                  ga, gb = Fraction(a['absolute_gap_rational']), Fraction(b['absolute_gap_rational'])
+                  effects['strict_gap_reduction'] += int(ga < gb)
+                  effects['strict_gap_increase'] += int(ga > gb)
+          summary['paired_effects'] = effects
+
+          by_rows = {}
+          for variant in protocol['variants']:
+              by_rows[variant] = {}
+              for nrows in sorted({r['row_count'] for r in runs}):
+                  subset = [r for r in runs if r['variant'] == variant and r['row_count'] == nrows]
+                  by_rows[variant][str(nrows)] = {
+                      'run_count': len(subset),
+                      'exact_status_count': sum(r['exact_status'] for r in subset),
+                      'bound_equality_count': sum(r['bound_equality'] for r in subset),
+                      'incumbent_count': sum(r['incumbent_available'] for r in subset),
+                      'median_lower_bound': float(sorted(Fraction(r['lower_rational']) for r in subset if r['lower_rational'])[len(subset)//2]) if subset else None,
+                      'compact_probe_calls': sum(r['compact_probe_calls'] for r in subset),
+                      'compact_certified_k': sum(r['compact_probe_certified_k'] for r in subset),
+                  }
+          summary['by_row_count'] = by_rows
+          compact_json = json.dumps(runs, sort_keys=True, separators=(',', ':')).encode()
+          summary['run_record_sha256'] = hashlib.sha256(compact_json).hexdigest()
+          (out / 'SUMMARY.json').write_text(json.dumps(summary, indent=2, sort_keys=True) + '\n')
+
+          a = summary['variants']['compact_probe']
+          b = summary['variants']['probe_disabled']
+          e = effects
+          lines = [
+              '# Compact event-slot lower-bound audit', '',
+              'Executed by GitHub Actions from the implementation/protocol frozen before the timed grid.',
+              'The comparison uses the same solver with the compact probe enabled or disabled; no planted',
+              'reference event is supplied as a warm start. All runs are synthetic sequential nonclique',
+              'instances and do not establish city-scale or real-membership performance.', '',
+              '## Design', '',
+              f"- {protocol['endpoint_problem_count']} endpoint problems and {protocol['replicates']} timing repeats.",
+              f"- {protocol['run_count']} total solver invocations; {protocol['seconds_per_endpoint']:.1f} seconds per invocation.",
+              f"- Candidate sizes: {', '.join(str(4*n) for n in protocol['core_counts'])} rows; capacities {protocol['capacities']}.",
+              '- Objective: minimum number of events at fixed selected-buffer support.', '',
+              '## Aggregate results', '',
+              '| Variant | Exact status | Equal rational bounds | Incumbent | Median seconds | Pricing LP calls |',
+              '|---|---:|---:|---:|---:|---:|',
+              f"| Compact probe | {a['exact_status_count']}/{a['run_count']} | {a['bound_equality_count']}/{a['run_count']} | {a['incumbent_count']}/{a['run_count']} | {a['median_elapsed_seconds']:.3f} | {a['total_pricing_lp_calls']:,} |",
+              f"| Probe disabled | {b['exact_status_count']}/{b['run_count']} | {b['bound_equality_count']}/{b['run_count']} | {b['incumbent_count']}/{b['run_count']} | {b['median_elapsed_seconds']:.3f} | {b['total_pricing_lp_calls']:,} |", '',
+              'Paired effects count replicate-level comparisons on identical inputs:', '',
+              f"- exact-status gains/losses: **{e['exact_gain']} / {e['exact_loss']}**;",
+              f"- equal-bound gains/losses: **{e['bound_equality_gain']} / {e['bound_equality_loss']}**;",
+              f"- incumbent gains/losses: **{e['incumbent_gain']} / {e['incumbent_loss']}**;",
+              f"- strict lower-bound gains/losses: **{e['strict_lower_bound_gain']} / {e['strict_lower_bound_loss']}**;",
+              f"- strict gap reductions/increases where both gaps exist: **{e['strict_gap_reduction']} / {e['strict_gap_increase']}**.", '',
+              '## Probe activity', '',
+              f"The compact variant made {a['total_compact_probe_calls']} probe calls, certified {a['total_compact_certified_k']} tested K values as impossible, and supplied {a['total_compact_witnesses']} replayable candidate worlds.",
+              'A phase-I conclusion raises a lower bound only after rational dual-residual repair. A MIP',
+              'failure never proves infeasibility; a MIP solution is accepted only after the original',
+              'ordered-event replay succeeds.', '',
+              '## Interpretation boundary', '',
+              'The protocol was frozen before this timed run. Timing repeats are not independent worlds.',
+              'The experiment isolates the joint effect of the compact probe, not the contribution of each',
+              'constraint family. Negative or mixed results are retained. No manuscript or Chicago/NYC',
+              'headline is changed by this audit.', '',
+          ]
+          (out / 'REPORT.md').write_text('\n'.join(lines))
+
+          checker = root / 'check_compact_event_slot_evidence.py'
+          checker.write_text(r'''#!/usr/bin/env python3
+from fractions import Fraction
+import hashlib, json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+OUT = HERE/'results'/'compact_event_slot_audit'
+P = json.loads((HERE/'COMPACT_EVENT_SLOT_PROTOCOL.json').read_text())
+S = json.loads((OUT/'SUMMARY.json').read_text())
+R = json.loads((OUT/'RUNS.json').read_text())
+assert len(R) == P['run_count'] == 96
+assert S['design'] == P
+assert S['protocol_sha256'] == hashlib.sha256((HERE/'COMPACT_EVENT_SLOT_PROTOCOL.json').read_bytes()).hexdigest()
+assert S['solver_sha256'] == hashlib.sha256((HERE.parent/'data_pipeline'/'production_audit'/'ordered_run_disclosure_separator.py').read_bytes()).hexdigest()
+assert S['compact_probe_sha256'] == hashlib.sha256((HERE.parent/'data_pipeline'/'production_audit'/'compact_event_slot_probe.py').read_bytes()).hexdigest()
+assert S['run_record_sha256'] == hashlib.sha256(json.dumps(R, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+assert all(not r['relation_witness_serialized'] for r in R)
+assert all(r['status'] != 'TECHNICAL_FAILURE' for r in R)
+for r in R:
+    if r['lower_rational'] and r['upper_rational']:
+        assert Fraction(r['lower_rational']) <= Fraction(r['upper_rational'])
+    if r['variant'] == 'probe_disabled':
+        assert r['compact_probe_calls'] == 0
+    if r['variant'] == 'compact_probe' and r['row_count'] < P['compact_probe_rows_min']:
+        assert r['compact_probe_calls'] == 0
+pairs = {}
+for r in R:
+    pairs.setdefault((tuple(r['cell']), r['replicate']), []).append(r)
+for group in pairs.values():
+    lo = [Fraction(x['lower_rational']) for x in group if x['lower_rational']]
+    hi = [Fraction(x['upper_rational']) for x in group if x['upper_rational']]
+    if lo and hi:
+        assert max(lo) <= min(hi)
+print('compact event-slot frozen evidence: PASS')
+''')
+          PY
+          chmod +x code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+      - name: Run full regression after evidence generation
+        run: python -m unittest discover -s code/ai_pilot/data_pipeline/production_audit/tests -v
+      - name: Commit evidence and remove one-off workflows
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git rm -f \
+            .github/workflows/run-compact-event-slot-audit.yml \
+            .github/workflows/apply-compact-event-slot-probe.yml \
+            .github/workflows/export-compact-probe-source.yml
+          git add \
+            code/ai_pilot/benchmarks/results/compact_event_slot_audit \
+            code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          git commit -m "Freeze compact event-slot audit and certified bounds"
+          git push origin HEAD:compact-event-slot-probe-20260905
