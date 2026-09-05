@@ -8,7 +8,7 @@ on:
       - .github/workflows/repair-compact-evidence.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   repair:
@@ -24,6 +24,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: repair-compact-evidence-20260905
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -45,21 +46,13 @@ jobs:
             --output-dir tmp/compact-event-slot-audit
       - name: Freeze evidence and synchronize documentation
         run: python scripts/finalize_compact_evidence.py
-      - name: Remove all one-off compact workflows and temporary scripts
+      - name: Remove temporary repair scripts
         run: |
           rm -f \
-            .github/workflows/apply-compact-event-slot-probe.yml \
-            .github/workflows/apply-compact-probe.yml \
-            .github/workflows/export-compact-probe-source.yml \
-            .github/workflows/finalize-compact-event-slot-probe.yml \
-            .github/workflows/finalize-compact-probe-docs.yml \
-            .github/workflows/run-compact-event-slot-audit.yml \
-            .github/workflows/verify-and-mark-compact-probe.yml \
-            .github/workflows/repair-compact-evidence.yml \
             scripts/repair_compact_integration.py \
             scripts/repair_compact_json.py \
             scripts/finalize_compact_evidence.py
-      - name: Verify and package the final tree
+      - name: Verify final scientific files
         run: |
           python -m py_compile \
             code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
@@ -68,11 +61,11 @@ jobs:
             code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
           python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
           python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
-          test "$(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)" = "$(printf 'chicago-live-audits.yml\nci.yml\n')"
-          tar --exclude=.git --exclude=tmp -czf "$RUNNER_TEMP/compact-repair-final-tree.tar.gz" .
-      - name: Upload verified final tree
-        uses: actions/upload-artifact@v4
-        with:
-          name: compact-repair-final-tree
-          path: ${{ runner.temp }}/compact-repair-final-tree.tar.gz
-          retention-days: 7
+      - name: Commit non-workflow repair
+        run: |
+          git restore --source=HEAD -- .github/workflows
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add -A
+          git commit -m "Repair compact evidence and synchronize project state"
+          git push origin HEAD:repair-compact-evidence-20260905
