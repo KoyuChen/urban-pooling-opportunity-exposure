@@ -1,0 +1,47 @@
+name: apply-pricing-patch
+on:
+  push:
+    branches: [improve-disclosure-pricing-20260905]
+    paths: [.github/workflows/apply-pricing-patch.yml]
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OPENBLAS_NUM_THREADS: '1'
+      OMP_NUM_THREADS: '1'
+      PYTHONHASHSEED: '0'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: improve-disclosure-pricing-20260905
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply exact local patch
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('.github/apply_pricing_patch.py')
+          s = p.read_text()
+          s = s.replace('c4dcdc716b3601ef91ee85377f721c1c3d85bf084553a6580167d285f544ef',
+                        'c4dcdc716b3601ef91ee85377f721c1c1c3d85bf084553a6580167d285f544ef')
+          p.write_text(s)
+          PY
+          python .github/apply_pricing_patch.py
+      - name: Validate patched solver
+        run: |
+          python -m pip install -r code/ai_pilot/requirements.txt
+          python -m unittest discover -s code/ai_pilot/data_pipeline/production_audit/tests -v
+          python code/ai_pilot/benchmarks/selective_disclosure_benchmark.py --self-test
+          python code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py --self-test
+      - name: Publish readable source and remove temporary transfer files
+        run: |
+          rm .github/apply_pricing_patch.py .github/workflows/apply-pricing-patch.yml .github/workflows/export-pricing-checkpoint.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add code/ai_pilot/data_pipeline/production_audit/ordered_run_disclosure_separator.py code/ai_pilot/data_pipeline/production_audit/tests/test_ordered_run_disclosure_separator.py .github/
+          git commit -m 'Apply checksum-verified canonical-root pricing and anytime bounds'
+          git push origin HEAD:improve-disclosure-pricing-20260905
