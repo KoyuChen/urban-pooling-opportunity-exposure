@@ -14,7 +14,8 @@ class AccelerationEvidenceTests(unittest.TestCase):
         table = folder/'PAIRED_CELLS.csv'
         self.assertEqual(hashlib.sha256(table.read_bytes()).hexdigest(),
                          report['full_record_sha256']['PAIRED_CELLS.csv'])
-        rows = list(csv.DictReader(table.open()))
+        with table.open(newline='') as handle:
+            rows = list(csv.DictReader(handle))
         self.assertEqual(len(rows), 48)
         for variant in ('baseline', 'accelerated'):
             part = [r for r in rows if r['variant'] == variant]
@@ -33,7 +34,8 @@ class AccelerationEvidenceTests(unittest.TestCase):
             pair = [r for r in rows if int(r['cell_index']) == i]
             self.assertEqual(len(pair),2)
             self.assertEqual(pair[0]['input_sha256'], pair[1]['input_sha256'])
-        certs = list(csv.DictReader((folder/'CERTIFICATE_COUNTS.csv').open()))
+        with (folder/'CERTIFICATE_COUNTS.csv').open(newline='') as handle:
+            certs = list(csv.DictReader(handle))
         self.assertEqual(len(certs),60)
         self.assertEqual(sum(int(r['certified_count']) for r in certs),240)
         self.assertEqual(sum(int(r['exact_oracle_agreement_count']) for r in certs),240)
