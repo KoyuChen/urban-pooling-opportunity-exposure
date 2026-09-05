@@ -13,17 +13,20 @@ universe, and a simultaneous-capacity bound.
 - `paper/` -- the active manuscript source.
 - `code/ai_pilot/data_pipeline/production_audit/` -- ordered-event solvers,
   Chicago/NYC extraction, public-data audits, tests, fixtures, and protocols.
-- `code/ai_pilot/benchmarks/` -- the controlled-truth generator and evaluation.
+- `code/ai_pilot/benchmarks/` -- controlled-truth and disclosure validation.
 - `code/ai_pilot/data_pipeline/results/` -- redacted aggregate evidence used by
   the current draft.
+- `code/ai_pilot/benchmarks/results/` -- controlled exploration evidence.
 - `scripts/` -- paper build, PDF checks, and the local Chicago boundary runner.
-- `ARTIFACT_MANIFEST.md` -- frozen run, artifact, file-hash, and claim pins.
+- `ARTIFACT_MANIFEST.md` -- frozen manuscript run, artifact, file-hash, and claim pins.
 - `docs/REPRODUCIBILITY.md` -- local and live rerun commands.
+- `docs/PROJECT_STATUS.md` -- verified manuscript versus exploration status.
+- `docs/IMPLICIT_DISCLOSURE_SEPARATOR.md` -- new separator contract and bound proofs.
 
 The historical path name `code/ai_pilot/` is retained to avoid a non-scientific
 mass rename. No legacy AI/weak-linkage pipeline remains in the active tree.
 
-## Current evidence
+## Frozen manuscript evidence
 
 - 3,000 controlled-truth instances across `C=2,3,4`; full candidate support
   covers the generated truth in every instance, while a feasible point world
@@ -46,9 +49,26 @@ mass rename. No legacy AI/weak-linkage pipeline remains in the active tree.
   positive-length outer-envelope core covers differ on all 60 assignments, but
   they are not two completed operational hidden worlds.
 
-Compact reports and machine-readable summaries are committed beside the older
-supporting coarsening and common-support audits under
-`code/ai_pilot/data_pipeline/results/`.
+## Disclosure exploration: implementation checkpoint, not manuscript claims
+
+The new `ordered_run_disclosure_separator.py` supports fixed support, signed
+additive row costs, event-count objectives, usage facts, and together/separate
+facts. It generates columns implicitly, replays integer witnesses, and repairs
+LP dual bounds in rational arithmetic. An exact hitting-set master invokes it
+to compute curator/ex-post minimum decision certificates. This is not an
+adaptive acquisition policy or an operational privacy guarantee.
+
+The new local audit has 45/45 mean-certificate and 15/15 event-count-certificate
+agreements with the explicit small oracle. Constructed 16/32-row stress closes
+5/6 endpoints under the declared budget; the sequential 32-row minimum remains
+unresolved. Easy simultaneous stress uses a disclosed deterministic warm start.
+See `code/ai_pilot/benchmarks/results/selective_disclosure_branch_price/` for
+source hashes, environment, exact design, and the unresolved result.
+
+These results do not replace the frozen NYC 14/18 scale lattice. Real event-
+membership truth, noise robustness, broad scale validation, and manuscript
+integration remain open. The all-partitions formula audit is explicitly scoped
+to an abstract singleton-allowing model or a known-buddy-bundle embedding.
 
 ## Reproduce
 
@@ -62,14 +82,18 @@ python -m unittest discover \
 python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
   --self-test
 
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python \
+  code/ai_pilot/benchmarks/selective_disclosure_branch_price_audit.py \
+  --instances-per-capacity 5 --stress --output-dir tmp/disclosure-bp-audit
+
 ./scripts/build_paper.sh
 ./scripts/check_submission_pdf.sh \
   paper/build/KDD_Research_Working_Draft.pdf
 ```
 
-The `ci` workflow runs the same deterministic checks and uploads the compiled
-paper. Live Chicago audits are manual so ordinary manuscript commits do not
-re-query public APIs.
+Only `ci.yml` and `chicago-live-audits.yml` remain active. The unified CI runs
+deterministic tests and uploads the compiled paper. Expensive benchmark commands
+are explicit local/manual runs, not restarted by one-off workflows on every push.
 
 ## Claim boundary
 

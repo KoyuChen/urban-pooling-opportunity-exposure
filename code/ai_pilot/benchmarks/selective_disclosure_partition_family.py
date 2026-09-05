@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Verify closed-form pair certificates on an all-partitions EventFrontier family.
+"""Verify pair certificates in an abstract all-partitions query model.
 
-Take n identical core intervals and capacity n. Every nonempty row subset is a
-feasible event column, so every set partition is an admissible EventFrontier
-world. Pair co-membership queries then have closed-form certificate sizes.
+This model allows singleton blocks. It is NOT the unconditioned EventFrontier
+model, whose physical events have at least two rows. A faithful conditional
+embedding uses n prelinked two-row bundles (2n identical mandatory intervals,
+capacity 2n); each known buddy pair is constrained together. Blocks then
+partition bundles, and the reported costs count ADDITIONAL cross-bundle facts.
+The enumeration below checks a balanced truth representative for each K,
+not every possible truth block-size profile.
 """
 
 from __future__ import annotations
@@ -146,12 +150,14 @@ def run(max_exact_n: int) -> dict:
         for n in (3, 6, 12, 30, 100)
     ]
     return {
-        "report_version": "eventfrontier-all-partitions-certificates/v1",
+        "report_version": "abstract-all-partitions-certificates/v2-scope-corrected",
         "design": {
             "max_exact_n": max_exact_n,
-            "identical_core_intervals": True,
-            "capacity_equals_n": True,
-            "all_set_partitions_feasible": True,
+            "abstract_singleton_blocks_allowed": True,
+            "all_set_partitions_feasible_in_abstract_model": True,
+            "truth_representatives": "one balanced partition for each K",
+            "eventfrontier_embedding": "2n rows in n known buddy pairs, capacity 2n",
+            "unconditioned_eventfrontier_claim": False,
         },
         "verified_cell_count": len(rows),
         "full_recovery_formula": "n-K+binom(K,2)",
@@ -170,7 +176,9 @@ def render(report: dict) -> str:
         "",
         f"Exact enumeration verifies **{report['verified_cell_count']}** parameter cells through n={report['design']['max_exact_n']}.",
         "",
-        "For a realized partition with K events on n active rows:",
+        "Scope: abstract partitions with singleton blocks; not unconditioned physical events.",
+        "The test uses one balanced truth representative for each K, not every truth profile.",
+        "For a realized partition with K blocks on n atoms:",
         "",
         "- full partition recovery requires `n-K+binom(K,2)` pair facts;",
         "- certifying `K <= k` requires `n-k` facts when the decision is true;",

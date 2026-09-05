@@ -1,0 +1,114 @@
+{
+  "report_version": "eventfrontier-implicit-disclosure-audit/v1",
+  "source_commit": "07c4ccdd77930b80966a270b3a7f147bba5fa326",
+  "design": {
+    "base_seed": 20260905,
+    "capacities": [2, 3, 4],
+    "instances_per_capacity": 5,
+    "mean_thresholds": [0.25, 0.5, 0.75],
+    "event_count_threshold": 2.5,
+    "certificate_is_ex_post_not_adaptive": true,
+    "explicit_builder_blocked_inside_separator": true,
+    "worlds_and_columns_enumerated_by_comparator_only": true,
+    "timestamps": "exact; strict positive-overlap",
+    "threshold_comparator": "exact rational >=, no tolerance shift",
+    "stress_seconds_per_endpoint": 10,
+    "simultaneous_stress_has_deterministic_clique_warm_start": true
+  },
+  "execution_environment": {
+    "execution_location": "local analysis runtime; source blobs verified against GitHub",
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "threads": 1
+  },
+  "source_sha256": {
+    "ordered_run_disclosure_separator.py": "c4dcdc716b3601ef91ee85377f721c1c1c3d85bf084553a6580167d285f544ef",
+    "selective_disclosure_branch_price_audit.py": "b5a89426d22b764aa21c5bdd49a1db89c595acd83b2ddc8a41842f73a8b93f22"
+  },
+  "summary": {
+    "member_mean": {
+      "cells": 45,
+      "minimum_certificate_certified": 45,
+      "exact_size_agreements": 45,
+      "unresolved": 0,
+      "mean_seconds": 2.0480171385333303,
+      "max_seconds": 13.13715240700003,
+      "mean_iterations": 5.088888888888889
+    },
+    "event_count": {
+      "cells": 15,
+      "minimum_certificate_certified": 15,
+      "exact_size_agreements": 15,
+      "unresolved": 0,
+      "mean_seconds": 1.5202793497333535,
+      "max_seconds": 3.6101291420000052,
+      "mean_iterations": 5.466666666666667
+    }
+  },
+  "stress_cells": [
+    {
+      "kind": "simultaneous", "core_rows": 8, "buffer_rows": 24,
+      "capacity": 4, "support_count": 16, "event_cost": 1,
+      "status": "EXACT_BOUND_CLOSED", "lower_bound": 6.0, "upper_bound": 6.0,
+      "absolute_gap": 0.0, "reason": null, "seconds": 0.40304597399995146,
+      "nodes": 1, "unique_generated_columns": 230, "pricing_lp_calls": 280,
+      "all_event_columns_enumerated": false, "all_worlds_enumerated": false
+    },
+    {
+      "kind": "simultaneous", "core_rows": 8, "buffer_rows": 24,
+      "capacity": 4, "support_count": 16, "event_cost": -1,
+      "status": "EXACT_BOUND_CLOSED", "lower_bound": -8.0, "upper_bound": -8.0,
+      "absolute_gap": 0.0, "reason": null, "seconds": 0.0004540500000302927,
+      "nodes": 0, "unique_generated_columns": 224, "pricing_lp_calls": 0,
+      "closure_method": "replayed clique warm start equals unconditional bound",
+      "all_event_columns_enumerated": false, "all_worlds_enumerated": false
+    },
+    {
+      "kind": "sequential", "core_rows": 4, "buffer_rows": 12,
+      "capacity": 2, "support_count": 8, "event_cost": 1,
+      "status": "EXACT_BOUND_CLOSED", "lower_bound": 2.0, "upper_bound": 2.0,
+      "absolute_gap": 0.0, "reason": null, "seconds": 8.338688730000058,
+      "nodes": 13, "buffer_branches": 6,
+      "unique_generated_columns": 236, "pricing_lp_calls": 4780,
+      "all_event_columns_enumerated": false, "all_worlds_enumerated": false
+    },
+    {
+      "kind": "sequential", "core_rows": 4, "buffer_rows": 12,
+      "capacity": 2, "support_count": 8, "event_cost": -1,
+      "status": "EXACT_BOUND_CLOSED", "lower_bound": -4.0, "upper_bound": -4.0,
+      "absolute_gap": 0.0, "reason": null, "seconds": 0.728263462999962,
+      "nodes": 1, "unique_generated_columns": 95, "pricing_lp_calls": 426,
+      "all_event_columns_enumerated": false, "all_worlds_enumerated": false
+    },
+    {
+      "kind": "sequential", "core_rows": 8, "buffer_rows": 24,
+      "capacity": 2, "support_count": 16, "event_cost": 1,
+      "status": "BOUNDED_UNRESOLVED", "lower_bound": 1.0, "upper_bound": null,
+      "absolute_gap": null, "reason": "TIME_LIMIT", "seconds": 10.000887581000029,
+      "nodes": 1, "unique_generated_columns": 1282, "pricing_lp_calls": 4311,
+      "all_event_columns_enumerated": false, "all_worlds_enumerated": false
+    },
+    {
+      "kind": "sequential", "core_rows": 8, "buffer_rows": 24,
+      "capacity": 2, "support_count": 16, "event_cost": -1,
+      "status": "EXACT_BOUND_CLOSED", "lower_bound": -8.0, "upper_bound": -8.0,
+      "absolute_gap": 0.0, "reason": null, "seconds": 6.950883812000029,
+      "nodes": 1, "unique_generated_columns": 807, "pricing_lp_calls": 2868,
+      "all_event_columns_enumerated": false, "all_worlds_enumerated": false
+    }
+  ],
+  "regression_validation": {
+    "production_tests_passed": 101,
+    "new_disclosure_tests": 21,
+    "random_explicit_endpoint_comparisons": 64,
+    "injected_timeout_and_near_threshold_cases": true
+  },
+  "claim_boundary": {
+    "supported": "small controlled certificate agreement and declared constructed stress cells",
+    "not_supported": "city-scale runtime, real membership truth, noisy answers, adaptive query savings",
+    "frozen_nyc_scale_result_unchanged": "14/18",
+    "manuscript_integration": "not performed"
+  },
+  "total_seconds": 141.64371035
+}
