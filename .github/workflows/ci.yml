@@ -103,15 +103,38 @@ jobs:
           summary = scale["summary"]
           assert scale["design"]["predeclared_cell_count"] == 18
           assert summary["completed_cell_count"] == 18
-          assert summary["integer_optimum_certified_count"] == 14
-          assert summary["bounded_unresolved_count"] == 4
+          assert summary["integer_optimum_certified_count"] == 18
+          assert summary["bounded_unresolved_count"] == 0
           assert summary["skipped_insufficient_public_rows_count"] == 0
-          assert [cell["absolute_gap"] for cell in summary["open_cells"]] == [
-              3,
-              4,
-              1,
-              3,
-          ]
+          assert summary["open_cells"] == []
+          assert summary["all_capacities_closed_through"] == {
+              "core_rows": 16,
+              "buffer_rows": 48,
+          }
+          assert scale["followup"]["run_id"] == 34003340919
+          assert len(scale["followup"]["artifacts"]) == 4
+          assert scale["claim_boundary"]["not_supported"].startswith(
+              "city-scale runtime"
+          )
+          import csv
+          with (nyc / "BRANCH_AND_PRICE_SCALE_CELLS.csv").open(
+              encoding="utf-8", newline=""
+          ) as handle:
+              scale_cells = list(csv.DictReader(handle))
+          assert len(scale_cells) == 18
+          assert all(
+              cell["status"] == "INTEGER_OPTIMUM_CERTIFIED"
+              for cell in scale_cells
+          )
+          target_values = {
+              (int(cell["core_rows"]), int(cell["capacity"])):
+              float(cell["integer_maximum_selected_buffers"])
+              for cell in scale_cells
+          }
+          assert target_values[(10, 4)] == 30.0
+          assert target_values[(12, 4)] == 36.0
+          assert target_values[(16, 3)] == 44.0
+          assert target_values[(16, 4)] == 48.0
 
           chicago = json.loads(
               (

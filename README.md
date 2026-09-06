@@ -43,9 +43,9 @@ mass rename. No legacy AI/weak-linkage pipeline remains in the active tree.
   24/126 cells (19.0%). Across capacities they make 498 decisions, 494 (99.2%)
   inside certified-ambiguous cells. This is instability, not public-data
   accuracy, because memberships are absent.
-- The NYC branch-and-price lattice closes 14/18 integer cells exactly, including
-  every capacity through 8 core + 24 buffer rows. The four remaining cells keep
-  valid gaps of 1--4.
+- The NYC branch-and-price lattice closes all 18/18 predeclared integer cells
+  exactly, through 16 core + 48 buffer rows at `C=2,3,4`. This is closure of one
+  deterministic nested-size lattice, not city-scale event recovery.
 - The Chicago live audit is snapshot-stable and count-closed for 60 cores, 611
   temporal candidates, and 50,405 endpoint-bin contributors. Two distinct
   positive-length outer-envelope core covers differ on all 60 assignments, but
@@ -79,7 +79,7 @@ See `code/ai_pilot/benchmarks/results/disclosure_independent_ablation/` for all
 The six seeded candidate row sets and timing repeats are not 208 independent
 worlds. These are local benchmark executions; CI checks tests and records.
 
-None of these figures replaces the NYC 14/18 scale lattice. Real membership
+None of these figures replaces the NYC 18/18 scale lattice. Real membership
 truth, unknown support, noise robustness and selective-disclosure manuscript
 integration remain open. Abstract all-partitions formulas require their stated
 singleton-allowing model or conditional known-buddy-bundle interpretation.
@@ -120,8 +120,9 @@ python code/ai_pilot/benchmarks/check_disclosure_independent_evidence.py
 
 Only `ci.yml`, `chicago-live-audits.yml`, and the manual `nyc-bp-24h.yml`
 follow-up remain active. The unified CI runs deterministic tests and uploads the
-compiled paper. The NYC follow-up isolates the four frozen open scale cells in
-separate fail-closed jobs; it is not restarted by ordinary manuscript commits.
+compiled paper. The NYC follow-up isolates the four formerly open scale cells
+in separate fail-closed jobs; it is not restarted by ordinary manuscript
+commits.
 
 ## Claim boundary
 

@@ -38,7 +38,7 @@ run_cell() {
     "$label" "$status" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 
-# Frozen open cells from the 14/18 scale lattice. Each receives 5h45m;
+# Cells that were open in the base 14/18 scale lattice. Each receives 5h45m;
 # the outer 24h watchdog leaves one hour for extraction and shutdown overhead.
 export -f run_cell
 export runner campaign_root cell_budget_seconds

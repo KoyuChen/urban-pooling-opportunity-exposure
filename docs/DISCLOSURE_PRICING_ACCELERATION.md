@@ -76,4 +76,5 @@ See `code/ai_pilot/benchmarks/results/disclosure_pricing_acceleration/REPORT.md`
 The paired grid was declared after tuning on the prior 32-row regular case,
 not as an independent held-out benchmark. Broader real-data performance,
 per-component ablations, unknown support, noisy answers, and paper integration
-remain open. The frozen NYC 14/18 scale result is unchanged.
+remain open. This audit predates and is independent of the later NYC 18/18
+scale follow-up.

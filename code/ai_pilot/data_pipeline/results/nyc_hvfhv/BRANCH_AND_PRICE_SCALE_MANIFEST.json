@@ -1,5 +1,5 @@
 {
-  "report_version": "nyc-hvfhv-branch-and-price-scale-summary/v1",
+  "report_version": "nyc-hvfhv-branch-and-price-scale-summary/v2",
   "source": {
     "workflow": "nyc-hvfhv-branch-and-price-scale",
     "run_id": 33837187046,
@@ -8,6 +8,43 @@
     "artifact_zip_sha256": "603fd059d600176e178ddcbdd6d1d40c36cf2d59d9c11e9c3130a81eae32a4cf",
     "source_report_json_sha256": "1056ee441a4cd91b518b43f7c0565f5e4f349c3206d3ba9a027d64ce5c6800ed",
     "source_report_markdown_sha256": "53055ec7b2a0f2093a1c00db29dacfe3173438c28175dc157be0a8613748a60d"
+  },
+  "followup": {
+    "workflow": "nyc-bp-24h",
+    "run_id": 34003340919,
+    "source_commit": "23933f4ce6e4c2a1706ba30832619416e2398791",
+    "merge_utility": "code/ai_pilot/data_pipeline/production_audit/merge_nyc_branch_price_scale_followups.py",
+    "snapshot_and_cohort_match_base": true,
+    "artifacts": [
+      {
+        "target": {"core_rows": 10, "capacity": 4},
+        "artifact_id": 9980398721,
+        "artifact_zip_digest": "sha256:6127a3dedf4f4ac9b17cafc5d22dd458636bd5f309b6082426d3e75985cf8f62",
+        "driver_manifest_sha256": "f9da2cccd47e85bbb806a9915a0695c60d9c7d69a74404b4b681e635b51e549a",
+        "source_report_json_sha256": "2ed0ed3bb6a7e35d0452396168cb48ca4530d03e7b6fb3da17011a052c89959d"
+      },
+      {
+        "target": {"core_rows": 12, "capacity": 4},
+        "artifact_id": 9980614201,
+        "artifact_zip_digest": "sha256:8d3d6e3455bcb807c046c5f8411d03ccc3c3cfa949a2b239a49ce3c6951335ba",
+        "driver_manifest_sha256": "00f1d2b73293f2bc5c93cc08138818dc329021aecb605cd05329285ac791bba0",
+        "source_report_json_sha256": "1b187c9eca93f627c57a90be12098acd17c2a31faec0d85632602801a5fb1e16"
+      },
+      {
+        "target": {"core_rows": 16, "capacity": 3},
+        "artifact_id": 9980411547,
+        "artifact_zip_digest": "sha256:dfff930698955204d66b0b4f61585679e41baec549cb4f08a81f22eb1395bf45",
+        "driver_manifest_sha256": "adba3e56673a2d149a52e35bf70d6ea7d252da7ec668dcb75c89a39c336c8b68",
+        "source_report_json_sha256": "160f1a48805d7ad6ca5cfa5a338be71094cf1a876e2c6b3c2e129933e1ed0915"
+      },
+      {
+        "target": {"core_rows": 16, "capacity": 4},
+        "artifact_id": 9981068879,
+        "artifact_zip_digest": "sha256:14b8e2e10cfec8ae2b10fe33378a91a6a6b1bbb2894304d37de4f0da7614ad3a",
+        "driver_manifest_sha256": "a1251e105d982a5ee4aaa6d0fb8335c0f4271e4c82b0a99463c6d742b0438609",
+        "source_report_json_sha256": "51ac2d3b64a0ea517700a5fa65634b2cc6e4156c84a4c820b4a4279b21a214a3"
+      }
+    ]
   },
   "design": {
     "provider": "HV0005",
@@ -25,45 +62,12 @@
   },
   "summary": {
     "completed_cell_count": 18,
-    "integer_optimum_certified_count": 14,
-    "bounded_unresolved_count": 4,
+    "integer_optimum_certified_count": 18,
+    "bounded_unresolved_count": 0,
     "skipped_insufficient_public_rows_count": 0,
-    "all_capacities_closed_through": {"core_rows": 8, "buffer_rows": 24},
-    "maximum_certified_size": {"core_rows": 16, "buffer_rows": 48, "capacity": 2},
-    "open_cells": [
-      {
-        "core_rows": 10,
-        "buffer_rows": 30,
-        "capacity": 4,
-        "integer_lower_bound": 27,
-        "global_upper_bound": 30,
-        "absolute_gap": 3
-      },
-      {
-        "core_rows": 12,
-        "buffer_rows": 36,
-        "capacity": 4,
-        "integer_lower_bound": 32,
-        "global_upper_bound": 36,
-        "absolute_gap": 4
-      },
-      {
-        "core_rows": 16,
-        "buffer_rows": 48,
-        "capacity": 3,
-        "integer_lower_bound": 43,
-        "global_upper_bound": 44,
-        "absolute_gap": 1
-      },
-      {
-        "core_rows": 16,
-        "buffer_rows": 48,
-        "capacity": 4,
-        "integer_lower_bound": 45,
-        "global_upper_bound": 48,
-        "absolute_gap": 3
-      }
-    ]
+    "all_capacities_closed_through": {"core_rows": 16, "buffer_rows": 48},
+    "maximum_certified_size": {"core_rows": 16, "buffer_rows": 48, "capacities": [2, 3, 4]},
+    "open_cells": []
   },
   "claim_boundary": {
     "supported": "certified integer optima or valid global intervals for one deterministic public exact-second cohort under the declared ordered-event model",

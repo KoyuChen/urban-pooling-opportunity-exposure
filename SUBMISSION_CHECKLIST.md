@@ -65,8 +65,8 @@ covers the current EventFrontier paper only.
   decisions, and one unresolved decision.
 - [x] The 19.0% statistic is correctly described as disagreement among four
   feasible point methods, not error against unobserved truth.
-- [x] The scale lattice reports 14/18 exact closures and all four valid open
-  intervals.
+- [x] The scale lattice reports 18/18 exact closures and preserves provenance
+  for the four longer-budget follow-ups.
 - [x] Public NYC rows are explicitly stated to contain no membership truth.
 
 ## Chicago public evidence

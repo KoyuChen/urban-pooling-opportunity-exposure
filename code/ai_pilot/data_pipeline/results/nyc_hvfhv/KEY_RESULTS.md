@@ -27,16 +27,13 @@ membership truth.
 ## Branch-and-price scale lattice
 
 The predeclared lattice contains six sizes and three capacities, from 4 core +
-12 buffer rows through 16 core + 48 buffer rows. All nine cells through 8+24
-close exactly. Overall, 14/18 integer optima are certified. The four open cells
-retain valid intervals:
+12 buffer rows through 16 core + 48 buffer rows. All 18/18 integer optima are
+certified. The four longer-budget follow-ups close at 30, 36, 44 and 48 for
+10+30 `C=4`, 12+36 `C=4`, 16+48 `C=3` and 16+48 `C=4`, respectively.
 
-- 10+30, `C=4`: `[27,30]`;
-- 12+36, `C=4`: `[32,36]`;
-- 16+48, `C=3`: `[43,44]`;
-- 16+48, `C=4`: `[45,48]`.
-
-No timeout is converted to optimality or infeasibility.
+No timeout is converted to optimality or infeasibility; exact status is assigned
+only after objective, lower bound and upper bound agree and the branch queue
+closes.
 
 ## Supporting public diagnostics
 

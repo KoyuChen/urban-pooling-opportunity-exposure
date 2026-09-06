@@ -29,6 +29,7 @@ Negative and mixed outcomes are retained.
 
 ## Boundaries
 
-This is synthetic fixed-support evidence. It does not change the manuscript,
-NYC 14/18 scale lattice, Chicago audit, real-event truth status, noise-robust
-claims, privacy claims or operational query-cost claims.
+This is synthetic fixed-support evidence. It did not itself change the
+then-frozen NYC 14/18 scale lattice (later closed 18/18 by a separate follow-up),
+the Chicago audit, real-event truth status, noise-robust claims, privacy claims
+or operational query-cost claims.

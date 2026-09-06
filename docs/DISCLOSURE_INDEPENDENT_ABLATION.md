@@ -87,4 +87,5 @@ OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python \
   --output-dir tmp/disclosure-independent
 ```
 
-This audit does not change any paper source or the frozen NYC 14/18 result.
+This audit did not change the then-frozen NYC 14/18 result and is independent
+of the later NYC 18/18 scale follow-up.

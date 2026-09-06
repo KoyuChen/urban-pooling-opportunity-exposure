@@ -17,8 +17,8 @@
 - Four feasible deterministic point methods disagree with one another in 24
   cells. Across capacities, 494/498 point decisions occur inside
   certified-ambiguous cells.
-- The branch-and-price scale lattice certifies 14/18 integer optima and reports
-  valid incumbent/open-node intervals for all four unresolved cells.
+- The branch-and-price scale lattice certifies all 18/18 predeclared integer
+  optima on one deterministic nested-size cohort through 16+48 at `C=2,3,4`.
 - Artificial 15-minute supports, same-zone screens, common-support capacity
   comparisons, and fixed thresholds are explicitly labeled sensitivity or
   reference analyses.

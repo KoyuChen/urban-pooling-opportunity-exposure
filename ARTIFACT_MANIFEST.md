@@ -88,9 +88,11 @@ Original source pins:
   `53055ec7b2a0f2093a1c00db29dacfe3173438c28175dc157be0a8613748a60d`.
 
 Cells range from 4 core + 12 buffer rows through 16 core + 48 buffer rows at
-`C=2,3,4`. Fourteen of 18 cells close exactly. The open cells retain valid
-intervals `[27,30]`, `[32,36]`, `[43,44]`, and `[45,48]`; no timeout is promoted
-to optimality.
+`C=2,3,4`. The base run closed 14/18 cells and retained four valid intervals.
+Follow-up run `34003340919` closes those targets exactly at 30, 36, 44 and 48,
+yielding 18/18 exact closure on this deterministic lattice. Artifact IDs,
+digests and source-report hashes are pinned in
+`BRANCH_AND_PRICE_SCALE_MANIFEST.json`; no timeout is promoted to optimality.
 
 ## Chicago live release-operator audit
 
