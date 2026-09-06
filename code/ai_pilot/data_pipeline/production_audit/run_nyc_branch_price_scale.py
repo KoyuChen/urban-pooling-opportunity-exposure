@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -28,6 +29,7 @@ HERE = Path(__file__).resolve().parent
 TARGET = HERE / "live_nyc_hvfhv_branch_and_price_scale.py"
 SMALL_CHECK_PAIR = "4:12"
 CAPACITIES = (2, 3, 4)
+TOL = 1e-7
 
 
 def target_scale_pairs(core_rows: int) -> tuple[str, ...]:
@@ -83,6 +85,69 @@ def write_manifest(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def audit_target_report(
+    report_path: Path,
+    core_rows: int,
+    capacities: list[int],
+) -> dict[str, Any]:
+    """Read the canonical report and summarize only the requested target cells."""
+
+    if not report_path.exists():
+        return {
+            "source_report_present": False,
+            "source_report_sha256": None,
+            "target_cell_count": 0,
+            "target_cells": [],
+            "status": "MISSING_SOURCE_REPORT",
+        }
+
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    requested = set(int(value) for value in capacities)
+    target_cells = [
+        cell
+        for cell in report.get("cells", [])
+        if int(cell.get("core_rows", -1)) == core_rows
+        and int(cell.get("capacity", -1)) in requested
+    ]
+    observed = {int(cell["capacity"]) for cell in target_cells}
+    all_present = observed == requested and len(target_cells) == len(requested)
+    def certified(cell: dict[str, Any]) -> bool:
+        if cell.get("status") != "INTEGER_OPTIMUM_CERTIFIED":
+            return False
+        values = [
+            cell.get("integer_maximum_selected_buffers"),
+            cell.get("global_lower_bound"),
+            cell.get("global_upper_bound"),
+        ]
+        if any(value is None for value in values):
+            return False
+        objective, lower, upper = (float(value) for value in values)
+        return abs(objective - lower) <= TOL and abs(objective - upper) <= TOL
+
+    all_certified = all_present and all(certified(cell) for cell in target_cells)
+    if all_certified:
+        status = "TARGET_INTEGER_OPTIMUM_CERTIFIED"
+    elif all_present:
+        status = "TARGET_UNRESOLVED_WITH_REPORT"
+    else:
+        status = "MISSING_TARGET_CELL"
+    return {
+        "source_report_present": True,
+        "source_report_sha256": sha256_file(report_path),
+        "target_cell_count": len(target_cells),
+        "target_cells": target_cells,
+        "status": status,
+    }
+
+
 def self_test() -> None:
     namespace = argparse.Namespace(
         output_dir=Path("tmp/test"),
@@ -104,6 +169,9 @@ def self_test() -> None:
     assert cli[start:cli.index("--capacities")] == ["4:12", "8:24"]
     assert cli[cli.index("--capacities") + 1:stop] == ["2", "3", "4"]
     assert cli[cli.index("--bp-time-limit-seconds") + 1] == "30.0"
+    assert audit_target_report(Path("does-not-exist.json"), 8, [2])["status"] == (
+        "MISSING_SOURCE_REPORT"
+    )
     print("NYC branch-and-price scaling driver self-test: PASS")
 
 
@@ -145,6 +213,10 @@ def main() -> int:
         self_test()
         return 0
     validate(args)
+    # The target wrapper runs with ``cwd=HERE``. Resolve the user-facing output
+    # directory before constructing its CLI so reports and manifests land in
+    # the same artifact tree even when --output-dir is relative.
+    args.output_dir = args.output_dir.resolve()
     args.output_dir.mkdir(parents=True, exist_ok=True)
     manifest_path = args.output_dir / "driver_manifest.json"
     started = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
@@ -155,10 +227,15 @@ def main() -> int:
         result = subprocess.run(command, cwd=HERE, check=False)
         elapsed = time.monotonic() - clock
         report_path = args.output_dir / "report.json"
+        report_audit = audit_target_report(
+            report_path,
+            args.ordered_core,
+            list(args.capacities),
+        )
         status = (
-            "SUCCESS"
-            if result.returncode == 0 and report_path.exists()
-            else "FAILED_OR_UNRESOLVED"
+            report_audit["status"]
+            if result.returncode == 0
+            else "DRIVER_FAILURE"
         )
         write_manifest(
             manifest_path,
@@ -180,7 +257,7 @@ def main() -> int:
                 "target_scale_pairs": list(target_scale_pairs(args.ordered_core)),
                 "target_cli": cli,
                 "process_exit_status": result.returncode,
-                "source_report_present": report_path.exists(),
+                **report_audit,
                 "status": status,
                 "claim_boundary": (
                     "algorithmic scaling on a predeclared public-data audit cohort; "
@@ -188,7 +265,16 @@ def main() -> int:
                 ),
             },
         )
-        return int(result.returncode)
+        # Missing output is an execution failure. A valid report containing an
+        # honest unresolved gap remains a successful fail-closed run.
+        if result.returncode != 0:
+            return int(result.returncode)
+        if report_audit["status"] in {
+            "TARGET_INTEGER_OPTIMUM_CERTIFIED",
+            "TARGET_UNRESOLVED_WITH_REPORT",
+        }:
+            return 0
+        return 3
     except Exception as error:
         write_manifest(
             manifest_path,

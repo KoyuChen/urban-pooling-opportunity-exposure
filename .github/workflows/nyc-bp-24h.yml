@@ -53,6 +53,23 @@ jobs:
             --solver-time-limit 20700 \
             --bp-max-nodes 1000000 \
             --bp-max-pricing-cases 65536
+      - name: Verify source report was captured
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("tmp/core${{ matrix.core }}-capacity${{ matrix.capacity }}/driver_manifest.json")
+          manifest = json.loads(path.read_text(encoding="utf-8"))
+          assert manifest["source_report_present"] is True, manifest
+          assert manifest["target_cell_count"] == 1, manifest
+          assert manifest["status"] in {
+              "TARGET_INTEGER_OPTIMUM_CERTIFIED",
+              "TARGET_UNRESOLVED_WITH_REPORT",
+          }, manifest
+          print(manifest["status"])
+          PY
       - name: Upload fail-closed cell record
         if: always()
         uses: actions/upload-artifact@v4
