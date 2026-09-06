@@ -86,6 +86,31 @@ def padding_label(padding_minutes: float) -> str:
     return f"{padding_minutes:g} min"
 
 
+def candidate_omission_costs(
+    rows: Sequence[frontier.TripRow],
+    full_edges: Sequence[tuple[int, int]],
+    declared_base_edges: set[tuple[int, int]],
+) -> list[int]:
+    """Return generic omitted-candidate core-incidence costs.
+
+    The declared base may come from any candidate construction rule.  Every
+    full-envelope edge outside it costs one per incident core row, including
+    edges with missing geography.
+    """
+
+    full_set = set(full_edges)
+    if not declared_base_edges <= full_set:
+        raise ValueError("declared base support is not a subset of the full envelope")
+    core = {row.index for row in rows if row.role == "core"}
+    costs: list[int] = []
+    for edge in full_edges:
+        incidence = int(edge[0] in core) + int(edge[1] in core)
+        if incidence not in {1, 2}:
+            raise ValueError("full edge must be incident to at least one core row")
+        costs.append(0 if edge in declared_base_edges else incidence)
+    return costs
+
+
 def _core_release_extrema(
     rows: Sequence[frontier.TripRow],
 ) -> tuple[datetime, datetime]:
@@ -474,6 +499,29 @@ def add_boundary_padding_curve(
         )
         query_rows.extend(point_rows)
 
+    omission_base = edge_sets[ordered_values[0]]
+    omission_costs = candidate_omission_costs(rows, temporal_edges, omission_base)
+    core_count = sum(row.role == "core" for row in rows)
+    omission_values = frontier.gamma_grid(core_count)
+    omission_graph_points: list[dict[str, Any]] = []
+    omission_query_rows: list[dict[str, Any]] = []
+    for gamma in omission_values:
+        graph_point, point_rows = frontier.solve_curve_point(
+            rows=rows,
+            edges=temporal_edges,
+            temporal_edge_count=len(temporal_edges),
+            unmeasured_edges=full_unmeasured,
+            curve_type="candidate_omission",
+            parameter_label=str(gamma),
+            parameter_value=float(gamma),
+            radius_km=None,
+            gamma=gamma,
+            miss_costs=omission_costs,
+            time_limit_seconds=time_limit_seconds,
+        )
+        omission_graph_points.append(asdict(graph_point))
+        omission_query_rows.extend(point_rows)
+
     audit = boundary_padding_identity_audit(
         padding_values=ordered_values,
         node_sets=node_sets,
@@ -487,11 +535,16 @@ def add_boundary_padding_curve(
             + json.dumps(audit["mismatches"][:8], sort_keys=True)
         )
 
-    report["sensitivity_rows"] = [*report["sensitivity_rows"], *query_rows]
+    report["sensitivity_rows"] = [
+        *report["sensitivity_rows"],
+        *query_rows,
+        *omission_query_rows,
+    ]
     expected_labels = {
         "radius": [str(point["parameter_label"]) for point in report["radius_graph_points"]],
         "gamma": [str(point["parameter_label"]) for point in report["gamma_graph_points"]],
         "buffer_padding": [padding_label(value) for value in ordered_values],
+        "candidate_omission": [str(value) for value in omission_values],
     }
     monotonicity = frontier.monotonicity_audit(
         report["sensitivity_rows"],
@@ -525,10 +578,24 @@ def add_boundary_padding_curve(
     }
     report["boundary_padding_graph_points"] = graph_points
     report["boundary_padding_identity_audit"] = audit
+    report["candidate_omission_curve"] = {
+        "parameter": "allowed selected core incidence through omitted candidate edges",
+        "base_support": f"boundary padding p={ordered_values[0]:g} minutes",
+        "full_support": (
+            f"boundary-complete padding p={FULL_BOUNDARY_PADDING_MINUTES:g} minutes"
+        ),
+        "grid": omission_values,
+        "missing_geography_exempt": False,
+        "interpretation": (
+            "robust expansion from a declared candidate support to its full public "
+            "temporal envelope; not an estimated miss rate or partner-recall guarantee"
+        ),
+    }
+    report["candidate_omission_graph_points"] = omission_graph_points
     report["monotonicity_audit"] = monotonicity
     if monotonicity["status"] == "PASS":
         statement = "Every declared curve/query chain is fully certified and monotone."
-        clause = "all certified intervals widen monotonically along all three support axes"
+        clause = "all certified intervals widen monotonically along all four support axes"
     else:
         statement = (
             f"Only {monotonicity['fully_certified_monotone_chain_count']} of "
@@ -540,11 +607,17 @@ def add_boundary_padding_curve(
         )
         clause = (
             "monotonic widening is supported only for the complete certified chains "
-            "identified by the audit across padding, radius, and Gamma"
+            "identified by the audit across padding, radius, spatial Gamma, and "
+            "candidate-omission Gamma"
         )
     report["claim_boundary"]["monotonicity_statement"] = statement
+    core_design = (
+        "For one fixed outcome-blind 15-minute panel core"
+        if report["extraction"].get("predeclared_core_start_local")
+        else "For one adaptively selected 15-minute smoke-test core"
+    )
     report["claim_boundary"]["strongest_supported_statement"] = (
-        "For one adaptively selected 15-minute smoke-test core, this metadata/count-"
+        f"{core_design}, this metadata/count-"
         "stable extraction yields a count-closed, core-incident K=2 public temporal "
         "candidate universe under the declared timestamp-rounding model; the p=15 "
         "minute endpoint is boundary-complete, p>15 is endpoint-identical, and "
@@ -553,8 +626,8 @@ def add_boundary_padding_curve(
     report["claim_boundary"]["prohibited_statement"] = (
         "The true Chicago pooled runs or co-rider partners have been reconstructed; "
         "the buffer is recursively hidden-run closed; padding below 15 minutes has "
-        "partner-recall validity; the radius/Gamma axes estimate partner misses; or "
-        "this selected bin establishes a Chicago-population effect."
+        "partner-recall validity; either Gamma axis estimates partner misses; or "
+        "this bin or panel establishes a Chicago-population effect."
     )
     report.pop("report_sha256", None)
     report["report_sha256"] = frontier.sha256_json(report)
@@ -680,10 +753,26 @@ def _boundary_report_section(report: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _candidate_omission_report_section(report: Mapping[str, Any]) -> str:
+    curve = report["candidate_omission_curve"]
+    return "\n".join(
+        [
+            "## Generic candidate-omission incidence sensitivity",
+            "",
+            f"The declared base is `{curve['base_support']}` and the outer support is "
+            f"`{curve['full_support']}`. Gamma counts selected core incidence through "
+            "outer-support edges omitted from the base, including edges without released "
+            "geography. This is a robust-support budget, not an estimated miss rate or "
+            "partner-recall guarantee.",
+            "",
+        ]
+    )
+
+
 def render_report(report: Mapping[str, Any]) -> str:
     base = frontier.render_report(report)
     marker = "## Measured out-of-radius incidence sensitivity"
-    section = _boundary_report_section(report)
+    section = _boundary_report_section(report) + "\n\n" + _candidate_omission_report_section(report)
     if marker not in base:
         return base + "\n\n" + section + "\n"
     return base.replace(marker, section + "\n\n" + marker, 1)
@@ -699,6 +788,7 @@ def write_outputs(report: Mapping[str, Any], output_dir: Path) -> None:
         *report["radius_graph_points"],
         *report["boundary_padding_graph_points"],
         *report["gamma_graph_points"],
+        *report["candidate_omission_graph_points"],
     ]
     _write_union_csv(graph_rows, output_dir / "candidate_graph_curve.csv")
     plot_files = frontier.plot_curves(report["sensitivity_rows"], output_dir)
@@ -815,6 +905,9 @@ def self_test() -> None:
     zero_edges, _ = frontier.build_temporal_edges(zero_rows)
     full_edges, _ = frontier.build_temporal_edges(full_rows)
     assert set(zero_edges) <= set(full_edges)
+    costs = candidate_omission_costs(rows, full_edges, set(zero_edges))
+    assert len(costs) == len(full_edges)
+    assert all(cost in {0, 1, 2} for cost in costs)
     assert parse_padding_grid("0,5,10,15,30") == [0.0, 5.0, 10.0, 15.0, 30.0]
     print("boundary-padding self-test: PASS")
 

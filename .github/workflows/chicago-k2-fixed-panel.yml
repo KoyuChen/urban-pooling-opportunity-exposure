@@ -1,0 +1,112 @@
+name: chicago-k2-fixed-panel
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/chicago-k2-fixed-panel.yml"
+      - "code/ai_pilot/data_pipeline/production_audit/CHICAGO_K2_PANEL_PROTOCOL.json"
+      - "code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py"
+      - "code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier.py"
+      - "code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py"
+      - "code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_partitioned.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: chicago-k2-fixed-panel
+  cancel-in-progress: false
+
+jobs:
+  cohorts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        include:
+          - {index: 0, slug: cohort_000_20260105T0800}
+          - {index: 1, slug: cohort_001_20260105T1200}
+          - {index: 2, slug: cohort_002_20260105T1730}
+          - {index: 3, slug: cohort_003_20260106T0800}
+          - {index: 4, slug: cohort_004_20260106T1200}
+          - {index: 5, slug: cohort_005_20260106T1730}
+          - {index: 6, slug: cohort_006_20260107T0800}
+          - {index: 7, slug: cohort_007_20260107T1200}
+          - {index: 8, slug: cohort_008_20260107T1730}
+          - {index: 9, slug: cohort_009_20260108T0800}
+          - {index: 10, slug: cohort_010_20260108T1200}
+          - {index: 11, slug: cohort_011_20260108T1730}
+          - {index: 12, slug: cohort_012_20260109T0800}
+          - {index: 13, slug: cohort_013_20260109T1200}
+          - {index: 14, slug: cohort_014_20260109T1730}
+          - {index: 15, slug: cohort_015_20260112T0800}
+          - {index: 16, slug: cohort_016_20260112T1200}
+          - {index: 17, slug: cohort_017_20260112T1730}
+          - {index: 18, slug: cohort_018_20260113T0800}
+          - {index: 19, slug: cohort_019_20260113T1200}
+          - {index: 20, slug: cohort_020_20260113T1730}
+          - {index: 21, slug: cohort_021_20260114T0800}
+          - {index: 22, slug: cohort_022_20260114T1200}
+          - {index: 23, slug: cohort_023_20260114T1730}
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --disable-pip-version-check \
+            numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8
+      - name: Verify panel protocol and driver
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py --self-test
+      - name: Run one predeclared fixed cohort
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py \
+            --window-index ${{ matrix.index }} \
+            --output-dir tmp/chicago-k2-fixed-panel
+      - name: Upload fail-closed cohort record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.slug }}
+          path: tmp/chicago-k2-fixed-panel/${{ matrix.slug }}
+          if-no-files-found: error
+          retention-days: 90
+
+  aggregate:
+    needs: cohorts
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: cohort_*
+          path: tmp/chicago-k2-fixed-panel
+      - name: Build fail-closed panel report
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py \
+            --aggregate-only \
+            --output-dir tmp/chicago-k2-fixed-panel
+      - name: Upload panel summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-fixed-panel-summary
+          path: |
+            tmp/chicago-k2-fixed-panel/panel_report.json
+            tmp/chicago-k2-fixed-panel/panel_windows.csv
+            tmp/chicago-k2-fixed-panel/PANEL_REPORT.md
+          if-no-files-found: error
+          retention-days: 90

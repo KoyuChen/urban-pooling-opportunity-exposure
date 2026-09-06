@@ -1,0 +1,118 @@
+{
+  "report_version": "atr-diamor-multiquery-report/v1",
+  "status": "PASS",
+  "training_day": "DIAMOR-1",
+  "evaluation_day": "DIAMOR-2",
+  "claim_scope": "oracle-q, label-assisted cohort audit; learned-baseline headline is DIAMOR-2 only",
+  "training_trajectory_sha256": "7cd6fb682a76b4fe28d1ef2b926806f52f9d809f9ee61199d02cb9341d6dde8d",
+  "training_groups_sha256": "82610a20baa4e8259dceb81c9413084cbf4a5098699d53a1af9cf2b037c80f28",
+  "evaluation_trajectory_sha256": "2f1ce0813aaea5e29ffea03800219edb80b451680b3dbb9e9a546f2c2fb1ff93",
+  "evaluation_groups_sha256": "1decd011dfeb905cd043fcbdbdfe9e2aad3a723c2055a3758da92c42abd12a62",
+  "base_protocol_sha256": "322b866b0bd8df7c40318b4226140f26bc0262a91e9e6946bcf24fe981e67c9f",
+  "multiquery_protocol_sha256": "d09e644bcf571dc7b0841810a3e1306c6a93f57e7b4d002158e2a6bbe36fd981",
+  "benchmark_sha256": "27efcb62659988e76f3f836651c6db852f74ac7e7767ad367f71c666479a896c",
+  "model": {
+    "mean": [
+      2.7137081767353473,
+      23.0079371107744,
+      0.31796683854751134
+    ],
+    "scale": [
+      1.4318642272595263,
+      22.731035085570767,
+      0.2980708492034084
+    ],
+    "coefficients": [
+      -4.646936138289458,
+      0.010948432251123009,
+      -1.4351894048053824
+    ],
+    "intercept": -4.236690008151975,
+    "training_edges": 663,
+    "training_positives": 142
+  },
+  "evaluation_cell_count": 410,
+  "summary": {
+    "distance_m": {
+      "exact_cells": 395,
+      "representable_exact_cells": 381,
+      "truth_covered_representable_cells": 381,
+      "ambiguous_threshold_decisions": 691,
+      "threshold_decisions": 1185,
+      "baselines": {
+        "closest_distance": {
+          "evaluated_cells": 381,
+          "threshold_errors": 32,
+          "errors_flagged": 32,
+          "mean_relation_recall": 0.8961504811898513
+        },
+        "motion_affinity": {
+          "evaluated_cells": 381,
+          "threshold_errors": 111,
+          "errors_flagged": 111,
+          "mean_relation_recall": 0.8195975503062117
+        },
+        "learned_diamor1": {
+          "evaluated_cells": 381,
+          "threshold_errors": 44,
+          "errors_flagged": 44,
+          "mean_relation_recall": 0.892432195975503
+        }
+      }
+    },
+    "speed_gap_mps": {
+      "exact_cells": 395,
+      "representable_exact_cells": 381,
+      "truth_covered_representable_cells": 381,
+      "ambiguous_threshold_decisions": 766,
+      "threshold_decisions": 1185,
+      "baselines": {
+        "closest_distance": {
+          "evaluated_cells": 381,
+          "threshold_errors": 44,
+          "errors_flagged": 44,
+          "mean_relation_recall": 0.8961504811898513
+        },
+        "motion_affinity": {
+          "evaluated_cells": 381,
+          "threshold_errors": 128,
+          "errors_flagged": 128,
+          "mean_relation_recall": 0.8195975503062117
+        },
+        "learned_diamor1": {
+          "evaluated_cells": 381,
+          "threshold_errors": 70,
+          "errors_flagged": 70,
+          "mean_relation_recall": 0.892432195975503
+        }
+      }
+    },
+    "heading_gap_deg": {
+      "exact_cells": 395,
+      "representable_exact_cells": 381,
+      "truth_covered_representable_cells": 381,
+      "ambiguous_threshold_decisions": 533,
+      "threshold_decisions": 1185,
+      "baselines": {
+        "closest_distance": {
+          "evaluated_cells": 381,
+          "threshold_errors": 38,
+          "errors_flagged": 38,
+          "mean_relation_recall": 0.8961504811898513
+        },
+        "motion_affinity": {
+          "evaluated_cells": 381,
+          "threshold_errors": 39,
+          "errors_flagged": 39,
+          "mean_relation_recall": 0.8195975503062117
+        },
+        "learned_diamor1": {
+          "evaluated_cells": 381,
+          "threshold_errors": 35,
+          "errors_flagged": 35,
+          "mean_relation_recall": 0.892432195975503
+        }
+      }
+    }
+  }
+}

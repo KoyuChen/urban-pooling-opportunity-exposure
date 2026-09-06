@@ -1,0 +1,45 @@
+{
+  "protocol_version": "atr-diamor-dyad-truth/v4-adversarial-replay",
+  "dataset": "ATR DIAMOR preprocessed trajectories and manual group annotations",
+  "dataset_url_pattern": "https://dil.atr.jp/ISL/sets/groups/files/DIAMOR-{day}.zip",
+  "license": "research use only; cite ATR references",
+  "selection": {
+    "snapshot_grid_seconds": {
+      "start": 600,
+      "stop_inclusive": 16800,
+      "step": 120
+    },
+    "snapshot_half_width_seconds": 0.05,
+    "minimum_visible_people": 4,
+    "minimum_true_dyads": 1
+  },
+  "scope": {
+    "included_true_groups": [2],
+    "exclude_members_of_larger_groups": true,
+    "absent_from_group_file_treated_as_singleton_only_after_quarantine": true,
+    "partial_or_nonpositive_group_policy": "quarantine every recoverable positive member id",
+    "negative_mobility_aid_policy": "parse the documented -2/-3 type prefix and quarantine recoverable positive group partners",
+    "multiple_id_annotation_policy": "parse recoverable ids, quarantine the subject aliases and group partners",
+    "one_sided_or_conflicting_membership_policy": "quarantine the transitive closure of every affected annotated group"
+  },
+  "candidate_support": {
+    "distance_radii_m": [1.0, 1.5, 2.0, 3.0, 5.0],
+    "maximum_motion_angle_degrees": 90.0,
+    "uses_group_labels": false
+  },
+  "query": {
+    "name": "mean_within_dyad_distance_m",
+    "cardinality_conditioning": "true dyad count q is disclosed; memberships are hidden",
+    "decision_thresholds_m": [0.8, 1.2, 1.6]
+  },
+  "certificate": {
+    "solver_time_limit_seconds": 60.0,
+    "solver_relative_gap": 0.0,
+    "require_solver_optimal_status": true,
+    "require_witness_replay": true,
+    "require_raw_integrality_cardinality_degree_checks": true,
+    "require_solver_objective_and_dual_replay": true,
+    "independent_subset_oracle_max_vertices": 12,
+    "publish_raw_pedestrian_ids": false
+  }
+}

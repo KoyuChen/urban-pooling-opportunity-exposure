@@ -1,0 +1,148 @@
+{
+  "report_version": "atr-diamor-dyad-truth-summary/v4",
+  "days": [
+    {
+      "eligible_snapshot_count": 88,
+      "cell_count": 440,
+      "exact_cell_count": 411,
+      "computationally_closed_cell_count": 440,
+      "truth_representable_cell_count": 388,
+      "representable_truth_covered_cell_count": 388,
+      "representable_point_rule_threshold_errors": 36,
+      "representable_errors_flagged_ambiguous": 36,
+      "dataset_day": "DIAMOR-1",
+      "audit_role": "pilot",
+      "report_sha256": "acb6fe744b1a4eb9981bc39990db8fdbe789e16cc09bc5c7ff41916ad6263d48",
+      "trajectory_sha256": "7cd6fb682a76b4fe28d1ef2b926806f52f9d809f9ee61199d02cb9341d6dde8d",
+      "groups_sha256": "82610a20baa4e8259dceb81c9413084cbf4a5098699d53a1af9cf2b037c80f28",
+      "protocol_sha256": "322b866b0bd8df7c40318b4226140f26bc0262a91e9e6946bcf24fe981e67c9f",
+      "benchmark_sha256": "5ca43360a7a2b1500362986131de22147a69737d18ee444e2079b40f0c026967",
+      "runtime": {
+        "python": "3.12.13",
+        "platform": "Linux-6.18.35-x86_64-with-glibc2.39",
+        "numpy": "2.3.5",
+        "scipy": "1.17.0",
+        "solver": "scipy.optimize.milp (HiGHS)"
+      },
+      "computational_status": "PASS",
+      "semantic_status": "PASS",
+      "witness_replay_status": "PASS",
+      "independent_tiny_oracle_status": "PASS",
+      "replayed_exact_cell_count": 411,
+      "independent_tiny_checked_cell_count": 190,
+      "independent_tiny_passed_cell_count": 190,
+      "excluded_or_quarantined_member_count": 407,
+      "group_parse_audit": {
+        "total_rows": 1692,
+        "standard_positive_rows": 1675,
+        "malformed_rows": 0,
+        "partial_or_nonpositive_group_rows": 17,
+        "multiple_id_rows": 2,
+        "nonperson_mobility_aid_rows": 6,
+        "conflicting_membership_ids": 3,
+        "conflicting_group_member_ids": 15,
+        "larger_group_member_ids": 382,
+        "quarantined_uncertain_ids": 407
+      },
+      "label_usage": {
+        "candidate_edge_scoring": false,
+        "cohort_exclusion": true,
+        "snapshot_eligibility": true,
+        "cardinality_q": true,
+        "final_truth_audit": true
+      }
+    },
+    {
+      "eligible_snapshot_count": 82,
+      "cell_count": 410,
+      "exact_cell_count": 395,
+      "computationally_closed_cell_count": 410,
+      "truth_representable_cell_count": 381,
+      "representable_truth_covered_cell_count": 381,
+      "representable_point_rule_threshold_errors": 32,
+      "representable_errors_flagged_ambiguous": 32,
+      "dataset_day": "DIAMOR-2",
+      "audit_role": "predeclared_followup",
+      "report_sha256": "2c7cc8d519a3e76a681d96c7313079c97b705be2cf6c8c79384caae9c734bbeb",
+      "trajectory_sha256": "2f1ce0813aaea5e29ffea03800219edb80b451680b3dbb9e9a546f2c2fb1ff93",
+      "groups_sha256": "1decd011dfeb905cd043fcbdbdfe9e2aad3a723c2055a3758da92c42abd12a62",
+      "protocol_sha256": "322b866b0bd8df7c40318b4226140f26bc0262a91e9e6946bcf24fe981e67c9f",
+      "benchmark_sha256": "5ca43360a7a2b1500362986131de22147a69737d18ee444e2079b40f0c026967",
+      "runtime": {
+        "python": "3.12.13",
+        "platform": "Linux-6.18.35-x86_64-with-glibc2.39",
+        "numpy": "2.3.5",
+        "scipy": "1.17.0",
+        "solver": "scipy.optimize.milp (HiGHS)"
+      },
+      "computational_status": "PASS",
+      "semantic_status": "PASS",
+      "witness_replay_status": "PASS",
+      "independent_tiny_oracle_status": "PASS",
+      "replayed_exact_cell_count": 395,
+      "independent_tiny_checked_cell_count": 5,
+      "independent_tiny_passed_cell_count": 5,
+      "excluded_or_quarantined_member_count": 430,
+      "group_parse_audit": {
+        "total_rows": 1698,
+        "standard_positive_rows": 1659,
+        "malformed_rows": 0,
+        "partial_or_nonpositive_group_rows": 39,
+        "multiple_id_rows": 1,
+        "nonperson_mobility_aid_rows": 5,
+        "conflicting_membership_ids": 4,
+        "conflicting_group_member_ids": 10,
+        "larger_group_member_ids": 376,
+        "quarantined_uncertain_ids": 430
+      },
+      "label_usage": {
+        "candidate_edge_scoring": false,
+        "cohort_exclusion": true,
+        "snapshot_eligibility": true,
+        "cardinality_q": true,
+        "final_truth_audit": true
+      }
+    }
+  ],
+  "combined": {
+    "eligible_snapshots": 170,
+    "cells": 850,
+    "numerical_optimal_replayed_cells": 806,
+    "infeasible_cells": 44,
+    "truth_representable_cells": 769,
+    "representable_truth_covered_cells": 769,
+    "representable_point_rule_threshold_errors": 68,
+    "representable_errors_flagged_ambiguous": 68,
+    "misspecified_but_solver_feasible_cells": 37,
+    "misspecified_support_unflagged_wrong_decisions": 16,
+    "misspecified_support_unflagged_wrong_snapshot_count": 8,
+    "independent_tiny_checked_cells": 195,
+    "truth_representable_snapshots_by_radius_m": {
+      "1.0": {
+        "numerator": 124,
+        "denominator": 170
+      },
+      "1.5": {
+        "numerator": 157,
+        "denominator": 170
+      },
+      "2.0": {
+        "numerator": 159,
+        "denominator": 170
+      },
+      "3.0": {
+        "numerator": 164,
+        "denominator": 170
+      },
+      "5.0": {
+        "numerator": 165,
+        "denominator": 170
+      }
+    },
+    "widest_radius_valid_decisions": {
+      "radius_m": 5.0,
+      "ambiguous": 410,
+      "total": 495
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "protocol_version": "atr-diamor-alternating-structure/v1",
+  "support_summary": "results/atr_diamor_support_calibration/SUMMARY.json",
+  "density_cap_summary": "results/atr_diamor_density_cap/SUMMARY.json",
+  "audit_day": "DIAMOR-2",
+  "graphs": ["frozen fixed radius-angle support", "frozen selected local-degree cap"],
+  "diagnostic": "decompose the symmetric difference of replayed lower- and upper-endpoint matchings into alternating path and cycle components",
+  "claim_boundary": "descriptive post-hoc witness audit on previously touched DIAMOR-2; optimizer tie-breaking may select one of multiple endpoint witnesses"
+}

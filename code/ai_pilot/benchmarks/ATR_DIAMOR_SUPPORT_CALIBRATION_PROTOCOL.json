@@ -1,0 +1,12 @@
+{
+  "protocol_version": "atr-diamor-support-calibration/v1",
+  "base_protocol": "ATR_DIAMOR_DYAD_PROTOCOL.json",
+  "pilot_day": "DIAMOR-1",
+  "followup_day": "DIAMOR-2",
+  "distance_radii_m": [0.75, 1.0, 1.25, 1.5, 2.0, 3.0, 5.0, 7.5],
+  "maximum_motion_angle_degrees": [30.0, 45.0, 60.0, 90.0, 120.0, 180.0],
+  "pilot_relational_coverage_target": 0.95,
+  "selection_rule": "among rules meeting the pilot target, minimize mean candidate edges; break ties by radius then angle",
+  "frontier_query": "oracle-q mean within-dyad distance with base-protocol thresholds",
+  "claim_boundary": "DIAMOR-1 calibration and previously touched DIAMOR-2 follow-up; labels determine eligibility, exclusions, pilot coverage, oracle q, and evaluation"
+}

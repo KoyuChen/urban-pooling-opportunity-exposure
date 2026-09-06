@@ -1,0 +1,20 @@
+{
+  "protocol_version": "atr-diamor-multiquery/v1",
+  "base_protocol": "ATR_DIAMOR_DYAD_PROTOCOL.json",
+  "training_day": "DIAMOR-1",
+  "evaluation_day": "DIAMOR-2",
+  "training_candidate_radius_m": 5.0,
+  "queries": {
+    "distance_m": [0.8, 1.2, 1.6],
+    "speed_gap_mps": [0.1, 0.2, 0.3],
+    "heading_gap_deg": [15.0, 30.0, 45.0]
+  },
+  "point_baselines": {
+    "closest_distance": "minimum-cardinality-q distance matching",
+    "motion_affinity": "minimum-cardinality-q sum of normalized distance, heading gap, and speed gap",
+    "learned_diamor1": "class-balanced L2-logistic edge scorer trained only on DIAMOR-1 and frozen for DIAMOR-2"
+  },
+  "logistic_l2": 0.001,
+  "speed_gap_scale_mps": 0.5,
+  "claim_boundary": "oracle-q, label-assisted cohort audit; learned-baseline headline is DIAMOR-2 only"
+}

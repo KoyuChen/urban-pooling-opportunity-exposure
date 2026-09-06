@@ -1,0 +1,12 @@
+{
+  "protocol_version": "atr-diamor-unknown-q/v1",
+  "base_protocol": "ATR_DIAMOR_DYAD_PROTOCOL.json",
+  "scope": "Same frozen snapshots, exclusions, candidate radii, and distance query as ATR v4",
+  "cardinality_regimes": {
+    "oracle_q": "the annotated visible-dyad count",
+    "q_pm_1": "all positive cardinalities within one of the annotated count",
+    "all_positive_q": "all cardinalities from one through floor(visible_people/2)"
+  },
+  "zero_dyad_policy": "excluded because mean within-dyad distance is undefined",
+  "claim_boundary": "all_positive_q removes labels from endpoint cardinality but labels still determine cohort eligibility, exclusions, and truth evaluation"
+}

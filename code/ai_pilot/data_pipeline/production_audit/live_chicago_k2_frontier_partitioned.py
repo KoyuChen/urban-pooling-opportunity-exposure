@@ -28,7 +28,7 @@ import json
 import math
 import sys
 from collections import Counter, defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -388,8 +388,17 @@ def _configure_request_budget(timeout_seconds: int, attempts: int) -> None:
 
 
 def _validate_args(args: argparse.Namespace) -> None:
-    scan_start = frontier.parse_required_datetime(args.scan_start)
-    scan_end = frontier.parse_required_datetime(args.scan_end)
+    fixed_core_start = (
+        frontier.parse_required_datetime(args.core_start)
+        if getattr(args, "core_start", None)
+        else None
+    )
+    scan_start = fixed_core_start or frontier.parse_required_datetime(args.scan_start)
+    scan_end = (
+        fixed_core_start + timedelta(minutes=frontier.RELEASE_BIN_MINUTES)
+        if fixed_core_start is not None
+        else frontier.parse_required_datetime(args.scan_end)
+    )
     if not scan_start < scan_end:
         raise SystemExit("--scan-start must precede --scan-end")
     if args.min_core_rows < 2 or args.max_core_rows < args.min_core_rows:

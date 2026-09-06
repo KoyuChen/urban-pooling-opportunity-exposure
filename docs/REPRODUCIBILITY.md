@@ -18,6 +18,8 @@ python \
   --self-test
 python -m unittest discover \
   -s code/ai_pilot/data_pipeline/production_audit/tests -v
+python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py \
+  --self-test
 python code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
   --self-test
 ```
@@ -81,3 +83,36 @@ Live jobs are also available through the manually dispatched
 `chicago-live-audits` workflow. All outputs belong in ignored directories such
 as `tmp/`; do not commit raw rows, identifiers, event columns, reconstructed
 partners, or latent timestamps.
+
+## ATR DIAMOR annotated-relation audits
+
+Obtain DIAMOR-1 and DIAMOR-2 directly from the ATR repository under its
+research-use terms. Raw trajectories, labels, row identifiers, and detailed
+witnesses must remain outside the repository. The aggregate cross-day audits
+can be reproduced with:
+
+```bash
+python code/ai_pilot/benchmarks/atr_diamor_support_calibration.py \
+  --pilot-trajectory /path/to/person_DIAMOR-1_all.csv \
+  --pilot-groups /path/to/groups_DIAMOR-1.dat \
+  --followup-trajectory /path/to/person_DIAMOR-2_all.csv \
+  --followup-groups /path/to/groups_DIAMOR-2.dat \
+  --output /ignored/path/support-calibration
+
+python code/ai_pilot/benchmarks/atr_diamor_density_cap.py \
+  --pilot-trajectory /path/to/person_DIAMOR-1_all.csv \
+  --pilot-groups /path/to/groups_DIAMOR-1.dat \
+  --followup-trajectory /path/to/person_DIAMOR-2_all.csv \
+  --followup-groups /path/to/groups_DIAMOR-2.dat \
+  --output /ignored/path/density-cap
+
+python code/ai_pilot/benchmarks/atr_diamor_alternating_structure.py \
+  --trajectory /path/to/person_DIAMOR-2_all.csv \
+  --groups /path/to/groups_DIAMOR-2.dat \
+  --output /ignored/path/alternating-structure
+```
+
+The committed `SUMMARY.json` files intentionally omit snapshot-level cells.
+Their tests verify code, protocol, and upstream-summary hashes as well as the
+frozen aggregate counts. Detailed local `report.json` files must not be
+committed because they retain snapshot offsets and endpoint witnesses.

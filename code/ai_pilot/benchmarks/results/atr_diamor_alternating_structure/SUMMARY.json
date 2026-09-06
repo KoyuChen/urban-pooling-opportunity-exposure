@@ -1,0 +1,56 @@
+{
+  "report_version": "atr-diamor-alternating-structure-report/v1",
+  "status": "PASS",
+  "claim_scope": "descriptive post-hoc witness audit on previously touched DIAMOR-2; optimizer tie-breaking may select one of multiple endpoint witnesses",
+  "trajectory_sha256": "2f1ce0813aaea5e29ffea03800219edb80b451680b3dbb9e9a546f2c2fb1ff93",
+  "groups_sha256": "1decd011dfeb905cd043fcbdbdfe9e2aad3a723c2055a3758da92c42abd12a62",
+  "base_protocol_sha256": "322b866b0bd8df7c40318b4226140f26bc0262a91e9e6946bcf24fe981e67c9f",
+  "diagnostic_protocol_sha256": "f16fd85ac77d17e4fb7a886331fb30e5dc1ec18f5cc7dc23f061fcf098cc9116",
+  "support_summary_sha256": "678136e59073d2729145adfc0fd7c3f5bffceb1ff98ca4cfefe620f0b9141261",
+  "density_summary_sha256": "e2f119d6023c34db60f7e2b39097fb5065353736e9c6a8a7ebd68d1855b0b9f7",
+  "benchmark_sha256": "64e25fd115f5b6a3d8b0f37fced8a9e88667e54cb44b730f065f96d561a3ef48",
+  "eligible_snapshots": 82,
+  "fixed": {
+    "exact_cells": 82,
+    "mean_frontier_width": 1.8973360727332231,
+    "positive_width_cells": 82,
+    "ambiguous_snapshot_count": 82,
+    "distinct_endpoint_witness_cells": 82,
+    "multi_component_cells": 73,
+    "path_component_count": 243,
+    "cycle_component_count": 3,
+    "component_edge_count_distribution": {
+      "1": 199,
+      "2": 39,
+      "3": 3,
+      "4": 5
+    },
+    "maximum_component_edges": 4
+  },
+  "capped": {
+    "exact_cells": 82,
+    "mean_frontier_width": 1.852018756897861,
+    "positive_width_cells": 82,
+    "ambiguous_snapshot_count": 82,
+    "distinct_endpoint_witness_cells": 82,
+    "multi_component_cells": 72,
+    "path_component_count": 244,
+    "cycle_component_count": 3,
+    "component_edge_count_distribution": {
+      "1": 201,
+      "2": 38,
+      "3": 5,
+      "4": 3
+    },
+    "maximum_component_edges": 4
+  },
+  "comparison": {
+    "comparable_exact_cells": 82,
+    "identical_lower_endpoint_cells": 82,
+    "identical_upper_endpoint_cells": 61,
+    "identical_ambiguity_count_cells": 82,
+    "contracted_upper_endpoint_cells": 21,
+    "mean_upper_contraction_among_changed": 0.17695332849998624,
+    "maximum_upper_contraction": 0.5770553324227308
+  }
+}

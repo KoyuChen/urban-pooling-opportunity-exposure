@@ -1,0 +1,182 @@
+{
+  "report_version": "atr-diamor-density-cap-report/v1",
+  "status": "PASS",
+  "claim_scope": "post-hoc mechanism audit using DIAMOR-1 selection and previously touched DIAMOR-2 follow-up; labels determine eligibility, exclusions, pilot coverage constraint, oracle q, and evaluation",
+  "pilot_trajectory_sha256": "7cd6fb682a76b4fe28d1ef2b926806f52f9d809f9ee61199d02cb9341d6dde8d",
+  "pilot_groups_sha256": "82610a20baa4e8259dceb81c9413084cbf4a5098699d53a1af9cf2b037c80f28",
+  "followup_trajectory_sha256": "2f1ce0813aaea5e29ffea03800219edb80b451680b3dbb9e9a546f2c2fb1ff93",
+  "followup_groups_sha256": "1decd011dfeb905cd043fcbdbdfe9e2aad3a723c2055a3758da92c42abd12a62",
+  "base_protocol_sha256": "322b866b0bd8df7c40318b4226140f26bc0262a91e9e6946bcf24fe981e67c9f",
+  "density_protocol_sha256": "1ba755cc72f8969409883ce27c5065c9e8a5d80aedcc1a90127f7af71ebeb624",
+  "support_summary_sha256": "678136e59073d2729145adfc0fd7c3f5bffceb1ff98ca4cfefe620f0b9141261",
+  "benchmark_sha256": "cdec104e60cc12018adc23dafcdfc95f80311d8a510f2e25cb33081ace55844c",
+  "fixed_rule": {
+    "radius_m": 3.0,
+    "maximum_motion_angle_degrees": 120.0
+  },
+  "pilot_fixed_covered_snapshots": 85,
+  "selected_cap": {
+    "degree_cap": 2,
+    "eligible_snapshots": 88,
+    "covered_snapshots": 85,
+    "relational_coverage": 0.9659090909090909,
+    "mean_candidate_edges": 4.329545454545454,
+    "total_candidate_edges": 381
+  },
+  "followup_selected_cap": {
+    "degree_cap": 2,
+    "eligible_snapshots": 82,
+    "covered_snapshots": 81,
+    "relational_coverage": 0.9878048780487805,
+    "mean_candidate_edges": 11.195121951219512,
+    "total_candidate_edges": 918
+  },
+  "followup_frontier": {
+    "computationally_closed_cells": 82,
+    "exact_cells": 82,
+    "infeasible_cells": 0,
+    "threshold_decisions": 246,
+    "ambiguous_threshold_decisions": 217,
+    "certified_threshold_decisions": 29,
+    "false_certificates": 0,
+    "false_certificate_representable_cells": 0
+  },
+  "comparison_to_fixed": {
+    "mean_edge_ratio_to_fixed": 0.9198396793587175,
+    "candidate_edges_saved": 80,
+    "coverage_change_snapshots": 0,
+    "certified_decision_change": 0
+  },
+  "pilot_grid": [
+    {
+      "degree_cap": 1,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 84,
+      "relational_coverage": 0.9545454545454546,
+      "mean_candidate_edges": 3.5568181818181817,
+      "total_candidate_edges": 313
+    },
+    {
+      "degree_cap": 2,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.329545454545454,
+      "total_candidate_edges": 381
+    },
+    {
+      "degree_cap": 3,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.488636363636363,
+      "total_candidate_edges": 395
+    },
+    {
+      "degree_cap": 4,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.5227272727272725,
+      "total_candidate_edges": 398
+    },
+    {
+      "degree_cap": 5,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.5227272727272725,
+      "total_candidate_edges": 398
+    },
+    {
+      "degree_cap": 6,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.5227272727272725,
+      "total_candidate_edges": 398
+    },
+    {
+      "degree_cap": 7,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.5227272727272725,
+      "total_candidate_edges": 398
+    },
+    {
+      "degree_cap": 8,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.5227272727272725,
+      "total_candidate_edges": 398
+    }
+  ],
+  "followup_grid": [
+    {
+      "degree_cap": 1,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 8.378048780487806,
+      "total_candidate_edges": 687
+    },
+    {
+      "degree_cap": 2,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 11.195121951219512,
+      "total_candidate_edges": 918
+    },
+    {
+      "degree_cap": 3,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 11.951219512195122,
+      "total_candidate_edges": 980
+    },
+    {
+      "degree_cap": 4,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 12.158536585365853,
+      "total_candidate_edges": 997
+    },
+    {
+      "degree_cap": 5,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 12.170731707317072,
+      "total_candidate_edges": 998
+    },
+    {
+      "degree_cap": 6,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 12.170731707317072,
+      "total_candidate_edges": 998
+    },
+    {
+      "degree_cap": 7,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 12.170731707317072,
+      "total_candidate_edges": 998
+    },
+    {
+      "degree_cap": 8,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 12.170731707317072,
+      "total_candidate_edges": 998
+    }
+  ]
+}

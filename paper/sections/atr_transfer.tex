@@ -1,0 +1,161 @@
+\section{Annotated-Relation Stress Test: Pedestrian Groups}
+\label{sec:atr-transfer}
+
+\paragraph{Role in the evidence chain.}
+The Chicago and NYC releases contain real rows but omit the operational
+relation, so they cannot measure whether a feasible-world frontier contains the
+realized world. Controlled data provide exact truth but may encode the method's
+own assumptions. ATR occupies the narrow middle layer: we apply EventFrontier
+to DIAMOR
+pedestrian data, which provide timestamped positions and motion attributes from
+public corridors together with manually coded social groups
+\citep{atrgroupdata2015,zanlungo2014potential}.  The tracking rows are produced
+by range-sensor systems, whereas group membership is coded separately.  This
+creates an annotated relation that can be masked from candidate edge scoring
+and retained for a controlled audit. The purpose is not to claim general
+external validity. It is to stress-test the candidate-support gate on real row
+relations and measure what fails when that gate omits annotated edges.
+
+\paragraph{Release operator and scope.}
+We retain timestamp, planar position, speed, and direction of motion.  At each
+fixed snapshot, two visible rows are candidate partners when their separation
+is at most $r\in\{1,1.5,2,3,5\}$ meters and their directions differ by at most
+$90$ degrees.  The true number $q$ of visible dyads is disclosed, but their
+memberships are hidden.  Labels also determine eligibility and which annotated
+larger or uncertain groups are excluded.  Candidate edge scoring itself is
+label-free, but the full experiment is therefore an oracle-assisted,
+$q$-conditioned masked-label audit.  We conservatively quarantine recoverable
+positive IDs in partial, nonpositive, multiple-ID, one-sided, or conflicting
+annotations rather than silently treat them as singletons.  Each remaining
+feasible world is a cardinality-$q$ matching, and the query is its mean
+within-dyad separation.  The deterministic point comparator selects a
+minimum-separation matching.
+
+The v4 evidence protocol fixes 136 snapshots on a two-minute grid for each day.
+DIAMOR-1 is the pilot day.  DIAMOR-2 applies the same grid and candidate rules as
+a predeclared follow-up; because it had already been touched by an earlier
+sparse audit, we do not describe it as a pristine holdout.
+
+\begin{table}[t]
+\caption{ATR dyad audit. Coverage is evaluated only where every annotated dyad
+edge is present in candidate support. ``Flagged'' counts point-decision errors
+occurring at thresholds crossed by the frontier.}
+\label{tab:atr-truth}
+\centering
+\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Day & Eligible snapshots & Cells & Truth coverage & Errors flagged \\
+\midrule
+DIAMOR-1 (pilot) & 88 & 440 & 388/388 & 36/36 \\
+DIAMOR-2 (follow-up) & 82 & 410 & 381/381 & 32/32 \\
+\midrule
+Total & 170 & 850 & 769/769 & 68/68 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Truth coverage and candidate completeness.}
+All 850 radius--snapshot cells terminate with either replayed numerical MILP
+optima (806 cells) or candidate-graph infeasibility (44 cells).  All 195 cells
+within a 12-vertex limit also agree with an independent subset-recursion oracle.
+Replay checks the raw solution's integrality, degree, cardinality, objective,
+and primal--dual residuals before an endpoint is published.
+Conditional on the annotated matching being representable, the frontier covers
+the realized mean separation in all $769/769$ cells.  The closest-pair point
+rule makes 68 threshold errors in those cells; every error occurs where the
+frontier crosses the threshold. These conditional coverage and flagging counts
+are positive controls implied by optimizing over a feasible set that contains
+the annotated world. They check implementation, but are not an empirical
+success rate or independent evidence of transfer.
+
+Candidate completeness is not automatic.  Across both days, a 1-meter radius
+contains the annotated world in only 124 of 170 eligible snapshots; this rises
+to 157 at 1.5 meters and 165 at 5 meters.  The gain comes at the cost of wider
+identified sets: on the predeclared follow-up day, mean width rises from
+$0.043$ meters at $r=1$ to $3.861$ meters at $r=5$.  At $r=5$, 410 of 495
+valid-support threshold decisions (82.8\%) remain ambiguous.  Scalar aggregate
+coverage under a misspecified graph is not counted as relational coverage: the
+true value can fall inside an interval by coincidence even when the annotated
+matching itself is absent.  Under misspecified support, 16 wrong point
+decisions are not flagged, across eight snapshots.
+
+\paragraph{Removing oracle cardinality.}
+We next union the fixed-$q$ frontiers over either $q\pm1$ or every positive
+cardinality through half the visible population. The latter removes labels
+from endpoint cardinality, although labels still determine eligibility,
+exclusions, and evaluation. Relative to oracle $q$, the all-positive-$q$
+regime makes 826 rather than 806 cells feasible because some candidate graphs
+admit a smaller matching than the annotated count. This is apparent
+feasibility, not restored relational coverage. Mean width increases from
+$1.176$ to $1.297$ meters, and certified threshold decisions fall from
+$1286/2418$ (53.2\%) to $1136/2478$ (45.8\%). All 20 false certificates occur
+where candidate support omits the annotated world; none occurs under
+representable truth.
+
+\paragraph{Cross-day, multi-query point reconstruction.}
+To avoid aligning every point rule with its evaluated query, we train a
+class-balanced logistic dyad score on DIAMOR-1 using only distance, heading
+difference, and speed difference, freeze it, and construct cardinality-$q$
+matchings on DIAMOR-2. The same matching is evaluated for mean distance, mean
+speed gap, and mean heading gap. Across the 381 exact cells with representable
+truth, the learned and closest-distance rules have similar mean dyad recall
+(89.24\% versus 89.62\%) but different downstream errors. The learned rule
+makes respectively 44, 70, and 35 threshold errors for the three queries,
+compared with 32, 44, and 38 for closest-distance; every error is
+frontier-ambiguous. Thus comparable edge recovery does not imply comparable
+decision reliability. The linear scorer is a transparent cross-day baseline,
+not a state-of-the-art trajectory model.
+
+\paragraph{Calibrating candidate support across days.}
+Finally, on DIAMOR-1 we search a fixed $8\times6$ radius--motion-angle grid,
+require 95\% snapshot-level relational coverage, and select the qualifying
+rule with the fewest mean candidate edges. The selected 3-meter, 120-degree
+rule contains the annotated world in 85/88 pilot snapshots with 4.52 candidate
+edges per snapshot. Frozen on DIAMOR-2, it covers 81/82 snapshots, but candidate
+density rises to 12.17 edges per snapshot and only 29/246 threshold decisions
+are certified. Thus coverage transfers in this comparison while sparsity and
+decision informativeness do not. This is not a universal support rule: the
+density shift motivates reporting both relational coverage and downstream
+certification yield.
+
+A post-hoc mechanism audit then caps each node at its nearest incident edges
+inside that frozen support. DIAMOR-1 selects $k=2$ as the sparsest cap preserving
+the fixed rule's 85/88 pilot coverage. On DIAMOR-2 it preserves 81/82 coverage
+and removes 80/998 candidate edges (8.0\%), yet certifies exactly the same
+29/246 decisions. Simple degree control therefore reduces graph bulk without
+restoring informativeness; structural alternative matchings survive the cap.
+An endpoint-witness decomposition makes this failure more concrete. All 82
+fixed graphs have positive width, and 73 returned lower--upper witness pairs
+differ through multiple disconnected alternating components. These components
+are small---at most four edges---and overwhelmingly paths. The cap leaves every
+lower endpoint unchanged and contracts 21 upper endpoints (0.177 meters on
+average among changed cells), but crosses no evaluated threshold. Graph
+compression and decision identification therefore separate in this audit.
+This is the empirical pattern allowed by
+Proposition~\ref{prop:k2thresholdcontraction}: a nested candidate graph can
+strictly contract continuous endpoints while leaving every evaluated threshold
+inside the contracted frontier. The small-component counts illustrate
+Theorem~\ref{thm:k2alternating}; they are not required for its conclusion.
+
+\paragraph{What ATR adds---and what it does not.}
+The informative result is the failure boundary, not $769/769$ conditional
+coverage. Real annotated dyads show that a plausible geometric support rule can
+omit the joint world even when optimization remains feasible; in those
+misspecified cells, frontier ambiguity need not protect the analyst. The radius
+sweep also exposes a coverage--informativeness trade-off: wider support retains
+more annotated worlds while rapidly making threshold decisions ambiguous.
+Synthetic experiments isolate this mechanism under known truth; ATR shows that
+the same support failure is present in a separately collected relation
+annotation. Chicago and NYC then assess release-specific scale and ambiguity,
+not truth coverage.
+
+This audit validates conditional coverage for fixed snapshots, dyads, a
+disclosed support count, label-assisted cohort construction, and one geometric
+query.  The group labels were produced by one coder and are treated as an
+annotated reference rather than error-free physical truth.  It neither
+estimates the population prevalence of social groups nor validates the Chicago
+or NYC candidate rules.  ATR data are research-use-only and are not
+redistributed.  Full witnesses remain in a controlled local audit; the public
+artifact stores the protocol, hashes, aggregate summaries, and statuses without
+row IDs or relation assignments.

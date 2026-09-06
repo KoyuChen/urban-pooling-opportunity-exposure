@@ -1,0 +1,52 @@
+{
+  "eligible_snapshots": {
+    "previous": 171,
+    "current": 170,
+    "delta": -1
+  },
+  "cells": {
+    "previous": 855,
+    "current": 850,
+    "delta": -5
+  },
+  "numerical_optimal_replayed_cells": {
+    "previous": 811,
+    "current": 806,
+    "delta": -5
+  },
+  "infeasible_cells": {
+    "previous": 44,
+    "current": 44,
+    "delta": 0
+  },
+  "truth_representable_cells": {
+    "previous": 774,
+    "current": 769,
+    "delta": -5
+  },
+  "representable_truth_covered_cells": {
+    "previous": 774,
+    "current": 769,
+    "delta": -5
+  },
+  "representable_point_rule_threshold_errors": {
+    "previous": 64,
+    "current": 68,
+    "delta": 4
+  },
+  "representable_errors_flagged_ambiguous": {
+    "previous": 64,
+    "current": 68,
+    "delta": 4
+  },
+  "misspecified_support_unflagged_wrong_decisions": {
+    "previous": 15,
+    "current": 16,
+    "delta": 1
+  },
+  "misspecified_support_unflagged_wrong_snapshot_count": {
+    "previous": 7,
+    "current": 8,
+    "delta": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "protocol_version": "chicago-k2-fixed-panel/v1",
+  "timezone": "America/Chicago",
+  "date_start": "2026-01-05",
+  "date_end": "2026-01-14",
+  "weekdays_only": true,
+  "local_start_times": ["08:00", "12:00", "17:30"],
+  "expected_window_count": 24,
+  "selection_rule": "Cartesian product of every weekday in the closed date range and every listed local start time, ordered by date then time.",
+  "replacement_rule": "No window is replaced after row counts, feasibility, runtime, or frontier outcomes are observed.",
+  "eligibility": {
+    "min_core_rows": 2,
+    "max_core_rows": 80,
+    "max_candidate_rows": 5000
+  },
+  "support": {
+    "rounding_half_width_minutes": 7.5,
+    "complete_boundary_padding_minutes": 15,
+    "boundary_padding_grid_minutes": [0, 15],
+    "base_radius_km": 2
+  },
+  "solver": {
+    "endpoint_time_limit_seconds": 60
+  },
+  "claim_boundary": "A fixed outcome-blind public-data certification panel; not a probability sample, hidden-run recovery study, partner-recall benchmark, or Chicago population estimate."
+}

@@ -2143,6 +2143,7 @@ def plot_curves(rows: Sequence[Mapping[str, Any]], output_dir: Path) -> list[str
     for curve_type, xlabel in (
         ("radius", "Maximum endpoint radius (km)"),
         ("gamma", "Allowed measured out-of-radius core incidences Γ"),
+        ("candidate_omission", "Allowed omitted-candidate core incidences Γ"),
     ):
         relevant = [
             row
@@ -2296,9 +2297,20 @@ def render_report(report: Mapping[str, Any]) -> str:
 def run(args: argparse.Namespace) -> dict[str, Any]:
     generated = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     snapshot_before = dataset_snapshot(_request_json(_metadata_url()))
+    fixed_core_start = (
+        parse_required_datetime(args.core_start)
+        if getattr(args, "core_start", None)
+        else None
+    )
+    scan_start = fixed_core_start or parse_required_datetime(args.scan_start)
+    scan_end = (
+        fixed_core_start + timedelta(minutes=RELEASE_BIN_MINUTES)
+        if fixed_core_start is not None
+        else parse_required_datetime(args.scan_end)
+    )
     selected = choose_core_bin(
-        scan_start=parse_required_datetime(args.scan_start),
-        scan_end=parse_required_datetime(args.scan_end),
+        scan_start=scan_start,
+        scan_end=scan_end,
         min_core_rows=args.min_core_rows,
         max_core_rows=args.max_core_rows,
         max_candidate_rows=args.max_candidate_rows,
@@ -2520,12 +2532,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "generated_at_utc": generated,
         "snapshot": asdict(snapshot_after),
         "extraction": {
-            "scan_start_local": args.scan_start,
-            "scan_end_local": args.scan_end,
+            "scan_start_local": scan_start.isoformat(),
+            "scan_end_local": scan_end.isoformat(),
+            "predeclared_core_start_local": (
+                fixed_core_start.isoformat() if fixed_core_start is not None else None
+            ),
             "selection_algorithm": (
-                "adaptive smoke-test selection of the highest-count released 15-minute "
-                "K=2 bin satisfying core integrity, core/candidate resource caps, and "
-                "complete core end timestamps; not a population-representative sample"
+                "fixed outcome-blind released 15-minute bin; no replacement after "
+                "eligibility or frontier outcomes are observed"
+                if fixed_core_start is not None
+                else "adaptive smoke-test selection of the highest-count released "
+                "15-minute K=2 bin satisfying core integrity, core/candidate resource "
+                "caps, and complete core end timestamps; not a population-representative sample"
             ),
             "overlap_envelope_derivation": (
                 "For rounding half-width delta=7.5 minutes, any determinate partner of a "
@@ -2743,6 +2761,13 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-dir", type=Path, default=Path("tmp/chicago-k2-frontier"))
     parser.add_argument("--scan-start", default=DEFAULT_SCAN_START)
     parser.add_argument("--scan-end", default=DEFAULT_SCAN_END)
+    parser.add_argument(
+        "--core-start",
+        help=(
+            "fixed released 15-minute core-bin start; when supplied, scan-start/end "
+            "are ignored and the bin is never adaptively replaced"
+        ),
+    )
     parser.add_argument("--min-core-rows", type=int, default=12)
     parser.add_argument("--max-core-rows", type=int, default=60)
     parser.add_argument("--max-candidate-rows", type=int, default=5000)
@@ -2758,8 +2783,15 @@ def main() -> int:
     if args.self_test:
         self_test()
         return 0
-    scan_start = parse_required_datetime(args.scan_start)
-    scan_end = parse_required_datetime(args.scan_end)
+    fixed_core_start = (
+        parse_required_datetime(args.core_start) if args.core_start else None
+    )
+    scan_start = fixed_core_start or parse_required_datetime(args.scan_start)
+    scan_end = (
+        fixed_core_start + timedelta(minutes=RELEASE_BIN_MINUTES)
+        if fixed_core_start is not None
+        else parse_required_datetime(args.scan_end)
+    )
     if not scan_start < scan_end:
         raise SystemExit("--scan-start must precede --scan-end")
     if args.min_core_rows < 2 or args.max_core_rows < args.min_core_rows:

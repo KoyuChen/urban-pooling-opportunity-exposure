@@ -38,6 +38,11 @@ jobs:
             code/ai_pilot/benchmarks/selective_disclosure_constraint_generation.py \
             code/ai_pilot/benchmarks/compact_event_slot_audit.py \
             code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py \
+            code/ai_pilot/benchmarks/atr_diamor_dyad_truth.py \
+            code/ai_pilot/benchmarks/atr_diamor_evidence_summary.py \
+            code/ai_pilot/benchmarks/atr_diamor_support_calibration.py \
+            code/ai_pilot/benchmarks/atr_diamor_density_cap.py \
+            code/ai_pilot/benchmarks/atr_diamor_alternating_structure.py \
             code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py \
             scripts/audit_tex_references.py
@@ -62,7 +67,7 @@ jobs:
           python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
           python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
           actual="$(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)"
-          expected="$(printf 'chicago-live-audits.yml\nci.yml\nnyc-bp-24h.yml\n')"
+          expected="$(printf 'chicago-k2-fixed-panel.yml\nchicago-live-audits.yml\nci.yml\nnyc-bp-24h.yml\n')"
           test "$actual" = "$expected"
       - name: Audit frozen headline evidence
         run: |
@@ -72,6 +77,56 @@ jobs:
 
           root = Path("code/ai_pilot/data_pipeline/results")
           nyc = root / "nyc_hvfhv"
+
+          atr = json.loads(
+              Path(
+                  "code/ai_pilot/benchmarks/results/atr_diamor_truth/SUMMARY.json"
+              ).read_text(encoding="utf-8")
+          )
+          atr_combined = atr["combined"]
+          assert atr["report_version"] == "atr-diamor-dyad-truth-summary/v4"
+          assert atr_combined["eligible_snapshots"] == 170
+          assert atr_combined["cells"] == 850
+          assert atr_combined["numerical_optimal_replayed_cells"] == 806
+          assert atr_combined["infeasible_cells"] == 44
+          assert atr_combined["truth_representable_cells"] == 769
+          assert atr_combined["representable_truth_covered_cells"] == 769
+          assert atr_combined["representable_point_rule_threshold_errors"] == 68
+          assert atr_combined["representable_errors_flagged_ambiguous"] == 68
+          assert atr_combined["misspecified_support_unflagged_wrong_decisions"] == 16
+          assert atr_combined["misspecified_support_unflagged_wrong_snapshot_count"] == 8
+          assert atr_combined["independent_tiny_checked_cells"] == 195
+          assert atr_combined["widest_radius_valid_decisions"] == {
+              "radius_m": 5.0,
+              "ambiguous": 410,
+              "total": 495,
+          }
+
+          atr_results = Path("code/ai_pilot/benchmarks/results")
+          support = json.loads(
+              (atr_results / "atr_diamor_support_calibration/SUMMARY.json").read_text()
+          )
+          assert support["status"] == "PASS"
+          assert support["selected_rule"]["covered_snapshots"] == 85
+          assert support["followup_selected_rule"]["covered_snapshots"] == 81
+          assert support["followup_frontier"]["certified_threshold_decisions"] == 29
+
+          density = json.loads(
+              (atr_results / "atr_diamor_density_cap/SUMMARY.json").read_text()
+          )
+          assert density["status"] == "PASS"
+          assert density["selected_cap"]["degree_cap"] == 2
+          assert density["comparison_to_fixed"]["candidate_edges_saved"] == 80
+          assert density["comparison_to_fixed"]["certified_decision_change"] == 0
+
+          alternating = json.loads(
+              (atr_results / "atr_diamor_alternating_structure/SUMMARY.json").read_text()
+          )
+          assert alternating["status"] == "PASS"
+          assert alternating["fixed"]["multi_component_cells"] == 73
+          assert alternating["fixed"]["maximum_component_edges"] == 4
+          assert alternating["comparison"]["contracted_upper_endpoint_cells"] == 21
+          assert alternating["comparison"]["identical_ambiguity_count_cells"] == 82
 
           panel = json.loads(
               (nyc / "ORDERED_DECISION_PANEL_SUMMARY.json").read_text(

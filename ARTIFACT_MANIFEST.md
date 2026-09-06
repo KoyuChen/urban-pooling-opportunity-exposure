@@ -29,6 +29,40 @@ identifies local exploration provenance and does not label it as workflow execut
 These results validate the declared generator and method, not transfer to an
 operational city dataset.
 
+## ATR DIAMOR annotated-relation audits
+
+Disclosure-safe aggregate evidence is stored under:
+
+- `code/ai_pilot/benchmarks/results/atr_diamor_truth/`;
+- `code/ai_pilot/benchmarks/results/atr_diamor_unknown_q/`;
+- `code/ai_pilot/benchmarks/results/atr_diamor_multiquery/`;
+- `code/ai_pilot/benchmarks/results/atr_diamor_support_calibration/`;
+- `code/ai_pilot/benchmarks/results/atr_diamor_density_cap/`;
+- `code/ai_pilot/benchmarks/results/atr_diamor_alternating_structure/`.
+
+The base dyad audit contains 170 eligible snapshots and 850 radius cells. All
+806 feasible cells have replayed exact endpoints and 44 are certified
+infeasible. Conditional on candidate support containing the annotated world,
+769/769 frontiers cover the annotated aggregate and flag 68/68 closest-pair
+point errors. Under misspecified support, 16 wrong point decisions remain
+unflagged across eight snapshots.
+
+Pilot-only support calibration selects 3 m/120 degrees at 85/88 DIAMOR-1
+snapshot coverage. Frozen on previously touched DIAMOR-2, it covers 81/82
+snapshots but produces only 29/246 certified threshold decisions. A post-hoc
+`k=2` local-degree cap preserves that coverage and removes 80/998 edges without
+changing any decision. It contracts 21 upper endpoints but no evaluated
+threshold. Returned endpoint witnesses differ through multiple alternating
+components in 73/82 fixed graphs; component counts are descriptive because
+optimal-witness tie-breaking is not enumerated.
+
+ATR data are research-use-only and are not redistributed. These audits use
+labels for eligibility, exclusions, pilot calibration or training, oracle
+cardinality, and evaluation as specified by each protocol. DIAMOR-2 is a frozen
+cross-day follow-up, not a pristine holdout. Hashes of source files, protocols,
+runners, and upstream summaries are pinned inside each `SUMMARY.json` and
+checked by deterministic tests.
+
 ## NYC frozen decision panel
 
 Repository summaries:

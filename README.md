@@ -13,13 +13,25 @@ universe, and a simultaneous-capacity bound.
 - `paper/` -- the active manuscript source.
 - `code/ai_pilot/data_pipeline/production_audit/` -- ordered-event solvers,
   Chicago/NYC extraction, public-data audits, tests, fixtures, and protocols.
-- `code/ai_pilot/benchmarks/` -- controlled-truth and disclosure validation.
+- `code/ai_pilot/benchmarks/` -- controlled-truth, disclosure, and ATR
+  pedestrian-group truth validation.
 - `code/ai_pilot/data_pipeline/results/` -- redacted aggregate evidence used by
   the current draft.
 - `code/ai_pilot/benchmarks/results/` -- controlled exploration evidence.
 - `scripts/` -- paper build, PDF checks, and the local Chicago boundary runner.
 - `ARTIFACT_MANIFEST.md` -- frozen manuscript run, artifact, file-hash, and claim pins.
 - `docs/REPRODUCIBILITY.md` -- local and live rerun commands.
+- `docs/ATR_DIAMOR_TRUTH_AUDIT.md` -- real annotated-relation stress-test protocol.
+- `code/ai_pilot/benchmarks/results/atr_diamor_unknown_q/` -- disclosure-safe
+  cardinality-uncertainty evidence.
+- `code/ai_pilot/benchmarks/results/atr_diamor_multiquery/` -- frozen cross-day
+  multi-query and point-reconstruction evidence.
+- `code/ai_pilot/benchmarks/results/atr_diamor_support_calibration/` -- frozen
+  pilot-selected candidate-support follow-up evidence.
+- `code/ai_pilot/benchmarks/results/atr_diamor_density_cap/` -- frozen post-hoc
+  local-degree-cap mechanism audit.
+- `code/ai_pilot/benchmarks/results/atr_diamor_alternating_structure/` -- frozen
+  endpoint-witness alternating-structure audit.
 - `docs/PROJECT_STATUS.md` -- verified manuscript versus exploration status.
 - `docs/IMPLICIT_DISCLOSURE_SEPARATOR.md` -- separator contract and bound proofs.
 - `docs/COMPACT_EVENT_SLOT_PROBE.md` -- compact lower-bound contract and audit.
@@ -118,10 +130,12 @@ python code/ai_pilot/benchmarks/check_disclosure_independent_evidence.py
   paper/build/KDD_Research_Working_Draft.pdf
 ```
 
-Only `ci.yml`, `chicago-live-audits.yml`, and the manual `nyc-bp-24h.yml`
-follow-up remain active. The unified CI runs deterministic tests and uploads the
-compiled paper. The NYC follow-up isolates the four formerly open scale cells
-in separate fail-closed jobs; it is not restarted by ordinary manuscript
+Only `ci.yml`, `chicago-live-audits.yml`, `chicago-k2-fixed-panel.yml`, and the
+manual `nyc-bp-24h.yml` follow-up remain active. The unified CI runs
+deterministic tests and uploads the compiled paper. The Chicago panel expands
+24 fixed outcome-blind date/time cells and never substitutes a failed or
+ineligible window. The NYC follow-up isolates the four formerly open scale
+cells in separate fail-closed jobs; it is not restarted by ordinary manuscript
 commits.
 
 ## Claim boundary

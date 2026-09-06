@@ -1,0 +1,156 @@
+{
+  "summary_version": "atr-diamor-unknown-q-summary/v1",
+  "claim_scope": "all_positive_q removes labels from endpoint cardinality but labels still determine cohort eligibility, exclusions, and truth evaluation",
+  "benchmark_sha256": "6e1152dacc42d66306df0aebbdbbafafdd0fdb50a26dadbdcc3204b8691538bd",
+  "base_protocol_sha256": "322b866b0bd8df7c40318b4226140f26bc0262a91e9e6946bcf24fe981e67c9f",
+  "unknown_q_protocol_sha256": "e3ac05717e4b0af3e49a26074617a2aeaa6f72bb29007abd41941fc8cbf08718",
+  "decision_threshold_count": 3,
+  "days": [
+    {
+      "dataset_day": "DIAMOR-1",
+      "audit_role": "pilot",
+      "report_sha256": "7fb4a296909e4ec9179963a937ef346a0672b8f8d9509bc69526aeac97cfc565",
+      "eligible_snapshot_count": 88,
+      "cell_count": 440,
+      "summary": {
+        "oracle_q": {
+          "cell_count": 440,
+          "computationally_closed_cell_count": 440,
+          "exact_cell_count": 411,
+          "infeasible_cell_count": 29,
+          "truth_representable_exact_cells": 388,
+          "truth_covered_representable_cells": 388,
+          "threshold_decisions": 1233,
+          "ambiguous_threshold_decisions": 441,
+          "certified_threshold_decisions": 792,
+          "false_certificates": 13,
+          "mean_width_m": 0.930379637186588,
+          "median_width_m": 0.21400925878397237
+        },
+        "q_pm_1": {
+          "cell_count": 440,
+          "computationally_closed_cell_count": 440,
+          "exact_cell_count": 420,
+          "infeasible_cell_count": 20,
+          "truth_representable_exact_cells": 388,
+          "truth_covered_representable_cells": 388,
+          "threshold_decisions": 1260,
+          "ambiguous_threshold_decisions": 539,
+          "certified_threshold_decisions": 721,
+          "false_certificates": 16,
+          "mean_width_m": 1.0228070712817252,
+          "median_width_m": 0.3236826844106129
+        },
+        "all_positive_q": {
+          "cell_count": 440,
+          "computationally_closed_cell_count": 440,
+          "exact_cell_count": 421,
+          "infeasible_cell_count": 19,
+          "truth_representable_exact_cells": 388,
+          "truth_covered_representable_cells": 388,
+          "threshold_decisions": 1263,
+          "ambiguous_threshold_decisions": 556,
+          "certified_threshold_decisions": 707,
+          "false_certificates": 16,
+          "mean_width_m": 1.0851357116196045,
+          "median_width_m": 0.3583064471016706
+        }
+      }
+    },
+    {
+      "dataset_day": "DIAMOR-2",
+      "audit_role": "predeclared_followup",
+      "report_sha256": "424b35a6d96514f1670e62d75cb1162324ef1b0d7703d26692fbfc2771e0a0a9",
+      "eligible_snapshot_count": 82,
+      "cell_count": 410,
+      "summary": {
+        "oracle_q": {
+          "cell_count": 410,
+          "computationally_closed_cell_count": 410,
+          "exact_cell_count": 395,
+          "infeasible_cell_count": 15,
+          "truth_representable_exact_cells": 381,
+          "truth_covered_representable_cells": 381,
+          "threshold_decisions": 1185,
+          "ambiguous_threshold_decisions": 691,
+          "certified_threshold_decisions": 494,
+          "false_certificates": 3,
+          "mean_width_m": 1.4306904865632832,
+          "median_width_m": 0.9645921684662497
+        },
+        "q_pm_1": {
+          "cell_count": 410,
+          "computationally_closed_cell_count": 410,
+          "exact_cell_count": 405,
+          "infeasible_cell_count": 5,
+          "truth_representable_exact_cells": 381,
+          "truth_covered_representable_cells": 381,
+          "threshold_decisions": 1215,
+          "ambiguous_threshold_decisions": 757,
+          "certified_threshold_decisions": 458,
+          "false_certificates": 5,
+          "mean_width_m": 1.4748856722261487,
+          "median_width_m": 1.0008242447510944
+        },
+        "all_positive_q": {
+          "cell_count": 410,
+          "computationally_closed_cell_count": 410,
+          "exact_cell_count": 405,
+          "infeasible_cell_count": 5,
+          "truth_representable_exact_cells": 381,
+          "truth_covered_representable_cells": 381,
+          "threshold_decisions": 1215,
+          "ambiguous_threshold_decisions": 786,
+          "certified_threshold_decisions": 429,
+          "false_certificates": 4,
+          "mean_width_m": 1.517594856995578,
+          "median_width_m": 1.0674492653634564
+        }
+      }
+    }
+  ],
+  "combined": {
+    "oracle_q": {
+      "cell_count": 850,
+      "exact_cell_count": 806,
+      "infeasible_cell_count": 44,
+      "threshold_decisions": 2418,
+      "ambiguous_threshold_decisions": 1132,
+      "certified_threshold_decisions": 1286,
+      "certified_decision_rate": 0.5318444995864351,
+      "false_certificates": 16,
+      "false_certificate_cells": 11,
+      "false_certificate_cells_with_representable_truth": 0,
+      "mean_width_m": 1.175569197364993,
+      "median_width_m": 0.5792383104739016
+    },
+    "q_pm_1": {
+      "cell_count": 850,
+      "exact_cell_count": 825,
+      "infeasible_cell_count": 25,
+      "threshold_decisions": 2475,
+      "ambiguous_threshold_decisions": 1296,
+      "certified_threshold_decisions": 1179,
+      "certified_decision_rate": 0.4763636363636364,
+      "false_certificates": 21,
+      "false_certificate_cells": 18,
+      "false_certificate_cells_with_representable_truth": 0,
+      "mean_width_m": 1.2447365662908056,
+      "median_width_m": 0.6487862011367564
+    },
+    "all_positive_q": {
+      "cell_count": 850,
+      "exact_cell_count": 826,
+      "infeasible_cell_count": 24,
+      "threshold_decisions": 2478,
+      "ambiguous_threshold_decisions": 1342,
+      "certified_threshold_decisions": 1136,
+      "certified_decision_rate": 0.45843422114608556,
+      "false_certificates": 20,
+      "false_certificate_cells": 17,
+      "false_certificate_cells_with_representable_truth": 0,
+      "mean_width_m": 1.2971768180085503,
+      "median_width_m": 0.7359283899072688
+    }
+  }
+}

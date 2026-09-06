@@ -1,0 +1,11 @@
+{
+  "protocol_version": "atr-diamor-density-cap/v1",
+  "base_support_summary": "results/atr_diamor_support_calibration/SUMMARY.json",
+  "pilot_day": "DIAMOR-1",
+  "followup_day": "DIAMOR-2",
+  "degree_caps": [1, 2, 3, 4, 5, 6, 7, 8],
+  "candidate_rule": "within the frozen pilot-selected radius-angle support, retain each node's k nearest incident edges and take their undirected union",
+  "selection_rule": "on DIAMOR-1, preserve the frozen fixed-rule covered-snapshot count and minimize mean candidate edges; break ties by smaller k",
+  "frontier_query": "oracle-q mean within-dyad distance with base-protocol thresholds",
+  "claim_boundary": "post-hoc mechanism audit using DIAMOR-1 selection and previously touched DIAMOR-2 follow-up; labels determine eligibility, exclusions, pilot coverage constraint, oracle q, and evaluation"
+}

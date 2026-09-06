@@ -1,0 +1,910 @@
+{
+  "report_version": "atr-diamor-support-calibration-report/v1",
+  "status": "PASS",
+  "claim_scope": "DIAMOR-1 calibration and previously touched DIAMOR-2 follow-up; labels determine eligibility, exclusions, pilot coverage, oracle q, and evaluation",
+  "pilot_trajectory_sha256": "7cd6fb682a76b4fe28d1ef2b926806f52f9d809f9ee61199d02cb9341d6dde8d",
+  "pilot_groups_sha256": "82610a20baa4e8259dceb81c9413084cbf4a5098699d53a1af9cf2b037c80f28",
+  "followup_trajectory_sha256": "2f1ce0813aaea5e29ffea03800219edb80b451680b3dbb9e9a546f2c2fb1ff93",
+  "followup_groups_sha256": "1decd011dfeb905cd043fcbdbdfe9e2aad3a723c2055a3758da92c42abd12a62",
+  "base_protocol_sha256": "322b866b0bd8df7c40318b4226140f26bc0262a91e9e6946bcf24fe981e67c9f",
+  "calibration_protocol_sha256": "74e76436e24cf630aa8c88c5e0fb0c35d86e5ded1b74db3c74fa667a1cedc5fc",
+  "benchmark_sha256": "02e7dce350380fcdef193b8d2b1b58ec008edc88d28672f9007b3026bbfdad49",
+  "pilot_eligible_snapshots": 88,
+  "followup_eligible_snapshots": 82,
+  "selected_rule": {
+    "radius_m": 3.0,
+    "maximum_motion_angle_degrees": 120.0,
+    "eligible_snapshots": 88,
+    "covered_snapshots": 85,
+    "relational_coverage": 0.9659090909090909,
+    "mean_candidate_edges": 4.5227272727272725,
+    "total_candidate_edges": 398
+  },
+  "followup_selected_rule": {
+    "radius_m": 3.0,
+    "maximum_motion_angle_degrees": 120.0,
+    "eligible_snapshots": 82,
+    "covered_snapshots": 81,
+    "relational_coverage": 0.9878048780487805,
+    "mean_candidate_edges": 12.170731707317072,
+    "total_candidate_edges": 998
+  },
+  "followup_frontier": {
+    "computationally_closed_cells": 82,
+    "exact_cells": 82,
+    "infeasible_cells": 0,
+    "threshold_decisions": 246,
+    "ambiguous_threshold_decisions": 217,
+    "certified_threshold_decisions": 29,
+    "false_certificates": 0,
+    "false_certificate_representable_cells": 0
+  },
+  "pilot_grid": [
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 18,
+      "relational_coverage": 0.20454545454545456,
+      "mean_candidate_edges": 0.5909090909090909,
+      "total_candidate_edges": 52
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 18,
+      "relational_coverage": 0.20454545454545456,
+      "mean_candidate_edges": 0.6136363636363636,
+      "total_candidate_edges": 54
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 18,
+      "relational_coverage": 0.20454545454545456,
+      "mean_candidate_edges": 0.625,
+      "total_candidate_edges": 55
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 18,
+      "relational_coverage": 0.20454545454545456,
+      "mean_candidate_edges": 0.6363636363636364,
+      "total_candidate_edges": 56
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 19,
+      "relational_coverage": 0.2159090909090909,
+      "mean_candidate_edges": 0.6590909090909091,
+      "total_candidate_edges": 58
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 19,
+      "relational_coverage": 0.2159090909090909,
+      "mean_candidate_edges": 0.6704545454545454,
+      "total_candidate_edges": 59
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 56,
+      "relational_coverage": 0.6363636363636364,
+      "mean_candidate_edges": 1.4204545454545454,
+      "total_candidate_edges": 125
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 61,
+      "relational_coverage": 0.6931818181818182,
+      "mean_candidate_edges": 1.5227272727272727,
+      "total_candidate_edges": 134
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 61,
+      "relational_coverage": 0.6931818181818182,
+      "mean_candidate_edges": 1.5340909090909092,
+      "total_candidate_edges": 135
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 62,
+      "relational_coverage": 0.7045454545454546,
+      "mean_candidate_edges": 1.5568181818181819,
+      "total_candidate_edges": 137
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 64,
+      "relational_coverage": 0.7272727272727273,
+      "mean_candidate_edges": 1.6136363636363635,
+      "total_candidate_edges": 142
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 64,
+      "relational_coverage": 0.7272727272727273,
+      "mean_candidate_edges": 1.75,
+      "total_candidate_edges": 154
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 68,
+      "relational_coverage": 0.7727272727272727,
+      "mean_candidate_edges": 1.75,
+      "total_candidate_edges": 154
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 76,
+      "relational_coverage": 0.8636363636363636,
+      "mean_candidate_edges": 1.9204545454545454,
+      "total_candidate_edges": 169
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 76,
+      "relational_coverage": 0.8636363636363636,
+      "mean_candidate_edges": 1.9431818181818181,
+      "total_candidate_edges": 171
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 77,
+      "relational_coverage": 0.875,
+      "mean_candidate_edges": 1.9659090909090908,
+      "total_candidate_edges": 173
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 79,
+      "relational_coverage": 0.8977272727272727,
+      "mean_candidate_edges": 2.0681818181818183,
+      "total_candidate_edges": 182
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.9090909090909091,
+      "mean_candidate_edges": 2.3636363636363638,
+      "total_candidate_edges": 208
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 70,
+      "relational_coverage": 0.7954545454545454,
+      "mean_candidate_edges": 1.9318181818181819,
+      "total_candidate_edges": 170
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 78,
+      "relational_coverage": 0.8863636363636364,
+      "mean_candidate_edges": 2.125,
+      "total_candidate_edges": 187
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 78,
+      "relational_coverage": 0.8863636363636364,
+      "mean_candidate_edges": 2.147727272727273,
+      "total_candidate_edges": 189
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 79,
+      "relational_coverage": 0.8977272727272727,
+      "mean_candidate_edges": 2.2045454545454546,
+      "total_candidate_edges": 194
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9204545454545454,
+      "mean_candidate_edges": 2.352272727272727,
+      "total_candidate_edges": 207
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 82,
+      "relational_coverage": 0.9318181818181818,
+      "mean_candidate_edges": 2.772727272727273,
+      "total_candidate_edges": 244
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 71,
+      "relational_coverage": 0.8068181818181818,
+      "mean_candidate_edges": 2.3295454545454546,
+      "total_candidate_edges": 205
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 79,
+      "relational_coverage": 0.8977272727272727,
+      "mean_candidate_edges": 2.5454545454545454,
+      "total_candidate_edges": 224
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 79,
+      "relational_coverage": 0.8977272727272727,
+      "mean_candidate_edges": 2.5795454545454546,
+      "total_candidate_edges": 227
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.9090909090909091,
+      "mean_candidate_edges": 2.6818181818181817,
+      "total_candidate_edges": 236
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 82,
+      "relational_coverage": 0.9318181818181818,
+      "mean_candidate_edges": 2.909090909090909,
+      "total_candidate_edges": 256
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 83,
+      "relational_coverage": 0.9431818181818182,
+      "mean_candidate_edges": 3.6818181818181817,
+      "total_candidate_edges": 324
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 72,
+      "relational_coverage": 0.8181818181818182,
+      "mean_candidate_edges": 3.3068181818181817,
+      "total_candidate_edges": 291
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9204545454545454,
+      "mean_candidate_edges": 3.6136363636363638,
+      "total_candidate_edges": 318
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9204545454545454,
+      "mean_candidate_edges": 3.7613636363636362,
+      "total_candidate_edges": 331
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 83,
+      "relational_coverage": 0.9431818181818182,
+      "mean_candidate_edges": 4.068181818181818,
+      "total_candidate_edges": 358
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 85,
+      "relational_coverage": 0.9659090909090909,
+      "mean_candidate_edges": 4.5227272727272725,
+      "total_candidate_edges": 398
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 86,
+      "relational_coverage": 0.9772727272727273,
+      "mean_candidate_edges": 6.090909090909091,
+      "total_candidate_edges": 536
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 73,
+      "relational_coverage": 0.8295454545454546,
+      "mean_candidate_edges": 5.556818181818182,
+      "total_candidate_edges": 489
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 82,
+      "relational_coverage": 0.9318181818181818,
+      "mean_candidate_edges": 6.3522727272727275,
+      "total_candidate_edges": 559
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 82,
+      "relational_coverage": 0.9318181818181818,
+      "mean_candidate_edges": 6.681818181818182,
+      "total_candidate_edges": 588
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 84,
+      "relational_coverage": 0.9545454545454546,
+      "mean_candidate_edges": 7.534090909090909,
+      "total_candidate_edges": 663
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 86,
+      "relational_coverage": 0.9772727272727273,
+      "mean_candidate_edges": 8.659090909090908,
+      "total_candidate_edges": 762
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 87,
+      "relational_coverage": 0.9886363636363636,
+      "mean_candidate_edges": 12.579545454545455,
+      "total_candidate_edges": 1107
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 73,
+      "relational_coverage": 0.8295454545454546,
+      "mean_candidate_edges": 7.943181818181818,
+      "total_candidate_edges": 699
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 82,
+      "relational_coverage": 0.9318181818181818,
+      "mean_candidate_edges": 9.340909090909092,
+      "total_candidate_edges": 822
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 82,
+      "relational_coverage": 0.9318181818181818,
+      "mean_candidate_edges": 10.136363636363637,
+      "total_candidate_edges": 892
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 84,
+      "relational_coverage": 0.9545454545454546,
+      "mean_candidate_edges": 12.056818181818182,
+      "total_candidate_edges": 1061
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 86,
+      "relational_coverage": 0.9772727272727273,
+      "mean_candidate_edges": 14.261363636363637,
+      "total_candidate_edges": 1255
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 88,
+      "covered_snapshots": 87,
+      "relational_coverage": 0.9886363636363636,
+      "mean_candidate_edges": 21.511363636363637,
+      "total_candidate_edges": 1893
+    }
+  ],
+  "followup_grid": [
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 25,
+      "relational_coverage": 0.3048780487804878,
+      "mean_candidate_edges": 0.8658536585365854,
+      "total_candidate_edges": 71
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 26,
+      "relational_coverage": 0.3170731707317073,
+      "mean_candidate_edges": 0.8902439024390244,
+      "total_candidate_edges": 73
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 26,
+      "relational_coverage": 0.3170731707317073,
+      "mean_candidate_edges": 0.9024390243902439,
+      "total_candidate_edges": 74
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 26,
+      "relational_coverage": 0.3170731707317073,
+      "mean_candidate_edges": 0.926829268292683,
+      "total_candidate_edges": 76
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 26,
+      "relational_coverage": 0.3170731707317073,
+      "mean_candidate_edges": 0.9390243902439024,
+      "total_candidate_edges": 77
+    },
+    {
+      "radius_m": 0.75,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 27,
+      "relational_coverage": 0.32926829268292684,
+      "mean_candidate_edges": 0.9634146341463414,
+      "total_candidate_edges": 79
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 60,
+      "relational_coverage": 0.7317073170731707,
+      "mean_candidate_edges": 1.951219512195122,
+      "total_candidate_edges": 160
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 61,
+      "relational_coverage": 0.7439024390243902,
+      "mean_candidate_edges": 2.0121951219512195,
+      "total_candidate_edges": 165
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 61,
+      "relational_coverage": 0.7439024390243902,
+      "mean_candidate_edges": 2.048780487804878,
+      "total_candidate_edges": 168
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 62,
+      "relational_coverage": 0.7560975609756098,
+      "mean_candidate_edges": 2.1219512195121952,
+      "total_candidate_edges": 174
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 62,
+      "relational_coverage": 0.7560975609756098,
+      "mean_candidate_edges": 2.1341463414634148,
+      "total_candidate_edges": 175
+    },
+    {
+      "radius_m": 1.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 63,
+      "relational_coverage": 0.7682926829268293,
+      "mean_candidate_edges": 2.268292682926829,
+      "total_candidate_edges": 186
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 70,
+      "relational_coverage": 0.8536585365853658,
+      "mean_candidate_edges": 2.5121951219512195,
+      "total_candidate_edges": 206
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 72,
+      "relational_coverage": 0.8780487804878049,
+      "mean_candidate_edges": 2.6341463414634148,
+      "total_candidate_edges": 216
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 72,
+      "relational_coverage": 0.8780487804878049,
+      "mean_candidate_edges": 2.682926829268293,
+      "total_candidate_edges": 220
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 73,
+      "relational_coverage": 0.8902439024390244,
+      "mean_candidate_edges": 2.8048780487804876,
+      "total_candidate_edges": 230
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 73,
+      "relational_coverage": 0.8902439024390244,
+      "mean_candidate_edges": 2.8658536585365852,
+      "total_candidate_edges": 235
+    },
+    {
+      "radius_m": 1.25,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 74,
+      "relational_coverage": 0.9024390243902439,
+      "mean_candidate_edges": 3.207317073170732,
+      "total_candidate_edges": 263
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 74,
+      "relational_coverage": 0.9024390243902439,
+      "mean_candidate_edges": 3.3292682926829267,
+      "total_candidate_edges": 273
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 77,
+      "relational_coverage": 0.9390243902439024,
+      "mean_candidate_edges": 3.4878048780487805,
+      "total_candidate_edges": 286
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 77,
+      "relational_coverage": 0.9390243902439024,
+      "mean_candidate_edges": 3.548780487804878,
+      "total_candidate_edges": 291
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 78,
+      "relational_coverage": 0.9512195121951219,
+      "mean_candidate_edges": 3.6951219512195124,
+      "total_candidate_edges": 303
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 78,
+      "relational_coverage": 0.9512195121951219,
+      "mean_candidate_edges": 3.817073170731707,
+      "total_candidate_edges": 313
+    },
+    {
+      "radius_m": 1.5,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 79,
+      "relational_coverage": 0.9634146341463414,
+      "mean_candidate_edges": 4.512195121951219,
+      "total_candidate_edges": 370
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 75,
+      "relational_coverage": 0.9146341463414634,
+      "mean_candidate_edges": 5.329268292682927,
+      "total_candidate_edges": 437
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 78,
+      "relational_coverage": 0.9512195121951219,
+      "mean_candidate_edges": 5.597560975609756,
+      "total_candidate_edges": 459
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 78,
+      "relational_coverage": 0.9512195121951219,
+      "mean_candidate_edges": 5.695121951219512,
+      "total_candidate_edges": 467
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 79,
+      "relational_coverage": 0.9634146341463414,
+      "mean_candidate_edges": 6.060975609756097,
+      "total_candidate_edges": 497
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 79,
+      "relational_coverage": 0.9634146341463414,
+      "mean_candidate_edges": 6.365853658536586,
+      "total_candidate_edges": 522
+    },
+    {
+      "radius_m": 2.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 8.0,
+      "total_candidate_edges": 656
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 77,
+      "relational_coverage": 0.9390243902439024,
+      "mean_candidate_edges": 9.585365853658537,
+      "total_candidate_edges": 786
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 10.268292682926829,
+      "total_candidate_edges": 842
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 10.585365853658537,
+      "total_candidate_edges": 868
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 11.414634146341463,
+      "total_candidate_edges": 936
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 12.170731707317072,
+      "total_candidate_edges": 998
+    },
+    {
+      "radius_m": 3.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 82,
+      "relational_coverage": 1.0,
+      "mean_candidate_edges": 16.670731707317074,
+      "total_candidate_edges": 1367
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 77,
+      "relational_coverage": 0.9390243902439024,
+      "mean_candidate_edges": 18.365853658536587,
+      "total_candidate_edges": 1506
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 19.73170731707317,
+      "total_candidate_edges": 1618
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 20.4390243902439,
+      "total_candidate_edges": 1676
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 22.475609756097562,
+      "total_candidate_edges": 1843
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 24.26829268292683,
+      "total_candidate_edges": 1990
+    },
+    {
+      "radius_m": 5.0,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 82,
+      "relational_coverage": 1.0,
+      "mean_candidate_edges": 38.146341463414636,
+      "total_candidate_edges": 3128
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 30.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 77,
+      "relational_coverage": 0.9390243902439024,
+      "mean_candidate_edges": 29.146341463414632,
+      "total_candidate_edges": 2390
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 45.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 31.634146341463413,
+      "total_candidate_edges": 2594
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 60.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 80,
+      "relational_coverage": 0.975609756097561,
+      "mean_candidate_edges": 33.24390243902439,
+      "total_candidate_edges": 2726
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 90.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 37.74390243902439,
+      "total_candidate_edges": 3095
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 120.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 81,
+      "relational_coverage": 0.9878048780487805,
+      "mean_candidate_edges": 41.5609756097561,
+      "total_candidate_edges": 3408
+    },
+    {
+      "radius_m": 7.5,
+      "maximum_motion_angle_degrees": 180.0,
+      "eligible_snapshots": 82,
+      "covered_snapshots": 82,
+      "relational_coverage": 1.0,
+      "mean_candidate_edges": 66.59756097560975,
+      "total_candidate_edges": 5461
+    }
+  ]
+}
