@@ -20,3 +20,77 @@ separate statuses.
 
 This is a public-data certification panel, not a probability sample, hidden-run
 recovery study, partner-recall benchmark, or Chicago population estimate.
+
+## Verified initial checkpoint, 2026-09-07
+
+The first panel run, `34048658431` at source commit
+`a8a3f4cb3861d30612bcd1db9145134e9b1b566d`, produced 19 completed windows,
+one scientifically ineligible fixed core (index 21), and four transport
+failures (indices 0, 12, 20, 23). Reaggregating its compact JSON reports with
+their companion sensitivity CSVs gives 2,830 endpoint pairs: 2,264 certified,
+566 ineligible because a public query value is missing, and zero
+computationally unresolved. The data-complete endpoint rate is 100%.
+These are the initial 19-window results, not new results from a retry.
+
+`code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/INITIAL_CHECKPOINT.json`
+pins the original 24 artifact IDs and archive digests, 447 extracted file
+hashes, the protocol, and all three extraction/solver runner files. The
+archive digests were checked against GitHub's artifact metadata before this
+manifest was created. The accompanying `initial_panel_*` files contain the
+corrected aggregate; they do not replace the frozen manuscript evidence.
+
+The pilot remains **PARTIAL / HOLD** while four transport-failed windows lack
+terminal scientific records. The broader scale gate also remains open: 19
+completed windows do not establish a benchmark with hundreds of cohorts.
+
+## Resume without reselecting or overwriting cohorts
+
+The workflow now restores a verified checkpoint, creates a dynamic matrix
+containing only transport-failed windows, then merges available retry records.
+It preserves completed windows byte-for-byte, including any unresolved
+scientific endpoints, and retains scientific ineligibility. Recovery does not
+select a window based on its frontier or replace its declared start time.
+
+For the original checkpoint:
+
+```bash
+gh run download 34048658431 \
+  --repo KoyuChen/urban-pooling-opportunity-exposure \
+  --pattern 'cohort_*' --dir tmp/chicago-seed
+python code/ai_pilot/data_pipeline/production_audit/resume_chicago_k2_fixed_panel.py \
+  --seed-dir tmp/chicago-seed \
+  --seed-manifest code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/INITIAL_CHECKPOINT.json \
+  --output-dir tmp/chicago-recovered
+```
+
+Run only the indices in `tmp/chicago-recovered/recovery_plan.json`, writing
+each attempt to a fresh retry directory with the existing fixed-panel driver.
+Then merge:
+
+```bash
+python code/ai_pilot/data_pipeline/production_audit/resume_chicago_k2_fixed_panel.py \
+  --output-dir tmp/chicago-recovered \
+  --merge-dir tmp/chicago-retries \
+  --source-run-id LOCAL_ATTEMPT_LABEL
+```
+
+Each replaced transport-failure record moves to `history/<cohort>/<attempt>/`
+before the new record is installed. A failed transfer remains a transfer
+failure. An absent retry artifact leaves the previous failure in place.
+Missing or altered evidence, changed protocol/runner code, a mismatched driver,
+an incomplete sensitivity file, or missing count closure stops recovery before
+the old records are replaced. A non-transport error requires investigation;
+it is not automatically retried. Source artifact expiration also stops restore.
+
+The Actions run uploads `chicago-k2-panel-checkpoint`, including all 24 active
+records, the retained attempt history, hashes and provenance. For the next
+manual run, set `resume_run_id` to the latest run containing that verified
+checkpoint; the initial run ID is only the bootstrap default. Checkpoint
+artifacts have 90-day retention. Workflow edits trigger a recovery run;
+ordinary code or manuscript commits do not launch live data pulls. A new run
+supersedes an older queued run in the same concurrency group.
+
+Each newly successful retry must satisfy the runner's own before/after
+snapshot check. Reusing an earlier window does not claim that all windows were
+downloaded simultaneously or that the public source never changes. Snapshot
+revision evidence remains in each report.

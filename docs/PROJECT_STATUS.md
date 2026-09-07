@@ -77,8 +77,19 @@ the manuscript pending real membership truth or unknown-support/noisy-answer
 closure.
 
 The Chicago K=2 fixed-panel protocol predeclares 24 weekday/date-time cells
-before public row counts or frontier outcomes are inspected. Code and workflow
-are implemented; no panel result is a manuscript claim until the workflow
-artifacts are captured, audited, and frozen. A separate generic omission budget
-now expands from the declared under-padded support to the boundary-complete
-temporal envelope without exempting edges whose geography is missing.
+before public row counts or frontier outcomes are inspected. The verified
+initial run has 19 completed windows, one scientifically ineligible fixed core,
+and four transport failures. Corrected aggregation of the original sensitivity
+CSVs gives 2,264/2,830 certified endpoint pairs, 566 missing-public-value pairs,
+and zero computationally unresolved pairs (100% exact among data-complete
+pairs). This is **PARTIAL / HOLD**, not a hundreds-of-cohorts scale result.
+
+Recovery pins the 24 original artifacts and 447 extracted files, reuses the 19
+completed windows and the ineligible window, and retries only indices 0, 12,
+20 and 23. Hash/protocol checks run before reuse; attempt history survives
+merging and the resulting full checkpoint can seed another run. Retry results
+must be captured before these counts change. See
+`docs/CHICAGO_K2_FIXED_PANEL.md` and the committed initial checkpoint manifest.
+A separate generic omission budget expands from the declared under-padded
+support to the boundary-complete temporal envelope without exempting edges
+whose geography is missing. These pilot records are not manuscript claims.

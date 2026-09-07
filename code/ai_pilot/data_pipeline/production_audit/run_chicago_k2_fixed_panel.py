@@ -156,6 +156,19 @@ def summarize_window(
                 sensitivity = list(csv.DictReader(handle))
         else:
             sensitivity = []
+    if not sensitivity:
+        return {
+            "window_index": index,
+            "core_start_local": start.isoformat(),
+            "status": "INVALID_MISSING_SENSITIVITY",
+        }
+    chains = report.get("monotonicity_audit", {}).get("chain_audits", [])
+    if chains and len(sensitivity) != sum(int(chain["point_count"]) for chain in chains):
+        return {
+            "window_index": index,
+            "core_start_local": start.isoformat(),
+            "status": "INVALID_INCOMPLETE_SENSITIVITY",
+        }
     certified = sum(
         row.get("endpoint_pair_certification") == "CERTIFIED_OPTIMAL_PAIR"
         for row in sensitivity
@@ -182,6 +195,11 @@ def summarize_window(
         "monotonicity_status": report["monotonicity_audit"]["status"],
         "closure_status": report["cohort"]["public_temporal_candidate_universe_closure_status"],
         "report_sha256": sha256_file(report_path),
+        "sensitivity_sha256": (
+            sha256_file(directory / "candidate_support_sensitivity.csv")
+            if (directory / "candidate_support_sensitivity.csv").exists()
+            else None
+        ),
     }
 
 
@@ -238,7 +256,7 @@ def aggregate(
     )
     columns = sorted({key for row in rows for key in row})
     with (output_dir / "panel_windows.csv").open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=columns)
+        writer = csv.DictWriter(handle, fieldnames=columns, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     lines = [
@@ -268,6 +286,8 @@ def run_window(
     protocol: dict[str, Any], index: int, start: datetime, output_dir: Path
 ) -> int:
     directory = output_dir / window_slug(index, start)
+    if directory.exists() and any(directory.iterdir()):
+        raise ValueError("cohort output is not empty; write retries separately and merge the checkpoint")
     directory.mkdir(parents=True, exist_ok=True)
     command = target_command(protocol, start, directory)
     result = subprocess.run(command, cwd=HERE, check=False)
