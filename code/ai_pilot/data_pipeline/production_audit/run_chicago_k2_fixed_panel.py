@@ -148,11 +148,24 @@ def summarize_window(
             "status": "INVALID_CORE_DRIFT",
             "observed_core_start_local": declared,
         }
-    sensitivity = report.get("sensitivity_rows", [])
+    sensitivity = report.get("sensitivity_rows")
+    if sensitivity is None:
+        sensitivity_path = directory / "candidate_support_sensitivity.csv"
+        if sensitivity_path.exists():
+            with sensitivity_path.open(encoding="utf-8", newline="") as handle:
+                sensitivity = list(csv.DictReader(handle))
+        else:
+            sensitivity = []
     certified = sum(
         row.get("endpoint_pair_certification") == "CERTIFIED_OPTIMAL_PAIR"
         for row in sensitivity
     )
+    missing_public_values = sum(
+        row.get("lower_status") == "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+        or row.get("upper_status") == "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+        for row in sensitivity
+    )
+    computationally_unresolved = len(sensitivity) - certified - missing_public_values
     return {
         "window_index": index,
         "core_start_local": start.isoformat(),
@@ -164,6 +177,8 @@ def summarize_window(
         "endpoint_pairs": len(sensitivity),
         "certified_endpoint_pairs": certified,
         "uncertified_endpoint_pairs": len(sensitivity) - certified,
+        "missing_public_query_value_endpoint_pairs": missing_public_values,
+        "computationally_unresolved_endpoint_pairs": computationally_unresolved,
         "monotonicity_status": report["monotonicity_audit"]["status"],
         "closure_status": report["cohort"]["public_temporal_candidate_universe_closure_status"],
         "report_sha256": sha256_file(report_path),
@@ -184,8 +199,15 @@ def aggregate(
     completed = [row for row in rows if row["status"] == "COMPLETED"]
     total_pairs = sum(int(row["endpoint_pairs"]) for row in completed)
     certified_pairs = sum(int(row["certified_endpoint_pairs"]) for row in completed)
+    missing_public_pairs = sum(
+        int(row["missing_public_query_value_endpoint_pairs"]) for row in completed
+    )
+    computationally_unresolved_pairs = sum(
+        int(row["computationally_unresolved_endpoint_pairs"]) for row in completed
+    )
+    data_complete_pairs = total_pairs - missing_public_pairs
     report = {
-        "report_version": "chicago-k2-fixed-panel-summary/v1",
+        "report_version": "chicago-k2-fixed-panel-summary/v2",
         "protocol_file": protocol_path.name,
         "protocol_sha256": sha256_file(protocol_path),
         "predeclared_window_count": len(windows),
@@ -198,6 +220,12 @@ def aggregate(
         "endpoint_pair_count": total_pairs,
         "certified_endpoint_pair_count": certified_pairs,
         "exact_endpoint_rate": certified_pairs / total_pairs if total_pairs else None,
+        "missing_public_query_value_endpoint_pair_count": missing_public_pairs,
+        "computationally_unresolved_endpoint_pair_count": computationally_unresolved_pairs,
+        "data_complete_endpoint_pair_count": data_complete_pairs,
+        "data_complete_exact_endpoint_rate": (
+            certified_pairs / data_complete_pairs if data_complete_pairs else None
+        ),
         "all_completed_windows_count_closed": all(
             row.get("closure_status") == "PASS" for row in completed
         ),
@@ -221,6 +249,14 @@ def aggregate(
         f"- Ineligible: {report['ineligible_window_count']}",
         f"- Failed or invalid: {report['failed_or_invalid_window_count']}",
         f"- Certified endpoint pairs: {certified_pairs}/{total_pairs}",
+        f"- Missing-public-value endpoint pairs: {missing_public_pairs}",
+        f"- Computationally unresolved endpoint pairs: {computationally_unresolved_pairs}",
+        "- Data-complete exact endpoint rate: "
+        + (
+            f"{report['data_complete_exact_endpoint_rate']:.1%}"
+            if report["data_complete_exact_endpoint_rate"] is not None
+            else "not applicable"
+        ),
         f"- Claim boundary: {report['claim_boundary']}",
         "",
     ]

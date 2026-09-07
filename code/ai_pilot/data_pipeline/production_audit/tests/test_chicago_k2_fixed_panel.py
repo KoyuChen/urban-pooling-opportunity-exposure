@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import csv
 import sys
 import tempfile
 import unittest
@@ -63,6 +64,61 @@ class FixedPanelProtocolTests(unittest.TestCase):
                 index=0, start=start, directory=Path(directory)
             )
             self.assertEqual(row["status"], "EXECUTION_FAILED")
+
+    def test_summary_reads_companion_sensitivity_csv(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            start = panel.expand_windows(panel.load_protocol(panel.DEFAULT_PROTOCOL))[0]
+            (root / "report.json").write_text(
+                json.dumps(
+                    {
+                        "extraction": {"predeclared_core_start_local": start.isoformat()},
+                        "cohort": {
+                            "core_rows": 2,
+                            "buffer_rows": 3,
+                            "candidate_rows": 5,
+                            "public_temporal_candidate_universe_closure_status": "PASS",
+                        },
+                        "logical_graph": {"edge_count": 4},
+                        "monotonicity_audit": {"status": "PARTIAL"},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            fields = [
+                "endpoint_pair_certification",
+                "lower_status",
+                "upper_status",
+            ]
+            with (root / "candidate_support_sensitivity.csv").open(
+                "w", encoding="utf-8", newline=""
+            ) as handle:
+                writer = csv.DictWriter(handle, fieldnames=fields)
+                writer.writeheader()
+                writer.writerows(
+                    [
+                        {
+                            "endpoint_pair_certification": "CERTIFIED_OPTIMAL_PAIR",
+                            "lower_status": "OPTIMAL_NUMERICAL_MILP",
+                            "upper_status": "OPTIMAL_NUMERICAL_MILP",
+                        },
+                        {
+                            "endpoint_pair_certification": "UNCERTIFIED",
+                            "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+                            "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+                        },
+                        {
+                            "endpoint_pair_certification": "UNCERTIFIED",
+                            "lower_status": "TIME_LIMIT_WITH_INCUMBENT",
+                            "upper_status": "TIME_LIMIT_WITH_INCUMBENT",
+                        },
+                    ]
+                )
+            row = panel.summarize_window(index=0, start=start, directory=root)
+            self.assertEqual(row["endpoint_pairs"], 3)
+            self.assertEqual(row["certified_endpoint_pairs"], 1)
+            self.assertEqual(row["missing_public_query_value_endpoint_pairs"], 1)
+            self.assertEqual(row["computationally_unresolved_endpoint_pairs"], 1)
 
     def test_generic_omission_budget_has_exact_base_and_full_endpoints(self) -> None:
         base = datetime(2026, 1, 1, 12, 0)
