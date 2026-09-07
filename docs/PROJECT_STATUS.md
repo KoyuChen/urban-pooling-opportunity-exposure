@@ -82,13 +82,18 @@ initial run has 19 completed windows, one scientifically ineligible fixed core,
 and four transport failures. Corrected aggregation of the original sensitivity
 CSVs gives 2,264/2,830 certified endpoint pairs, 566 missing-public-value pairs,
 and zero computationally unresolved pairs (100% exact among data-complete
-pairs). This is **PARTIAL / HOLD**, not a hundreds-of-cohorts scale result.
+pairs). The first completed local retry (index 0) raises the current total to
+20 completed windows, one ineligible and three outstanding, with 2,384/2,980
+certified pairs, 596 missing-public-value pairs and zero computationally
+unresolved. The original reports and this local retry are pinned separately.
+This is **PARTIAL / HOLD**, not a hundreds-of-cohorts scale result.
 
 Recovery pins the 24 original artifacts and 447 extracted files, reuses the 19
 completed windows and the ineligible window, and retries only indices 0, 12,
 20 and 23. Hash/protocol checks run before reuse; attempt history survives
-merging and the resulting full checkpoint can seed another run. Retry results
-must be captured before these counts change. See
+merging and the resulting full checkpoint can seed another run. GitHub run
+`34074653956` verified restore and launched the original four retry jobs;
+its results must be captured separately from the completed local retry. See
 `docs/CHICAGO_K2_FIXED_PANEL.md` and the committed initial checkpoint manifest.
 A separate generic omission budget expands from the declared under-padded
 support to the boundary-complete temporal envelope without exempting edges

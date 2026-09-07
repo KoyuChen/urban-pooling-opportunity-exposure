@@ -1,0 +1,25 @@
+{
+  "at_utc": "2026-09-07T02:00:52.506777+00:00",
+  "destination_run": 34074653956,
+  "reason": "GitHub retry jobs were verified in progress before ending duplicate local attempts.",
+  "attempts": [
+    {
+      "window_index": 12,
+      "execution_status": "INTERRUPTED_FOR_PERSISTENT_HANDOFF",
+      "process_exit_code": 130,
+      "scientific_result": null
+    },
+    {
+      "window_index": 20,
+      "execution_status": "INTERRUPTED_FOR_PERSISTENT_HANDOFF",
+      "process_exit_code": 130,
+      "scientific_result": null
+    },
+    {
+      "window_index": 23,
+      "execution_status": "TOOL_EXECUTION_CANCELLED",
+      "error": "network approval was cancelled before a decision was returned",
+      "scientific_result": null
+    }
+  ]
+}

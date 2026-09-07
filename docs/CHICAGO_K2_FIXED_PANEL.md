@@ -43,6 +43,34 @@ The pilot remains **PARTIAL / HOLD** while four transport-failed windows lack
 terminal scientific records. The broader scale gate also remains open: 19
 completed windows do not establish a benchmark with hundreds of cohorts.
 
+## First recovered window, 2026-09-07
+
+The local retry of index 0 (`2026-01-05T08:00`) completed with 47 core rows,
+445 buffer rows and 18,334 temporal edges. Count closure is PASS; the 150
+endpoint pairs comprise 120 certified and 30 missing-public-value pairs,
+with zero computationally unresolved. It used the same pinned extraction and
+solver source and the same metadata fingerprint as the initial records.
+
+`local_retry_20260907/` preserves the unmodified report, endpoint CSV and driver
+with a checkpoint manifest. The compact record excludes only derived plots.
+Merging this first completed retry with the original records produces the
+committed `latest_panel_*` aggregate and `LATEST_CHECKPOINT.json`: 20 completed,
+one ineligible, three still failed; 2,384/2,980 certified pairs, 596 missing
+public values, zero computationally unresolved. All 19 previously completed
+windows and the originally ineligible window retain their original hashes.
+The original failure for index 0 remains in attempt history. This is still
+**PARTIAL / HOLD**.
+
+To reconstruct this exact intermediate checkpoint after the initial prepare
+command below, merge
+`code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/local_retry_20260907`
+as the retry directory. Verify that directory's `checkpoint.json` with
+`verify_checkpoint` before merging. It is a local completed attempt; do not
+attribute it to the subsequently launched GitHub run `34074653956`. That run
+independently retries the original four transfer failures from the initial
+checkpoint. Remaining duplicate local attempts were stopped or cancelled;
+their execution records in `handoff.json` are not scientific results.
+
 ## Resume without reselecting or overwriting cohorts
 
 The workflow now restores a verified checkpoint, creates a dynamic matrix
