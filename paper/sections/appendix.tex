@@ -8,6 +8,43 @@ $F\in\F(\T',C',q)$. Set inclusion gives nesting of reachable counts and
 maxima. Minimizing a fixed functional over a superset can only weakly lower its
 optimum, and maximizing can only weakly raise it.
 
+\section{$K=2$ Matching and Sensitivity Proofs}
+
+\paragraph{Proof of Theorem~\ref{thm:k2matching}.}
+Map each two-row event in a feasible world to its edge. Disjoint event
+membership implies that the selected edges form a matching, and core coverage
+implies that every core vertex is saturated. Conversely, every matching that
+saturates $C_0$ defines disjoint two-row events covering each core exactly once;
+unmatched buffers are unused. These maps are inverse. Pair additivity gives
+equality of the world aggregate and selected-edge weight term by term.
+
+\paragraph{Proof of Theorem~\ref{thm:k2alternating}.}
+Every vertex has degree at most two in $M^-\mathbin{\triangle}M^+$ and is
+incident to at most one edge of each matching. Each nontrivial connected
+component is therefore a path or cycle whose edge colors alternate. A cycle is
+even and balanced. An alternating path has equal color counts or one extra edge
+of one color. Since $|M^-|=|M^+|=q$, the path imbalances sum to zero. Common
+edges cancel from $w(M^+)-w(M^-)$; grouping the remaining terms by component
+and dividing by $q$ proves Eq.~\eqref{eq:alternating-width}. A balanced cycle or
+path can be exchanged alone, whereas imbalanced paths must be exchanged in a
+cardinality-balanced collection. The decomposition need not be unique when an
+endpoint has multiple optimal witnesses; endpoint values remain unique.
+
+\paragraph{Proof of Proposition~\ref{prop:k2omission}.}
+Nesting follows because only the right-hand side increases. Every omitted edge
+has positive core incidence, giving the first endpoint identity. In any
+core-saturating matching, summing $|e\cap C_0|$ over selected edges counts each
+core exactly once and therefore equals $|C_0|$; the constraint is redundant at
+the second endpoint. Optimization over nested feasible sets gives the stated
+endpoint monotonicity.
+
+\paragraph{Proof of Proposition~\ref{prop:k2thresholdcontraction}.}
+Every feasible matching on $E'$ is feasible on $E$, so minimization over the
+smaller set weakly raises the lower endpoint and maximization weakly lowers the
+upper endpoint. The threshold rule certifies positive iff the lower endpoint
+is at least $\eta$, certifies negative iff the upper endpoint is below $\eta$,
+and is ambiguous otherwise, giving the equivalence.
+
 \section{Fixed-Span Connectivity and Total Unimodularity}
 Let $S$ be a selected interval family with union span $[a,b)$. If the
 positive-overlap graph is connected, the union is connected and covers every
@@ -103,6 +140,49 @@ only requires some alternative world with the same count. ``Scalar covered''
 is weaker still: the true mean can fall between endpoints by coincidence even
 when the true joint world is absent. These nested validation concepts are
 reported separately.
+
+\section{Annotated-Relation Audit Detail}
+
+\paragraph{Annotation and replay contract.}
+We retain timestamp, planar position, speed, and direction of motion. Labels
+determine eligibility and quarantine positive IDs in partial, nonpositive,
+multiple-ID, one-sided, or conflicting annotations rather than silently treat
+them as singletons. Candidate edge scoring remains label-free. Before an
+endpoint is published, replay checks the raw solution's integrality, degree,
+cardinality, objective, and primal--dual residuals. The 195 cells with at most
+12 vertices also agree with an independent subset-recursion oracle.
+
+\paragraph{Removing oracle cardinality.}
+We union fixed-$q$ frontiers over either $q\pm1$ or every positive cardinality
+through half the visible population. The latter removes labels from endpoint
+cardinality, although labels still determine eligibility, exclusions, and
+evaluation. Relative to oracle $q$, the all-positive-$q$ regime makes 826
+rather than 806 cells feasible because some candidate graphs admit a smaller
+matching than the annotated count. This is apparent feasibility, not restored
+relational coverage. Mean width increases from $1.176$ to $1.297$ meters, and
+certified threshold decisions fall from $1286/2418$ (53.2\%) to $1136/2478$
+(45.8\%). All 20 false certificates occur where candidate support omits the
+annotated world; none occurs under representable truth.
+
+\paragraph{Cross-day, multi-query point reconstruction.}
+We train a class-balanced logistic dyad score on DIAMOR-1 using only distance,
+heading difference, and speed difference, freeze it, and construct
+cardinality-$q$ matchings on DIAMOR-2. The same matching is evaluated for mean
+distance, speed gap, and heading gap. Across 381 exact cells with representable
+truth, the learned and closest-distance rules have similar mean dyad recall
+(89.24\% versus 89.62\%) but different downstream errors. The learned rule
+makes 44, 70, and 35 threshold errors for the three queries, compared with 32,
+44, and 38 for closest-distance; every error is frontier-ambiguous. The linear
+scorer is a transparent cross-day baseline, not a state-of-the-art trajectory
+model.
+
+\paragraph{Alternating-witness detail.}
+In the frozen follow-up support, the 73 multi-component witness differences
+contain 243 alternating paths and three cycles, with at most four edges per
+component. The $k=2$ degree cap contracts 21 upper endpoints by 0.177 meters on
+average among changed cells (maximum 0.577 meters) while preserving every lower
+endpoint and all 246 threshold classifications. These counts illustrate
+Theorem~\ref{thm:k2alternating}; they are not required for it.
 
 \section{Frozen NYC Decision-Panel Detail}
 The panel predeclares 20 eight-core windows and four 16-core stress windows.

@@ -19,13 +19,7 @@ sum.  Hence both frontier endpoints are exactly minimum- and maximum-weight
 core-saturating matching problems.
 \end{theorem}
 
-\paragraph{Proof.}
-Map each two-row event in a feasible world to its edge.  Disjoint event
-membership implies that the selected edges form a matching, and core coverage
-implies that every core vertex is saturated.  Conversely, every matching that
-saturates $C_0$ defines disjoint two-row events covering each core exactly once;
-unmatched buffers are unused.  These maps are inverse.  Pair additivity gives
-equality of the world aggregate and selected-edge weight term by term.
+The bijection and all subsequent $K=2$ proofs appear in the appendix.
 
 The matching representation also localizes the source of a nondegenerate
 frontier. For a matching $M$, write $w(M)=\sum_{e\in M}w_e$.
@@ -49,21 +43,6 @@ components; equal cardinality may couple paths whose individual edge-count
 imbalances are nonzero.
 \end{theorem}
 
-\paragraph{Proof.}
-Every vertex has degree at most two in $M^-\mathbin{\triangle}M^+$ and is
-incident to at most one edge of each matching. Each nontrivial connected
-component is therefore a path or cycle whose edge colors alternate. A cycle is
-even and balanced. An alternating path has equal color counts or one extra edge
-of one color. Since $|M^-|=|M^+|=q$, the path imbalances sum to zero. Common
-edges cancel from $w(M^+)-w(M^-)$; grouping the remaining terms by component
-and dividing by $q$ proves Eq.~\eqref{eq:alternating-width}.
-
-This theorem does not claim that every component can be exchanged alone. A
-balanced cycle or path can be, but imbalanced paths must be exchanged in a
-cardinality-balanced collection. Nor is the decomposition unique when an
-endpoint has multiple optimal witnesses; endpoint values remain unique even
-when the returned witness structure is not.
-
 The equivalence also yields a support-omission sensitivity object that does not
 depend on released geography.  Fix a declared base edge set $E_0\subseteq E$
 and let $d_e=|e\cap C_0|$ for $e\in E\setminus E_0$, with $d_e=0$ otherwise.
@@ -82,14 +61,6 @@ Consequently every lower endpoint is weakly nonincreasing and every upper
 endpoint weakly nondecreasing in $\Gamma$.
 \end{proposition}
 
-\paragraph{Proof.}
-Nesting follows because only the right-hand side increases.  Every omitted
-edge has positive core incidence, giving the first endpoint identity.  In any
-core-saturating matching, summing $|e\cap C_0|$ over selected edges counts each
-core exactly once and therefore equals $|C_0|$; the constraint is redundant at
-the second endpoint.  Optimization over nested feasible sets gives the stated
-endpoint monotonicity.
-
 \begin{proposition}[When support contraction changes no decision]
 \label{prop:k2thresholdcontraction}
 Let $E'\subseteq E$ and suppose both fixed-$q$ feasible sets are nonempty. Then
@@ -102,13 +73,6 @@ the decision ambiguous exactly when
 $\underline H_{E'}<\eta\leq\overline H_{E'}$. Hence strict contraction of a
 continuous frontier need not improve decision certification.
 \end{proposition}
-
-\paragraph{Proof.}
-Every feasible matching on $E'$ is feasible on $E$, so minimization over the
-smaller set weakly raises the lower endpoint and maximization weakly lowers the
-upper endpoint. The threshold rule certifies positive iff the lower endpoint
-is at least $\eta$, certifies negative iff the upper endpoint is below $\eta$,
-and is ambiguous otherwise, giving the equivalence.
 
 \subsection{A compact connectivity characterization}
 Fix exact intervals, a root row $r$, and a candidate span $[a,b)$. Let the
@@ -202,10 +166,7 @@ the best incumbent and largest open-node LP bound form a valid global lower and
 upper bound.
 \end{proposition}
 
-\paragraph{Justification.}
-The two children partition the integer solutions compatible with the parent.
-Exact pricing makes each node bound valid for the full, not merely restricted,
-column set. Standard branch-and-bound dominance then proves the claim. The
+The appendix gives the disjunction and global-bound argument. The
 implementation replays every incumbent, records open-node bounds, and never
 labels a time-limited cell optimal.
 
