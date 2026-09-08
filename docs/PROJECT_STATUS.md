@@ -1,6 +1,11 @@
 # Verified project status
 
-Checkpoint: 2026-09-06, NYC scale follow-up evidence captured and audited.
+Latest execution checkpoint: 2026-09-08, Chicago 24-window pilot closed.
+The next-stage plan is in `docs/NEXT_RESEARCH_GATE.md`. A separate 96-window
+Chicago calendar is declared in `CHICAGO_K2_FOLLOWUP_PROTOCOL.json`; it has no
+results yet and does not change the pilot's evidence counts. The immediate
+research task is a public-instance comparison linking the ordered-event
+structure to changes in attainable aggregate answers.
 
 The adversarially repaired ATR v4 dyad audit has 170 eligible fixed snapshots and 850 radius
 cells. All are computationally closed: 806 have replayed numerical MILP optima

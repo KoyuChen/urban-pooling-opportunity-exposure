@@ -1,0 +1,83 @@
+{
+  "protocol_version": "chicago-k2-calendar-followup/v1",
+  "timezone": "America/Chicago",
+  "date_start": "2026-01-15",
+  "date_end": "2026-02-27",
+  "weekdays_only": true,
+  "local_start_times": [
+    "08:00",
+    "12:00",
+    "17:30"
+  ],
+  "expected_window_count": 96,
+  "selection_rule": "Cartesian product of every weekday in the closed date range and every listed local start time, ordered by date then time.",
+  "replacement_rule": "No window is replaced after row counts, feasibility, runtime, or frontier outcomes are observed.",
+  "eligibility": {
+    "min_core_rows": 2,
+    "max_core_rows": 80,
+    "max_candidate_rows": 5000
+  },
+  "support": {
+    "rounding_half_width_minutes": 7.5,
+    "complete_boundary_padding_minutes": 15,
+    "boundary_padding_grid_minutes": [
+      0,
+      15
+    ],
+    "base_radius_km": 2
+  },
+  "solver": {
+    "endpoint_time_limit_seconds": 60
+  },
+  "claim_boundary": "A fixed outcome-blind public-data certification panel; not a probability sample, hidden-run recovery study, partner-recall benchmark, or Chicago population estimate.",
+  "declaration_context": "Calendar-disjoint extension selected after observing the 24-window pilot. This campaign has not requested these follow-up windows before declaration; no pristine-holdout or population-sampling claim is made.",
+  "pilot_lineage": {
+    "protocol_file": "CHICAGO_K2_PANEL_PROTOCOL.json",
+    "protocol_sha256": "d91f6c0bbfc27c0e1c094db886ee4d8ebe839c9da657100d96056c446b7e443c",
+    "final_recovery_run_id": 34178831936,
+    "evidence_commit": "3e2427074797c5c48995b8bd3bcc2c91dd51f5e3",
+    "completed_windows": 23,
+    "scientifically_ineligible_windows": 1,
+    "failed_windows": 0,
+    "combined_predeclared_window_count": 120
+  },
+  "execution_plan": {
+    "batch_size": 12,
+    "batch_count": 8,
+    "batch_order": "Contiguous window indices, in the date/time order defined above.",
+    "max_concurrent_cohorts": 4,
+    "transport_entrypoint": "live_chicago_k2_frontier_indexed_count.py",
+    "request_timeout_seconds": 240,
+    "request_attempts": 3,
+    "cohort_job_timeout_minutes": 180,
+    "reuse_rule": "Retain every terminal scientific record; retry transport failures at the identical start time in a new attempt directory.",
+    "pending_rule": "Never count an unstarted window as infeasible, ineligible, or a completed execution failure.",
+    "controller_status_at_declaration": "NOT_IMPLEMENTED_FOR_UNSTARTED_FOLLOWUP_WINDOWS"
+  },
+  "analysis_plan": {
+    "comparison": "Report the 24-window pilot and 96-window follow-up separately before any combined summary.",
+    "keep_all_declared_queries_and_curves": true,
+    "report_denominators": [
+      "declared windows",
+      "started windows",
+      "completed windows",
+      "scientifically ineligible windows",
+      "execution failures",
+      "unstarted windows",
+      "data-complete endpoint pairs",
+      "missing-public-value endpoint pairs",
+      "computationally unresolved endpoint pairs"
+    ],
+    "dependence_rule": "Parameter/query cells from one window are not independent observations; dates and time-of-day strata remain visible.",
+    "scale_milestone": "120 predeclared calendar windows; not automatically 100 eligible cohorts, hundreds of independent cohorts, city-scale closure, or population validity.",
+    "informativeness": "Summarize frontier width and endpoint changes by declared support curve; any added threshold analysis requires its own frozen specification before follow-up outcomes are inspected.",
+    "runtime_comparison": "Report pilot and follow-up acquisition timings separately because transport changed."
+  },
+  "runner_sha256": {
+    "run_chicago_k2_fixed_panel.py": "9e65130961fa3e7fa79af9073c31e9277e4ee4c45f24f74e9ce72cbf28690abf",
+    "live_chicago_k2_frontier.py": "8947874b12cb7df4507a2a477008b724f2e31420f85eca0c18fe4fbfc62bf6ae",
+    "live_chicago_k2_frontier_partitioned.py": "08d6f3272b9e6bc47c84eed16354ec4358b126ad2917675518f87a19c2df4e75",
+    "live_chicago_k2_frontier_boundary.py": "0b818126e8f3cf0593a3a635bb87300e4541a0eac646717c2a1839c20dc433f7",
+    "live_chicago_k2_frontier_indexed_count.py": "4dcb1098c38aa9ccdeadb5980e92fff4e7302e1c65a1166c250dcdcc3d403854"
+  }
+}
