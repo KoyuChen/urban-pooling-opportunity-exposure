@@ -50,6 +50,9 @@ class FixedPanelProtocolTests(unittest.TestCase):
         )
         self.assertEqual(Path(original[1]).name, panel.TARGET.name)
         self.assertEqual(Path(indexed[1]).name, panel.INDEXED_COUNT_TARGET.name)
+        self.assertEqual(original[original.index("--request-timeout") + 1], "90")
+        self.assertEqual(indexed[indexed.index("--request-timeout") + 1], "240")
+        indexed[indexed.index("--request-timeout") + 1] = "90"
         self.assertEqual(original[2:], indexed[2:])
 
     def test_summary_fails_closed_on_core_drift(self) -> None:

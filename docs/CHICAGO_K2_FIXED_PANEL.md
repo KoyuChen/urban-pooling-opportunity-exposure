@@ -81,8 +81,8 @@ as the retry directory. Verify that directory's `checkpoint.json` with
 `verify_checkpoint` before merging. It is a local completed attempt; do not
 attribute it to GitHub run `34074653956`. To reconstruct the current combined
 checkpoint, download the `chicago-k2-panel-checkpoint` artifact from run
-`34175478785`; it already incorporates the local retry through its audited
-prepare step. Remaining duplicate local attempts were stopped
+`34177343252`; it incorporates the local retry and retains the first indexed
+transport failure through its audited prepare/merge steps. Remaining duplicate local attempts were stopped
 or cancelled; their execution records in `handoff.json` are not scientific
 results.
 
@@ -128,7 +128,7 @@ it is not automatically retried. Source artifact expiration also stops restore.
 The Actions run uploads `chicago-k2-panel-checkpoint`, including all 24 active
 records, the retained attempt history, hashes and provenance. For the next
 manual run, set `resume_run_id` to the latest run containing that verified
-checkpoint. Run `34175478785` is now the default; the initial run remains an
+checkpoint. Run `34177343252` is now the default; the initial run remains an
 explicit bootstrap option. Checkpoint artifacts have 90-day retention. The
 prepare job also merges the independently pinned local index 0 if it is still
 absent. The dynamic matrix now contains only index 12. Workflow edits trigger a recovery run;
@@ -164,3 +164,12 @@ entrypoint hash is written into each new driver record and verified during
 checkpoint merge. Existing reports retain their original runner hashes. Until
 the fallback job produces a terminal artifact, index 12 remains a transport
 failure rather than feasible, infeasible, or exact result.
+
+The first fallback attempt in run `34177343252` passed the initial enumeration
+but repeated the same narrow index inside the partitioned fetch and timed out at
+the original 90-second request budget. That failed artifact is retained. The
+revised transport reuses the just-counted, exact in-memory index for partition
+construction, then independently re-enumerates the predicate after full-row
+extraction for the identity-stability check. Its per-request budget is 240
+seconds; this affects transport only and remains within the runner's declared
+10--300 second validation range.

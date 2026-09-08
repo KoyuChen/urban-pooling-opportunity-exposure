@@ -27,14 +27,19 @@ import live_chicago_k2_frontier_partitioned as partitioned  # noqa: E402
 
 CAP_PLUS_ONE = 5001
 _SEEN: dict[str, tuple[int, str]] = {}
+_INDEX_CACHE: dict[str, tuple[list[dict], str]] = {}
 _BASE_RENDER_REPORT = boundary.render_report
+_BASE_QUERY_ROWS = frontier.query_rows
 
 
 def indexed_scalar_count(where: str) -> tuple[int, str, str]:
     """Return an exact count below the resource cap and audit repeated identity."""
 
-    query = f"SELECT trip_id WHERE {where} ORDER BY trip_id LIMIT {CAP_PLUS_ONE}"
-    rows, api = frontier.query_rows(query, page_size=CAP_PLUS_ONE)
+    query = (
+        f"SELECT trip_id, trip_start_timestamp WHERE {where} "
+        f"ORDER BY trip_id LIMIT {CAP_PLUS_ONE}"
+    )
+    rows, api = _BASE_QUERY_ROWS(query, page_size=CAP_PLUS_ONE)
     ids = [frontier.normalized_text(row.get("trip_id")) for row in rows]
     if any(value is None for value in ids):
         raise frontier.LiveDataError("ID-index reconciliation contains a null trip_id")
@@ -47,7 +52,20 @@ def indexed_scalar_count(where: str) -> tuple[int, str, str]:
     if previous is not None and previous != current:
         raise frontier.LiveDataError("candidate ID set changed during extraction")
     _SEEN[where] = current
+    _INDEX_CACHE[where] = (list(rows), api)
     return len(resolved), api, query
+
+
+def cached_query_rows(query: str, *, page_size: int = 5000):
+    """Reuse only the exact in-memory index just counted; pass all else through."""
+
+    for where, (rows, api) in _INDEX_CACHE.items():
+        expected = (
+            f"SELECT trip_id, trip_start_timestamp WHERE {where} LIMIT {len(rows)}"
+        )
+        if query == expected:
+            return list(rows), api
+    return _BASE_QUERY_ROWS(query, page_size=page_size)
 
 
 def self_test() -> None:
@@ -72,6 +90,7 @@ def main() -> int:
     partitioned._validate_args(args)
     padding_values = boundary.parse_padding_grid(args.boundary_padding_minutes)
     partitioned._configure_request_budget(args.request_timeout, args.request_attempts)
+    frontier.query_rows = cached_query_rows
     frontier.scalar_count = indexed_scalar_count
     frontier.fetch_closed_candidate_universe = partitioned.partitioned_fetch_closed_candidate_universe
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -81,6 +100,7 @@ def main() -> int:
             "strategy": "capped ID-index reconciliation plus exact released-start partitions",
             "count_reconciliation": "unique ID enumeration; exact below declared resource cap",
             "identity_stability_check": True,
+            "in_memory_index_reuse_within_extraction": True,
             "cap_plus_one": CAP_PLUS_ONE,
             "request_timeout_seconds": args.request_timeout,
             "request_attempts": args.request_attempts,

@@ -142,6 +142,19 @@ class ChicagoResumeTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "indexed transport hash mismatch"):
             resume.verify_driver(directory, self.protocol, 0, self.windows[0])
 
+    def test_historical_indexed_transport_failure_retains_its_old_hash(self) -> None:
+        directory = self.seed / resume.panel.window_slug(2, self.windows[2])
+        driver_path = directory / "driver.json"
+        driver = json.loads(driver_path.read_text())
+        driver["command"] = resume.panel.target_command(
+            self.protocol, self.windows[2], directory, indexed_count_transport=True
+        )
+        timeout = driver["command"].index("--request-timeout") + 1
+        driver["command"][timeout] = "90"
+        driver["entrypoint_sha256"] = "0" * 64
+        resume.write_json(driver_path, driver)
+        resume.verify_driver(directory, self.protocol, 2, self.windows[2])
+
     def test_partial_retry_is_retained_without_discarding_other_records(self) -> None:
         out, _ = self.prepare()
         result = resume.merge(out, self.root / "no-new-artifacts", self.protocol_path, {})

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import Any
@@ -79,15 +80,28 @@ def verify_driver(directory: Path, protocol: dict[str, Any], index: int, start: 
         panel.TARGET.name, panel.INDEXED_COUNT_TARGET.name
     }:
         raise ValueError(f"driver entrypoint mismatch: {directory.name}")
-    if indexed and driver.get("entrypoint_sha256") != panel.sha256_file(
-        panel.INDEXED_COUNT_TARGET
-    ):
-        raise ValueError(f"indexed transport hash mismatch: {directory.name}")
+    if indexed:
+        recorded_hash = str(driver.get("entrypoint_sha256", ""))
+        if not re.fullmatch(r"[0-9a-f]{64}", recorded_hash):
+            raise ValueError(f"indexed transport hash is missing: {directory.name}")
+        if (directory / "report.json").exists() and recorded_hash != panel.sha256_file(
+            panel.INDEXED_COUNT_TARGET
+        ):
+            raise ValueError(f"indexed transport hash mismatch: {directory.name}")
     actual = actual[2:]
     expected = expected[2:]
     if actual[:1] != ["--output-dir"]:
         raise ValueError(f"driver output argument mismatch: {directory.name}")
     actual[1] = expected[1]
+    for option, lower, upper in (
+        ("--request-timeout", 10, 300),
+        ("--request-attempts", 1, 6),
+    ):
+        position = actual.index(option) + 1
+        value = int(actual[position])
+        if not lower <= value <= upper:
+            raise ValueError(f"driver transport budget is invalid: {directory.name}")
+        actual[position] = expected[expected.index(option) + 1]
     if actual != expected:
         raise ValueError(f"driver parameters differ from the frozen protocol: {directory.name}")
     if (directory / "report.json").exists() and driver.get("process_exit_status") != 0:

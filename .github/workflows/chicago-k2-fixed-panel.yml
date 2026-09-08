@@ -6,7 +6,7 @@ on:
       resume_run_id:
         description: "Source run: initial panel 34048658431, or a later checkpoint run"
         required: true
-        default: "34175478785"
+        default: "34177343252"
         type: string
   push:
     branches: [main]
@@ -29,7 +29,7 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
       retry_count: ${{ steps.plan.outputs.retry_count }}
     env:
-      SOURCE_RUN: ${{ inputs.resume_run_id || '34175478785' }}
+      SOURCE_RUN: ${{ inputs.resume_run_id || '34177343252' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

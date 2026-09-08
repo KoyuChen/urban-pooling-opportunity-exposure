@@ -102,7 +102,7 @@ def target_command(
         "--page-size",
         "100",
         "--request-timeout",
-        "90",
+        "240" if indexed_count_transport else "90",
         "--request-attempts",
         "3",
         "--base-radius-km",

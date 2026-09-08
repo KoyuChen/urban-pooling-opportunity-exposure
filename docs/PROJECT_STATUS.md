@@ -102,6 +102,10 @@ A live bounded-index probe returned 612 and 611 unique rows for the two
 predicates where wide `count(*)` had timed out. A separately hash-pinned
 ID-index reconciliation transport is implemented and tested; this does not
 change either window's status until complete retry artifacts are captured.
+The first indexed attempt, run `34177343252`, still timed out when redundantly
+pulling the same narrow index at 90 seconds. Its checkpoint is retained. The
+next attempt reuses that in-memory index within extraction, independently
+rechecks it afterward, and allows 240 seconds per transport request.
 A separate generic omission budget expands from the declared under-padded
 support to the boundary-complete temporal envelope without exempting edges
 whose geography is missing. These pilot records are not manuscript claims.
