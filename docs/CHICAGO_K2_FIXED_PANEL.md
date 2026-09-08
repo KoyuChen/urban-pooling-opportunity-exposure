@@ -44,7 +44,7 @@ transport-failed windows lacked terminal scientific records. The broader scale
 gate also remained open: 19 completed windows do not establish a benchmark
 with hundreds of cohorts.
 
-## Three recovered windows through 2026-09-08
+## Pilot execution closure through 2026-09-08
 
 The local retry of index 0 (`2026-01-05T08:00`) completed with 47 core rows,
 445 buffer rows and 18,334 temporal edges. Count closure is PASS; the 150
@@ -68,21 +68,31 @@ with count closure PASS. Its 150 endpoint pairs again comprise 120 certified,
 30 missing-public-value and zero computationally unresolved pairs. The record
 and artifact digest are pinned under `github_retry_34175478785/`.
 
+GitHub run `34178831936` completed the final index 12
+(`2026-01-09T08:00`) through the identity-reconciled transport: 56 core rows,
+556 buffer rows, 612 candidates and 24,322 temporal edges. Count closure is
+PASS. Its 150 endpoint pairs comprise 120 certified, 30 missing-public-value
+and zero computationally unresolved pairs. The source artifact `10038727322`
+and ZIP digest are pinned under `github_retry_34178831936/`.
+
 The committed `latest_panel_*` aggregate and `LATEST_CHECKPOINT.json` now give
-22 completed, one ineligible and one still failed; 2,624/3,280 certified pairs,
-656 missing public values, and zero computationally unresolved. All earlier
-completed and ineligible records retain their hashes. Original failure records
-remain in attempt history. This is still **PARTIAL / HOLD**.
+23 completed, one scientifically ineligible and zero failed windows;
+2,744/3,430 certified pairs, 686 missing public values, and zero
+computationally unresolved. All earlier completed and ineligible records
+retain their hashes, while original failures remain in attempt history. Thus
+the **24-window pilot execution is closed**. The broader Chicago Gate remains
+**PARTIAL / HOLD** because 23 eligible windows do not meet the
+hundreds-of-cohorts scale target.
 
 To reconstruct this exact intermediate checkpoint after the initial prepare
 command below, merge
 `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/local_retry_20260907`
 as the retry directory. Verify that directory's `checkpoint.json` with
 `verify_checkpoint` before merging. It is a local completed attempt; do not
-attribute it to GitHub run `34074653956`. To reconstruct the current combined
-checkpoint, download the `chicago-k2-panel-checkpoint` artifact from run
-`34177343252`; it incorporates the local retry and retains the first indexed
-transport failure through its audited prepare/merge steps. Remaining duplicate local attempts were stopped
+attribute it to GitHub run `34074653956`. To reconstruct the final combined
+checkpoint, download the `chicago-k2-panel-checkpoint` artifact `10038730623`
+from run `34178831936`; it incorporates every successful retry and retains the
+failed attempts through its audited prepare/merge steps. Remaining duplicate local attempts were stopped
 or cancelled; their execution records in `handoff.json` are not scientific
 results.
 
@@ -128,10 +138,10 @@ it is not automatically retried. Source artifact expiration also stops restore.
 The Actions run uploads `chicago-k2-panel-checkpoint`, including all 24 active
 records, the retained attempt history, hashes and provenance. For the next
 manual run, set `resume_run_id` to the latest run containing that verified
-checkpoint. Run `34177343252` is now the default; the initial run remains an
+checkpoint. Run `34178831936` is now the default; the initial run remains an
 explicit bootstrap option. Checkpoint artifacts have 90-day retention. The
 prepare job also merges the independently pinned local index 0 if it is still
-absent. The dynamic matrix now contains only index 12. Workflow edits trigger a recovery run;
+absent. The current dynamic matrix is empty. Workflow edits trigger a recovery run;
 ordinary code or manuscript commits do not launch live data pulls. A new run
 supersedes an older queued run in the same concurrency group.
 
@@ -144,7 +154,7 @@ revision evidence remains in each report.
 
 Repeated attempts at indices 12 and 20 showed that their failures were in the
 wide Socrata `count(*)` request, not infeasibility certificates. Index 20 later
-completed through the original transport; index 12 remains open. A bounded
+completed through the original transport; index 12 required the fallback. A bounded
 live probe of the identical predicates returned 612 and 611 unique-ID index
 rows, respectively, without serializing the IDs. The fallback entrypoint
 `live_chicago_k2_frontier_indexed_count.py` therefore replaces only aggregate
@@ -161,15 +171,15 @@ protocol are unchanged.
 
 This fallback is a transport equivalence, not a new candidate universe. Its
 entrypoint hash is written into each new driver record and verified during
-checkpoint merge. Existing reports retain their original runner hashes. Until
-the fallback job produces a terminal artifact, index 12 remains a transport
-failure rather than feasible, infeasible, or exact result.
+checkpoint merge. Existing reports retain their original runner hashes. Run
+`34178831936` produced the terminal report, sensitivity CSV and driver record,
+all of which pass checkpoint verification.
 
 The first fallback attempt in run `34177343252` passed the initial enumeration
 but repeated the same narrow index inside the partitioned fetch and timed out at
 the original 90-second request budget. That failed artifact is retained. The
-revised transport reuses the just-counted, exact in-memory index for partition
-construction, then independently re-enumerates the predicate after full-row
-extraction for the identity-stability check. Its per-request budget is 240
-seconds; this affects transport only and remains within the runner's declared
-10--300 second validation range.
+successful revised transport reuses the just-counted, exact in-memory index for
+partition construction, then independently re-enumerates the predicate after
+full-row extraction for the identity-stability check. Its per-request budget is
+240 seconds; this affects transport only and remains within the runner's
+declared 10--300 second validation range.

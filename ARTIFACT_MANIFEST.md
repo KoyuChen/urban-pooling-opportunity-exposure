@@ -169,6 +169,38 @@ certified endpoint pairs with zero reported MIP gap and replay residual. A
 15-minute complete boundary adds 92 buffers and 2,629 edges relative to the
 under-padded extraction.
 
+## Chicago K=2 fixed 24-window pilot
+
+Repository summaries:
+
+- `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/LATEST_PANEL_REPORT.md`;
+- `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/latest_panel_report.json`;
+- `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/latest_panel_windows.csv`;
+- `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/LATEST_CHECKPOINT.json`.
+
+Final recovery pins:
+
+- workflow run: `34178831936`;
+- source commit: `6d7207351bd30d2ee5fb60982bb45129e27d74fd`;
+- final cohort artifact: `10038727322`, ZIP SHA-256
+  `164f6d87a11ec84608ad605b9b6925a3d0630087864507471d1bdf37730752e1`;
+- complete checkpoint artifact: `10038730623`, ZIP SHA-256
+  `5c77fb8a279c4863e865b437d4c332e4b9ed4f99d6b8454b37964b652604f4fd`;
+- summary artifact: `10038730838`, ZIP SHA-256
+  `e8f061532946527db69526dd3e74edb78148b8334e1070b53949ebca8f68ca12`;
+- committed panel JSON/CSV/Markdown/checkpoint SHA-256:
+  `70c7e7e5ac005e5ff40989865e179933b234f16eabbda22d2c710821106425b1`,
+  `70bf41e5fad1aea3f2b8c2eb8af34fdd50a548bd892fda8df9c340e78d3f8917`,
+  `da91b51d61ba61af63a49192c23ff88b96ff6caae8a7eaa6a6a948d2dd408333`,
+  and `5b23a987fda2dc5c28cda3070fa2b56a3ecfce3792d7924521cd35fedc639efa`.
+
+The outcome-blind panel contains 24 fixed windows: 23 completed, one
+scientifically ineligible fixed core and zero execution failures. It has 3,430
+endpoint pairs, of which 2,744 are certified and 686 lack a public query value;
+none are computationally unresolved. Exact closure is 100% among data-complete
+pairs. This closes the pilot execution only. It is neither a probability sample
+nor a hundreds-of-cohorts or city-scale result.
+
 ## Artifact policy
 
 Committed evidence is aggregate and redacted. Raw identifiers, public-row

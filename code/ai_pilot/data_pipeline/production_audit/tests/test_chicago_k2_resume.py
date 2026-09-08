@@ -197,6 +197,31 @@ class ChicagoResumeTests(unittest.TestCase):
         row = resume.panel.summarize_window(index=0, start=self.windows[0], directory=directory)
         self.assertEqual(row["status"], "INVALID_INCOMPLETE_SENSITIVITY")
 
+    def test_frozen_final_pilot_summary_and_last_retry(self) -> None:
+        results = Path(__file__).resolve().parents[2] / "results" / "chicago_k2_fixed_panel"
+        compact = results / "github_retry_34178831936"
+        checkpoint = json.loads((compact / "checkpoint.json").read_text())
+        resume.verify_checkpoint(checkpoint, compact, resume.panel.DEFAULT_PROTOCOL)
+
+        summary = json.loads((results / "latest_panel_report.json").read_text())
+        self.assertEqual(summary["predeclared_window_count"], 24)
+        self.assertEqual(summary["completed_window_count"], 23)
+        self.assertEqual(summary["ineligible_window_count"], 1)
+        self.assertEqual(summary["failed_or_invalid_window_count"], 0)
+        self.assertEqual(summary["certified_endpoint_pair_count"], 2744)
+        self.assertEqual(summary["missing_public_query_value_endpoint_pair_count"], 686)
+        self.assertEqual(summary["computationally_unresolved_endpoint_pair_count"], 0)
+        self.assertEqual(summary["data_complete_exact_endpoint_rate"], 1.0)
+
+        last = summary["windows"][12]
+        self.assertEqual(last["status"], "COMPLETED")
+        self.assertEqual(last["report_sha256"], checkpoint["files"][
+            "cohort_012_20260109T0800/report.json"
+        ])
+        self.assertEqual(last["sensitivity_sha256"], checkpoint["files"][
+            "cohort_012_20260109T0800/candidate_support_sensitivity.csv"
+        ])
+
 
 if __name__ == "__main__":
     unittest.main()

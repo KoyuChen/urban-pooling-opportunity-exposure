@@ -137,9 +137,12 @@ deterministic tests and uploads the compiled paper. The Chicago panel retains
 completed windows, one ineligible window and four transport failures; recovery
 verifies the checkpoint, retries only failed transfers and preserves attempt
 history. See `docs/CHICAGO_K2_FIXED_PANEL.md` for the corrected endpoint counts
-and resume commands. Three recovered windows raise the current merged count to
-22 completed, one ineligible and one outstanding window; the full scale gate
-remains open. The NYC follow-up isolates the four formerly open scale
+and resume commands. Four recovered windows raise the current merged count to
+23 completed, one scientifically ineligible and zero failed windows. The
+24-window pilot execution is closed with 2,744/3,430 certified endpoint pairs,
+686 missing-public-value pairs and zero computationally unresolved pairs. The
+full scale gate remains open because this is not a hundreds-of-cohorts
+benchmark. The NYC follow-up isolates the four formerly open scale
 cells in separate fail-closed jobs; it is not restarted by ordinary manuscript
 commits.
 

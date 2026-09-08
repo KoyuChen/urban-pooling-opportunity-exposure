@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/opt/hostedtoolcache/Python/3.12.14/x64/bin/python",
+    "/home/runner/work/urban-pooling-opportunity-exposure/urban-pooling-opportunity-exposure/code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_indexed_count.py",
+    "--output-dir",
+    "/home/runner/work/urban-pooling-opportunity-exposure/urban-pooling-opportunity-exposure/tmp/chicago-retries/cohort_012_20260109T0800",
+    "--core-start",
+    "2026-01-09T08:00:00",
+    "--min-core-rows",
+    "2",
+    "--max-core-rows",
+    "80",
+    "--max-candidate-rows",
+    "5000",
+    "--page-size",
+    "100",
+    "--request-timeout",
+    "240",
+    "--request-attempts",
+    "3",
+    "--base-radius-km",
+    "2",
+    "--solver-time-limit",
+    "60",
+    "--boundary-padding-minutes",
+    "0,15"
+  ],
+  "core_start_local": "2026-01-09T08:00:00",
+  "entrypoint_sha256": "4dcb1098c38aa9ccdeadb5980e92fff4e7302e1c65a1166c250dcdcc3d403854",
+  "process_exit_status": 0,
+  "window_index": 12
+}

@@ -83,29 +83,32 @@ and four transport failures. Corrected aggregation of the original sensitivity
 CSVs gives 2,264/2,830 certified endpoint pairs, 566 missing-public-value pairs,
 and zero computationally unresolved pairs (100% exact among data-complete
 pairs). Completed retries at index 0 (local), index 23 (GitHub run
-`34074653956`) and index 20 (GitHub run `34175478785`) raise the current merged
-total to 22 completed windows, one ineligible and one outstanding, with
-2,624/3,280 certified pairs, 656 missing-public-value pairs and zero
-computationally unresolved. The original reports and all retry records are
-pinned separately.
-This is **PARTIAL / HOLD**, not a hundreds-of-cohorts scale result.
+`34074653956`), index 20 (run `34175478785`) and index 12 (run
+`34178831936`) close all 23 scientifically eligible windows. The final aggregate
+has 2,744/3,430 certified endpoint pairs, 686 missing-public-value pairs and
+zero computationally unresolved pairs; the data-complete exact rate is 100%.
+The original reports and all retry records are pinned separately. The
+**24-window pilot execution is closed**, but the broader Chicago scale gate is
+still **PARTIAL / HOLD** because this is not a hundreds-of-cohorts result.
 
 Recovery pins the 24 original artifacts and 447 extracted files, reuses the 19
 completed windows and the ineligible window, and retries only indices 0, 12,
 20 and 23. Hash/protocol checks run before reuse; attempt history survives
 merging and the resulting full checkpoint can seed another run. GitHub run
 `34074653956` verified restore and closed index 23. Run `34175478785` then
-merged the pinned local index 0 and closed index 20; index 12 remained a
-transport failure. The next recovery uses that checkpoint and retries only 12. See
+merged the pinned local index 0 and closed index 20. Run `34178831936` closed
+the final index 12 through the identity-reconciled fallback; its recovery plan
+is empty. See
 `docs/CHICAGO_K2_FIXED_PANEL.md` and the committed initial checkpoint manifest.
 A live bounded-index probe returned 612 and 611 unique rows for the two
 predicates where wide `count(*)` had timed out. A separately hash-pinned
-ID-index reconciliation transport is implemented and tested; this does not
-change either window's status until complete retry artifacts are captured.
+ID-index reconciliation transport is implemented, tested and now evidenced by
+the successful index-12 artifact.
 The first indexed attempt, run `34177343252`, still timed out when redundantly
 pulling the same narrow index at 90 seconds. Its checkpoint is retained. The
-next attempt reuses that in-memory index within extraction, independently
-rechecks it afterward, and allows 240 seconds per transport request.
+successful attempt reuses that in-memory index within extraction, independently
+rechecks it afterward, and allows 240 seconds per transport request. This is a
+transport repair, not a change to candidate support.
 A separate generic omission budget expands from the declared under-padded
 support to the boundary-complete temporal envelope without exempting edges
 whose geography is missing. These pilot records are not manuscript claims.

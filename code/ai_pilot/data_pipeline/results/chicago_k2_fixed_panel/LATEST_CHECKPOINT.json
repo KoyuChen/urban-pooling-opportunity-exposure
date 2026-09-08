@@ -257,8 +257,29 @@
     "cohort_011_20260108T1730/radius_same_dropoff_community_area_fraction.svg": "41cde0f33c040ad418fb0e04d8153c35343e4ab3fa66901792bc96189d099eb4",
     "cohort_011_20260108T1730/radius_same_pickup_community_area_fraction.svg": "9b95ff4409fb960894a1c2e9cbcfcfba6f17b7b6d76e2bd56ca2deec892918e8",
     "cohort_011_20260108T1730/report.json": "023a1f42c615388736755e348cb4e6767600d9de03d984086ae080739542d61c",
-    "cohort_012_20260109T0800/driver.json": "ece2d02afb2fadebe5ba2b22f3911eda6afe0119e67f6acf66451203ef850e5c",
-    "cohort_012_20260109T0800/failure.json": "5b7944679c39f4be8e1355c13508393e454764a50b2f52d5e72289a06024d13e",
+    "cohort_012_20260109T0800/CHICAGO_K2_PUBLIC_TEMPORAL_FRONTIER_REPORT.md": "c51d26b4e8af4b6b2eee8c1e572516664bfc75ccb550dc3436392189d2ec879d",
+    "cohort_012_20260109T0800/buffer_padding_edge_curve.svg": "46eefacf24817b217a2547aba9fded06c16a87fe4aa389dcfbab1355ad1f6674",
+    "cohort_012_20260109T0800/buffer_padding_mean_absolute_duration_gap.svg": "cb849e2e853a87bad202298e93032b5ec0c859243457008476ad8e4f80c24c69",
+    "cohort_012_20260109T0800/buffer_padding_mean_absolute_trip_miles_gap.svg": "746fbc161aae25902efd011d193c8ddfc27cee74ea530686376220140b3cec76",
+    "cohort_012_20260109T0800/buffer_padding_same_dropoff_community_area_fraction.svg": "eb25ea4241c65be12929c78ce9814657bc8778d84c8c9c5bbb4262031a740c0b",
+    "cohort_012_20260109T0800/buffer_padding_same_pickup_community_area_fraction.svg": "daba0ef6d0be7850cacfff391edf0139aa230037ce7a88aa2b6a51b6993c9a5a",
+    "cohort_012_20260109T0800/candidate_graph_curve.csv": "590aa4f503f935a50759512e210359462c49abb598d43c56411defaa36fb29ae",
+    "cohort_012_20260109T0800/candidate_omission_mean_absolute_duration_gap.svg": "84439309a166cc9f84fe9627160b566a99887ddf2189bdceb63991dffbbd97bf",
+    "cohort_012_20260109T0800/candidate_omission_mean_absolute_trip_miles_gap.svg": "1334d553ef9ce65bbeefa8ff7ae36f0cb137bf74425e88e05e2e60135b2afb39",
+    "cohort_012_20260109T0800/candidate_omission_same_dropoff_community_area_fraction.svg": "0e1772bf660202c059b186210aa161d2731cd3f51adc89326f15af074df19955",
+    "cohort_012_20260109T0800/candidate_omission_same_pickup_community_area_fraction.svg": "99f5f4424379d39b497d63165e547e594e5e67f62d16f41549b5c25f90728d51",
+    "cohort_012_20260109T0800/candidate_support_sensitivity.csv": "c827639833a8a6efa8f19af7378781ae07b1606394b10e1ab343d636b6e2cadb",
+    "cohort_012_20260109T0800/driver.json": "2549fdadf658f24859d33a07a45b4564d37fb2d530b2840af28b04b1bb7ce3d2",
+    "cohort_012_20260109T0800/gamma_mean_absolute_duration_gap.svg": "767818d500998557e3b8b35624d53220e52cfa5376409ba3066d70cc3dba7e7a",
+    "cohort_012_20260109T0800/gamma_mean_absolute_trip_miles_gap.svg": "0d0d8a509c490b915f929d2a9726b19a8c371b3979f49bd697cc6fb434939b3d",
+    "cohort_012_20260109T0800/gamma_same_dropoff_community_area_fraction.svg": "54642fa6f6854f1924afec34b883e73476250c66d5833e692795a51f42eb4925",
+    "cohort_012_20260109T0800/gamma_same_pickup_community_area_fraction.svg": "cf4b33a39ee39b4e745fb1a73b95f81461c703f15d6267a0865e0d9c2a3feefc",
+    "cohort_012_20260109T0800/radius_edge_curve.svg": "fbbefac2e2cc8374a2b961ae1f68d2266d2d90b8292b9f0e63810ad85b188e2f",
+    "cohort_012_20260109T0800/radius_mean_absolute_duration_gap.svg": "1b69e70c36104ac1c6d51ae186d9b86dadd83e33ab758978ec42a8cf8a87f6b5",
+    "cohort_012_20260109T0800/radius_mean_absolute_trip_miles_gap.svg": "967115f91aee3fe685cd12e0038b7fae29d9a0288c2878c7fadb6eb946352587",
+    "cohort_012_20260109T0800/radius_same_dropoff_community_area_fraction.svg": "e7ac80a53da18bba6e1c5252552026da512c6cb5ed425ad7eede89c2ac7c7d0a",
+    "cohort_012_20260109T0800/radius_same_pickup_community_area_fraction.svg": "a3b47cc681e61e2e5b952339c55dbd3dfc11f87d8b3b2b8264871c145acf9ed7",
+    "cohort_012_20260109T0800/report.json": "ca3866cca176093e6a6c58028490475dce7527839c72027593242376977121e8",
     "cohort_013_20260109T1200/CHICAGO_K2_PUBLIC_TEMPORAL_FRONTIER_REPORT.md": "d54bf344d2e945597bd6ab11b690e6b75cbd9d2ae6c22b88c54719cbe0ef9980",
     "cohort_013_20260109T1200/buffer_padding_edge_curve.svg": "1b553f377a17a48d648c3063b160066181d4cf8972ad3352c082cf47e3dba7bf",
     "cohort_013_20260109T1200/buffer_padding_mean_absolute_duration_gap.svg": "a0599d711313bbce663c24a3b84660fe16ebe860812864073219c8596bdb02ff",
@@ -499,6 +520,10 @@
     "history/cohort_012_20260109T0800/0001/failure.json": "e2efd5e7361e8c06e72f8b144d783502e287f2238e1df3e23d8fc7e14d1b13dc",
     "history/cohort_012_20260109T0800/0002/driver.json": "ece2d02afb2fadebe5ba2b22f3911eda6afe0119e67f6acf66451203ef850e5c",
     "history/cohort_012_20260109T0800/0002/failure.json": "a111350c753052942c14dd89b51f23042ee363c5d8a6d8b9a61faeedba6189da",
+    "history/cohort_012_20260109T0800/0003/driver.json": "ece2d02afb2fadebe5ba2b22f3911eda6afe0119e67f6acf66451203ef850e5c",
+    "history/cohort_012_20260109T0800/0003/failure.json": "5b7944679c39f4be8e1355c13508393e454764a50b2f52d5e72289a06024d13e",
+    "history/cohort_012_20260109T0800/0004/driver.json": "401628456edc4c43dea4def5881c8fd96cffc5578ffe93c79ddc5a318fd9a681",
+    "history/cohort_012_20260109T0800/0004/failure.json": "c3ddaa84bf909da5685db9915eacdb95fce0aeed8fac32ea21ab91c3ff24441d",
     "history/cohort_020_20260113T1730/0001/driver.json": "f265db11f63786ac987101efdd6cb6b364ac8e7fa0a66a486b94c22d6d5d5065",
     "history/cohort_020_20260113T1730/0001/failure.json": "e015f11ee349c37051776b2eaf28d2ac82c3c36754793f2396f67ae2e9b9e995",
     "history/cohort_020_20260113T1730/0002/driver.json": "85fbf6530cccd4d9528b73659f9e782fb1085b33bdf9aa484517ac1b16e8dde1",
@@ -682,6 +707,18 @@
         20
       ],
       "retry_run": "34175478785"
+    },
+    {
+      "retried_window_indices": [
+        12
+      ],
+      "retry_run": "34177343252"
+    },
+    {
+      "retried_window_indices": [
+        12
+      ],
+      "retry_run": "34178831936"
     }
   ],
   "runner_sha256": {
