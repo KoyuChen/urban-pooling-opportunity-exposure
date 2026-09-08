@@ -21,11 +21,15 @@ remains HOLD. It supplies no evidence about actual sequential vehicle runs or
 general model equivalence. The result and a TeX fragment are in
 `code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/`.
 
-The next research action is an outcome-blind temporal-geometry census of the
-already declared NYC panel windows, retaining all complete-clique cases and
-failures in its denominator. This will determine where connected non-clique
-events can even occur before specifying additional endpoint comparisons. It
-takes priority over another large solve on an uninformative small input.
+The outcome-blind temporal-geometry census is now implemented and its original
+24-cell calendar is frozen. Nine tests include independent triple enumeration
+on 60 random instances, timeout handling, unchanged terminal checkpoints and
+the full missing-window denominator. The first live extraction is being
+checked; no completed panel result is claimed at this checkpoint.
+`docs/NYC_GEOMETRY_CENSUS.md` documents the full-candidate and time-only 4+12
+views, event-column/full-world distinction, and persistent per-window workflow.
+The next execution step is to collect all 24 records and preserve every
+complete-clique case and failure before declaring new outcome comparisons.
 
 The adversarially repaired ATR v4 dyad audit has 170 eligible fixed snapshots and 850 radius
 cells. All are computationally closed: 806 have replayed numerical MILP optima
@@ -93,7 +97,9 @@ status is 16/48. The frozen
 rule sets the default budget to `0.75` seconds.
 
 Only `ci.yml`, `chicago-live-audits.yml`, `chicago-k2-fixed-panel.yml`, and the
-manual `nyc-bp-24h.yml` follow-up are active workflows. CI verifies compact hashes/default consistency,
+`nyc-bp-24h.yml` NYC campaign are active workflows. Its geometry mode executes
+the new census; historical branch-price reruns require explicit mode selection.
+CI verifies compact hashes/default consistency,
 deterministic tests and the paper build. The NYC follow-up assigned 20,700
 solver seconds independently to each of the four formerly open scale cells and
 certified all four exactly. Its artifact capture is fail-closed and every future

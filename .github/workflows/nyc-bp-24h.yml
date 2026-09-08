@@ -2,6 +2,16 @@ name: nyc-bp-24h
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: NYC campaign (formerly open branch-price cells are already closed)
+        type: choice
+        default: geometry
+        options: [geometry, branch-price]
+      resume_run_id:
+        description: Optional prior geometry run; reuse completed windows and retry transport failures
+        type: string
+        default: ''
   push:
     branches: [main]
     paths:
@@ -9,9 +19,11 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   open-cells:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'branch-price' }}
     runs-on: ubuntu-latest
     timeout-minutes: 360
     strategy:
@@ -78,3 +90,80 @@ jobs:
           path: tmp/core${{ matrix.core }}-capacity${{ matrix.capacity }}/
           if-no-files-found: warn
           retention-days: 30
+
+  geometry-tests:
+    if: ${{ github.event_name == 'push' || inputs.mode == 'geometry' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify fixed calendar, independent P3 counts and recovery states
+        run: python -m unittest discover -s code/ai_pilot/data_pipeline/production_audit/tests -p test_nyc_geometry_census.py -v
+
+  geometry-window:
+    needs: geometry-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    env:
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore prior window checkpoint when requested
+        if: ${{ inputs.resume_run_id != '' }}
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          name: nyc-geometry-window-${{ matrix.index }}
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+          path: tmp/nyc-geometry/window-${{ matrix.index }}
+      - name: Census one fixed window without outcome columns
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/nyc_geometry_census.py \
+            --window-index "${{ matrix.index }}" \
+            --output-dir "tmp/nyc-geometry/window-${{ matrix.index }}"
+      - name: Preserve aggregate checkpoint and every attempt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-geometry-window-${{ matrix.index }}
+          path: tmp/nyc-geometry/window-${{ matrix.index }}/
+          if-no-files-found: warn
+          retention-days: 90
+
+  geometry-summary:
+    if: ${{ always() && needs.geometry-tests.result == 'success' }}
+    needs: [geometry-tests, geometry-window]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download every observed window
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nyc-geometry-window-*
+          path: tmp/nyc-geometry-records
+      - name: Account for all 24 cells including missing reports
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/nyc_geometry_census.py \
+            --input-dir tmp/nyc-geometry-records --output-dir tmp/nyc-geometry-summary
+      - name: Preserve ledger, report, TeX and hashes even on HOLD
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-geometry-summary
+          path: tmp/nyc-geometry-summary/
+          retention-days: 90

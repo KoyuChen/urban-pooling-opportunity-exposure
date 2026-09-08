@@ -35,6 +35,8 @@ universe, and a simultaneous-capacity bound.
 - `docs/PROJECT_STATUS.md` -- verified manuscript versus exploration status.
 - `docs/NEXT_RESEARCH_GATE.md` -- next structural comparison, Chicago follow-up
   calendar, execution gates and manuscript decision criteria.
+- `docs/NYC_GEOMETRY_CENSUS.md` -- outcome-blind census on the original 24 NYC
+  cells, exact non-clique event-column diagnostic and resumable execution.
 - `code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/` --
   fixed-input ordered/pair/clique diagnostic: 36 exact endpoint pairs and
   no changes in 24 common-count comparisons; the input is a complete clique.
