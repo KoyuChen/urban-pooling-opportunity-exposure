@@ -1,16 +1,16 @@
 {
   "all_completed_windows_count_closed": true,
-  "certified_endpoint_pair_count": 2384,
+  "certified_endpoint_pair_count": 2504,
   "claim_boundary": "A fixed outcome-blind public-data certification panel; not a probability sample, hidden-run recovery study, partner-recall benchmark, or Chicago population estimate.",
-  "completed_window_count": 20,
+  "completed_window_count": 21,
   "computationally_unresolved_endpoint_pair_count": 0,
-  "data_complete_endpoint_pair_count": 2384,
+  "data_complete_endpoint_pair_count": 2504,
   "data_complete_exact_endpoint_rate": 1.0,
-  "endpoint_pair_count": 2980,
+  "endpoint_pair_count": 3130,
   "exact_endpoint_rate": 0.8,
-  "failed_or_invalid_window_count": 3,
+  "failed_or_invalid_window_count": 2,
   "ineligible_window_count": 1,
-  "missing_public_query_value_endpoint_pair_count": 596,
+  "missing_public_query_value_endpoint_pair_count": 626,
   "predeclared_window_count": 24,
   "protocol_file": "CHICAGO_K2_PANEL_PROTOCOL.json",
   "protocol_sha256": "d91f6c0bbfc27c0e1c094db886ee4d8ebe839c9da657100d96056c446b7e443c",
@@ -367,7 +367,7 @@
     },
     {
       "core_start_local": "2026-01-13T17:30:00",
-      "failure_message": "both Socrata APIs failed: soda2: LiveDataError: request failed: https://data.cityofchicago.org/resource/6dvr-xwnh.json?%24query=SELECT+trip_id%2C+trip_start_timestamp+WHERE+shared_trip_match+%3D+true+AND+trips_pooled+%3D+2+AND+trip_start_timestamp+IS+NOT+NULL+AND+trip_end_timestamp+IS+NOT+NULL+AND+trip_start_timestamp+%3C%3D+%272026-01-13T19%3A15%3A00.000%27+AND+trip_end_timestamp+%3E%3D+%272026-01-13T17%3A15%3A00.000%27+LIMIT+611; TimeoutError: The read operation timed out | TimeoutError: The read operation timed out | TimeoutError: The read operation timed out || soda3: LiveDataError: request failed: https://data.cityofchicago.org/api/v3/views/6dvr-xwnh/query.json; TimeoutError: The read operation timed out | TimeoutError: The read operation timed out | TimeoutError: The read operation timed out",
+      "failure_message": "both Socrata APIs failed: soda2: LiveDataError: request failed: https://data.cityofchicago.org/resource/6dvr-xwnh.json?%24query=SELECT+count%28%2A%29+AS+n+WHERE+shared_trip_match+%3D+true+AND+trips_pooled+%3D+2+AND+trip_start_timestamp+IS+NOT+NULL+AND+trip_end_timestamp+IS+NOT+NULL+AND+trip_start_timestamp+%3C%3D+%272026-01-13T19%3A15%3A00.000%27+AND+trip_end_timestamp+%3E%3D+%272026-01-13T17%3A15%3A00.000%27; TimeoutError: The read operation timed out | TimeoutError: The read operation timed out | TimeoutError: The read operation timed out || soda3: LiveDataError: request failed: https://data.cityofchicago.org/api/v3/views/6dvr-xwnh/query.json; TimeoutError: The read operation timed out | TimeoutError: The read operation timed out | TimeoutError: The read operation timed out",
       "failure_type": "LiveDataError",
       "status": "EXECUTION_FAILED",
       "window_index": 20
@@ -398,10 +398,21 @@
       "window_index": 22
     },
     {
+      "buffer_rows": 590,
+      "candidate_rows": 664,
+      "certified_endpoint_pairs": 120,
+      "closure_status": "PASS",
+      "computationally_unresolved_endpoint_pairs": 0,
+      "core_rows": 74,
       "core_start_local": "2026-01-14T17:30:00",
-      "failure_message": "both Socrata APIs failed: soda2: LiveDataError: request failed: https://data.cityofchicago.org/resource/6dvr-xwnh.json?%24query=SELECT+count%28%2A%29+AS+n+WHERE+shared_trip_match+%3D+true+AND+trips_pooled+%3D+2+AND+trip_start_timestamp+IS+NOT+NULL+AND+trip_end_timestamp+IS+NOT+NULL+AND+trip_start_timestamp+%3C%3D+%272026-01-14T19%3A00%3A00.000%27+AND+trip_end_timestamp+%3E%3D+%272026-01-14T17%3A15%3A00.000%27; TimeoutError: The read operation timed out | TimeoutError: The read operation timed out | TimeoutError: The read operation timed out || soda3: LiveDataError: request failed: https://data.cityofchicago.org/api/v3/views/6dvr-xwnh/query.json; TimeoutError: The read operation timed out | TimeoutError: The read operation timed out | TimeoutError: The read operation timed out",
-      "failure_type": "LiveDataError",
-      "status": "EXECUTION_FAILED",
+      "endpoint_pairs": 150,
+      "missing_public_query_value_endpoint_pairs": 30,
+      "monotonicity_status": "PARTIAL",
+      "report_sha256": "6f2b28a301830ab0e728e8cba8a808a4b12e9e6f8a62cdb5300046b3b9f6c790",
+      "sensitivity_sha256": "8e4f4bede03291042a7a6da8df308ad05e784a398ad33bbab8e22de1daf88366",
+      "status": "COMPLETED",
+      "temporal_edges": 33777,
+      "uncertified_endpoint_pairs": 30,
       "window_index": 23
     }
   ]

@@ -1,0 +1,1710 @@
+{
+  "boundary_padding_curve": {
+    "above_complete_endpoint_interpretation": "same feasible set by endpoint identity; canonical reuse rather than a claim of recursively closed hidden runs",
+    "at_complete_endpoint_interpretation": "boundary-complete for core-incident public temporal edges under the declared +/-7.5 minute release model",
+    "below_complete_endpoint_interpretation": "intentional under-padding stress test; not a closed candidate universe",
+    "complete_padding_minutes": 15.0,
+    "grid_minutes": [
+      0.0,
+      15.0
+    ],
+    "indeterminate_timestamp_buffers_retained_at_every_point": true,
+    "parameter": "released-time boundary padding p in minutes",
+    "rounding_half_width_minutes": 7.5
+  },
+  "boundary_padding_graph_points": [
+    {
+      "core_max_degree": 541,
+      "core_min_degree": 284,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "buffer_padding",
+      "dropped_buffer_rows": 122,
+      "edge_count": 28277,
+      "endpoint_source": "direct_milp",
+      "gamma_core_incidences": null,
+      "lower_released_end_cutoff": "2026-01-14T17:30:00",
+      "padding_minutes": 0.0,
+      "parameter_label": "0 min",
+      "parameter_value": 0.0,
+      "radius_km": null,
+      "retained_buffer_rows": 468,
+      "retained_core_rows": 74,
+      "retained_fraction_of_temporal": 0.8371673031944814,
+      "retained_indeterminate_buffer_rows": 0,
+      "spatially_unmeasured_edges_retained": 13408,
+      "upper_released_start_cutoff": "2026-01-14T18:45:00"
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "buffer_padding",
+      "dropped_buffer_rows": 0,
+      "edge_count": 33777,
+      "endpoint_source": "direct_milp",
+      "gamma_core_incidences": null,
+      "lower_released_end_cutoff": "2026-01-14T17:15:00",
+      "padding_minutes": 15.0,
+      "parameter_label": "15 min",
+      "parameter_value": 15.0,
+      "radius_km": null,
+      "retained_buffer_rows": 590,
+      "retained_core_rows": 74,
+      "retained_fraction_of_temporal": 1.0,
+      "retained_indeterminate_buffer_rows": 0,
+      "spatially_unmeasured_edges_retained": 15904,
+      "upper_released_start_cutoff": "2026-01-14T19:00:00"
+    }
+  ],
+  "boundary_padding_identity_audit": {
+    "complete_padding_minutes": 15.0,
+    "expected": "row and edge universes are nested in padding; p=2*delta equals the full temporal graph; every p>2*delta reuses the same certified endpoint",
+    "mismatch_count": 0,
+    "mismatches": [],
+    "post_complete_query_comparison_count": 0,
+    "rounding_half_width_minutes": 7.5,
+    "status": "PASS"
+  },
+  "candidate_omission_curve": {
+    "base_support": "boundary padding p=0 minutes",
+    "full_support": "boundary-complete padding p=15 minutes",
+    "grid": [
+      0,
+      1,
+      2,
+      4,
+      8,
+      16,
+      19,
+      37,
+      74
+    ],
+    "interpretation": "robust expansion from a declared candidate support to its full public temporal envelope; not an estimated miss rate or partner-recall guarantee",
+    "missing_geography_exempt": false,
+    "parameter": "allowed selected core incidence through omitted candidate edges"
+  },
+  "candidate_omission_graph_points": [
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 0,
+      "parameter_label": "0",
+      "parameter_value": 0.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 1,
+      "parameter_label": "1",
+      "parameter_value": 1.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 2,
+      "parameter_label": "2",
+      "parameter_value": 2.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 4,
+      "parameter_label": "4",
+      "parameter_value": 4.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 8,
+      "parameter_label": "8",
+      "parameter_value": 8.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 16,
+      "parameter_label": "16",
+      "parameter_value": 16.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 19,
+      "parameter_label": "19",
+      "parameter_value": 19.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 37,
+      "parameter_label": "37",
+      "parameter_value": 37.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "candidate_omission",
+      "edge_count": 33777,
+      "gamma_core_incidences": 74,
+      "parameter_label": "74",
+      "parameter_value": 74.0,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    }
+  ],
+  "claim_boundary": {
+    "monotonicity_statement": "Only 16 of 20 entire curve/query chains are fully certified and monotone, covering 4 of 5 complete query families; no universal monotonicity claim is made.",
+    "prohibited_statement": "The true Chicago pooled runs or co-rider partners have been reconstructed; the buffer is recursively hidden-run closed; padding below 15 minutes has partner-recall validity; either Gamma axis estimates partner misses; or this bin or panel establishes a Chicago-population effect.",
+    "released_field_scope": "Query coefficients use released public trip fields and their missing-data semantics; they are not claims about latent exact fare, duration, distance, or location values.",
+    "snapshot_scope": "Stable metadata and server counts pin extraction consistency; they do not constitute a transaction-level immutable snapshot guarantee.",
+    "strongest_supported_statement": "For one fixed outcome-blind 15-minute panel core, this metadata/count-stable extraction yields a count-closed, core-incident K=2 public temporal candidate universe under the declared timestamp-rounding model; the p=15 minute endpoint is boundary-complete, p>15 is endpoint-identical, and monotonic widening is supported only for the complete certified chains identified by the audit across padding, radius, spatial Gamma, and candidate-omission Gamma."
+  },
+  "cohort": {
+    "buffer_rows": 590,
+    "candidate_rows": 664,
+    "closure_audit": {
+      "checks": {
+        "candidate_count_matches_pinned_count": true,
+        "core_subset_verified": true,
+        "full_temporal_cover_optimal": true,
+        "global_null_start_or_end_targets_included": true,
+        "no_off_release_grid_rows": true,
+        "no_released_chronology_impossible_rows": true,
+        "no_unusable_context_rows": true,
+        "server_counts_stable": true,
+        "snapshot_stable": true
+      },
+      "definition": "count-closed, core-incident public temporal candidate universe; boundary-complete core candidate superset under released timestamps",
+      "failed_checks": [],
+      "hidden_run_closure_claimed": false,
+      "status": "PASS"
+    },
+    "core_end_local": "2026-01-14T17:45:00",
+    "core_rows": 74,
+    "core_start_local": "2026-01-14T17:30:00",
+    "core_subset_verified": true,
+    "determinate_candidate_rows": 664,
+    "hidden_run_closure_status": "NOT_IDENTIFIED_AND_NOT_CLAIMED",
+    "indeterminate_timestamp_rows": 0,
+    "indeterminate_timestamp_rows_included": true,
+    "lower_released_end_cutoff": "2026-01-14T17:15:00",
+    "off_release_grid_rows": 0,
+    "public_temporal_candidate_universe_closure_status": "PASS",
+    "released_chronology_impossible_rows": 0,
+    "row_audit": {
+      "buffer_rows": 590,
+      "context_rows": 0,
+      "core_rows": 74,
+      "core_unique_ids": 74,
+      "duplicate_id_rows": 0,
+      "field_completeness": {
+        "dropoff_area": 574,
+        "dropoff_coordinates": 574,
+        "fare": 657,
+        "pickup_area": 573,
+        "pickup_coordinates": 574,
+        "trip_miles": 664,
+        "trip_seconds": 664
+      },
+      "issues": {},
+      "null_or_blank_id_rows": 0,
+      "rows": 664,
+      "unique_nonnull_ids": 664
+    },
+    "server_counts_stable": true,
+    "snapshot_stable": true,
+    "upper_released_start_cutoff": "2026-01-14T19:00:00"
+  },
+  "endpoint_identity_audit": {
+    "base_radius_km": 2.0,
+    "core_count": 74,
+    "expected": "Gamma=0 equals the base-radius feasible set; Gamma=core_count equals the unconstrained temporal-only feasible set",
+    "mismatch_count": 0,
+    "mismatches": [],
+    "query_comparison_count": 10,
+    "status": "PASS",
+    "structural_basis": "cost zero iff an edge is in the base-radius graph; otherwise cost equals its one or two core endpoints. Core cover equalities fix total selected core incidence at core_count, so Gamma=core_count is redundant."
+  },
+  "extraction": {
+    "considered_bins": [
+      {
+        "candidate_count": 664,
+        "core_count": 74,
+        "core_start": "2026-01-14T17:30:00"
+      }
+    ],
+    "determinate_query_sha256": "086862b57bb341ad3d9bfa3261dff294dccb7c5f1b104d13e0aa8944a3bd7708",
+    "fetch_ledger": {
+      "combined_id_set_sha256": "d079f2b5cc4e87d70e69450112dc1856462c9c2b97c551dfa2f6628e817505d3",
+      "combined_row_count": 664,
+      "determinate": {
+        "index_api": "soda3",
+        "index_id_set_sha256": "d079f2b5cc4e87d70e69450112dc1856462c9c2b97c551dfa2f6628e817505d3",
+        "index_query_sha256": "36c5ec9b4e26b363d8910618b1f22d14cada2d084792e5b680d665cbfcd302a2",
+        "partition_count": 16,
+        "partitions": [
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "5b30563025593dd605b239c48d9ad540bc5cc16cc4496bf98f21dc13f3934c81",
+            "id_set_sha256": "82579e8e64e1889c90045bc2a33ae466d9a61566b982828c316de6d377154ca0",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "fee013cc4f5881ca6b1b56924e1675e9586869762ee21650eed7e11f97a7da26",
+            "released_start": "2026-01-14T13:30:00",
+            "row_count": 1,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "f0507764f6f90787c748812e827e17533a0d3cb397a7a9a326568a87c6b76210",
+            "id_set_sha256": "ec062dad74c85dae0a50ac2c0ff358c8630e3b13a44a2604eb43e3f3ecac30aa",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "a2b25ac3d3a506b2dee7a16ab149a3c03df0239d7450b1208da4ba44f700e71d",
+            "released_start": "2026-01-14T15:15:00",
+            "row_count": 1,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "b5c9d53cdcce42b31e2fe15efaf4f940e5e6d49056320368e9dd227d682a5ffb",
+            "id_set_sha256": "2b5f052889f4cf2db3b841eddb73bf30121758fc8ca8a9fd3c03f4c02381905a",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "c2b3b200053c9563a8c714c2cfc717f22eae193651ea815c228613c18461a738",
+            "released_start": "2026-01-14T15:45:00",
+            "row_count": 1,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "048c2c1c97e6b78f1fc634d28804760f8a170fd17b2cb8cab3a75023c697dd87",
+            "id_set_sha256": "216ea697f639c1fa5bc1a3b6b76191cf8e08d34450b1799f27e5e2b3f0cdc7ea",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "81e060c3c59d0808dfdf5a36915c6c27dd9554a990890cd367ec58ffcf8a7906",
+            "released_start": "2026-01-14T16:00:00",
+            "row_count": 7,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "4dbcd9a7267d7f9d1d14624ef09da40eba60aabb1131dd8a7e3928a244e8c1fe",
+            "id_set_sha256": "b1499b6b4846a3beca063b65171e7b67909abebda00e181a45a2f86c77d55e1f",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "cbb9d0a52bb98b79280b29af99b5ecfe8c1dfe4ed669948bbbdc2495f8deca1e",
+            "released_start": "2026-01-14T16:15:00",
+            "row_count": 11,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "e4217b448249f18703395163765e89ee27d5c4f70e9ce44cbe6b570b2a1779e1",
+            "id_set_sha256": "476bb3fb521944546dcc6db3fce7094da524cf8d337d05b3ab44424c349d8032",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "1b24ebd18da0552e47b93ece882493f81922fef505ecf55186ca85891266e74c",
+            "released_start": "2026-01-14T16:30:00",
+            "row_count": 28,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "ae8a7b82208c08bfccd98827a4ff39daec8c7bae1f6a55a09ac795a63d129ca6",
+            "id_set_sha256": "3f413230fdd4c5375ff7415801ae669e060ad7eb8c44e9a8929517c979ff4545",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "e5148368923b38790a33d1007355646d4a6344a2737f05632252a584f98e86e1",
+            "released_start": "2026-01-14T16:45:00",
+            "row_count": 44,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "e78bff097a81af9d7ae3c5e7b5e9f9e06e320872bf5357168a84bf279057f7b0",
+            "id_set_sha256": "a8d52fbf2a358209dfb92248805648fec5ef54f81b068e33ec828288234d73f8",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "85168c58264946960b7cf3a83e7d8b768922343a91e0633e83625329b10e996d",
+            "released_start": "2026-01-14T17:00:00",
+            "row_count": 71,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "8eb9e31b6315ddb168093ede37049596367892c2071eb1671f7251412ebdd6fb",
+            "id_set_sha256": "47a9a71ff9f775252f6167c785eea056f153c872478a504d83c4520fa002c64c",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "4a2823ed59a4c8882624a964b5c8a70fae53c5506334f7bca6b01db77b6b147b",
+            "released_start": "2026-01-14T17:15:00",
+            "row_count": 54,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "2fa7f45d2022b623519648e40a6829e7d6f4ce305ee466e260e22a5bd02835f9",
+            "id_set_sha256": "6351e4371e9f8a13d3176e5e6cea1ec0d2321c0f8c12e0f78a5d84e46fe3466e",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "ab713b7e8b981b41f202c21ecb832dcaed77b035439d2c96e21cfbcf7e4ee2e1",
+            "released_start": "2026-01-14T17:30:00",
+            "row_count": 74,
+            "source": "reused_integrity_checked_core_pull"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "abf47c474de6c3c37c44fe9b3bd0e12b811ba26a2dc92a245e2e66f8dc9faa56",
+            "id_set_sha256": "961958c167b366dada52332e7f91845657fe821f552a05033989698d525adc0f",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "03e2d2dedb978c20caa0c5fa87078cc7abe5f1374beef16b579acdd9f18fc557",
+            "released_start": "2026-01-14T17:45:00",
+            "row_count": 66,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "d50c174b375cc7fa9b2920d347b178c86624cc99d3ce184c147c4c19be411473",
+            "id_set_sha256": "98d9f5bfef23aca605765fddccd5c5ea5e5a93bd7ae4451cf4f464da856387b9",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "9980b43a2673a5a2519f263482a5c9a079bd116dda36f3412fcfa88b52d39888",
+            "released_start": "2026-01-14T18:00:00",
+            "row_count": 67,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "75937cf3cfa5c0c38cbe8c7e22ee67a3dce484dcb272158ace28e15b6a385f00",
+            "id_set_sha256": "55f6a89e1efaf2c021a947fb63e973b167a6dea498f3e23ab6f154d6cd0336b5",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "e77f82785c1c0862835d0002f9842958225ecb73ae3de7ece1edb13edfefdecd",
+            "released_start": "2026-01-14T18:15:00",
+            "row_count": 64,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "7c1b73dab697ce00ba8ffbd16d72e4ee08c675b4e5a5e1cf9b2f62f802895fc1",
+            "id_set_sha256": "ef3dc96bfac707abef9d9b8baceed004bf71aa364ec968aa791c591b796e70a8",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "39d5001788b3016aaef4639ff6b02f5682fa8b9854f062dbf4b69f2bc41fa288",
+            "released_start": "2026-01-14T18:30:00",
+            "row_count": 66,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "f3ee52a5ae956f3c152a17e102d7fd450bdfdb22914b3a77584e64fd76c704f6",
+            "id_set_sha256": "3b7a421967df965f006a040e685da71ab80db2e9609187d59d5091537708bbef",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "b78ce8737f911f91c5554d07b84ace6b422cc28476cea85e047f13086a4e0283",
+            "released_start": "2026-01-14T18:45:00",
+            "row_count": 60,
+            "source": "exact_released_start_partition"
+          },
+          {
+            "count_api": "soda2",
+            "count_query_sha256": "f5ed1b0c2ccd4312825764e158d15230a6ca4c482c35261ef341ba57e4d2a22a",
+            "id_set_sha256": "962588f2632693fec6be6d6f6776621569c611c1c69aeaee5b80343b8bd9f3b3",
+            "page_apis": [
+              "soda2"
+            ],
+            "query_sha256": "eaa3f575cc4c25c412ea590ca20f33611e6a997e2c8f143203be65f6dbbbca8d",
+            "released_start": "2026-01-14T19:00:00",
+            "row_count": 49,
+            "source": "exact_released_start_partition"
+          }
+        ],
+        "strategy": "narrow_id_start_index_then_exact_start_partitions"
+      },
+      "essential_fields": [
+        "trip_id",
+        "trip_start_timestamp",
+        "trip_end_timestamp",
+        "trip_seconds",
+        "trip_miles",
+        "pickup_community_area",
+        "dropoff_community_area",
+        "fare",
+        "shared_trip_authorized",
+        "shared_trip_match",
+        "trips_pooled",
+        "pickup_centroid_latitude",
+        "pickup_centroid_longitude",
+        "dropoff_centroid_latitude",
+        "dropoff_centroid_longitude"
+      ],
+      "fetch_strategy_version": "partitioned-index-v1",
+      "indeterminate": {
+        "batch_count": 0,
+        "batches": [],
+        "index_query_sha256": null,
+        "strategy": "not_needed_server_count_zero"
+      },
+      "raw_trip_ids_emitted": false
+    },
+    "indeterminate_query_sha256": "fb0763601cb400d9a551bbb5ca8c0f3a70c6fca9a237a12658aa790f788d5826",
+    "overlap_envelope_derivation": "For rounding half-width delta=7.5 minutes, any determinate partner of a core row must satisfy released_start <= max_core_released_end + 2*delta and released_end >= min_core_released_start - 2*delta. All null-start or null-end literal Match=true,K=2 rows are appended globally.",
+    "predeclared_core_start_local": "2026-01-14T17:30:00",
+    "raw_rows_serialized": false,
+    "raw_rows_sha256": "3fccd73fa023c044b94e10941758f46f5cf8c28a4cd5605fea4fab29f6993ff5",
+    "scan_end_local": "2026-01-14T17:45:00",
+    "scan_group_query_sha256": "e0fa6bbd8f853072ef4bc680657864964cca4ea3fed4273453a0155ea7b7dd47",
+    "scan_start_local": "2026-01-14T17:30:00",
+    "selection_algorithm": "fixed outcome-blind released 15-minute bin; no replacement after eligibility or frontier outcomes are observed",
+    "transport": {
+      "partition_page_size": 100,
+      "request_attempts": 3,
+      "request_timeout_seconds": 90,
+      "strategy": "narrow index plus exact released-start partitions"
+    }
+  },
+  "gamma_curve": {
+    "base_edge_count": 15965,
+    "base_radius_km": 2.0,
+    "endpoint_identity_implementation": "Gamma=0 reuses the certified base-radius endpoint pair and Gamma=core_count reuses the certified temporal-only endpoint pair; the equivalences are also checked structurally",
+    "gamma_definition": "number of core incidences assigned through temporal edges whose measured endpoint distance exceeds the fixed base radius",
+    "gamma_is_estimated_miss_rate": false,
+    "gamma_is_total_candidate_miss_budget": false,
+    "unmeasured_distance_edges_retained_and_cost_zero": true
+  },
+  "gamma_graph_points": [
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 0,
+      "parameter_label": "0",
+      "parameter_value": 0.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 1,
+      "parameter_label": "1",
+      "parameter_value": 1.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 2,
+      "parameter_label": "2",
+      "parameter_value": 2.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 4,
+      "parameter_label": "4",
+      "parameter_value": 4.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 8,
+      "parameter_label": "8",
+      "parameter_value": 8.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 16,
+      "parameter_label": "16",
+      "parameter_value": 16.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 19,
+      "parameter_label": "19",
+      "parameter_value": 19.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 37,
+      "parameter_label": "37",
+      "parameter_value": 37.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "gamma",
+      "edge_count": 33777,
+      "gamma_core_incidences": 74,
+      "parameter_label": "74",
+      "parameter_value": 74.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    }
+  ],
+  "generated_at_utc": "2026-09-07T01:57:59+00:00",
+  "logical_graph": {
+    "buffer_nodes": 590,
+    "core_nodes": 74,
+    "cover_status": "OPTIMAL_NUMERICAL_MILP",
+    "definition": "literal Match=true,K=2 endpoints; at least one core endpoint; possible closed-interval overlap after +/-7.5 minute release expansion",
+    "edge_count": 33777,
+    "edge_provenance": {
+      "core_buffer": 31076,
+      "core_core": 2701,
+      "retained_determinate_overlap": 33777,
+      "temporally_ruled_out": 12584
+    },
+    "partner_coverage_claim": "NOT_ESTIMATED_OR_IDENTIFIED_FROM_PUBLIC_ROWS",
+    "spatially_unmeasured_edges": 15904
+  },
+  "monotonicity_audit": {
+    "certification_failure_count": 90,
+    "certification_failures": [
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "0 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "0 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "0 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "0.25 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "0.25 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "0.25 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "0.5 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "0.5 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "0.5 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "1 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "1 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "1 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "2 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "2 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "2 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "4 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "4 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "4 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "8 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "8 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "8 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "16 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "16 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "16 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "32 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "32 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "32 km",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "radius",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "temporal-only",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "temporal-only",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "radius",
+        "parameter": "temporal-only",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "0",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "0",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "0",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "1",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "1",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "1",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "2",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "2",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "2",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "4",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "4",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "4",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "8",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "8",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "8",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "16",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "16",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "16",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "19",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "19",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "19",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "37",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "37",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "37",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "gamma",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "74",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "74",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "gamma",
+        "parameter": "74",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "buffer_padding",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "0 min",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "buffer_padding",
+        "parameter": "0 min",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "buffer_padding",
+        "parameter": "0 min",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "buffer_padding",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "15 min",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "buffer_padding",
+        "parameter": "15 min",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "buffer_padding",
+        "parameter": "15 min",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "0",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "0",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "0",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "1",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "1",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "1",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "2",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "2",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "2",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "4",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "4",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "4",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "8",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "8",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "8",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "16",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "16",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "16",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "19",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "19",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "19",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "37",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "37",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "37",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "lower_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES",
+        "parameter": "74",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "nonoptimal_or_missing_solver_status",
+        "upper_status": "UNRESOLVED_MISSING_PUBLIC_QUERY_VALUES"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "74",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "endpoint_pair_not_marked_certified"
+      },
+      {
+        "curve_type": "candidate_omission",
+        "parameter": "74",
+        "query": "mean_absolute_fare_gap_per_core",
+        "reason": "missing_certified_endpoint"
+      }
+    ],
+    "chain_audits": [
+      {
+        "certification_failure_count": 0,
+        "curve_type": "radius",
+        "point_count": 10,
+        "query": "mean_absolute_trip_miles_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "radius",
+        "point_count": 10,
+        "query": "mean_absolute_duration_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 30,
+        "curve_type": "radius",
+        "point_count": 10,
+        "query": "mean_absolute_fare_gap_per_core",
+        "status": "FAIL",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "radius",
+        "point_count": 10,
+        "query": "same_pickup_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "radius",
+        "point_count": 10,
+        "query": "same_dropoff_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "gamma",
+        "point_count": 9,
+        "query": "mean_absolute_trip_miles_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "gamma",
+        "point_count": 9,
+        "query": "mean_absolute_duration_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 27,
+        "curve_type": "gamma",
+        "point_count": 9,
+        "query": "mean_absolute_fare_gap_per_core",
+        "status": "FAIL",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "gamma",
+        "point_count": 9,
+        "query": "same_pickup_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "gamma",
+        "point_count": 9,
+        "query": "same_dropoff_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "buffer_padding",
+        "point_count": 2,
+        "query": "mean_absolute_trip_miles_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "buffer_padding",
+        "point_count": 2,
+        "query": "mean_absolute_duration_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 6,
+        "curve_type": "buffer_padding",
+        "point_count": 2,
+        "query": "mean_absolute_fare_gap_per_core",
+        "status": "FAIL",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "buffer_padding",
+        "point_count": 2,
+        "query": "same_pickup_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "buffer_padding",
+        "point_count": 2,
+        "query": "same_dropoff_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "candidate_omission",
+        "point_count": 9,
+        "query": "mean_absolute_trip_miles_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "candidate_omission",
+        "point_count": 9,
+        "query": "mean_absolute_duration_gap_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 27,
+        "curve_type": "candidate_omission",
+        "point_count": 9,
+        "query": "mean_absolute_fare_gap_per_core",
+        "status": "FAIL",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "candidate_omission",
+        "point_count": 9,
+        "query": "same_pickup_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      },
+      {
+        "certification_failure_count": 0,
+        "curve_type": "candidate_omission",
+        "point_count": 9,
+        "query": "same_dropoff_community_area_fraction_per_core",
+        "status": "PASS",
+        "violation_count": 0
+      }
+    ],
+    "chain_count": 20,
+    "expected": "every curve/query chain fully certified; lower nonincreasing and upper nondecreasing as candidate support expands",
+    "fully_certified_monotone_chain_count": 16,
+    "fully_certified_monotone_query_family_count": 4,
+    "malformed_row_count": 0,
+    "malformed_rows": [],
+    "query_family_audits": [
+      {
+        "curve_chain_count": 4,
+        "query": "mean_absolute_duration_gap_per_core",
+        "status": "PASS"
+      },
+      {
+        "curve_chain_count": 4,
+        "query": "mean_absolute_fare_gap_per_core",
+        "status": "FAIL"
+      },
+      {
+        "curve_chain_count": 4,
+        "query": "mean_absolute_trip_miles_gap_per_core",
+        "status": "PASS"
+      },
+      {
+        "curve_chain_count": 4,
+        "query": "same_dropoff_community_area_fraction_per_core",
+        "status": "PASS"
+      },
+      {
+        "curve_chain_count": 4,
+        "query": "same_pickup_community_area_fraction_per_core",
+        "status": "PASS"
+      }
+    ],
+    "query_family_count": 5,
+    "status": "PARTIAL",
+    "violation_count": 0,
+    "violations": []
+  },
+  "plot_files": [
+    "radius_edge_curve.svg",
+    "radius_mean_absolute_duration_gap.svg",
+    "radius_mean_absolute_trip_miles_gap.svg",
+    "radius_same_dropoff_community_area_fraction.svg",
+    "radius_same_pickup_community_area_fraction.svg",
+    "gamma_mean_absolute_duration_gap.svg",
+    "gamma_mean_absolute_trip_miles_gap.svg",
+    "gamma_same_dropoff_community_area_fraction.svg",
+    "gamma_same_pickup_community_area_fraction.svg",
+    "candidate_omission_mean_absolute_duration_gap.svg",
+    "candidate_omission_mean_absolute_trip_miles_gap.svg",
+    "candidate_omission_same_dropoff_community_area_fraction.svg",
+    "candidate_omission_same_pickup_community_area_fraction.svg",
+    "buffer_padding_edge_curve.svg",
+    "buffer_padding_mean_absolute_duration_gap.svg",
+    "buffer_padding_mean_absolute_trip_miles_gap.svg",
+    "buffer_padding_same_dropoff_community_area_fraction.svg",
+    "buffer_padding_same_pickup_community_area_fraction.svg"
+  ],
+  "radius_graph_points": [
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 107,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 15906,
+      "gamma_core_incidences": null,
+      "parameter_label": "0 km",
+      "parameter_value": 0.0,
+      "radius_km": 0.0,
+      "retained_fraction_of_temporal": 0.47091215916155965,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 107,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 15906,
+      "gamma_core_incidences": null,
+      "parameter_label": "0.25 km",
+      "parameter_value": 0.25,
+      "radius_km": 0.25,
+      "retained_fraction_of_temporal": 0.47091215916155965,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 107,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 15907,
+      "gamma_core_incidences": null,
+      "parameter_label": "0.5 km",
+      "parameter_value": 0.5,
+      "radius_km": 0.5,
+      "retained_fraction_of_temporal": 0.4709417651064334,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 107,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 15913,
+      "gamma_core_incidences": null,
+      "parameter_label": "1 km",
+      "parameter_value": 1.0,
+      "radius_km": 1.0,
+      "retained_fraction_of_temporal": 0.47111940077567577,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 107,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 15965,
+      "gamma_core_incidences": null,
+      "parameter_label": "2 km",
+      "parameter_value": 2.0,
+      "radius_km": 2.0,
+      "retained_fraction_of_temporal": 0.47265890990910975,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 108,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 16331,
+      "gamma_core_incidences": null,
+      "parameter_label": "4 km",
+      "parameter_value": 4.0,
+      "radius_km": 4.0,
+      "retained_fraction_of_temporal": 0.48349468573289517,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 134,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 18623,
+      "gamma_core_incidences": null,
+      "parameter_label": "8 km",
+      "parameter_value": 8.0,
+      "radius_km": 8.0,
+      "retained_fraction_of_temporal": 0.5513515113834858,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 203,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 26456,
+      "gamma_core_incidences": null,
+      "parameter_label": "16 km",
+      "parameter_value": 16.0,
+      "radius_km": 16.0,
+      "retained_fraction_of_temporal": 0.7832548775794179,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 351,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 33357,
+      "gamma_core_incidences": null,
+      "parameter_label": "32 km",
+      "parameter_value": 32.0,
+      "radius_km": 32.0,
+      "retained_fraction_of_temporal": 0.9875655031530332,
+      "spatially_unmeasured_edges_retained": 15904
+    },
+    {
+      "core_max_degree": 663,
+      "core_min_degree": 357,
+      "core_zero_degree_count": 0,
+      "cover_mip_gap": 0.0,
+      "cover_status": "OPTIMAL_NUMERICAL_MILP",
+      "curve_type": "radius",
+      "edge_count": 33777,
+      "gamma_core_incidences": null,
+      "parameter_label": "temporal-only",
+      "parameter_value": null,
+      "radius_km": null,
+      "retained_fraction_of_temporal": 1.0,
+      "spatially_unmeasured_edges_retained": 15904
+    }
+  ],
+  "redaction": {
+    "matching_witnesses_emitted": false,
+    "outputs_are_aggregate_only": true,
+    "raw_rows_emitted": false,
+    "raw_trip_ids_emitted": false
+  },
+  "report_sha256": "5424087f1587e8504ebd45ba9ac6956ad17f8273e58fc03508bf80e210cae2c4",
+  "report_version": "chicago-k2-public-temporal-candidate-universe/v3",
+  "snapshot": {
+    "dataset_id": "6dvr-xwnh",
+    "dataset_name": "Transportation Network Providers - Trips (2025-)",
+    "publication_date": 1740694134,
+    "revision_fingerprint_sha256": "52f2ff4772d94efe764a1406bacd7696ef473e7a2e626c97c04f21b6534f4190",
+    "rows_updated_at": 1788219933,
+    "schema_sha256": "4a0ec188bdee38b7967c443a39f8da65651e191a39a88d7ca3d5a20b648fde42",
+    "view_last_modified": 1774466850
+  }
+}

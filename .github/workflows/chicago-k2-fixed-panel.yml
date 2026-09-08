@@ -6,7 +6,7 @@ on:
       resume_run_id:
         description: "Source run: initial panel 34048658431, or a later checkpoint run"
         required: true
-        default: "34048658431"
+        default: "34074653956"
         type: string
   push:
     branches: [main]
@@ -29,7 +29,7 @@ jobs:
       matrix: ${{ steps.plan.outputs.matrix }}
       retry_count: ${{ steps.plan.outputs.retry_count }}
     env:
-      SOURCE_RUN: ${{ inputs.resume_run_id || '34048658431' }}
+      SOURCE_RUN: ${{ inputs.resume_run_id || '34074653956' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -57,6 +57,36 @@ jobs:
           run-id: ${{ env.SOURCE_RUN }}
           name: chicago-k2-panel-checkpoint
           path: tmp/chicago-seed
+      - name: Merge committed completed retries still absent from the source
+        if: env.SOURCE_RUN != '34048658431'
+        run: |
+          python - <<'PY'
+          import json, shutil, sys, tempfile
+          from pathlib import Path
+          sys.path.insert(0, 'code/ai_pilot/data_pipeline/production_audit')
+          import resume_chicago_k2_fixed_panel as resume
+          root = Path('tmp/chicago-seed')
+          committed = Path('code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/local_retry_20260907')
+          resume.verify_checkpoint(json.loads((root / 'checkpoint.json').read_text()),
+                                   root, resume.panel.DEFAULT_PROTOCOL)
+          resume.verify_checkpoint(json.loads((committed / 'checkpoint.json').read_text()),
+                                   committed, resume.panel.DEFAULT_PROTOCOL)
+          allowed = {item['slug'] for item in
+                     resume.recovery_plan(root, resume.panel.DEFAULT_PROTOCOL)['retry_windows']}
+          with tempfile.TemporaryDirectory() as temporary:
+              stage = Path(temporary)
+              applied = []
+              for source in committed.glob('cohort_*'):
+                  if source.name in allowed:
+                      shutil.copytree(source, stage / source.name)
+                      applied.append(source.name)
+              if applied:
+                  resume.merge(root, stage, resume.panel.DEFAULT_PROTOCOL, {
+                      'committed_retry_checkpoint': committed.as_posix(),
+                      'applied_cohorts': sorted(applied),
+                  })
+          print(json.dumps({'committed_retries_applied': sorted(applied)}))
+          PY
       - name: Verify checkpoint and select only transport retries
         id: plan
         run: |

@@ -137,9 +137,9 @@ deterministic tests and uploads the compiled paper. The Chicago panel retains
 completed windows, one ineligible window and four transport failures; recovery
 verifies the checkpoint, retries only failed transfers and preserves attempt
 history. See `docs/CHICAGO_K2_FIXED_PANEL.md` for the corrected endpoint counts
-and resume commands. The first completed local retry raises the current count
-to 20 completed, one ineligible and three outstanding windows; the full scale
-gate remains open. The NYC follow-up isolates the four formerly open scale
+and resume commands. Two recovered windows raise the current merged count to
+21 completed, one ineligible and two outstanding windows; the full scale gate
+remains open. The NYC follow-up isolates the four formerly open scale
 cells in separate fail-closed jobs; it is not restarted by ordinary manuscript
 commits.
 

@@ -39,11 +39,12 @@ archive digests were checked against GitHub's artifact metadata before this
 manifest was created. The accompanying `initial_panel_*` files contain the
 corrected aggregate; they do not replace the frozen manuscript evidence.
 
-The pilot remains **PARTIAL / HOLD** while four transport-failed windows lack
-terminal scientific records. The broader scale gate also remains open: 19
-completed windows do not establish a benchmark with hundreds of cohorts.
+At that checkpoint the pilot was **PARTIAL / HOLD** because four
+transport-failed windows lacked terminal scientific records. The broader scale
+gate also remained open: 19 completed windows do not establish a benchmark
+with hundreds of cohorts.
 
-## First recovered window, 2026-09-07
+## Two recovered windows through 2026-09-08
 
 The local retry of index 0 (`2026-01-05T08:00`) completed with 47 core rows,
 445 buffer rows and 18,334 temporal edges. Count closure is PASS; the 150
@@ -53,23 +54,31 @@ solver source and the same metadata fingerprint as the initial records.
 
 `local_retry_20260907/` preserves the unmodified report, endpoint CSV and driver
 with a checkpoint manifest. The compact record excludes only derived plots.
-Merging this first completed retry with the original records produces the
-committed `latest_panel_*` aggregate and `LATEST_CHECKPOINT.json`: 20 completed,
-one ineligible, three still failed; 2,384/2,980 certified pairs, 596 missing
-public values, zero computationally unresolved. All 19 previously completed
-windows and the originally ineligible window retain their original hashes.
-The original failure for index 0 remains in attempt history. This is still
-**PARTIAL / HOLD**.
+GitHub recovery run `34074653956` independently completed index 23
+(`2026-01-14T17:30`): 74 core rows, 590 buffer rows and 33,777 temporal edges,
+with count closure PASS. Its 150 endpoint pairs comprise 120 certified and 30
+missing-public-value pairs, again with zero computationally unresolved. The
+record and artifact digest are pinned under `github_retry_34074653956/`.
+Indices 0, 12 and 20 remained transport failures in that GitHub checkpoint;
+workflow-level success does not relabel them as scientific success.
+
+Merging the successful local index 0 with the GitHub checkpoint produces the
+committed `latest_panel_*` aggregate and `LATEST_CHECKPOINT.json`: 21 completed,
+one ineligible, two still failed; 2,504/3,130 certified pairs, 626 missing
+public values, zero computationally unresolved. All earlier completed and
+ineligible records retain their hashes. Original failure records remain in
+attempt history. This is still **PARTIAL / HOLD**.
 
 To reconstruct this exact intermediate checkpoint after the initial prepare
 command below, merge
 `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/local_retry_20260907`
 as the retry directory. Verify that directory's `checkpoint.json` with
 `verify_checkpoint` before merging. It is a local completed attempt; do not
-attribute it to the subsequently launched GitHub run `34074653956`. That run
-independently retries the original four transfer failures from the initial
-checkpoint. Remaining duplicate local attempts were stopped or cancelled;
-their execution records in `handoff.json` are not scientific results.
+attribute it to GitHub run `34074653956`. To reconstruct the current combined
+checkpoint, start instead from that run's `chicago-k2-panel-checkpoint` artifact
+and merge the same local retry. Remaining duplicate local attempts were stopped
+or cancelled; their execution records in `handoff.json` are not scientific
+results.
 
 ## Resume without reselecting or overwriting cohorts
 
@@ -113,8 +122,10 @@ it is not automatically retried. Source artifact expiration also stops restore.
 The Actions run uploads `chicago-k2-panel-checkpoint`, including all 24 active
 records, the retained attempt history, hashes and provenance. For the next
 manual run, set `resume_run_id` to the latest run containing that verified
-checkpoint; the initial run ID is only the bootstrap default. Checkpoint
-artifacts have 90-day retention. Workflow edits trigger a recovery run;
+checkpoint. Run `34074653956` is now the default; the initial run remains an
+explicit bootstrap option. Checkpoint artifacts have 90-day retention. The
+prepare job also merges the independently pinned local index 0 if it is still
+absent, so the dynamic matrix now contains only indices 12 and 20. Workflow edits trigger a recovery run;
 ordinary code or manuscript commits do not launch live data pulls. A new run
 supersedes an older queued run in the same concurrency group.
 
