@@ -1,0 +1,23 @@
+{
+  "checkpoint_version": "chicago-k2-panel-checkpoint/v1",
+  "files": {
+    "cohort_020_20260113T1730/candidate_support_sensitivity.csv": "c79bc186b04f45fb68e5960d0ee38109c545b56ff4c10cfe28c67536cc7bb165",
+    "cohort_020_20260113T1730/driver.json": "5e280ff7d4ce2bd8531c9539a24ec27cb0fc9dad8db2a60f25b0d6b2b3269616",
+    "cohort_020_20260113T1730/report.json": "4134d99b05184c3d0370e88a199bac1a0bded6d3d43b9847af0aff8a8a4a7a5d"
+  },
+  "protocol_sha256": "d91f6c0bbfc27c0e1c094db886ee4d8ebe839c9da657100d96056c446b7e443c",
+  "provenance": [
+    {
+      "record_scope": "Unmodified report, endpoint CSV and driver; plots are derived and not included.",
+      "retry_run": 34175478785,
+      "source_artifact_digest": "sha256:25a8c7d155337d5bbc9c40a6da43e1ade3c0af46cc42d328fa3b87275368399e",
+      "source_artifact_id": 10037618914,
+      "source_commit": "4e25c10aada7c9ed81d0667a561be275635d79b9"
+    }
+  ],
+  "runner_sha256": {
+    "live_chicago_k2_frontier.py": "8947874b12cb7df4507a2a477008b724f2e31420f85eca0c18fe4fbfc62bf6ae",
+    "live_chicago_k2_frontier_boundary.py": "0b818126e8f3cf0593a3a635bb87300e4541a0eac646717c2a1839c20dc433f7",
+    "live_chicago_k2_frontier_partitioned.py": "08d6f3272b9e6bc47c84eed16354ec4358b126ad2917675518f87a19c2df4e75"
+  }
+}

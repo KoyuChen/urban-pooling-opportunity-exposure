@@ -44,7 +44,7 @@ transport-failed windows lacked terminal scientific records. The broader scale
 gate also remained open: 19 completed windows do not establish a benchmark
 with hundreds of cohorts.
 
-## Two recovered windows through 2026-09-08
+## Three recovered windows through 2026-09-08
 
 The local retry of index 0 (`2026-01-05T08:00`) completed with 47 core rows,
 445 buffer rows and 18,334 temporal edges. Count closure is PASS; the 150
@@ -62,12 +62,17 @@ record and artifact digest are pinned under `github_retry_34074653956/`.
 Indices 0, 12 and 20 remained transport failures in that GitHub checkpoint;
 workflow-level success does not relabel them as scientific success.
 
-Merging the successful local index 0 with the GitHub checkpoint produces the
-committed `latest_panel_*` aggregate and `LATEST_CHECKPOINT.json`: 21 completed,
-one ineligible, two still failed; 2,504/3,130 certified pairs, 626 missing
-public values, zero computationally unresolved. All earlier completed and
-ineligible records retain their hashes. Original failure records remain in
-attempt history. This is still **PARTIAL / HOLD**.
+GitHub recovery run `34175478785` then completed index 20
+(`2026-01-13T17:30`): 60 core rows, 551 buffer rows and 24,274 temporal edges,
+with count closure PASS. Its 150 endpoint pairs again comprise 120 certified,
+30 missing-public-value and zero computationally unresolved pairs. The record
+and artifact digest are pinned under `github_retry_34175478785/`.
+
+The committed `latest_panel_*` aggregate and `LATEST_CHECKPOINT.json` now give
+22 completed, one ineligible and one still failed; 2,624/3,280 certified pairs,
+656 missing public values, and zero computationally unresolved. All earlier
+completed and ineligible records retain their hashes. Original failure records
+remain in attempt history. This is still **PARTIAL / HOLD**.
 
 To reconstruct this exact intermediate checkpoint after the initial prepare
 command below, merge
@@ -75,8 +80,9 @@ command below, merge
 as the retry directory. Verify that directory's `checkpoint.json` with
 `verify_checkpoint` before merging. It is a local completed attempt; do not
 attribute it to GitHub run `34074653956`. To reconstruct the current combined
-checkpoint, start instead from that run's `chicago-k2-panel-checkpoint` artifact
-and merge the same local retry. Remaining duplicate local attempts were stopped
+checkpoint, download the `chicago-k2-panel-checkpoint` artifact from run
+`34175478785`; it already incorporates the local retry through its audited
+prepare step. Remaining duplicate local attempts were stopped
 or cancelled; their execution records in `handoff.json` are not scientific
 results.
 
@@ -122,10 +128,10 @@ it is not automatically retried. Source artifact expiration also stops restore.
 The Actions run uploads `chicago-k2-panel-checkpoint`, including all 24 active
 records, the retained attempt history, hashes and provenance. For the next
 manual run, set `resume_run_id` to the latest run containing that verified
-checkpoint. Run `34074653956` is now the default; the initial run remains an
+checkpoint. Run `34175478785` is now the default; the initial run remains an
 explicit bootstrap option. Checkpoint artifacts have 90-day retention. The
 prepare job also merges the independently pinned local index 0 if it is still
-absent, so the dynamic matrix now contains only indices 12 and 20. Workflow edits trigger a recovery run;
+absent. The dynamic matrix now contains only index 12. Workflow edits trigger a recovery run;
 ordinary code or manuscript commits do not launch live data pulls. A new run
 supersedes an older queued run in the same concurrency group.
 
@@ -133,3 +139,28 @@ Each newly successful retry must satisfy the runner's own before/after
 snapshot check. Reusing an earlier window does not claim that all windows were
 downloaded simultaneously or that the public source never changes. Snapshot
 revision evidence remains in each report.
+
+### Indexed-count transport fallback
+
+Repeated attempts at indices 12 and 20 showed that their failures were in the
+wide Socrata `count(*)` request, not infeasibility certificates. Index 20 later
+completed through the original transport; index 12 remains open. A bounded
+live probe of the identical predicates returned 612 and 611 unique-ID index
+rows, respectively, without serializing the IDs. The fallback entrypoint
+`live_chicago_k2_frontier_indexed_count.py` therefore replaces only aggregate
+count transport with `trip_id` enumeration capped at 5,001 rows.
+
+For a selected cohort the declared resource cap is 5,000, so any response below
+5,001 is an exact enumeration. Reaching 5,001 is used only to reject the cohort
+as over-cap, never as its exact population count. The same predicate is
+enumerated before and after extraction; both the count and an in-memory ID-set
+hash must agree. Null or duplicate IDs fail closed. Raw IDs and hashes of
+individual IDs are not written. Full rows are still fetched and reconciled by
+exact released-start partitions, and the graph, sensitivity queries, MILP and
+protocol are unchanged.
+
+This fallback is a transport equivalence, not a new candidate universe. Its
+entrypoint hash is written into each new driver record and verified during
+checkpoint merge. Existing reports retain their original runner hashes. Until
+the fallback job produces a terminal artifact, index 12 remains a transport
+failure rather than feasible, infeasible, or exact result.

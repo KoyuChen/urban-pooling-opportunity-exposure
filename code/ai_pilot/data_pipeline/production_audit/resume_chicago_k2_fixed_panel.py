@@ -69,10 +69,20 @@ def verify_driver(directory: Path, protocol: dict[str, Any], index: int, start: 
     if driver.get("window_index") != index or driver.get("core_start_local") != start.isoformat():
         raise ValueError(f"driver window mismatch: {directory.name}")
     actual = list(driver.get("command", []))
-    expected = panel.target_command(protocol, start, directory)
+    entrypoint = Path(actual[1]) if len(actual) >= 2 else Path("")
+    indexed = entrypoint.name == panel.INDEXED_COUNT_TARGET.name
+    expected = panel.target_command(
+        protocol, start, directory, indexed_count_transport=indexed
+    )
     # Python installation and absolute checkout/output paths vary by machine.
-    if len(actual) < 4 or Path(actual[1]).name != panel.TARGET.name:
+    if len(actual) < 4 or entrypoint.name not in {
+        panel.TARGET.name, panel.INDEXED_COUNT_TARGET.name
+    }:
         raise ValueError(f"driver entrypoint mismatch: {directory.name}")
+    if indexed and driver.get("entrypoint_sha256") != panel.sha256_file(
+        panel.INDEXED_COUNT_TARGET
+    ):
+        raise ValueError(f"indexed transport hash mismatch: {directory.name}")
     actual = actual[2:]
     expected = expected[2:]
     if actual[:1] != ["--output-dir"]:

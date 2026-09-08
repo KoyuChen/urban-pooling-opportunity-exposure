@@ -82,21 +82,26 @@ initial run has 19 completed windows, one scientifically ineligible fixed core,
 and four transport failures. Corrected aggregation of the original sensitivity
 CSVs gives 2,264/2,830 certified endpoint pairs, 566 missing-public-value pairs,
 and zero computationally unresolved pairs (100% exact among data-complete
-pairs). Completed retries at index 0 (local) and index 23 (GitHub run
-`34074653956`) raise the current merged total to 21 completed windows, one
-ineligible and two outstanding, with 2,504/3,130 certified pairs, 626
-missing-public-value pairs and zero computationally unresolved. The original
-reports and both retry records are pinned separately.
+pairs). Completed retries at index 0 (local), index 23 (GitHub run
+`34074653956`) and index 20 (GitHub run `34175478785`) raise the current merged
+total to 22 completed windows, one ineligible and one outstanding, with
+2,624/3,280 certified pairs, 656 missing-public-value pairs and zero
+computationally unresolved. The original reports and all retry records are
+pinned separately.
 This is **PARTIAL / HOLD**, not a hundreds-of-cohorts scale result.
 
 Recovery pins the 24 original artifacts and 447 extracted files, reuses the 19
 completed windows and the ineligible window, and retries only indices 0, 12,
 20 and 23. Hash/protocol checks run before reuse; attempt history survives
 merging and the resulting full checkpoint can seed another run. GitHub run
-`34074653956` verified restore and retained a complete checkpoint: index 23
-closed, while 0, 12 and 20 remained transfer failures. The next recovery uses
-that checkpoint, merges the pinned local index 0, and retries only 12 and 20. See
+`34074653956` verified restore and closed index 23. Run `34175478785` then
+merged the pinned local index 0 and closed index 20; index 12 remained a
+transport failure. The next recovery uses that checkpoint and retries only 12. See
 `docs/CHICAGO_K2_FIXED_PANEL.md` and the committed initial checkpoint manifest.
+A live bounded-index probe returned 612 and 611 unique rows for the two
+predicates where wide `count(*)` had timed out. A separately hash-pinned
+ID-index reconciliation transport is implemented and tested; this does not
+change either window's status until complete retry artifacts are captured.
 A separate generic omission budget expands from the declared under-padded
 support to the boundary-complete temporal envelope without exempting edges
 whose geography is missing. These pilot records are not manuscript claims.

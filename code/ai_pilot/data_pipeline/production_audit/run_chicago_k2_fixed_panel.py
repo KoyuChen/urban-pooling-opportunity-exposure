@@ -22,6 +22,7 @@ from typing import Any
 HERE = Path(__file__).resolve().parent
 DEFAULT_PROTOCOL = HERE / "CHICAGO_K2_PANEL_PROTOCOL.json"
 TARGET = HERE / "live_chicago_k2_frontier_boundary.py"
+INDEXED_COUNT_TARGET = HERE / "live_chicago_k2_frontier_indexed_count.py"
 
 
 def sha256_file(path: Path) -> str:
@@ -78,7 +79,8 @@ def window_slug(index: int, start: datetime) -> str:
 
 
 def target_command(
-    protocol: dict[str, Any], start: datetime, output_dir: Path
+    protocol: dict[str, Any], start: datetime, output_dir: Path,
+    *, indexed_count_transport: bool = False,
 ) -> list[str]:
     eligibility = protocol["eligibility"]
     support = protocol["support"]
@@ -86,7 +88,7 @@ def target_command(
     padding = ",".join(str(value) for value in support["boundary_padding_grid_minutes"])
     return [
         sys.executable,
-        str(TARGET),
+        str(INDEXED_COUNT_TARGET if indexed_count_transport else TARGET),
         "--output-dir",
         str(output_dir.resolve()),
         "--core-start",
@@ -283,13 +285,17 @@ def aggregate(
 
 
 def run_window(
-    protocol: dict[str, Any], index: int, start: datetime, output_dir: Path
+    protocol: dict[str, Any], index: int, start: datetime, output_dir: Path,
+    *, indexed_count_transport: bool = False,
 ) -> int:
     directory = output_dir / window_slug(index, start)
     if directory.exists() and any(directory.iterdir()):
         raise ValueError("cohort output is not empty; write retries separately and merge the checkpoint")
     directory.mkdir(parents=True, exist_ok=True)
-    command = target_command(protocol, start, directory)
+    command = target_command(
+        protocol, start, directory,
+        indexed_count_transport=indexed_count_transport,
+    )
     result = subprocess.run(command, cwd=HERE, check=False)
     (directory / "driver.json").write_text(
         json.dumps(
@@ -298,6 +304,7 @@ def run_window(
                 "core_start_local": start.isoformat(),
                 "command": command,
                 "process_exit_status": result.returncode,
+                "entrypoint_sha256": sha256_file(Path(command[1])),
             },
             indent=2,
             sort_keys=True,
@@ -327,6 +334,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--window-index", type=int)
     parser.add_argument("--aggregate-only", action="store_true")
     parser.add_argument("--self-test", action="store_true")
+    parser.add_argument(
+        "--indexed-count-transport",
+        action="store_true",
+        help="replace timeout-prone wide count(*) calls with capped ID-index reconciliation",
+    )
     return parser
 
 
@@ -343,10 +355,16 @@ def main() -> int:
     if args.window_index is not None:
         if not 0 <= args.window_index < len(windows):
             raise SystemExit("--window-index is outside the predeclared panel")
-        run_window(protocol, args.window_index, windows[args.window_index], args.output_dir)
+        run_window(
+            protocol, args.window_index, windows[args.window_index], args.output_dir,
+            indexed_count_transport=args.indexed_count_transport,
+        )
         return 0
     for index, start in enumerate(windows):
-        run_window(protocol, index, start, args.output_dir)
+        run_window(
+            protocol, index, start, args.output_dir,
+            indexed_count_transport=args.indexed_count_transport,
+        )
     aggregate(args.protocol, args.output_dir, windows)
     return 0
 

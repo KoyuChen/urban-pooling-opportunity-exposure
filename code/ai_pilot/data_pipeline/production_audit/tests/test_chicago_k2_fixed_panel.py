@@ -41,6 +41,17 @@ class FixedPanelProtocolTests(unittest.TestCase):
         self.assertEqual(command[command.index("--core-start") + 1], start.isoformat())
         self.assertNotIn("--scan-start", command)
 
+    def test_indexed_count_transport_changes_only_the_target_entrypoint(self) -> None:
+        protocol = panel.load_protocol(panel.DEFAULT_PROTOCOL)
+        start = panel.expand_windows(protocol)[0]
+        original = panel.target_command(protocol, start, Path("tmp/original"))
+        indexed = panel.target_command(
+            protocol, start, Path("tmp/original"), indexed_count_transport=True
+        )
+        self.assertEqual(Path(original[1]).name, panel.TARGET.name)
+        self.assertEqual(Path(indexed[1]).name, panel.INDEXED_COUNT_TARGET.name)
+        self.assertEqual(original[2:], indexed[2:])
+
     def test_summary_fails_closed_on_core_drift(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

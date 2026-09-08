@@ -125,6 +125,23 @@ class ChicagoResumeTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "cohort output is not empty"):
             resume.panel.run_window(self.protocol, 0, self.windows[0], self.seed)
 
+    def test_indexed_transport_driver_requires_its_entrypoint_hash(self) -> None:
+        directory = self.seed / resume.panel.window_slug(0, self.windows[0])
+        driver_path = directory / "driver.json"
+        driver = json.loads(driver_path.read_text())
+        driver["command"] = resume.panel.target_command(
+            self.protocol, self.windows[0], directory, indexed_count_transport=True
+        )
+        driver["entrypoint_sha256"] = resume.panel.sha256_file(
+            resume.panel.INDEXED_COUNT_TARGET
+        )
+        resume.write_json(driver_path, driver)
+        resume.verify_driver(directory, self.protocol, 0, self.windows[0])
+        driver["entrypoint_sha256"] = "0" * 64
+        resume.write_json(driver_path, driver)
+        with self.assertRaisesRegex(ValueError, "indexed transport hash mismatch"):
+            resume.verify_driver(directory, self.protocol, 0, self.windows[0])
+
     def test_partial_retry_is_retained_without_discarding_other_records(self) -> None:
         out, _ = self.prepare()
         result = resume.merge(out, self.root / "no-new-artifacts", self.protocol_path, {})

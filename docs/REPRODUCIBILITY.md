@@ -16,6 +16,9 @@ python -m py_compile \
 python \
   code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
   --self-test
+python \
+  code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_indexed_count.py \
+  --self-test
 python -m unittest discover \
   -s code/ai_pilot/data_pipeline/production_audit/tests -v
 python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py \
@@ -83,6 +86,19 @@ Live jobs are also available through the manually dispatched
 `chicago-live-audits` workflow. All outputs belong in ignored directories such
 as `tmp/`; do not commit raw rows, identifiers, event columns, reconstructed
 partners, or latent timestamps.
+
+For a predeclared fixed-panel window whose wide `count(*)` request times out,
+the transport-equivalent bounded-ID reconciliation is:
+
+```bash
+python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py \
+  --window-index 12 \
+  --indexed-count-transport \
+  --output-dir tmp/chicago-k2-indexed-retry
+```
+
+Use a fresh output directory and merge the terminal record through
+`resume_chicago_k2_fixed_panel.py`; do not overwrite the prior failed attempt.
 
 ## ATR DIAMOR annotated-relation audits
 
