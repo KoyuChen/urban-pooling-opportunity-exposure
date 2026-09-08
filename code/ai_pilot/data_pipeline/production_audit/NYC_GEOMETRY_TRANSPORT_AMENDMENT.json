@@ -1,0 +1,21 @@
+{
+  "version": "nyc-geometry-transport-amendment/v1",
+  "declared_date": "2026-09-08",
+  "base_protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48",
+  "frozen_producer_sha256": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+  "reason": "Four first-campaign windows encountered repeated 45-second request exhaustion. Retry only recorded transport failures; retain every old attempt and all scientific selection/integrity rules.",
+  "execution_overrides": {
+    "request_timeout_seconds": 120,
+    "window_deadline_seconds": 1800
+  },
+  "max_parallel": 2,
+  "unchanged": [
+    "all 24 declared windows",
+    "time/provider/zone projection",
+    "core and buffer selection",
+    "geometry calculations",
+    "source count and metadata rechecks",
+    "ineligibility criteria"
+  ],
+  "provenance": "The original protocol hash remains the base design reference. Every amended retry records this amendment hash, explicit execution overrides and retry-launcher hash. Completed records keep their original provenance."
+}
