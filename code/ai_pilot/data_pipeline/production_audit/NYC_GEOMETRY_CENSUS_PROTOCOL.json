@@ -1,0 +1,217 @@
+{
+  "version": "nyc-temporal-geometry-census/v1",
+  "declared_date": "2026-09-08",
+  "calendar_source_commit": "a864c8a6d48da3d4d8221dd01b32c011d935f7ea",
+  "calendar_source_path": ".github/workflows/nyc-hvfhv-ordered-decision-panel.yml",
+  "base_evidence_commit": "b794c87f9c8fb0097394578d25cfb64bf94be186",
+  "windows": [
+    {
+      "index": 0,
+      "label": "jan_weekday_am_n8",
+      "scan_start": "2023-01-03T06:00:00",
+      "scan_end": "2023-01-03T10:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 1,
+      "label": "jan_weekday_midday_n8",
+      "scan_start": "2023-01-03T11:00:00",
+      "scan_end": "2023-01-03T15:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 2,
+      "label": "jan_weekday_pm_n8",
+      "scan_start": "2023-01-03T17:00:00",
+      "scan_end": "2023-01-03T21:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 3,
+      "label": "jan_weekend_am_n8",
+      "scan_start": "2023-01-07T09:00:00",
+      "scan_end": "2023-01-07T13:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 4,
+      "label": "jan_weekend_pm_n8",
+      "scan_start": "2023-01-07T18:00:00",
+      "scan_end": "2023-01-07T22:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 5,
+      "label": "apr_weekday_am_n8",
+      "scan_start": "2023-04-04T06:00:00",
+      "scan_end": "2023-04-04T10:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 6,
+      "label": "apr_weekday_midday_n8",
+      "scan_start": "2023-04-04T11:00:00",
+      "scan_end": "2023-04-04T15:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 7,
+      "label": "apr_weekday_pm_n8",
+      "scan_start": "2023-04-04T17:00:00",
+      "scan_end": "2023-04-04T21:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 8,
+      "label": "apr_weekend_am_n8",
+      "scan_start": "2023-04-08T09:00:00",
+      "scan_end": "2023-04-08T13:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 9,
+      "label": "apr_weekend_pm_n8",
+      "scan_start": "2023-04-08T18:00:00",
+      "scan_end": "2023-04-08T22:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 10,
+      "label": "jul_weekday_am_n8",
+      "scan_start": "2023-07-05T06:00:00",
+      "scan_end": "2023-07-05T10:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 11,
+      "label": "jul_weekday_midday_n8",
+      "scan_start": "2023-07-05T11:00:00",
+      "scan_end": "2023-07-05T15:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 12,
+      "label": "jul_weekday_pm_n8",
+      "scan_start": "2023-07-05T17:00:00",
+      "scan_end": "2023-07-05T21:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 13,
+      "label": "jul_weekend_am_n8",
+      "scan_start": "2023-07-08T09:00:00",
+      "scan_end": "2023-07-08T13:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 14,
+      "label": "jul_weekend_pm_n8",
+      "scan_start": "2023-07-08T18:00:00",
+      "scan_end": "2023-07-08T22:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 15,
+      "label": "oct_weekday_am_n8",
+      "scan_start": "2023-10-03T06:00:00",
+      "scan_end": "2023-10-03T10:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 16,
+      "label": "oct_weekday_midday_n8",
+      "scan_start": "2023-10-03T11:00:00",
+      "scan_end": "2023-10-03T15:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 17,
+      "label": "oct_weekday_pm_n8",
+      "scan_start": "2023-10-03T17:00:00",
+      "scan_end": "2023-10-03T21:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 18,
+      "label": "oct_weekend_am_n8",
+      "scan_start": "2023-10-07T09:00:00",
+      "scan_end": "2023-10-07T13:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 19,
+      "label": "oct_weekend_pm_n8",
+      "scan_start": "2023-10-07T18:00:00",
+      "scan_end": "2023-10-07T22:00:00",
+      "core_count": 8
+    },
+    {
+      "index": 20,
+      "label": "jan_weekday_pm_n16",
+      "scan_start": "2023-01-03T17:00:00",
+      "scan_end": "2023-01-03T21:00:00",
+      "core_count": 16
+    },
+    {
+      "index": 21,
+      "label": "apr_weekday_pm_n16",
+      "scan_start": "2023-04-04T17:00:00",
+      "scan_end": "2023-04-04T21:00:00",
+      "core_count": 16
+    },
+    {
+      "index": 22,
+      "label": "jul_weekday_pm_n16",
+      "scan_start": "2023-07-05T17:00:00",
+      "scan_end": "2023-07-05T21:00:00",
+      "core_count": 16
+    },
+    {
+      "index": 23,
+      "label": "oct_weekday_pm_n16",
+      "scan_start": "2023-10-03T17:00:00",
+      "scan_end": "2023-10-03T21:00:00",
+      "core_count": 16
+    }
+  ],
+  "fields": [
+    "hvfhs_license_num",
+    "pickup_datetime",
+    "dropoff_datetime",
+    "pulocationid",
+    "dolocationid",
+    "shared_match_flag"
+  ],
+  "extraction": {
+    "scan_window_hours": 1,
+    "max_core_rows": 40,
+    "max_scan_rows": 5000,
+    "max_candidate_rows": 2500,
+    "max_indeterminate_rows": 200,
+    "rule": "Existing consistent-snapshot extractor with the original per-window minimum core size and public ordering; time/provider/zone projection only. Metadata and candidate counts rechecked after extraction. New snapshot, not byte identity with old outcome panel."
+  },
+  "views": {
+    "full": "First declared 8/16 positive-duration exact-time core rows, all other determinate positive-duration candidates optional buffers.",
+    "small": "First 4 cores from full view plus 12 nearest positive-duration buffers by exact temporal gap, pickup, dropoff, source order. No outcome availability or values used. Remaining original cores become optional buffers."
+  },
+  "invalid_time_rule": "Report omitted indeterminate and nonpositive-duration rows; insufficient valid cores is scientific ineligibility. Noninteger-second timestamps are OUT_OF_PROTOCOL, not rounded.",
+  "metrics": [
+    "row/core/buffer counts",
+    "overlap edge count and complete-clique status",
+    "common overlap duration",
+    "connected components and core components",
+    "number of induced three-row paths touching a core",
+    "hashed replay of one such path, if present"
+  ],
+  "epsilon_seconds": 1,
+  "scope": "A core-incident induced P3 is a connected non-clique capacity-2 event column. Counts do not establish full-world extendability, q-conditioned endpoint differences, actual vehicle events or truth coverage.",
+  "execution": {
+    "request_timeout_seconds": 45,
+    "window_deadline_seconds": 900,
+    "max_parallel": 4,
+    "retry_rule": "Keep every attempt; re-run only TRANSPORT_FAILURE or TRANSPORT_DEADLINE, never completed or scientifically ineligible windows. No replacement dates."
+  },
+  "denominator": "24 declared cells, 20 distinct scan windows; stress cells overlap broad cells and are not independent. Keep NOT_STARTED, IN_PROGRESS, scientific exclusions and transfer failures. Do not convert prior outcome ineligibility into current geometry ineligibility without re-extraction.",
+  "next_comparison_rule": "No outcome solves in this census. Any subsequent comparison protocol must retain all geometry classes in its denominator and establish full-world feasibility separately.",
+  "publication": "Aggregate per-window JSON, ledger CSV, report and TeX only; input hashes and code hashes; no raw rows, identifiers or event witnesses."
+}
