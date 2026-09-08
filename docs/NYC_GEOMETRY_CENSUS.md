@@ -54,7 +54,8 @@ events, realized capacity or population prevalence.
 ## Execution and recovery
 
 The existing `nyc-bp-24h.yml` workflow now defaults to geometry when manually
-dispatched and runs geometry on changes to that workflow. Historical
+dispatched. Changes to that workflow now launch transport recovery from the
+first campaign `34237155750`, rather than repeat successful extractions. Historical
 branch-and-price follow-ups remain available only through the explicit
 `branch-price` mode, because their four formerly open cells are already closed.
 
@@ -81,3 +82,18 @@ an admissible status and all completed extracts to share one release
 fingerprint. Failure, unstarted and incomplete states remain HOLD. Even PASS
 establishes geometry only; any outcome comparison needs its own fixed protocol
 and full-world feasibility verification.
+
+### Declared transport amendment (2026-09-08)
+
+`NYC_GEOMETRY_TRANSPORT_AMENDMENT.json` was committed before amended retries.
+Repeated 45-second request exhaustion motivates a 120-second request timeout,
+a 30-minute window deadline and at most two concurrent recovery workers.
+The scientific protocol and producer remain byte-for-byte frozen. Each retry
+records the amendment, launcher and predecessor hashes before fetching.
+Only recorded transport failures are eligible; terminal records are reused.
+The original attempt and all recovery attempts remain in the final manifest.
+Manual `geometry-retry` accepts a source `resume_run_id`; the default is the
+first campaign. Missing checkpoints, interrupted audits and changed scientific
+records cannot be silently replaced. `merge_nyc_geometry_recovery.py` verifies
+all predecessor hashes and emits the same full-denominator report and TeX.
+No outcome endpoints are computed by this recovery.

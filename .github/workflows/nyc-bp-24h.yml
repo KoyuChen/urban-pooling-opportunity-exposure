@@ -7,7 +7,7 @@ on:
         description: NYC campaign (formerly open branch-price cells are already closed)
         type: choice
         default: geometry
-        options: [geometry, branch-price]
+        options: [geometry, geometry-retry, branch-price]
       resume_run_id:
         description: Optional prior geometry run; reuse completed windows and retry transport failures
         type: string
@@ -92,7 +92,7 @@ jobs:
           retention-days: 30
 
   geometry-tests:
-    if: ${{ github.event_name == 'push' || inputs.mode == 'geometry' }}
+    if: ${{ github.event_name == 'push' || inputs.mode == 'geometry' || inputs.mode == 'geometry-retry' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -100,9 +100,13 @@ jobs:
         with:
           python-version: '3.12'
       - name: Verify fixed calendar, independent P3 counts and recovery states
-        run: python -m unittest discover -s code/ai_pilot/data_pipeline/production_audit/tests -p test_nyc_geometry_census.py -v
+        run: |
+          for suite in test_nyc_geometry_census.py test_retry_nyc_geometry_transport.py test_merge_nyc_geometry_recovery.py test_collect_nyc_geometry_census.py; do
+            python -m unittest discover -s code/ai_pilot/data_pipeline/production_audit/tests -p "$suite" -v || exit 1
+          done
 
   geometry-window:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'geometry' }}
     needs: geometry-tests
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -142,7 +146,7 @@ jobs:
           retention-days: 90
 
   geometry-summary:
-    if: ${{ always() && needs.geometry-tests.result == 'success' }}
+    if: ${{ always() && needs.geometry-tests.result == 'success' && github.event_name == 'workflow_dispatch' && inputs.mode == 'geometry' }}
     needs: [geometry-tests, geometry-window]
     runs-on: ubuntu-latest
     steps:
@@ -166,4 +170,104 @@ jobs:
         with:
           name: nyc-geometry-summary
           path: tmp/nyc-geometry-summary/
+          retention-days: 90
+
+  recovery-ready:
+    if: ${{ github.event_name == 'push' || inputs.mode == 'geometry-retry' }}
+    needs: geometry-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      BASE_RUN: ${{ inputs.resume_run_id || '34237155750' }}
+    steps:
+      - name: Require original campaign completion before restoring checkpoints
+        run: |
+          python - <<'PYTHON'
+          import json, os, time, urllib.request
+          url = f"https://api.github.com/repos/${{ github.repository }}/actions/runs/{os.environ['BASE_RUN']}"
+          deadline = time.monotonic() + 1080
+          while time.monotonic() < deadline:
+              request = urllib.request.Request(url, headers={"Authorization": "Bearer " + os.environ["GH_TOKEN"], "Accept": "application/vnd.github+json"})
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  run = json.load(response)
+              if run["status"] == "completed":
+                  print("Source run complete; preserving its conclusion:", run["conclusion"])
+                  break
+              time.sleep(30)
+          else:
+              raise SystemExit("Source campaign still active; do not create replacement records")
+          PYTHON
+
+  geometry-retry:
+    needs: recovery-ready
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        index: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    env:
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Restore exact source record (required, never start from an empty checkpoint)
+        uses: actions/download-artifact@v4
+        with:
+          name: nyc-geometry-window-${{ matrix.index }}
+          run-id: ${{ inputs.resume_run_id || '34237155750' }}
+          github-token: ${{ github.token }}
+          path: tmp/nyc-geometry-retry/window-${{ matrix.index }}
+      - name: Reuse terminal records or apply declared transport amendment
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/retry_nyc_geometry_transport.py \
+            --window-index "${{ matrix.index }}" \
+            --output-dir "tmp/nyc-geometry-retry/window-${{ matrix.index }}"
+      - name: Preserve original attempts and amendment alongside the new record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-geometry-window-${{ matrix.index }}
+          path: tmp/nyc-geometry-retry/window-${{ matrix.index }}/
+          if-no-files-found: warn
+          retention-days: 90
+
+  geometry-recovery-summary:
+    if: ${{ always() && needs.recovery-ready.result == 'success' }}
+    needs: [recovery-ready, geometry-retry]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download original evidence, including all failed attempts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nyc-geometry-window-*
+          run-id: ${{ inputs.resume_run_id || '34237155750' }}
+          github-token: ${{ github.token }}
+          path: tmp/nyc-geometry-base
+      - name: Download all observed recovery evidence
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: nyc-geometry-window-*
+          path: tmp/nyc-geometry-retry-records
+      - name: Verify predecessors and retain the complete 24-cell denominator
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/merge_nyc_geometry_recovery.py \
+            --base-dir tmp/nyc-geometry-base --retry-dir tmp/nyc-geometry-retry-records \
+            --base-run-id "${{ inputs.resume_run_id || '34237155750' }}" \
+            --retry-run-id "${{ github.run_id }}" --output-dir tmp/nyc-geometry-recovery-summary
+      - name: Preserve report and TeX even when recovery remains HOLD
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nyc-geometry-recovery-summary
+          path: tmp/nyc-geometry-recovery-summary/
           retention-days: 90
