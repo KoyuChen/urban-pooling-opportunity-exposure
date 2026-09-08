@@ -3,6 +3,37 @@
 Decision date: 2026-09-08. Baseline evidence commit:
 `3e2427074797c5c48995b8bd3bcc2c91dd51f5e3`.
 
+## D1--2 execution update, 2026-09-08
+
+The declared 4+12 structural comparison is complete; aggregate evidence is in
+`code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/`.
+The new, count-reconciled extraction contains 38 source cores and 437 candidate
+rows before the fixed reduction. It is not asserted to be byte-identical to the
+historical scale instance. All nine family/capacity cells and 36 outcome pairs
+are certified, with 117 support and 72 endpoint MILP checks and witness replay.
+
+**No fixed-q comparison changes an endpoint (0/24).** At q=2 and q=4, all
+possible buffer subsets are feasible in all families. Ordered and clique
+columns are identical at each capacity: 54, 394 and 1,719 columns. All 16 input
+intervals share 14 seconds; the overlap graph is complete. Thus the small
+instance cannot exercise the connected-non-clique aspect of the ordered model.
+Larger maximum support at C=3,4 distinguishes multi-member events from pairs,
+but does not demonstrate a fixed-q outcome advantage for sequential events.
+
+Execution/verification gate: **PASS**. Public structural-advantage evidence:
+**HOLD**. Preserve the null result; do not enlarge or change rows until an
+effect appears. Before new endpoint solves, the next task is to freeze an
+outcome-blind geometry census on the already declared NYC decision-panel
+calendar: common-overlap/complete-clique status, non-clique connected-event
+availability, source counts and all failure statuses. Retain every declared
+window, including geometrically uninformative ones. This is a diagnostic
+design update, not a fresh independent holdout. It has not been run yet.
+
+The work packages below remain the longer plan. The geometry census now comes
+immediately before further D1 endpoint comparisons. Chicago's 96-window
+calendar remains fixed and unstarted; its recovery-controller work is still
+pending, with no new Chicago results inferred from this NYC audit.
+
 ## Target and current boundary
 
 Build the case that temporal-event structure changes which aggregate conclusions
@@ -32,8 +63,9 @@ Days below are work packages, not promises about live-service or queue timing.
 | D5 | Aggregate informativeness analysis | Support-versus-width profiles, full missingness denominators, point disagreement and threshold sensitivity where specified | Determine whether the intervals support useful conclusions or mainly diagnose lack of identification |
 | D6--7 | Align theory, literature and manuscript | Closest-work comparison, revised claim-to-evidence table, rebuilt TeX/PDF | Decide whether the evidence supports a KDD main-track submission narrative |
 
-The immediate research task is the D1--2 structural comparison. The Chicago
-calendar is declared now so later selection cannot follow its outcomes. Its
+The original immediate research task was the D1--2 structural comparison; its
+first fixed-input result and the revised next task are recorded above. The Chicago
+calendar is declared so later selection cannot follow its outcomes. Its
 live execution begins only after a controller represents unstarted windows
 correctly; no extra user approval is needed for this implementation gate.
 

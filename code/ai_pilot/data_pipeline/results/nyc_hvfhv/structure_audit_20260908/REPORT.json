@@ -1,0 +1,2388 @@
+{
+  "claim_boundary": {
+    "not_supported": "True run recovery, candidate-world coverage, population prevalence, city-scale certification, or proof of novelty relative to prior work.",
+    "supported": "Conditional effects of restricting event families on one fixed small public exact-time input."
+  },
+  "comparisons": [
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 7.189,
+      "ordered_upper": 26.8445,
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 7.189,
+      "restricted_upper": 26.8445,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 7.189,
+      "ordered_upper": 26.8445,
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 7.189,
+      "restricted_upper": 26.8445,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 42.84166666666667,
+      "ordered_upper": 88.33333333333333,
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 42.84166666666667,
+      "restricted_upper": 88.33333333333333,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 42.84166666666667,
+      "ordered_upper": 88.33333333333333,
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 42.84166666666667,
+      "restricted_upper": 88.33333333333333,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 9.26775,
+      "ordered_upper": 24.658,
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 9.26775,
+      "restricted_upper": 24.658,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 9.26775,
+      "ordered_upper": 24.658,
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 9.26775,
+      "restricted_upper": 24.658,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 49.95,
+      "ordered_upper": 83.6,
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 49.95,
+      "restricted_upper": 83.6,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 2,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 49.95,
+      "ordered_upper": 83.6,
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 49.95,
+      "restricted_upper": 83.6,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 7.189,
+      "ordered_upper": 26.8445,
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 7.189,
+      "restricted_upper": 26.8445,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 7.189,
+      "ordered_upper": 26.8445,
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 7.189,
+      "restricted_upper": 26.8445,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 42.84166666666667,
+      "ordered_upper": 88.33333333333333,
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 42.84166666666667,
+      "restricted_upper": 88.33333333333333,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 42.84166666666667,
+      "ordered_upper": 88.33333333333333,
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 42.84166666666667,
+      "restricted_upper": 88.33333333333333,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 9.26775,
+      "ordered_upper": 24.658,
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 9.26775,
+      "restricted_upper": 24.658,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 9.26775,
+      "ordered_upper": 24.658,
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 9.26775,
+      "restricted_upper": 24.658,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 49.95,
+      "ordered_upper": 83.6,
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 49.95,
+      "restricted_upper": 83.6,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 3,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 49.95,
+      "ordered_upper": 83.6,
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 49.95,
+      "restricted_upper": 83.6,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 7.189,
+      "ordered_upper": 26.8445,
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 7.189,
+      "restricted_upper": 26.8445,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 7.189,
+      "ordered_upper": 26.8445,
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 7.189,
+      "restricted_upper": 26.8445,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 42.84166666666667,
+      "ordered_upper": 88.33333333333333,
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 42.84166666666667,
+      "restricted_upper": 88.33333333333333,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 42.84166666666667,
+      "ordered_upper": 88.33333333333333,
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 42.84166666666667,
+      "restricted_upper": 88.33333333333333,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 9.26775,
+      "ordered_upper": 24.658,
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 9.26775,
+      "restricted_upper": 24.658,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 9.26775,
+      "ordered_upper": 24.658,
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "restricted_lower": 9.26775,
+      "restricted_upper": 24.658,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 49.95,
+      "ordered_upper": 83.6,
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 49.95,
+      "restricted_upper": 83.6,
+      "restriction": "pair",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    },
+    {
+      "capacity": 4,
+      "endpoint_changed_exactly": false,
+      "lower_increase": 0.0,
+      "ordered_lower": 49.95,
+      "ordered_upper": 83.6,
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "restricted_lower": 49.95,
+      "restricted_upper": 83.6,
+      "restriction": "clique",
+      "status": "CERTIFIED_FIXED_Q_COMPARISON",
+      "upper_decrease": 0.0,
+      "width_decrease": 0.0
+    }
+  ],
+  "design": {
+    "base_evidence_commit": "e7048bd15f9ca45592cf7d3c13970c22fa3f20b9",
+    "buffer_rows": 12,
+    "capacities": [
+      2,
+      3,
+      4
+    ],
+    "comparison_tolerance": 1e-07,
+    "core_rows": 4,
+    "declared_date": "2026-09-08",
+    "extraction": {
+      "expected_provider": "HV0005",
+      "max_candidate_rows": 2500,
+      "max_core_rows": 40,
+      "max_indeterminate_rows": 200,
+      "max_scan_rows": 5000,
+      "min_core_rows": 4,
+      "scan_end": "2023-01-03T21:00:00",
+      "scan_start": "2023-01-03T17:00:00",
+      "scan_window_hours": 1.0,
+      "selection": "Existing count-reconciled NYC smoke extraction, first 4 core rows in source order, then nearest 12 buffers by exact temporal gap and source tie order; buffers require nonmissing miles and seconds. Selection uses outcome availability but not outcome magnitude. Remaining original cores may become optional buffers, as in the existing reduced audit.",
+      "source_identity_rule": "New extraction; do not assert byte identity with the old scale instance. Store snapshot, query and input hashes. Fail on metadata/count change or unexpected provider."
+    },
+    "families": {
+      "clique": "Every pair of members overlaps by at least epsilon, satisfying the same ordered-event constraints.",
+      "ordered": "Connected interval-overlap graph and simultaneous occupancy at most C; total event size may exceed C.",
+      "pair": "Exactly two members, satisfying the same ordered-event constraints; K=2 is not the same restriction as C=2."
+    },
+    "milp_seconds_per_solve": 30.0,
+    "minimum_interval_duration_seconds": 1.0,
+    "outcome_comparison": "For each capacity evaluate every positive integer q feasible in all three families. Keep the same q and query coefficients across families. Do not compare outcomes at model-specific maximum support.",
+    "overlap_epsilon_seconds": 1.0,
+    "protocol_version": "nyc-fixed-time-structure-audit/v1",
+    "publication": "Commit aggregate tables, source/code hashes and witness hashes only. Keep raw input and event witnesses in ignored local scratch; never upload them.",
+    "purpose": "Retrospective fixed-input diagnostic of event-family restrictions, not a truth or population study.",
+    "queries": [
+      {
+        "attribute": "miles",
+        "name": "mean_selected_buffer_miles",
+        "scale": 1
+      },
+      {
+        "attribute": "seconds",
+        "name": "mean_selected_buffer_trip_minutes",
+        "scale": 60
+      }
+    ],
+    "scope_limit": "Only 4+12 in this protocol. Assess all results, including equality, before declaring larger diagnostics. No threshold search, truth-coverage claim or population extrapolation.",
+    "support_comparison": "Report the entire reachable selected-buffer-count set, including zero, for each family and capacity. Record ordered-only counts as exclusions by the restricted model.",
+    "verification": "Complete run-column enumeration and exact finite master; independently formulate a binary column-selection MILP for every q and endpoint, replay its chosen events and compare with enumeration. Decimal query coefficients are scored with rational arithmetic. A MILP timeout is an unresolved verification, never infeasibility.",
+    "world_constraints": "Each core exactly once; each buffer at most once; every event has at least two members and touches a core; no buffer-only events."
+  },
+  "input_geometry": {
+    "all_rows_common_overlap_seconds": 14.0,
+    "complete_overlap_graph": true,
+    "overlap_edges": 120,
+    "possible_pair_edges": 120,
+    "row_count": 16
+  },
+  "outcome_cells": [
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 2,
+      "elapsed_seconds": 0.005301386998326052,
+      "family": "ordered",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "a6fc677f1b70e1b729876613c0fb877a4ff31873667a5a19e6d8a9d81c8d3f88",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "9b0481af773432a2fb0fcb51012db5073e97c5d12bcdf9dfa0974b355c8026c8",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "3ff3fb8003ea4880aa01179c5394ba30b8affaed189442367eaa53242710ef1e",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "78d5a8203ee84de1c48dfb4676a60be8cd2671874d9eb4b5b76474192312c322",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 2,
+      "elapsed_seconds": 0.00514309400023194,
+      "family": "pair",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "fa3855ab6ede01eadcdcfd16214cb2bd2502522aa755e99ce74c9dc6b4ded914",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "a83c386dca17d828d8fd4c653f9d606cebb5f2f567f65eb0a62138f9a59475c1",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "a38072b8d2bb2a583a10ed808a122e1be382772ed16b8764ec76214ab577779d",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "dd71b52474da486814ec95d4b50f72dc9de7a4823a45a3b986e3783e1d5dbe04",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 2,
+      "elapsed_seconds": 0.005859404998773243,
+      "family": "clique",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "5053c8693c2c0dad9e3b21961154c8c6f809cd0e02bb6a36b1e672a3231c077e",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "097a4ed29c6c50ad749005e4d455974f673d36d2343745baac506c51178d84b4",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "f9c097613238e62f622e5dd6645e22365c4011feead2e15a2b67e8ecb53e22a4",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "5d88e78dd54f78ca2c2c5fc7ed4558c2191a6b31cc649fcf8861599f88a9b87e",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 2,
+      "elapsed_seconds": 0.005119111003295984,
+      "family": "ordered",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "4b77b8b13916a4bfb785bc262918d01ce32dfc21acfbf3c6181985302b3c72b3",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "5762a700f26f7787320e339107a999f0f25a50a880664408ade7dae40c631737",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "3206a886cb80078349a032f591f1d9c9c48f4ed13fd3948a470a5301c59a4b92",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "32ae32bdf1cbc7c9862e4ac3636c26a406502ec301568bef467c433d716eb3e0",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 2,
+      "elapsed_seconds": 0.005109263998747338,
+      "family": "pair",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "abab23fec469bb0fe1694161e5980dd8b6b586cb28584ca08cd6c68ddc212440",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "604408700b6db3ac0b22406e7509ba6c2e4ae515a4583218761c76688e392fbf",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "2dbd04c85a5cca0278e63ae2ffdb5d21d2fec6b44586d0a3d0d7391c057a779a",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "9eadd4b466fef5f477ca55927d1e508e125e617ab2e3059d83d0672ed5c21d65",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 2,
+      "elapsed_seconds": 0.0050701069994829595,
+      "family": "clique",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "84bfeb53fb93627843c028cd2430c29bc25756401eb3021d2a00f0be9d7d575b",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "3163520beec088ad56bdf95bacf8892712bceaf5cffdb67112613bf5eeac898a",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "4b7d661aaeadc0c088afd38478b659fa1d06f9561d4f5b10cac41add1d40f0a9",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "f82990fab12a63d18cd8edbbdef4e707c9f456c83c62dc830a23aaaa864ce5c8",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 2,
+      "elapsed_seconds": 0.012683358996582683,
+      "family": "ordered",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "62c44ae81d02a49c52893de081992fd473d41a6cf6c9a503c72f227d0a4e614e",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "755ecaea2e3591634e7a09e9efca888ee4bf7c8739d1b5d12d1eb82154ac695b",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "8393051a7abc3fc5a86621213e90bf83a3eeb20d141946ef3724d808b33a932d",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "26a1dfa81466e1556ee97cc5e781ef369cdd26616626a9707aa0b60dddda4f83",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 2,
+      "elapsed_seconds": 0.011529866002092604,
+      "family": "pair",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "10ff477971a721942a6c2157f164096708502b654dc953f5571a92ff7a29680f",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "e3358c72ed4e502c54b29a12790027cc30952a8a405441331aab6c5584ed0f67",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "68b49114e12ac9d37da5fc5ef6592b9adaa0da5ea50cfa5fb5f2a1af562db31d",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "4950993e49af4d0a6f06897cc53a9f8f8704c99cc73d4612449d5779a26447f8",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 2,
+      "elapsed_seconds": 0.011747723001462873,
+      "family": "clique",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "016619efe2cf65dbee43e06ee79fcddf4c8236b32f5d5339058b183e3b870636",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "d43253714bd9e545e6c1ffb8dcad486350b21c2adfdd2832795697b3ae07e9e1",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "d790cbd9ba93f23f77c2bab63591f6f55a72c87b0885f5caf682aa35343a0170",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "c1a42c6a06ad4dbb40d974338781e95ef4c6b21387d19ae21eba027b1375428a",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 2,
+      "elapsed_seconds": 0.011216213999432512,
+      "family": "ordered",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "aeb5462029273f83291a3494c3731d46b674863fcc36fef63b25740272236dcb",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "aeb5462029273f83291a3494c3731d46b674863fcc36fef63b25740272236dcb",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "8393051a7abc3fc5a86621213e90bf83a3eeb20d141946ef3724d808b33a932d",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "26a1dfa81466e1556ee97cc5e781ef369cdd26616626a9707aa0b60dddda4f83",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 2,
+      "elapsed_seconds": 0.015090837005118374,
+      "family": "pair",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "94013a53e3c243f3a12046aa99e34a1292745e17068bae249da1ce847e6778af",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "94013a53e3c243f3a12046aa99e34a1292745e17068bae249da1ce847e6778af",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "68b49114e12ac9d37da5fc5ef6592b9adaa0da5ea50cfa5fb5f2a1af562db31d",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "4950993e49af4d0a6f06897cc53a9f8f8704c99cc73d4612449d5779a26447f8",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 2,
+      "elapsed_seconds": 0.012589983001817018,
+      "family": "clique",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "0ddfcec80584971dc6034ea41d143e7c88c007168a7a5366614fcafefc130958",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "0ddfcec80584971dc6034ea41d143e7c88c007168a7a5366614fcafefc130958",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "d790cbd9ba93f23f77c2bab63591f6f55a72c87b0885f5caf682aa35343a0170",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "c1a42c6a06ad4dbb40d974338781e95ef4c6b21387d19ae21eba027b1375428a",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 3,
+      "elapsed_seconds": 0.05717597899638349,
+      "family": "ordered",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "1a23a861c8f286d2160f2f77fd83324bb6131ace19a732e3c7966493a78f438b",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "4dbfcd71747bc76e4e4cd86a466e8655d5b2d906d5d1b28f6393a1ce6f4d1119",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "3e1b70e4f3a3adac00b1dc2f3fab8f52cab035470e6c6b7aad37dbc274acf2fc",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "3e1b70e4f3a3adac00b1dc2f3fab8f52cab035470e6c6b7aad37dbc274acf2fc",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 3,
+      "elapsed_seconds": 0.005026989005273208,
+      "family": "pair",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "83e2a41c5e8d2cb930103827d640c4175039f51ef668917651dbf1acc36956eb",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "5777cb569e678161acfeff28dd8cf3bb1ca42448010c05bac35f9b3c78deb37c",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "ffc66ca301279ff856cb7dd6cb07f9be5c84f90931280f30fd6960da262bccd8",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "b5294e001a28f4e8e5fc0b2b18df703fb11d99e919df904adb7b46527f983623",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 3,
+      "elapsed_seconds": 0.057776802001171745,
+      "family": "clique",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "8b89661c2668d05f6721d6abf522f46442dbece4d7a04c3911a690b553ff4980",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "b2286c3aba2d065c54c8f0a2c44fad420921782fade0878e2a6b614056157e93",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "7d7879208add465b2a5b023463a41dd6a0e8d2e6e43e1086362ac89fccfc4770",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "7d7879208add465b2a5b023463a41dd6a0e8d2e6e43e1086362ac89fccfc4770",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 3,
+      "elapsed_seconds": 0.057882454006175976,
+      "family": "ordered",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "e31b380a2287a862d7958df4a8712cc346682938322a59168e483ab0337afd6e",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "bd88d9028b9000209733a3bc6a888097829af42d5a882a2ec1d1bd9ec839c191",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "59cba85c6e3bce123e2d7cad52473d47106d2a4518dfa1bfc2ffd707e8d98213",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "59cba85c6e3bce123e2d7cad52473d47106d2a4518dfa1bfc2ffd707e8d98213",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 3,
+      "elapsed_seconds": 0.006846099997346755,
+      "family": "pair",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "656bd283ec9e2fc36df565234e4c5e5bfbee3a617576cb0c6055b3908b5a2dd4",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "73d87a46475fd3a15103d7841ef2cfb075d6aab55257a52e0a36f40ca60f2e96",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "c91e48b7caf17e254c4298cfc43681881f7286977b93f136dc296097611f4a26",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "1e41007fca6719aeaf1ec827dbbbb80c626a0c9c193d13a1bd043f03d02c3d0b",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 3,
+      "elapsed_seconds": 0.06367070999840507,
+      "family": "clique",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "f59388f812a84d0e3ac308684f1189cafb4c618e49264fa6c1a37ced768c6901",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "5a233154bf8ed5020b84fe08148e60fe696908f1b8a658fc6f6c52facb5b825c",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "f8a25be25ae0e1041d88ba5161c10d37356d223ca62db961eec3b2c9e048a172",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "f8a25be25ae0e1041d88ba5161c10d37356d223ca62db961eec3b2c9e048a172",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 3,
+      "elapsed_seconds": 0.027993757001240738,
+      "family": "ordered",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "5a7fe57cb9287c9c54411cadd2f37b64198a7c4879fa71ccffcc21f55ce43caf",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "d76e4e2aa9b34773ac3b331080deacc779681bc8d01acc1634f77440432a1a4d",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "e115ed7fdb7d2b5bbc2ba0d889b9bb773049c0527cb0835899ff501fe67cb909",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "8b03bd106edc1161d594acd8c238fc64e96f08858808f4f9839a5f99c49c7dd3",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 3,
+      "elapsed_seconds": 0.0127721000026213,
+      "family": "pair",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "9b70df7962109769c899aa651276f7e4dd744b602d9f040957ab01cf4f13c159",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "8958967a4e1ce0bac2801fa3ce0c6dac298e2a218430d8dbd4807a7e17c202af",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "35843d0cf400ef0c8ae84d74361b976aa16983e388f3ecd12ae1c79deaafd672",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "aabbdfe62fceac683f8cad2c31e27b95e1301d90470c8d48bda5553a618b2cfd",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 3,
+      "elapsed_seconds": 0.029496998999093194,
+      "family": "clique",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "2630f987ffad0829125a37e3dbdfcc3bfad4891946f5e443ae710c57f5145d1d",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "a6eb3fc508f031a5528f8ab2509c5d2677160898d108860fdfc32974efc89c12",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "ba6a268d554c6b263a91fbfe5c81dbeafbe1f972f9ec9953816bf433fd0b0c02",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "4dc3455ae90a8a3d23395578943fa9d63412da39c6522301b35b9aa8c64af5b7",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 3,
+      "elapsed_seconds": 0.023685332002060022,
+      "family": "ordered",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "edae490509807ceee874ba07590c33e28847cc36ae2c676aedc2726a223e9730",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "7f65ae5a628538f65dc0acaa279828ab2c66f1ea4b1d56ad6e2255aa54903e4f",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "0eec2d65b22b1733dc093c1080d68820e7e0cd1a17be4b91ef1b63fdd184f09c",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "8b03bd106edc1161d594acd8c238fc64e96f08858808f4f9839a5f99c49c7dd3",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 3,
+      "elapsed_seconds": 0.011769386997912079,
+      "family": "pair",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "c402aa7806168aecba5855ece178587cf78e84600bb3a27444ffb635871681de",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "c402aa7806168aecba5855ece178587cf78e84600bb3a27444ffb635871681de",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "35843d0cf400ef0c8ae84d74361b976aa16983e388f3ecd12ae1c79deaafd672",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "aabbdfe62fceac683f8cad2c31e27b95e1301d90470c8d48bda5553a618b2cfd",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 3,
+      "elapsed_seconds": 0.028242320993740577,
+      "family": "clique",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "53f49009c87d3f9e88d8c81cc1acdbc8edf5e4df3eda09b284c8cc5b3512323d",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "c8773afd767aeb0b213306b39dd1f5b1fc554395c412b43ba67c510cbbabf4d1",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "244289e06b57e511ffa1dc5cdb95f822d488a00c9d09b5eddc5211747efd494f",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "4dc3455ae90a8a3d23395578943fa9d63412da39c6522301b35b9aa8c64af5b7",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 4,
+      "elapsed_seconds": 0.6731691229942953,
+      "family": "ordered",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "fa44665807ee9b00e48c15039cb4d3e1ebba37818a05a81d396cdd6dc3148e4e",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "ffe3173e1cb06c3ed3b6d4c3ce7e2335517440251935348d393e9056f2f2a208",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "cb66aa9ccdc4e703a1728c47ac9aae59b8955f3c3671d2c1e0763fcaab1788ea",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "f90464ac2bd5630cfd923a9f781b3c0454e983e891d6cc88be2bc56b6e6f11ca",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 4,
+      "elapsed_seconds": 0.005315559996233787,
+      "family": "pair",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "a4ab86a735a0d1b30db1285b9ec62f58da44492894acdf4e98e537e13b76a33d",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "7b16c67d498bcbab18df6fac0b921176c476079f4b47a8175d6c15e73f506ac7",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "1620f9de2441d8d48d2fa71cf036e4d8e46215e02e6a1dc7808566f2ca44d736",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "60d9df27f4248bd555d8eb2e76564c635a5fa403b0843ba10a1dad52fc426d66",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 4,
+      "elapsed_seconds": 0.6579436889951467,
+      "family": "clique",
+      "lower": 7.189,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "d4b6b04f4f291cc111f1a48480eecbf48da43188f722bafe14a808f202b027fd",
+      "lower_rational": "7189/1000",
+      "lower_witness_sha256": "1fa37b633ae231763dca64573d6f61fbdc9323465db295132097f71f6570750b",
+      "q": 2,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 26.8445,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "4f8cb9b1e15c6d0384294cdeaae9e06e6ad1191f50a732ab6b26632e86c6559b",
+      "upper_rational": "53689/2000",
+      "upper_witness_sha256": "3028e1a3263ffeeec3b3a0b21daa143fbb40e9e2dcf0a59a154947d802e8ec44",
+      "width": 19.6555,
+      "width_rational": "39311/2000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 4,
+      "elapsed_seconds": 0.6535532889975002,
+      "family": "ordered",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "95292acc84d149f197041b9459830625494ad3430a978062f9cc3ab1b938716b",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "0e1d4b09362af32a87369a3f9dcaa9b98e66c1c719b894827a29d0147d0692a3",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "a91c3d666e1f2050fabb30da78fef75aca0657a48c0a4aab709a024102067eb8",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "e297a7ace70f967b93960903982206a8260524560b3060d423d806b1a736dc57",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 4,
+      "elapsed_seconds": 0.00621918400429422,
+      "family": "pair",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "1c1027f607b4f590c68624bcc5e7ae33918c844edcb51501a61f7d1e0977a980",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "7963d5e814af08825eecc8c114c91ff27381d7ae9f258a18fd45b0ad29093757",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "0ca7179db3832fa1ee214d71fabba87fa6b58043f290c85d38611704598b3ed5",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "a80b266ac5753f891de9ad4ffb891c2978a565aebad425fe21ee11a5d49c47b2",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 66,
+      "capacity": 4,
+      "elapsed_seconds": 0.6497824670004775,
+      "family": "clique",
+      "lower": 42.84166666666667,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "0e2535a6cca29b949c41e60ad629a73948aad3e08102b6c07eeb0756b98089ac",
+      "lower_rational": "5141/120",
+      "lower_witness_sha256": "79bf823cfc3ea1d8c5fb6e4c360cdd2d01c4904d1fddc53e20934ca855f58cea",
+      "q": 2,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 66,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 88.33333333333333,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "caf12b5f0c04eb2bfe7c9d8847c5db67b5a25b4a95a3b119cea6dde5274614db",
+      "upper_rational": "265/3",
+      "upper_witness_sha256": "13f6cafdef9f5d88fc46ef14082c6a459816270467dc9f8c5dbcbd2be39c0754",
+      "width": 45.49166666666667,
+      "width_rational": "5459/120"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 4,
+      "elapsed_seconds": 0.42137172000366263,
+      "family": "ordered",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "d6885a49244ec5243fdde77693003f30d7f88318b060c3bdcc0f06db91268072",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "2fffbd286ea9c9bd606c7d3be3dd54ef8a93f55b5d19a89309ba08de66a0d57b",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "c97eb303dc9af4fa84a17965e1ae250970329989e9062236d69deca9e5cc9baf",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "3b9b8ab7ef0f0bae48deac8b298529e9758bcc978f9c9559444da610c3fbcd49",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 4,
+      "elapsed_seconds": 0.012123096996219829,
+      "family": "pair",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "e8b19a281bc7628596191e4efa04b3504ec2bd967a25b034209ca0055cad5954",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "6da46a4099f5fb8ecbf24a98a3c10b62a496f48514ac445f41f5ca8314704fa4",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "47ddc79f622b0baca86a00c7083ad519ef01be713ddef2bdbfc3a780d564e299",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "0d8f73f2a21121876ec7f7ebeb37c69a2ce675a5948174594ece8364eb39fac1",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 4,
+      "elapsed_seconds": 0.4129849800010561,
+      "family": "clique",
+      "lower": 9.26775,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "bd0ea8639cf2bec7793cfa643e4ade7327948b99314d7dcd2c995f97ffd167eb",
+      "lower_rational": "37071/4000",
+      "lower_witness_sha256": "ba7d40d8f6a61ae4c3e48f0d0a7bfb616b806c4450bb3b1cfb10ecae21599552",
+      "q": 4,
+      "query": "mean_selected_buffer_miles",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 24.658,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "66e5ac426ef2ea91f5c85a709922077d74766fcb779025ebef1b5fe0c4383c0b",
+      "upper_rational": "12329/500",
+      "upper_witness_sha256": "d5b0963bc7e52414bb6c8498b606bc7d98ff1017247b2caa525442c896cb4360",
+      "width": 15.39025,
+      "width_rational": "61561/4000"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 4,
+      "elapsed_seconds": 0.7368848949990934,
+      "family": "ordered",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "abc02a2ab0a680b4c1fd0f91b6e9d498a0c4f3c525b214d3518181a4f190486f",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "2ffc5ad5a477bafd6912785535b8b79258b0f6adf221c4d6b86aae7db79f895d",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "e6381b56dcb9e2fab5e3726bb89104b1c99475b6cf3ab2a10141cd8b46ff728c",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "3b9b8ab7ef0f0bae48deac8b298529e9758bcc978f9c9559444da610c3fbcd49",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 4,
+      "elapsed_seconds": 0.01173315000050934,
+      "family": "pair",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "39c54cbf28a7823cf029eeabf4160f1b2b1422efe986dd5126077bcdec7a268c",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "39c54cbf28a7823cf029eeabf4160f1b2b1422efe986dd5126077bcdec7a268c",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "47ddc79f622b0baca86a00c7083ad519ef01be713ddef2bdbfc3a780d564e299",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "0d8f73f2a21121876ec7f7ebeb37c69a2ce675a5948174594ece8364eb39fac1",
+      "width": 33.65,
+      "width_rational": "673/20"
+    },
+    {
+      "all_possible_q_buffer_subsets": 495,
+      "capacity": 4,
+      "elapsed_seconds": 0.7340883900033077,
+      "family": "clique",
+      "lower": 49.95,
+      "lower_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "lower_milp_witness_sha256": "d0eeab04bd72f44576002600b31b03d45301ef736d1ed2c225d8f14dbc964edb",
+      "lower_rational": "999/20",
+      "lower_witness_sha256": "1956de37abf078ba01e414260ab65d8fa013d2eea8eb3cbcad470b434a843faf",
+      "q": 4,
+      "query": "mean_selected_buffer_trip_minutes",
+      "reachable_q_buffer_masks": 495,
+      "status": "CERTIFIED_EXACT_FINITE_FRONTIER",
+      "upper": 83.6,
+      "upper_milp_status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+      "upper_milp_witness_sha256": "97b5d864756406c8f00adcc1b66784099744ffd2cdab06dad992649e561f6581",
+      "upper_rational": "418/5",
+      "upper_witness_sha256": "d5b0963bc7e52414bb6c8498b606bc7d98ff1017247b2caa525442c896cb4360",
+      "width": 33.65,
+      "width_rational": "673/20"
+    }
+  ],
+  "provenance": {
+    "fetched_at_utc": "2026-09-08T09:32:10.213582+00:00",
+    "generated_at_utc": "2026-09-08T09:40:45.516791+00:00",
+    "input_sha256": "f3a5f2eb30048ff3c9004d1d1978c0ecda1cf4f481ab9b8969f86a7162c1801f",
+    "protocol_sha256": "67e148104cc2e834feebba4663c5c34a02348a94672c6bf8fb8e2ec089cb3920",
+    "source": {
+      "byte_identity_with_old_scale_instance": "NOT_ESTABLISHED",
+      "core_window_end": "2023-01-03T18:00:00",
+      "core_window_start": "2023-01-03T17:45:00",
+      "count_reconciled": true,
+      "dataset_url": "https://data.cityofnewyork.us/resource/u253-aew4.json",
+      "determinate_rows": 437,
+      "indeterminate_rows": 0,
+      "new_extraction": true,
+      "provider": "HV0005",
+      "query_sha256": {
+        "core": "21696700bf70e3f4cfd7d71d4ea0c6328f628c9d9a373d33f1d0e116e545fa7f",
+        "core_count": "478b8430b347489661e052a96ef2293775900a4930983ce3e3742d63a069ccf9",
+        "determinate": "eac27aa13d8fe408bb78434ed97643355ab08f6082b5bc3b1a45c6753051d7ff",
+        "determinate_count": "ae435729a61b69f76d6d8773b686cccfbb591db8b624f69dc5fec1f970d52178",
+        "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+        "indeterminate_count": "0f748236c82be208d0df6d6f4a1c1f659b4c57f57c55ec7eaf28605e272b3bb4",
+        "scan": "b0293965d13f528fb763eb099c65ebefff77a297c5b22f44291a435c50325c8d",
+        "scan_count": "51e2517304614e06c85d06bd5d9173af663ab29585c2482d35ab66ba669fbfcd"
+      },
+      "snapshot": {
+        "dataset_id": "u253-aew4",
+        "dataset_name": "2023 High Volume FHV Trip Data",
+        "publication_date": 1719935304,
+        "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+        "rows_updated_at": 1721064543,
+        "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+        "view_last_modified": 1721155212
+      },
+      "source_candidate_multiset_sha256": "a3287fd41a996179bc0b25985417ebfa798d99a6ac8911471daf41b996b74802",
+      "source_candidate_rows": 437,
+      "source_core_rows": 38
+    },
+    "source_code_sha256": {
+      "live_nyc_hvfhv_existential_time.py": "534293fe2a029f6b05d6a9fa3fad42f85afdc001643a7993757bee5079ba60fe",
+      "live_nyc_hvfhv_existential_time_hybrid.py": "24cb748aedb7e4f0ed8cc791c5465aa09a7f3a4cc89c4c20e4860ab9266f5e7f",
+      "live_nyc_hvfhv_ordered_run_smoke.py": "cf8900514a443045dc56ada6c9c37a24549e0483f8c26a3f0eeecdfd8d5c2cba",
+      "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+      "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8",
+      "ordered_run_fixed_time_master.py": "0ac22f50fe6b3d5b581eb47889e5c691c01754f4aa3f44d8459a8c3958b3c7eb",
+      "ordered_run_structure_audit.py": "b841d1ab6e198de28656cf4993244172baeac39ef1bc2359cdc4108e5810319d",
+      "run_nyc_structure_audit.py": "57ee0e1edb5123ad9a73a49cf45c149ff1aa5d3ce60b48a0a15dcd2ab31024bb"
+    },
+    "versions": {
+      "numpy": "2.3.5",
+      "python": "3.12.13",
+      "scipy": "1.17.0"
+    }
+  },
+  "redaction": {
+    "aggregate_only": true,
+    "event_columns_emitted": false,
+    "raw_rows_emitted": false,
+    "witnesses_emitted": false
+  },
+  "report_version": "nyc-fixed-time-structure-audit/v1",
+  "summary": {
+    "certified_endpoint_pairs": 36,
+    "changed_fixed_q_comparisons": 0,
+    "comparisons_by_restriction": {
+      "clique": {
+        "changed": 0,
+        "total": 12
+      },
+      "pair": {
+        "changed": 0,
+        "total": 12
+      }
+    },
+    "elapsed_seconds": 10.481492598999466,
+    "family_capacity_cells": 9,
+    "fixed_q_comparisons": 24,
+    "missing_query_value_pairs": 0,
+    "outcome_endpoint_pairs": 36,
+    "unresolved_verification_count": 0,
+    "verification_status": "PASS"
+  },
+  "support_cells": [
+    {
+      "buffer_count": 12,
+      "capacity": 2,
+      "columns_excluded_from_ordered": 0,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 888,
+      "family": "ordered",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 2,
+      "maximum_selected_buffers": 4,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.2154911909965449,
+      "ordered_support_counts_excluded": [],
+      "reachable_buffer_mask_count": 562,
+      "reachable_selected_buffer_counts": [
+        0,
+        2,
+        4
+      ],
+      "row_count": 16,
+      "run_column_count": 54,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "a4dd5189c0fe93a166beaf83655cb42f7164dbfa4a0b52228b18c787b23dccc5"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 1,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "561119ede2e359e84c4434b3151382ebe3ad45abebcbb5ed3d703dcbaa876d45"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 3,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "f20317115174d9d52ebcfde20efede745e7a61c2818de407617ea451a6e0e628"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 5,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 6,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 7,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 8,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 9,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 10,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 11,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 12,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        }
+      ],
+      "support_verification_seconds": 0.026343035999161657
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 2,
+      "columns_excluded_from_ordered": 0,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 888,
+      "family": "pair",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 2,
+      "maximum_selected_buffers": 4,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.2154911909965449,
+      "ordered_support_counts_excluded": [],
+      "reachable_buffer_mask_count": 562,
+      "reachable_selected_buffer_counts": [
+        0,
+        2,
+        4
+      ],
+      "row_count": 16,
+      "run_column_count": 54,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "cf79950375cfd755ecbd31d8b773108c687d9eb1e10d38cd26bc552e5e6dd5a0"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 1,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "ed1f9058f994add0c188f6b2739899899c9ca59d58018c5a4cabdba07446a236"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 3,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "5ab638e1c9dac0724eab0505a33f3ec0847c93bb1c45f4cc401fedb60f5af873"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 5,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 6,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 7,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 8,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 9,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 10,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 11,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 12,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        }
+      ],
+      "support_verification_seconds": 0.025564071998815052
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 2,
+      "columns_excluded_from_ordered": 0,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 888,
+      "family": "clique",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 2,
+      "maximum_selected_buffers": 4,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.2154911909965449,
+      "ordered_support_counts_excluded": [],
+      "reachable_buffer_mask_count": 562,
+      "reachable_selected_buffer_counts": [
+        0,
+        2,
+        4
+      ],
+      "row_count": 16,
+      "run_column_count": 54,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "2f09da478cbf9f1e1e1e482492e1d570bc0a85a56a6335701aacfb4ff91136a0"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 1,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "d4e09de89e4e42f3ee8e0be4c2ca819f0d38add3fbf22e53962408bfa2a9c9ae"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 3,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "f5e1c2e339b4d52d6d6b2aa438cfca659bf1b4c28e05510aaaf389eb95d55ced"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 5,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 6,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 7,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 8,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 9,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 10,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 11,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 12,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        }
+      ],
+      "support_verification_seconds": 0.022246787004405633
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 3,
+      "columns_excluded_from_ordered": 0,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 7506,
+      "family": "ordered",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 3,
+      "maximum_selected_buffers": 8,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.33028477499465225,
+      "ordered_support_counts_excluded": [],
+      "reachable_buffer_mask_count": 3797,
+      "reachable_selected_buffer_counts": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "row_count": 16,
+      "run_column_count": 394,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "81a90ec8859a8662e59c72e2c29959e227faba32c4a75c38214874daba7d2d1a"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 1,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "116fc8945cffab52128df0d4824a140a0971b7062d228a1db5ffd5e9b24413cf"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "88d7e6fc657c12209dd69eaca8ec69d5cac909b99239bcb732f35bf15095379c"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 3,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "0bb3e3b3e56b5c800506b418b594f419c3490ff3c04f5d6fef74e03f0a2202fe"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "a659d1e9b15474498ed5488b63ede7e15bb8b2bad9a3c9032c86544aa199b80a"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 5,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "26a145340e263d67ccdb63df40714b5dd7f7eb398e3c3e2bde0cd9fa4109abe0"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 6,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "063cb55c77cd626320b7afcd40021b36a3c0bd1e58b235e5909ac297034a02d8"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 7,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "6c753935baa365f2bf9146897a81d3ea11afaa278927786ddbc582a5708c01c6"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 8,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "02dc29c8e6ae14b9ecd2ce476100e0581d150e2c74e63df1a27dc584e8d83337"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 9,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 10,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 11,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 12,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        }
+      ],
+      "support_verification_seconds": 0.11731372899521375
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 3,
+      "columns_excluded_from_ordered": 340,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 888,
+      "family": "pair",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 2,
+      "maximum_selected_buffers": 4,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.33028477499465225,
+      "ordered_support_counts_excluded": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        8
+      ],
+      "reachable_buffer_mask_count": 562,
+      "reachable_selected_buffer_counts": [
+        0,
+        2,
+        4
+      ],
+      "row_count": 16,
+      "run_column_count": 54,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "7dcbabd18652ea72e0752faf57afaf0e58b46dffed875b1b4842c3ba5fdffa1b"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 1,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "264ecb0343dc5f733d8ac2b4b144d0690fe151dd5cf18c21b065f351fd04c4ff"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 3,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "8edeba6ad53aee1b19a6426e8465f6e2db3b89a8da96d24e3f9baf1aeae43b28"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 5,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 6,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 7,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 8,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 9,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 10,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 11,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 12,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        }
+      ],
+      "support_verification_seconds": 0.02244881600199733
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 3,
+      "columns_excluded_from_ordered": 0,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 7506,
+      "family": "clique",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 3,
+      "maximum_selected_buffers": 8,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.33028477499465225,
+      "ordered_support_counts_excluded": [],
+      "reachable_buffer_mask_count": 3797,
+      "reachable_selected_buffer_counts": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "row_count": 16,
+      "run_column_count": 394,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "81202a78a24fab751d2f936794284a1a814e222e11167eb62264dcf9b173bf7a"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 1,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "4780669319ea8e34143ce359c61c0e33efdd98b336699987ef618f9ffcd9f421"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "494969e8219ac6652cdf793bfff23943efcdbca5638f7117f98169d4f13f9885"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 3,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "903208a3c2d6818e473921979447d76075c7f25d82d2e1baf21779a2aef778c4"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "48536fa1da6913635d0c81841d1a832df99fc33c8dd7d217b1327812c7f030f6"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 5,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "6fecec928a71530be4e866485dc1686b1c1ac8f91da09c1e447ea9482d429cbd"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 6,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "1496756300061343fa0264723b7d354e23368544f6959e9774dda075ba09549a"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 7,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "9db97d8a674036781ae1cdd9e826714791a80ce6adf7a239b2046583bd4e739e"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 8,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "d6337eb2d09830e177185a3f15a23c09afb896f14e1a604c78d957acad1f74ec"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 9,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 10,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 11,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 12,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        }
+      ],
+      "support_verification_seconds": 0.11466407199623063
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 4,
+      "columns_excluded_from_ordered": 0,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 12679,
+      "family": "ordered",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 4,
+      "maximum_selected_buffers": 12,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.5008654679986648,
+      "ordered_support_counts_excluded": [],
+      "reachable_buffer_mask_count": 4096,
+      "reachable_selected_buffer_counts": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "row_count": 16,
+      "run_column_count": 1719,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "b950a20f96bcf452b8d804c446ae02d8ac68fbe025ac645479318021fd84eb4d"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 1,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "9f8d4bfc795f15d851e01370c3f103235cbfc00d779c4996fdbbc179bbfadccc"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "cc1dc775a04959094474af4428bd6a38d57a9b747cf7db81d4658bcb94f474f5"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 3,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "e8e98dde944e09a0207063bf7a8a13d7d5d32d74a93c5204123d7ed1a4770324"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "e8420a4dd99eeb4b975bc82dc1f9f71368693eb948fe5b42ee02111658838847"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 5,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "5e75e2c3ac998e26931528d7d324249b786362fab65c59e8493690df49fe7f15"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 6,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "a108c21cd2816ec15e5111f64b67bc4d4aad2d0525e34fae0d10556becb94226"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 7,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "2bf1d5b01983a7176167c81dcfde4a63a327cc32c8e413f973238cd95e8c3ae4"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 8,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "4e2909fb76c55dddf82ca7430053956f5f208b92e23653193d740177022374eb"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 9,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "637720972fb323ddddcfbed8c69144526a93187702000b2691546a946532ee42"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 10,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "e79888a2fdf3c4692f421ab710aa852df6d70f86e2dbdb6ca2509dbf4633b0d4"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 11,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "eb44cd88d639a319ec90f27c064c90cb9a92cde7fb14aaff70d03f28ff8071fa"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 12,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "9d0f6aa25c383b07ca00bea5fffd9fe1539d3d870632b71ff0992954cbedee1c"
+        }
+      ],
+      "support_verification_seconds": 1.6880040600008215
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 4,
+      "columns_excluded_from_ordered": 1665,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 888,
+      "family": "pair",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 2,
+      "maximum_selected_buffers": 4,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.5008654679986648,
+      "ordered_support_counts_excluded": [
+        1,
+        3,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "reachable_buffer_mask_count": 562,
+      "reachable_selected_buffer_counts": [
+        0,
+        2,
+        4
+      ],
+      "row_count": 16,
+      "run_column_count": 54,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "7e0f56bc4fadb07899855a4999d33d34c97f878dd414937c5c58f3a4d5d2d25e"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 1,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "4f1d487711f526006c2392686ff8a7946d5b0e91a8d339327f3c6f522e828c93"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 3,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "c49eeb9e37aa8eed98c91f8dd59b4e58a92fb75a59e2a2ae96e444305e700dd5"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 5,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 6,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 7,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 8,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 9,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 10,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 11,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": false,
+          "q": 12,
+          "status": "PROVEN_INFEASIBLE_NUMERICAL_MILP"
+        }
+      ],
+      "support_verification_seconds": 0.0305349539994495
+    },
+    {
+      "buffer_count": 12,
+      "capacity": 4,
+      "columns_excluded_from_ordered": 0,
+      "common_positive_q": [
+        2,
+        4
+      ],
+      "core_count": 4,
+      "explored_master_state_count": 12679,
+      "family": "clique",
+      "full_column_universe_independently_checked": true,
+      "max_members_in_one_feasible_run_column": 4,
+      "maximum_selected_buffers": 12,
+      "minimum_selected_buffers": 0,
+      "ordered_enumeration_and_column_check_seconds": 0.5008654679986648,
+      "ordered_support_counts_excluded": [],
+      "reachable_buffer_mask_count": 4096,
+      "reachable_selected_buffer_counts": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "row_count": 16,
+      "run_column_count": 1719,
+      "status": "EXACT_ENUMERATION_COMPLETE",
+      "support_checks": [
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 0,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "bad1d0d1fa8f1b9278cce325b0fd91bab763e06ce6371333cf8ddae18164f9c2"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 1,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "f21349acdae9456105202f0cc758b72c25ac4ab52ec9ea392a134dc05dc9796e"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 2,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "8d35290144848557b375530fc853b9479dd5f4e78fdde887e14f2dd028df991a"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 3,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "1b4871723c9132b202e38e8cfcf64298e2a0506e680302eddd9b63d881a4bf1e"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 4,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "6c81d21d00178b8388bb4a009e9bf9dba3d208a3d174ace0c7200e585c2d1852"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 5,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "8079da66df65cc5d8ada98ae7e40b9df4815b31f2ba32f6027da23a54796fd30"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 6,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "fd26a51d5e134a20491a3c003edb9239ca28e33e809d976d6c7612437d330443"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 7,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "b44c41eeed7bc100bed6c47e91b5dbf2e0ff148dc8a3c2ad716760e18db406c8"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 8,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "5265e6ef996f7ff818492b9604d709980318f039dba0e1a1bdc7e710b4043fc6"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 9,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "934671404f50eccd6f1e1fe9d090eb38f4e06c995dc348ad88734e36244e8484"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 10,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "a19dfe9c33074071dd21ff0d6a96895ce999b06c90cdf6920ba779170bae1e97"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 11,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "338c41711c542c64c8b10705503ece6553dcbd0999b534f9ef2168a6cc6be149"
+        },
+        {
+          "agreement": true,
+          "enumeration_feasible": true,
+          "q": 12,
+          "status": "OPTIMAL_NUMERICAL_MILP_REPLAYED",
+          "witness_sha256": "a90bab6dc361e15f835e0a9202635a1517e79788432d9c69b7151a056c4df75e"
+        }
+      ],
+      "support_verification_seconds": 1.647438633001002
+    }
+  ],
+  "unresolved_verifications": []
+}

@@ -1,0 +1,12 @@
+{
+  "aggregate_only": true,
+  "files_sha256": {
+    "COMPARISONS.csv": "e7741762414ef010773bacd1bb7c828fe047fc266da9831544d64a0c889d3722",
+    "OUTCOMES.csv": "269a329b377036422b3e1c5aeb24e42fe5ea961b7fb31d5fb0d4d026f37c2dc7",
+    "REPORT.json": "f435d9f6f5384ab7514f0c029fd1acaf3f5bcc59545ff09add57b3e864901118",
+    "REPORT.md": "41802f548a6a933a35d7f6b306f8333af8ddbcbee1dcc37f5b134fe4a62671b4",
+    "RESULTS.tex": "fd5c203977822cc050170a6013e6a06cf9d752b6df5d95c1c46485b524be911e",
+    "SUPPORT.csv": "a7cbf27c0418ca31e2166d42db35932509beca24dd0eb183abc55a7d590b1dff"
+  },
+  "report_version": "nyc-structure-artifact-manifest/v1"
+}

@@ -1,0 +1,28 @@
+% Generated aggregate fragment; not yet included in the manuscript.
+\paragraph{Fixed-input event-structure diagnostic.}
+A retrospective NYC audit fixes four core and twelve buffer rows,
+exact public times and query values, and compares ordered events,
+exactly-two-row events, and clique events at $C\in\{2,3,4\}$.
+Only positive buffer counts feasible in all three families are used
+for outcome comparisons, with the same count on each side.
+The audit certifies 36 endpoint pairs;
+0 of 24 fixed-count comparisons change an endpoint.
+\begin{table}[t]
+\centering
+\begin{tabular}{c|rrr}
+$C$ & Ordered & Two-row & Clique \\
+\hline
+2 & 4 & 4 & 4 \\
+3 & 8 & 4 & 8 \\
+4 & 12 & 4 & 12 \\
+\end{tabular}
+\caption{Maximum selected-buffer counts on one fixed NYC small audit input. These model-specific maxima are not fixed-count outcome comparisons.}
+\label{tab:nyc-structure-diagnostic}
+\end{table}
+All sixteen intervals share 14 seconds of common overlap.
+Thus every admissible ordered event is already a clique; this
+instance does not test the value of connected non-clique events.
+The result establishes neither a distinct public-data outcome
+advantage for ordered structure nor a general equivalence of the models.
+Buffer selection requires complete public miles and trip-time values.
+No true-event recovery, true-world coverage or population claim follows.

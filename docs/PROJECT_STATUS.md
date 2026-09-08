@@ -1,11 +1,31 @@
 # Verified project status
 
-Latest execution checkpoint: 2026-09-08, Chicago 24-window pilot closed.
+Latest execution checkpoint: 2026-09-08, NYC fixed-input structural diagnostic closed.
 The next-stage plan is in `docs/NEXT_RESEARCH_GATE.md`. A separate 96-window
 Chicago calendar is declared in `CHICAGO_K2_FOLLOWUP_PROTOCOL.json`; it has no
-results yet and does not change the pilot's evidence counts. The immediate
-research task is a public-instance comparison linking the ordered-event
-structure to changes in attainable aggregate answers.
+results yet and does not change the closed 24-window pilot's evidence counts.
+
+The new NYC structural comparison fixes one 4-core/12-buffer input at capacities
+2, 3 and 4. All 36 outcome endpoint pairs close; 117 support-feasibility checks
+and 72 endpoint MILP checks agree with complete enumeration and witness replay.
+At the common positive buffer counts (2 and 4), **0/24 restricted-versus-ordered
+comparisons change any endpoint**. Ordered and clique event columns coincide
+at every capacity. Maximum support is 4/8/12 for ordered and clique, and 4/4/4
+for exactly-two-row events; those maxima are not fixed-q outcome differences.
+
+The reason is visible in the input geometry: all 16 intervals have a common
+14-second overlap, so the graph is a complete 120-edge clique. Every buffer
+subset of sizes 2 and 4 is feasible under all three models. This diagnostic is
+computationally PASS, but the proposed public-data structural-advantage claim
+remains HOLD. It supplies no evidence about actual sequential vehicle runs or
+general model equivalence. The result and a TeX fragment are in
+`code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/`.
+
+The next research action is an outcome-blind temporal-geometry census of the
+already declared NYC panel windows, retaining all complete-clique cases and
+failures in its denominator. This will determine where connected non-clique
+events can even occur before specifying additional endpoint comparisons. It
+takes priority over another large solve on an uninformative small input.
 
 The adversarially repaired ATR v4 dyad audit has 170 eligible fixed snapshots and 850 radius
 cells. All are computationally closed: 806 have replayed numerical MILP optima

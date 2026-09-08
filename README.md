@@ -35,6 +35,9 @@ universe, and a simultaneous-capacity bound.
 - `docs/PROJECT_STATUS.md` -- verified manuscript versus exploration status.
 - `docs/NEXT_RESEARCH_GATE.md` -- next structural comparison, Chicago follow-up
   calendar, execution gates and manuscript decision criteria.
+- `code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/` --
+  fixed-input ordered/pair/clique diagnostic: 36 exact endpoint pairs and
+  no changes in 24 common-count comparisons; the input is a complete clique.
 - `docs/IMPLICIT_DISCLOSURE_SEPARATOR.md` -- separator contract and bound proofs.
 - `docs/COMPACT_EVENT_SLOT_PROBE.md` -- compact lower-bound contract and audit.
 - `docs/MANUSCRIPT_SCOPE_DECISION.md` -- current paper-scope decision.

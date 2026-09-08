@@ -1,0 +1,10 @@
+capacity,family,status,row_count,core_count,buffer_count,run_column_count,explored_master_state_count,reachable_buffer_mask_count,reachable_selected_buffer_counts,minimum_selected_buffers,maximum_selected_buffers,max_members_in_one_feasible_run_column,columns_excluded_from_ordered,ordered_support_counts_excluded,common_positive_q,full_column_universe_independently_checked,ordered_enumeration_and_column_check_seconds,support_verification_seconds
+2,ordered,EXACT_ENUMERATION_COMPLETE,16,4,12,54,888,562,"[0, 2, 4]",0,4,2,0,[],"[2, 4]",True,0.2154911909965449,0.026343035999161657
+2,pair,EXACT_ENUMERATION_COMPLETE,16,4,12,54,888,562,"[0, 2, 4]",0,4,2,0,[],"[2, 4]",True,0.2154911909965449,0.025564071998815052
+2,clique,EXACT_ENUMERATION_COMPLETE,16,4,12,54,888,562,"[0, 2, 4]",0,4,2,0,[],"[2, 4]",True,0.2154911909965449,0.022246787004405633
+3,ordered,EXACT_ENUMERATION_COMPLETE,16,4,12,394,7506,3797,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",0,8,3,0,[],"[2, 4]",True,0.33028477499465225,0.11731372899521375
+3,pair,EXACT_ENUMERATION_COMPLETE,16,4,12,54,888,562,"[0, 2, 4]",0,4,2,340,"[1, 3, 5, 6, 7, 8]","[2, 4]",True,0.33028477499465225,0.02244881600199733
+3,clique,EXACT_ENUMERATION_COMPLETE,16,4,12,394,7506,3797,"[0, 1, 2, 3, 4, 5, 6, 7, 8]",0,8,3,0,[],"[2, 4]",True,0.33028477499465225,0.11466407199623063
+4,ordered,EXACT_ENUMERATION_COMPLETE,16,4,12,1719,12679,4096,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]",0,12,4,0,[],"[2, 4]",True,0.5008654679986648,1.6880040600008215
+4,pair,EXACT_ENUMERATION_COMPLETE,16,4,12,54,888,562,"[0, 2, 4]",0,4,2,1665,"[1, 3, 5, 6, 7, 8, 9, 10, 11, 12]","[2, 4]",True,0.5008654679986648,0.0305349539994495
+4,clique,EXACT_ENUMERATION_COMPLETE,16,4,12,1719,12679,4096,"[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]",0,12,4,0,[],"[2, 4]",True,0.5008654679986648,1.647438633001002

@@ -201,6 +201,29 @@ none are computationally unresolved. Exact closure is 100% among data-complete
 pairs. This closes the pilot execution only. It is neither a probability sample
 nor a hundreds-of-cohorts or city-scale result.
 
+## NYC fixed-input structure diagnostic (local, not yet a manuscript claim)
+
+Evidence directory:
+`code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/`.
+Execution date: 2026-09-08. Protocol was committed before outcomes were solved;
+this is a new retrospective source pull, not a new independent holdout.
+
+- Protocol SHA-256: `67e148104cc2e834feebba4663c5c34a02348a94672c6bf8fb8e2ec089cb3920`.
+- Modeled-input SHA-256: `f3a5f2eb30048ff3c9004d1d1978c0ecda1cf4f481ab9b8969f86a7162c1801f`.
+- `REPORT.json` pins source metadata, query hashes, extraction multiset hash,
+  all eight runner/helper source hashes and numerical-library versions.
+- `MANIFEST.json` pins every aggregate JSON/CSV/Markdown/TeX file.
+- 9 family/capacity cells, 36 exact outcome pairs, 117 support MILP checks and
+  72 endpoint MILP checks; no unresolved verification or missing-value pair.
+- 0/24 fixed-q outcome comparisons change endpoints. All 16 intervals share
+  14 seconds, forming a complete overlap clique. Ordered and clique columns
+  coincide; multi-member events allow support 4/8/12 versus 4/4/4 for pairs.
+
+This is a null fixed-query diagnostic, not evidence of ordered events improving
+public-data outcomes, real-run recovery, true-world coverage or city-scale
+certification. `RESULTS.tex` is a standalone fragment for later integration;
+the current manuscript has not silently acquired a new positive claim.
+
 ## Artifact policy
 
 Committed evidence is aggregate and redacted. Raw identifiers, public-row
