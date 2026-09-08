@@ -7,6 +7,7 @@ It does not alter the frozen producer, selected windows or geometry metrics.
 """
 import argparse
 from collections import Counter
+from copy import deepcopy
 import json
 from pathlib import Path
 import re
@@ -15,6 +16,7 @@ import nyc_geometry_census as census
 
 
 def annotate(report, jobs):
+    report = deepcopy(report)
     states = {}
     for job in jobs:
         match = re.fullmatch(r"geometry-window \((\d+)\)", job["name"])
@@ -74,6 +76,16 @@ def main():
             report["ledger"][i]["local_retry"] = recovery
         report["local_retries"] = recoveries
     census.write_summary(report, args.output_dir)
+    counts = report["summary"]["status_counts"]
+    transport = sum(counts.get(s, 0) for s in census.RETRYABLE)
+    excluded = sum(n for s, n in counts.items() if s.startswith("INELIGIBLE_"))
+    with (args.output_dir / "RESULTS.tex").open("a") as handle:
+        handle.write(f"This checkpoint retains {transport} transport failures and {excluded} protocol exclusions; "
+                     f"the census gate is {report['summary']['status'].replace('_', ' ')}.\n")
+    manifest_path = args.output_dir / "MANIFEST.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest["files_sha256"]["RESULTS.tex"] = census.file_sha(args.output_dir / "RESULTS.tex")
+    census.write_json(manifest_path, manifest)
     print(json.dumps(report["summary"], indent=2))
     return 0 if report["summary"]["status"] == "PASS_GEOMETRY_CENSUS" else 2
 

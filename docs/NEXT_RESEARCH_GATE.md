@@ -27,7 +27,12 @@ outcome-blind geometry census on the already declared NYC decision-panel
 calendar: common-overlap/complete-clique status, non-clique connected-event
 availability, source counts and all failure statuses. Retain every declared
 window, including geometrically uninformative ones. This is a diagnostic
-design update, not a fresh independent holdout. It has not been run yet.
+design update, not a fresh independent holdout. Its first 24-cell run is now
+recorded: 8 geometry-complete, 3 protocol exclusions and 13 transport failures.
+All eight completed full views have non-clique event columns; four time-only
+4+12 reductions are complete cliques. Recovery run `34240720735` reuses terminal
+records and retries transport failures under a separately declared wait-budget
+amendment. The census remains HOLD until the full ledger is verified.
 
 The work packages below remain the longer plan. The geometry census now comes
 immediately before further D1 endpoint comparisons. Chicago's 96-window

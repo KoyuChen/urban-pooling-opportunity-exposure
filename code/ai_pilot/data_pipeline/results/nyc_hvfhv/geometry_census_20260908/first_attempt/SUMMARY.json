@@ -1,0 +1,1502 @@
+{
+  "aggregate_only": true,
+  "claim_boundary": "A core-incident induced P3 is a connected non-clique capacity-2 event column. Counts do not establish full-world extendability, q-conditioned endpoint differences, actual vehicle events or truth coverage.",
+  "denominator": "24 declared cells, 20 distinct scan windows; stress cells overlap broad cells and are not independent. Keep NOT_STARTED, IN_PROGRESS, scientific exclusions and transfer failures. Do not convert prior outcome ineligibility into current geometry ineligibility without re-extraction.",
+  "generated_at": "2026-09-08T14:52:38.982016+00:00",
+  "ledger": [
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:17:47.297137+00:00",
+      "elapsed_seconds": 90.262756008,
+      "full": {
+        "buffer_count": 381,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 66743,
+        "full_world_extendability_checked": false,
+        "input_sha256": "df65b77a35ed9157d1b2a8f6f5f9f588ff8b92e30d8ecf1180acfa7251fb573b",
+        "largest_component_rows": 389,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 26439,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "bf8783954e72a8774817742c575ef99e2d7f4d85c6e2cb26bde36678ed679e2c",
+        "possible_edges": 75466,
+        "row_count": 389,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 26,
+        "full_world_extendability_checked": false,
+        "input_sha256": "3c31256d57361da9080adebe620efcd9739644ce54f85e91269b17664acc99a5",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 118,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "10be92f49589e077b41b9a5cbc05c7862795f10334712fd879f8561b6dace716",
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "8f2018b403a01be7c2ca87ec1efc3758899f85a1418208f86b7088e605b263ed",
+        "provider": "HV0005",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "b1db7a4e9a10c9c547f23ef8f39fff99e310dc684cd55c064a49c07ddd26ca6a",
+          "determinate_count": "56b63da078a15c415e793f43464dba6fd3a88fccde9eb6f5d1ca8f04e1ec94fc",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0f748236c82be208d0df6d6f4a1c1f659b4c57f57c55ec7eaf28605e272b3bb4",
+          "scan": "0d689e36fccf422b6b98d317c83735096ed46a3d5f8b9bcc853af55d29e629c0",
+          "scan_count": "f96cf79ab5c1c85d787f4c25b564662e5e39b6dec008cb99e4e2f3b10dcacdc9"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 389,
+        "source_core_end": "2023-01-03T07:00:00",
+        "source_core_rows": 37,
+        "source_core_start": "2023-01-03T06:45:00"
+      },
+      "started_at": "2026-09-08T14:16:17.033981+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 0,
+        "label": "jan_weekday_am_n8",
+        "scan_end": "2023-01-03T10:00:00",
+        "scan_start": "2023-01-03T06:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097773067,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:18:41.185468+00:00",
+      "elapsed_seconds": 143.639039041,
+      "full": {
+        "buffer_count": 321,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 58549,
+        "full_world_extendability_checked": false,
+        "input_sha256": "fdc244d71ae712811d80b957fa32650a714f6516fc4d2b1f783bb3cf63772c39",
+        "largest_component_rows": 329,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 19553,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "cd5d4fc75f7bae20ca100d14a8618978190137e9c2724c6b98f393a2c1dbf812",
+        "possible_edges": 53956,
+        "row_count": 329,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 26,
+        "complete_clique": true,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 0,
+        "full_world_extendability_checked": false,
+        "input_sha256": "35e68aab9c9a1ab63c818e3cc1c80a5dbc9f9be2ef757bad63303bb46b2ddb43",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": false,
+        "nonclique_core_component_count": 0,
+        "overlap_edges": 120,
+        "p3_witness_replayed": false,
+        "p3_witness_sha256": null,
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "7cf6a23e6bb992d05c8bc2ad72f5413e0477bf3a57d41f54f5da4fc06d9bd14b",
+        "provider": "HV0005",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "1cc51492f97cdb76367496641e9806451dd96d0243d51f6c47175861d5f6930a",
+          "determinate_count": "4fd1aea6e6c7204335b3aaeed2d39d4f9a94beacff5ca5a188c60afdcb9be2df",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0f748236c82be208d0df6d6f4a1c1f659b4c57f57c55ec7eaf28605e272b3bb4",
+          "scan": "365268411bbddd75110ee8b287ced17acd2770e07436e748042fb6e71d38d9ad",
+          "scan_count": "0793751878ff480a77eafff8ce51d4d26c0b9e3354293dad5111e621748264eb"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 329,
+        "source_core_end": "2023-01-03T11:15:00",
+        "source_core_rows": 39,
+        "source_core_start": "2023-01-03T11:00:00"
+      },
+      "started_at": "2026-09-08T14:16:17.546157+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 1,
+        "label": "jan_weekday_midday_n8",
+        "scan_end": "2023-01-03T15:00:00",
+        "scan_start": "2023-01-03T11:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097772986,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:18:44.684419+00:00",
+      "elapsed_seconds": 147.68042775799998,
+      "full": {
+        "buffer_count": 429,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 101923,
+        "full_world_extendability_checked": false,
+        "input_sha256": "715e0b4226fa0a7a70742ebb524d3b7e4c60239dcf9e894f0eeacd910bcd36b3",
+        "largest_component_rows": 437,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 33873,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "a83229cbb48e1a17d7aa3fa84b6af1dc94102ac37af438cde8fe3a284896b617",
+        "possible_edges": 95266,
+        "row_count": 437,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 14,
+        "complete_clique": true,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 0,
+        "full_world_extendability_checked": false,
+        "input_sha256": "e6aa4e87f7f765bfcf3ddd338e8d11305593526948ccf6c9783eae50a8381d2a",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": false,
+        "nonclique_core_component_count": 0,
+        "overlap_edges": 120,
+        "p3_witness_replayed": false,
+        "p3_witness_sha256": null,
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "5c0ed21eaf602c43ddec9aa44a423c17576c94aefba8c925063a99faf9139ab4",
+        "provider": "HV0005",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "4441f6bd1883e45c79b4cc4cb9355eef3404a85c11e69532671a35e52e94c34c",
+          "determinate_count": "ae435729a61b69f76d6d8773b686cccfbb591db8b624f69dc5fec1f970d52178",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0f748236c82be208d0df6d6f4a1c1f659b4c57f57c55ec7eaf28605e272b3bb4",
+          "scan": "b0cab78669c0cb3f77da8b9dae0529f21895e7f6a8c68959ce0e0c29e9551f6c",
+          "scan_count": "51e2517304614e06c85d06bd5d9173af663ab29585c2482d35ab66ba669fbfcd"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 437,
+        "source_core_end": "2023-01-03T18:00:00",
+        "source_core_rows": 38,
+        "source_core_start": "2023-01-03T17:45:00"
+      },
+      "started_at": "2026-09-08T14:16:17.003631+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 2,
+        "label": "jan_weekday_pm_n8",
+        "scan_end": "2023-01-03T21:00:00",
+        "scan_start": "2023-01-03T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097773040,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:20:09.048768+00:00",
+      "elapsed_seconds": 232.54793506299998,
+      "full": {
+        "buffer_count": 257,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 30698,
+        "full_world_extendability_checked": false,
+        "input_sha256": "a8f9889949f989e70de87b21472d9e9d23fb4ba6c79e3c1fe991df02d1005f2c",
+        "largest_component_rows": 265,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 11340,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "5a1a5b2719cd4649b99c989cf644a18939752f0e9c083d6d0a47d7dc0271fea3",
+        "possible_edges": 34980,
+        "row_count": 265,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 26,
+        "full_world_extendability_checked": false,
+        "input_sha256": "93902d34b755e54ed7e7bff09d9f45241a26950314da438d94836f8b39f1215f",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 118,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "efe1571d0a7d855012b672e45d5d0c6b2d2a760a5c95dfd62ee45fa7cabfbed0",
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "66605b3b607567399914e43b4e82f8a92af11bce01477bc132d9cadbcee4ba25",
+        "provider": "HV0005",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "a120a171eb99c600ffa8e30f53f9707c9695d3c254d7247ad0145b2af7440d3a",
+          "determinate_count": "d3955fe33e3f4aa0d001dda0eafc5cc7db71014be701327592f31140a5cfd8cb",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0f748236c82be208d0df6d6f4a1c1f659b4c57f57c55ec7eaf28605e272b3bb4",
+          "scan": "cb7dc526c173c94df46f5388b1481e777746bea1a4bb9e92fec1212302483ca6",
+          "scan_count": "0b6c8d3b68ccdb45b405e658120e7b1347506f4ffb50e40f3952a6c27c7dcb9c"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 265,
+        "source_core_end": "2023-01-07T09:45:00",
+        "source_core_rows": 33,
+        "source_core_start": "2023-01-07T09:30:00"
+      },
+      "started_at": "2026-09-08T14:16:16.500568+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 3,
+        "label": "jan_weekend_am_n8",
+        "scan_end": "2023-01-07T13:00:00",
+        "scan_start": "2023-01-07T09:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097772958,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:24:49.389279+00:00",
+      "elapsed_seconds": 413.52353781000005,
+      "full": {
+        "buffer_count": 173,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 10724,
+        "full_world_extendability_checked": false,
+        "input_sha256": "b9c36f1c8da8ca97acade02f98e26553271bad7153faca88677849cbd40a74a5",
+        "largest_component_rows": 181,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 5790,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "a3e04ea389b9c8b4c4f5ad696b9820c4888e8bfba0b40f13be60c7db2cdcda46",
+        "possible_edges": 16290,
+        "row_count": 181,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 112,
+        "complete_clique": true,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 0,
+        "full_world_extendability_checked": false,
+        "input_sha256": "1859d4cc212dd28f477e5df34a5872c88cd809411f2416fc600a77c2781b2d67",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": false,
+        "nonclique_core_component_count": 0,
+        "overlap_edges": 120,
+        "p3_witness_replayed": false,
+        "p3_witness_sha256": null,
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "3326f25d615ab27c1e3b41fe3bc09ddaf8068f74a606a502b8f990eccd3bb065",
+        "provider": "HV0003",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "04f091fed1016e11e8b07aeb99e9d06dce7a30f8a2977e46455edd076ce04636",
+          "determinate_count": "4d1021d1f7e509b3fd1a61da3fbc27556aa5307b82bd2f0735fa2855af43aa97",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0b74e875d00198f85ee714e5334588c81764c48a0fd99541929024f8159af5cc",
+          "scan": "ea04472a5949558d20dac5b091d4d7058b751ac0eade7e4fcaa2e4b2472d127a",
+          "scan_count": "e25c05dee66ab29d702787a74cd293fae05e9ca3ab56ff915e65844db65b8a67"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 181,
+        "source_core_end": "2023-01-07T18:45:00",
+        "source_core_rows": 18,
+        "source_core_start": "2023-01-07T18:30:00"
+      },
+      "started_at": "2026-09-08T14:17:55.865431+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 4,
+        "label": "jan_weekend_pm_n8",
+        "scan_end": "2023-01-07T22:00:00",
+        "scan_start": "2023-01-07T18:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097773108,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:25:30.427996+00:00",
+      "elapsed_seconds": 401.432782942,
+      "full": {
+        "buffer_count": 315,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 27623,
+        "full_world_extendability_checked": false,
+        "input_sha256": "6d64c4addb58d18c874dfdd3e41327b49397c3ec61d1f98e219b689f0f145575",
+        "largest_component_rows": 323,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 16173,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "062ec70e807586c21f7a871a2f4b905b64d8094d3843487b607911cbe7df5378",
+        "possible_edges": 52003,
+        "row_count": 323,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 58,
+        "full_world_extendability_checked": false,
+        "input_sha256": "1750f0dec17e74ae25b4db3f424764e7311a37d0f754b8f0d901d9be70c2fb95",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 115,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "9df3cdb28dd8541d6f33f0e6f1e71a18d4754be37997d124ecf35685c9ca55c2",
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "612956b11f3d67842dd45e724d4530419a3e306aa55653a112ea60f88ba36e85",
+        "provider": "HV0003",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "d206d05c1e05b97fd3269016666505af5a0ae794f56a02dc2af719c894f03c24",
+          "determinate_count": "1938e1fae5bd0819fa8d3e4b5e4d9d1e7272c05ccb20da5f5dfc6f960e410426",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0b74e875d00198f85ee714e5334588c81764c48a0fd99541929024f8159af5cc",
+          "scan": "6499e78d77ad526b7c6925afd3d95acc13edcba98f76c62b221f2f8ebea12033",
+          "scan_count": "7ca8345044e995b4bc8df1edf83b2839bfd93e82ebac681470959b90a1dda45b"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 323,
+        "source_core_end": "2023-04-04T06:30:00",
+        "source_core_rows": 34,
+        "source_core_start": "2023-04-04T06:15:00"
+      },
+      "started_at": "2026-09-08T14:18:48.994874+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 5,
+        "label": "apr_weekday_am_n8",
+        "scan_end": "2023-04-04T10:00:00",
+        "scan_start": "2023-04-04T06:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097773130,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:26:19.743534+00:00",
+      "elapsed_seconds": 446.458417826,
+      "full": {
+        "buffer_count": 112,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 7970,
+        "full_world_extendability_checked": false,
+        "input_sha256": "b2036ac50505d72ad11f825b48aab06d5ac293b6a1f5ff587f302b395dada17c",
+        "largest_component_rows": 120,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 2659,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "67e84e1883649d4eb40a842065d43cb29d940831715c50ce5c4f248c918c9e52",
+        "possible_edges": 7140,
+        "row_count": 120,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 13,
+        "complete_clique": true,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 0,
+        "full_world_extendability_checked": false,
+        "input_sha256": "4a95066a34eabe8192f93c3c2c5421558f9bc5fb9262a56668c182e088070fc6",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": false,
+        "nonclique_core_component_count": 0,
+        "overlap_edges": 120,
+        "p3_witness_replayed": false,
+        "p3_witness_sha256": null,
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "558e3e9ed78401d6eb262d1cc7a0f1328f6e062a64ad8b16b6b5e5fd5dc5f613",
+        "provider": "HV0003",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "135cb3c664e2ea94961943aec092cff5f2d14dbe3a47830cec128d662d50eda8",
+          "determinate_count": "9c713b5e5c78460bf15498a029d79ab0dae415b8d0f0d692933bc5bc1074a9db",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0b74e875d00198f85ee714e5334588c81764c48a0fd99541929024f8159af5cc",
+          "scan": "aff766ee2ee69ef6d9cbb64ea64612d6aa4b7056cc45be18567c1758fd601f46",
+          "scan_count": "37babfa0a55beec2647284211d64fe02eafb23befef1321c34d7728f04c53df0"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 120,
+        "source_core_end": "2023-04-04T11:45:00",
+        "source_core_rows": 17,
+        "source_core_start": "2023-04-04T11:30:00"
+      },
+      "started_at": "2026-09-08T14:18:53.284698+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 6,
+        "label": "apr_weekday_midday_n8",
+        "scan_end": "2023-04-04T15:00:00",
+        "scan_start": "2023-04-04T11:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097773221,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:25:25.410934+00:00",
+      "elapsed_seconds": 307.735497506,
+      "full": {
+        "buffer_count": 333,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 8,
+        "core_incident_induced_p3_count": 71180,
+        "full_world_extendability_checked": false,
+        "input_sha256": "0c6398f43b60feca6a1bf8a5f56b9eb73bb97bd788c4f7efe259d190fccb7bd5",
+        "largest_component_rows": 341,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 21158,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "68ce29cfe568689c9129dc24de512fe99137e2b06521cb7a7e4c3f9d4311c7eb",
+        "possible_edges": 57970,
+        "row_count": 341,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "small": {
+        "buffer_count": 12,
+        "common_overlap_seconds": 0,
+        "complete_clique": false,
+        "component_count": 1,
+        "core_component_count": 1,
+        "core_count": 4,
+        "core_incident_induced_p3_count": 76,
+        "full_world_extendability_checked": false,
+        "input_sha256": "f81e91277662d9b3c61db543644ae64c4fe927bf9983557cc9937b0f3e2fd50b",
+        "largest_component_rows": 16,
+        "nonclique_capacity2_event_available": true,
+        "nonclique_core_component_count": 1,
+        "overlap_edges": 113,
+        "p3_witness_replayed": true,
+        "p3_witness_sha256": "c024eb058ad89939a22a16c3afcaac7df305abdf43181bb19b3b74bd04c15b08",
+        "possible_edges": 120,
+        "row_count": 16,
+        "status": "GEOMETRY_COMPLETE"
+      },
+      "source": {
+        "excluded_time_rows": {},
+        "historical_instance_identity": "NOT_ESTABLISHED_NEW_SNAPSHOT",
+        "outcome_columns_requested": false,
+        "projected_candidate_multiset_sha256": "161866aec69fd8286a188b657c9725faa638f32ce91a66b2ca8a9766056c12e9",
+        "provider": "HV0003",
+        "query_sha256": {
+          "core": "fdc0b3093b4896245bde004c673b75b24348cb80ebb6bc4992a2845bfd9dcd23",
+          "core_count": "0b02eba546d929c226f62674fc50c3e88abf152edc7ad197cb262a4fc0dc2e8e",
+          "determinate": "398aa4236485a0e3898e408c8c3546101d6838def173e5273eb11c695a8c01a5",
+          "determinate_count": "364a364346527a1b9feb79c833762ffe8a3b601334ed755ee6f51e4d5212e851",
+          "indeterminate": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+          "indeterminate_count": "0b74e875d00198f85ee714e5334588c81764c48a0fd99541929024f8159af5cc",
+          "scan": "a70642d22b16d2f79535eb07322bf835264a85b5139ecd18b975cca184f5cbdb",
+          "scan_count": "1f3b43ab3f0333a5e4bf1d99e1382ba549e219c6e5bbc049bb5eaf604060a3c6"
+        },
+        "server_counts_rechecked": true,
+        "snapshot": {
+          "dataset_id": "u253-aew4",
+          "dataset_name": "2023 High Volume FHV Trip Data",
+          "publication_date": 1719935304,
+          "revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+          "rows_updated_at": 1721064543,
+          "schema_sha256": "b3375715369026ce50c2d7a3501e4bed773f309ea510a45e00937bd436a25710",
+          "view_last_modified": 1721155212
+        },
+        "source_candidate_rows": 341,
+        "source_core_end": "2023-04-04T17:45:00",
+        "source_core_rows": 37,
+        "source_core_start": "2023-04-04T17:30:00"
+      },
+      "started_at": "2026-09-08T14:20:17.675059+00:00",
+      "status": "GEOMETRY_COMPLETE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 7,
+        "label": "apr_weekday_pm_n8",
+        "scan_end": "2023-04-04T21:00:00",
+        "scan_start": "2023-04-04T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097773091,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:32:43.022254+00:00",
+      "elapsed_seconds": 464.083533277,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:24:58.938329+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 8,
+        "label": "apr_weekend_am_n8",
+        "scan_end": "2023-04-08T13:00:00",
+        "scan_start": "2023-04-08T09:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097772920,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:29:50.479772+00:00",
+      "elapsed_seconds": 251.57409938800004,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "f72b13cebe3f0d81b4dbd60a5b2ff2e408635147ac73e7afd84b484f5be4b191",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:25:38.905476+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 9,
+        "label": "apr_weekend_pm_n8",
+        "scan_end": "2023-04-08T22:00:00",
+        "scan_start": "2023-04-08T18:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097773010,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:33:21.177199+00:00",
+      "elapsed_seconds": 462.997830843,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:25:38.179112+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 10,
+        "label": "jul_weekday_am_n8",
+        "scan_end": "2023-07-05T10:00:00",
+        "scan_start": "2023-07-05T06:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097773139,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:33:18.883513+00:00",
+      "elapsed_seconds": 409.989832669,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:26:28.893367+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 11,
+        "label": "jul_weekday_midday_n8",
+        "scan_end": "2023-07-05T15:00:00",
+        "scan_start": "2023-07-05T11:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097773393,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:35:00.118153+00:00",
+      "elapsed_seconds": 301.397614369,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:29:58.720174+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 12,
+        "label": "jul_weekday_pm_n8",
+        "scan_end": "2023-07-05T21:00:00",
+        "scan_start": "2023-07-05T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097773132,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:37:29.922759+00:00",
+      "elapsed_seconds": 278.680840193,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:32:51.241558+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 13,
+        "label": "jul_weekend_am_n8",
+        "scan_end": "2023-07-08T13:00:00",
+        "scan_start": "2023-07-08T09:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097773200,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:34:56.048913+00:00",
+      "elapsed_seconds": 87.580987991,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason": "no scan window produced an integrity- and cap-qualified core",
+      "started_at": "2026-09-08T14:33:28.467536+00:00",
+      "status": "INELIGIBLE_NO_QUALIFIED_CORE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 14,
+        "label": "jul_weekend_pm_n8",
+        "scan_end": "2023-07-08T22:00:00",
+        "scan_start": "2023-07-08T18:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097775281,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:38:15.924724+00:00",
+      "elapsed_seconds": 286.929245934,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:33:28.995130+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 15,
+        "label": "oct_weekday_am_n8",
+        "scan_end": "2023-10-03T10:00:00",
+        "scan_start": "2023-10-03T06:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097775512,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:40:33.471885+00:00",
+      "elapsed_seconds": 327.307853125,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:35:06.163706+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 16,
+        "label": "oct_weekday_midday_n8",
+        "scan_end": "2023-10-03T15:00:00",
+        "scan_start": "2023-10-03T11:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097775609,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:39:49.946898+00:00",
+      "elapsed_seconds": 282.470720427,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:35:07.475813+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 17,
+        "label": "oct_weekday_pm_n8",
+        "scan_end": "2023-10-03T21:00:00",
+        "scan_start": "2023-10-03T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097775749,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:38:02.393979+00:00",
+      "elapsed_seconds": 25.844429303,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason": "no scan window produced an integrity- and cap-qualified core",
+      "started_at": "2026-09-08T14:37:36.549213+00:00",
+      "status": "INELIGIBLE_NO_QUALIFIED_CORE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 18,
+        "label": "oct_weekend_am_n8",
+        "scan_end": "2023-10-07T13:00:00",
+        "scan_start": "2023-10-07T09:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097776036,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:38:31.006614+00:00",
+      "elapsed_seconds": 20.919098408,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason": "no scan window produced an integrity- and cap-qualified core",
+      "started_at": "2026-09-08T14:38:10.087177+00:00",
+      "status": "INELIGIBLE_NO_QUALIFIED_CORE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 8,
+        "index": 19,
+        "label": "oct_weekend_pm_n8",
+        "scan_end": "2023-10-07T22:00:00",
+        "scan_start": "2023-10-07T18:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "success",
+        "id": 102097775802,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:43:52.850657+00:00",
+      "elapsed_seconds": 327.755367951,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:38:25.094972+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 16,
+        "index": 20,
+        "label": "jan_weekday_pm_n16",
+        "scan_end": "2023-01-03T21:00:00",
+        "scan_start": "2023-01-03T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097775968,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:43:23.342072+00:00",
+      "elapsed_seconds": 283.21270404200004,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:38:40.129039+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 16,
+        "index": 21,
+        "label": "apr_weekday_pm_n16",
+        "scan_end": "2023-04-04T21:00:00",
+        "scan_start": "2023-04-04T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097776040,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:46:55.792891+00:00",
+      "elapsed_seconds": 415.50951460199997,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "318896cb2c96d9237336bb809cc393686b413798285e547df3d2b04171cc52e8",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:40:00.282988+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 16,
+        "index": 22,
+        "label": "jul_weekday_pm_n16",
+        "scan_end": "2023-07-05T21:00:00",
+        "scan_start": "2023-07-05T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097776385,
+        "status": "completed"
+      }
+    },
+    {
+      "aggregate_only": true,
+      "completed_at": "2026-09-08T14:50:25.015246+00:00",
+      "elapsed_seconds": 582.051412834,
+      "provenance": {
+        "code_sha256": {
+          "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+          "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+          "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+          "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+        },
+        "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+      },
+      "reason_sha256": "5f5d3b4f876e8e91187d6d9b48d3435fe159b127b67b7215b7ca0f6b63bfbf5c",
+      "reason_type": "LiveDataError",
+      "started_at": "2026-09-08T14:40:42.963492+00:00",
+      "status": "TRANSPORT_FAILURE",
+      "version": "nyc-temporal-geometry-census/v1",
+      "window": {
+        "core_count": 16,
+        "index": 23,
+        "label": "oct_weekday_pm_n16",
+        "scan_end": "2023-10-03T21:00:00",
+        "scan_start": "2023-10-03T17:00:00"
+      },
+      "workflow_job": {
+        "conclusion": "failure",
+        "id": 102097776478,
+        "status": "completed"
+      }
+    }
+  ],
+  "provenance": {
+    "code_sha256": {
+      "nyc_geometry_census.py": "63b3bab25fb38b3212792fa70d52affd9c7cd35e49315f94a3c46fa25c5f887f",
+      "nyc_hvfhv_consistent_snapshot.py": "afb9fbd56dba624455b54ca4096847177e1f7982eee79a5d98ecaa6a28ad3763",
+      "nyc_hvfhv_smoke_fetch.py": "86561d13f22f2bad2a614c3c36c347a3a6700eb88a74e3e50fb3e208c188635d",
+      "nyc_hvfhv_smoke_types.py": "4e04793965406ae4f46ecfafc34a2036bd40c13f61b32c0745503467b0ce45c8"
+    },
+    "collector_sha256": "6926e88feab2f3c72f784a56ecf9c1be2516e433518e7149b2653527de271568",
+    "protocol_sha256": "4ef3835d899576247498a5e15e064207a461e30dfa8653f3081683468a486d48"
+  },
+  "summary": {
+    "broad_full": {
+      "complete_clique_views": 0,
+      "eligible_views": 8,
+      "nonclique_event_available_views": 8
+    },
+    "common_fingerprint_count": 1,
+    "declared_cells": 24,
+    "distinct_scan_windows": 20,
+    "full": {
+      "complete_clique_views": 0,
+      "eligible_views": 8,
+      "nonclique_event_available_views": 8
+    },
+    "small": {
+      "complete_clique_views": 4,
+      "eligible_views": 8,
+      "nonclique_event_available_views": 4
+    },
+    "status": "HOLD_INCOMPLETE_OR_INCONSISTENT",
+    "status_counts": {
+      "GEOMETRY_COMPLETE": 8,
+      "INELIGIBLE_NO_QUALIFIED_CORE": 3,
+      "TRANSPORT_FAILURE": 13
+    },
+    "stress_full": {
+      "complete_clique_views": 0,
+      "eligible_views": 0,
+      "nonclique_event_available_views": 0
+    }
+  },
+  "version": "nyc-temporal-geometry-census/v1",
+  "workflow_source": {
+    "artifacts": [
+      {
+        "digest": "sha256:ce023a3cff37bbe69018084df4514262ade9fede781f5f0ce42c224457d8d70a",
+        "id": 10061888230,
+        "name": "nyc-geometry-summary"
+      },
+      {
+        "digest": "sha256:5014823d16209b56dc4b03fe808290ec60c47d501359ef45b991d152c192a368",
+        "id": 10061881695,
+        "name": "nyc-geometry-window-23"
+      },
+      {
+        "digest": "sha256:29c41a44b6af3148bb2dd2ca471ff45c572fbb213750ac6ba1e05a6b937c714a",
+        "id": 10061715807,
+        "name": "nyc-geometry-window-22"
+      },
+      {
+        "digest": "sha256:454c840988904a1300163dcbc12aa060ffb313d8e0b2e9288902e125bf93fb1a",
+        "id": 10061574890,
+        "name": "nyc-geometry-window-20"
+      },
+      {
+        "digest": "sha256:29c63d541fe74ecbd3bd694a27f70830db5f9ed97745021e37016951ae8e31f4",
+        "id": 10061552874,
+        "name": "nyc-geometry-window-21"
+      },
+      {
+        "digest": "sha256:e209b0e4fa91994d7ebd60efceb48aba171335b85fb79509112b2d72e0c001ec",
+        "id": 10061424725,
+        "name": "nyc-geometry-window-16"
+      },
+      {
+        "digest": "sha256:247d3cf3b3ca17c32b90e2700b595eeaa9dff7d6f95a61dcc1363ca3fed859b1",
+        "id": 10061392083,
+        "name": "nyc-geometry-window-17"
+      },
+      {
+        "digest": "sha256:5369ea5c670a1d46ca06ef8bc7939eafdfc43f954cff6ec38981cdc002359b68",
+        "id": 10061333016,
+        "name": "nyc-geometry-window-19"
+      },
+      {
+        "digest": "sha256:6039ed98e208d493d0033f7d2a5d6459b3e52c17302d3988691b8f60b9820984",
+        "id": 10061322089,
+        "name": "nyc-geometry-window-15"
+      },
+      {
+        "digest": "sha256:efe5f8425a0d91c2ede4e9cda3060379fefd5fdfe489c064706fa1f4deaff8fa",
+        "id": 10061311728,
+        "name": "nyc-geometry-window-18"
+      },
+      {
+        "digest": "sha256:67709285e84f577d80ac3403a67a5a9268d0d956fb29288c4bda7eeb3bff72ec",
+        "id": 10061287602,
+        "name": "nyc-geometry-window-13"
+      },
+      {
+        "digest": "sha256:2cc4d9bab27b52bba7513804dc2c7250ed68510d2710bf253b60f45c0b773a44",
+        "id": 10061177300,
+        "name": "nyc-geometry-window-12"
+      },
+      {
+        "digest": "sha256:3bb7bf72f7a73a316a8dc36e2f27ae7949810df00c628fd3cfa2cf4f08914fe5",
+        "id": 10061174277,
+        "name": "nyc-geometry-window-14"
+      },
+      {
+        "digest": "sha256:33899cac48733be9a5da2a0ea36ae98b61283c9cc84cd31ec00f668682fb1be0",
+        "id": 10061104953,
+        "name": "nyc-geometry-window-10"
+      },
+      {
+        "digest": "sha256:071dcf3c0973f0211b43b88081472cf158b26d1ae5eb7c64f7e7b9adc066558a",
+        "id": 10061103110,
+        "name": "nyc-geometry-window-11"
+      },
+      {
+        "digest": "sha256:cdbccf7d4f29b8bfa4789c1268822f5e71d68fe9fb281f9750c59922ebc66453",
+        "id": 10061076688,
+        "name": "nyc-geometry-window-8"
+      },
+      {
+        "digest": "sha256:dc9d668ee381c09858ae9e1fc80a8e8e1b5975835a70dc3316728c4910d7e7af",
+        "id": 10060945577,
+        "name": "nyc-geometry-window-9"
+      },
+      {
+        "digest": "sha256:67ca1e364bfebe36e95ae6b8eeff07577bc59ca89b98fef53d8df00b8bd84954",
+        "id": 10060789523,
+        "name": "nyc-geometry-window-6"
+      },
+      {
+        "digest": "sha256:8c9b546601fc61f860053bf049d80dcc03cf482f6c4f7f49eda273f2eb89a7ba",
+        "id": 10060752688,
+        "name": "nyc-geometry-window-5"
+      },
+      {
+        "digest": "sha256:f4403319843f6ef0273738bed5fd1ae1d409e9b16f7f3db5b49e90e6c0179943",
+        "id": 10060749289,
+        "name": "nyc-geometry-window-7"
+      },
+      {
+        "digest": "sha256:514c286291e3588de996f08ccd89b3be31af4e76b86cde014e9c92bad2c2e6b5",
+        "id": 10060723271,
+        "name": "nyc-geometry-window-4"
+      },
+      {
+        "digest": "sha256:9eedf6b403eb7b17c2b390b555f4d5d891c2a1c6974fbcc61cb800eb75617bc8",
+        "id": 10060513106,
+        "name": "nyc-geometry-window-3"
+      },
+      {
+        "digest": "sha256:06fbf643c01547d150d70ff9383fd2fe7d1fdb4a6b0815410649c81aff272e86",
+        "id": 10060450349,
+        "name": "nyc-geometry-window-2"
+      },
+      {
+        "digest": "sha256:ff0751ed5a5ca449cceea25353a3651c7a2616131e37141fb70ed51ca3e3fb60",
+        "id": 10060447662,
+        "name": "nyc-geometry-window-1"
+      },
+      {
+        "digest": "sha256:5172c2e786e9c3dee46601b438aa3188a7c9df966d2ad424744080343131d975",
+        "id": 10060408285,
+        "name": "nyc-geometry-window-0"
+      }
+    ],
+    "job_states_sha256": "070326ca80f1e6987516cfac9d18597e49daf8bd964c59c552c60a569d92115d",
+    "run_id": 34237155750,
+    "source_commit": "0598685a4b5a4d16060bf0a4e3b7e940e8563925",
+    "url": "https://github.com/KoyuChen/urban-pooling-opportunity-exposure/actions/runs/34237155750",
+    "window_report_sha256": {
+      "apr_weekday_am_n8": "9b7293c5321bc4286089b3d96c095f2f1924530c40b8a4cb4d0e6b0cac86e985",
+      "apr_weekday_midday_n8": "84cb5434a01cc900005e6e8134751859bf0dfb2fb1c50644404530442efdeece",
+      "apr_weekday_pm_n16": "906b1142b82dd7d4693c8e8b6ff503553d4ee957eba2195a7dc782027912a183",
+      "apr_weekday_pm_n8": "4a00f7a9848faf3fbac89e83e66ae8d9d8130c6f23ce61b2a558751efacf822b",
+      "apr_weekend_am_n8": "b4fbf79311d7cff5e974e22ba9e8da338ec6804e928dc97ce820aad9a18aa4f9",
+      "apr_weekend_pm_n8": "e82fd315a47cde272dd4756e932e67b85d545e3689b5f5be561ac27cba19e7ac",
+      "jan_weekday_am_n8": "3d7aa1e3b01a248402021c37e1964326818171fed2f51cd5efbcc0effbfb40b0",
+      "jan_weekday_midday_n8": "f2a6c8952a87bae4bb71740f7f732100e96f0d45f32805f99895effe65d6ebf8",
+      "jan_weekday_pm_n16": "9eeb9386dfac82fbc4893b246fb19f8b35d199b43c36a85f25f951fe8de21cd1",
+      "jan_weekday_pm_n8": "06c9b926db7d254121bcf5e6316d625c07b148816fc7ebab40d17268ec036d35",
+      "jan_weekend_am_n8": "12cb4a47af937c0110541be32cdf897ddc6952523120fd2bcd5592b543a78c45",
+      "jan_weekend_pm_n8": "8bf3f4f3f165c67e5f799c36f9e5bfbd89eadf50472dda5cc12c474e4cdfdadf",
+      "jul_weekday_am_n8": "957f1acd35ef87302eb0b5f98bdd91d22bb56e2dd91aff170a1f66f4fd11e414",
+      "jul_weekday_midday_n8": "a4bcd33267251751c631775fc733d05cda14eaea0355e613e2b174a6356415d4",
+      "jul_weekday_pm_n16": "42ec2873398ecc7da88813195fdc43d48833680b42df59e28b14f93e2df1c591",
+      "jul_weekday_pm_n8": "c273dd547433285dccc85fdb27954560d46b3ab08091990e17b2d53c37d2fb0b",
+      "jul_weekend_am_n8": "809e78c7dcfbfe6aebe252e22716c25cb246ed0851d1cb57a46fcd8536d73cd3",
+      "jul_weekend_pm_n8": "b76fca4e7df1f23f7d4576fd0636d9b261248cc653983e00e711ef32e31a6559",
+      "oct_weekday_am_n8": "7f81ce9b92976262e41d97539b9962c273dec7c00c3993820ec23a1c695960f6",
+      "oct_weekday_midday_n8": "282e387832b802eb28e3a15395ed2c3bf07d03536343e7de2d57de24b3291e4e",
+      "oct_weekday_pm_n16": "4889ebe3b6184a5a21377c6ee35a275f24de19ea8c200b30b666cf26cd792678",
+      "oct_weekday_pm_n8": "ea2b57f1f2955c38083b432dba1b671946e06b9e5efabd9f4ffba0fe169a3f13",
+      "oct_weekend_am_n8": "c96e127acf002a4d6b22062e644349e09f103da8c20e20a21c8563fc8805a30a",
+      "oct_weekend_pm_n8": "fb7566a5be59c5553771f4545559e22501a400e0c630d1012cf1c0d18f7b0044"
+    }
+  }
+}

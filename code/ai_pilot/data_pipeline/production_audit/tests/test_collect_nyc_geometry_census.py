@@ -26,6 +26,8 @@ class CollectorTests(unittest.TestCase):
         report=collector.annotate(census.aggregate(p,[row]),[
             {'id':1,'name':'geometry-window (0)','status':'completed','conclusion':'success'}])
         self.assertEqual(report['ledger'][0]['status'],'INELIGIBLE_NO_QUALIFIED_CORE')
+        self.assertNotIn('workflow_job', row)
+        self.assertNotIn('collector_sha256', row['provenance'])
 
 
 if __name__=='__main__': unittest.main()

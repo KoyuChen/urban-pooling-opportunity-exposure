@@ -1,0 +1,9 @@
+{
+  "aggregate_only": true,
+  "files_sha256": {
+    "REPORT.md": "7ed3c437487d3566689cd014a0187fd2ea07140741a2ceb7aea91d8fdc28bb20",
+    "RESULTS.tex": "023cd9f7047da54c8df11d33046a2df9dae0d79431fdf896c9a95ba1a27e8a42",
+    "SUMMARY.json": "cc925c6afe9915b136972abfa9eebde1ea56083381f40d586c0823a764d53d71",
+    "WINDOWS.csv": "d55d85deac6d6d64ad6ceb46e2cfa74258bb43ab286dccba2758d17ccb35d57c"
+  }
+}
