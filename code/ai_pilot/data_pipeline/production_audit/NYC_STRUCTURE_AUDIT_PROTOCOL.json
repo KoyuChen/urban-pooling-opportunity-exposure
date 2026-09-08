@@ -1,0 +1,41 @@
+{
+  "protocol_version": "nyc-fixed-time-structure-audit/v1",
+  "declared_date": "2026-09-08",
+  "purpose": "Retrospective fixed-input diagnostic of event-family restrictions, not a truth or population study.",
+  "base_evidence_commit": "e7048bd15f9ca45592cf7d3c13970c22fa3f20b9",
+  "extraction": {
+    "scan_start": "2023-01-03T17:00:00",
+    "scan_end": "2023-01-03T21:00:00",
+    "scan_window_hours": 1.0,
+    "min_core_rows": 4,
+    "max_core_rows": 40,
+    "max_scan_rows": 5000,
+    "max_candidate_rows": 2500,
+    "max_indeterminate_rows": 200,
+    "expected_provider": "HV0005",
+    "selection": "Existing count-reconciled NYC smoke extraction, first 4 core rows in source order, then nearest 12 buffers by exact temporal gap and source tie order; buffers require nonmissing miles and seconds. Selection uses outcome availability but not outcome magnitude. Remaining original cores may become optional buffers, as in the existing reduced audit.",
+    "source_identity_rule": "New extraction; do not assert byte identity with the old scale instance. Store snapshot, query and input hashes. Fail on metadata/count change or unexpected provider."
+  },
+  "core_rows": 4,
+  "buffer_rows": 12,
+  "capacities": [2, 3, 4],
+  "overlap_epsilon_seconds": 1.0,
+  "minimum_interval_duration_seconds": 1.0,
+  "families": {
+    "ordered": "Connected interval-overlap graph and simultaneous occupancy at most C; total event size may exceed C.",
+    "pair": "Exactly two members, satisfying the same ordered-event constraints; K=2 is not the same restriction as C=2.",
+    "clique": "Every pair of members overlaps by at least epsilon, satisfying the same ordered-event constraints."
+  },
+  "world_constraints": "Each core exactly once; each buffer at most once; every event has at least two members and touches a core; no buffer-only events.",
+  "support_comparison": "Report the entire reachable selected-buffer-count set, including zero, for each family and capacity. Record ordered-only counts as exclusions by the restricted model.",
+  "outcome_comparison": "For each capacity evaluate every positive integer q feasible in all three families. Keep the same q and query coefficients across families. Do not compare outcomes at model-specific maximum support.",
+  "queries": [
+    {"name": "mean_selected_buffer_miles", "attribute": "miles", "scale": 1},
+    {"name": "mean_selected_buffer_trip_minutes", "attribute": "seconds", "scale": 60}
+  ],
+  "verification": "Complete run-column enumeration and exact finite master; independently formulate a binary column-selection MILP for every q and endpoint, replay its chosen events and compare with enumeration. Decimal query coefficients are scored with rational arithmetic. A MILP timeout is an unresolved verification, never infeasibility.",
+  "milp_seconds_per_solve": 30.0,
+  "comparison_tolerance": 1e-7,
+  "scope_limit": "Only 4+12 in this protocol. Assess all results, including equality, before declaring larger diagnostics. No threshold search, truth-coverage claim or population extrapolation.",
+  "publication": "Commit aggregate tables, source/code hashes and witness hashes only. Keep raw input and event witnesses in ignored local scratch; never upload them."
+}
