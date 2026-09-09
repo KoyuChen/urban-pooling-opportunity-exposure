@@ -45,6 +45,7 @@ jobs:
             code/ai_pilot/benchmarks/atr_diamor_alternating_structure.py \
             code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py \
+            code/ai_pilot/data_pipeline/production_audit/chicago_k2_followup.py \
             scripts/audit_tex_references.py
           python scripts/audit_tex_references.py
           python \

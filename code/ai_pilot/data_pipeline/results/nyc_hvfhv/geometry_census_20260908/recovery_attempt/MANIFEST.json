@@ -1,0 +1,10 @@
+{
+  "version": "nyc-geometry-recovery-audit-manifest/v1",
+  "aggregate_only": true,
+  "source_artifact_zip_sha256": "daaf81f8fcd57e07996e48f98e3348306804a52c40135b97b0a026992ab1888d",
+  "files_sha256": {
+    "RECOVERY_AUDIT.json": "f55e5220c90e4d90b4299f7f0598d9c1df48ca78e57860f6eb76af1ed96942c0",
+    "REPORT.md": "661ecf49314505e0d57982153978460227e85c668bbf88fb27ff3ac1f7dbf390",
+    "RESULTS.tex": "00b524b4ba031b64ea29952c35a27b471d16da6afb1500dd54235f157b15f656"
+  }
+}

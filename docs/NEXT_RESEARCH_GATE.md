@@ -32,7 +32,10 @@ recorded: 8 geometry-complete, 3 protocol exclusions and 13 transport failures.
 All eight completed full views have non-clique event columns; four time-only
 4+12 reductions are complete cliques. Recovery run `34240720735` reuses terminal
 records and retries transport failures under a separately declared wait-budget
-amendment. The census remains HOLD until the full ledger is verified.
+amendment. The verified recovery retained the same 8 complete and 3 excluded
+cells, with 11 transport failures and 2 hard deadlines. A further completed
+calculation lacked a finalized artifact and is not admitted. The census remains
+HOLD; another budget increase is not the next task.
 
 The work packages below remain the longer plan. The geometry census now comes
 immediately before further D1 endpoint comparisons. Chicago's 96-window
@@ -128,7 +131,9 @@ chosen after the pilot; this is a calendar extension, not a pristine holdout.
 It retains the pilot's eligibility caps, support curves, query definitions
 and 60-second endpoint budget, using the verified indexed-count transport.
 
-The current single-window driver accepts this protocol, for example:
+The staged controller `chicago_k2_followup.py` now accepts this protocol and
+maintains all 96 statuses from initialization. The existing single-window
+driver remains the scientific execution entrypoint, for example:
 
 ```bash
 python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py \
@@ -138,15 +143,19 @@ python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.p
 ```
 
 The command is an execution entrypoint, not a record that it has been run.
-The old recovery workflow is tied to the completed 24-window pilot and must
-not be silently redirected to this new panel. A staged controller must first:
+The pilot and follow-up checkpoint schemas remain separate. The controller:
 
 - verify the declared calendar and protocol/code hashes;
 - distinguish unstarted windows from attempted failures and scientific exclusions;
 - retain independent per-window reports and every failed attempt;
 - leave completed scientific results untouched, including unresolved endpoints;
 - retry only failed transfers at the same date/time; and
-- produce a complete panel ledger after each batch, with all 96 windows present.
+- produces a complete panel ledger and TeX fragment after each batch, with all
+  96 windows present;
+- rejects batch advancement until every earlier window is completed or
+  scientifically ineligible; and
+- records a scheduled job with no retrievable artifact as an execution failure,
+  not as unstarted or scientifically infeasible.
 
 Batch pauses may address data integrity, access or compute failures. They must
 not select dates or suppress results based on frontier width or a preferred

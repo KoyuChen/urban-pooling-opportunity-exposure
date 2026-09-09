@@ -3,11 +3,23 @@ name: chicago-k2-fixed-panel
 on:
   workflow_dispatch:
     inputs:
-      resume_run_id:
-        description: "Source run: initial panel 34048658431, or a later checkpoint run"
+      mode:
+        description: "Run the frozen 96-window follow-up or revisit the closed pilot recovery"
         required: true
-        default: "34178831936"
+        default: "followup"
+        type: choice
+        options: [followup, pilot-recovery]
+      resume_run_id:
+        description: "Prior checkpoint run; leave empty only for follow-up batch 0"
+        required: false
+        default: ""
         type: string
+      batch_index:
+        description: "Frozen follow-up batch, in order"
+        required: true
+        default: "0"
+        type: choice
+        options: ["0", "1", "2", "3", "4", "5", "6", "7"]
   push:
     branches: [main]
     paths:
@@ -23,6 +35,7 @@ concurrency:
 
 jobs:
   prepare:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'pilot-recovery' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -202,5 +215,149 @@ jobs:
             tmp/chicago-k2-fixed-panel/panel_windows.csv
             tmp/chicago-k2-fixed-panel/PANEL_REPORT.md
             tmp/chicago-k2-fixed-panel/recovery_plan.json
+          if-no-files-found: error
+          retention-days: 90
+
+  followup-prepare:
+    if: ${{ github.event_name == 'push' || inputs.mode == 'followup' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      selected_count: ${{ steps.plan.outputs.selected_count }}
+      indices: ${{ steps.plan.outputs.indices }}
+    env:
+      BATCH_INDEX: ${{ inputs.batch_index || '0' }}
+      RESUME_RUN: ${{ inputs.resume_run_id }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore prior follow-up checkpoint when advancing or retrying
+        if: env.RESUME_RUN != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.RESUME_RUN }}
+          name: chicago-k2-followup-checkpoint
+          path: tmp/chicago-k2-followup
+      - name: Initialize only the first batch when no checkpoint is supplied
+        if: env.RESUME_RUN == ''
+        run: |
+          test "$BATCH_INDEX" = "0"
+          python code/ai_pilot/data_pipeline/production_audit/chicago_k2_followup.py \
+            --checkpoint-dir tmp/chicago-k2-followup --initialize
+      - name: Verify sequential gate and choose only this fixed batch
+        id: plan
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/chicago_k2_followup.py \
+            --checkpoint-dir tmp/chicago-k2-followup --batch-index "$BATCH_INDEX" \
+            --plan-output "$RUNNER_TEMP/followup-plan.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          plan = json.loads((Path(os.environ['RUNNER_TEMP']) / 'followup-plan.json').read_text())
+          indices = [item['index'] for item in plan['selected_windows']]
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              print('matrix=' + json.dumps(plan['matrix'], separators=(',', ':')), file=output)
+              print('selected_count=' + str(len(indices)), file=output)
+              print('indices=' + json.dumps(indices, separators=(',', ':')), file=output)
+          PY
+      - name: Preserve verified pre-batch checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-followup-prepared
+          path: tmp/chicago-k2-followup
+          if-no-files-found: error
+          retention-days: 90
+
+  followup-cohorts:
+    needs: followup-prepare
+    if: needs.followup-prepare.outputs.selected_count != '0'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.followup-prepare.outputs.matrix) }}
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: |
+          python -m pip install --disable-pip-version-check \
+            numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8
+      - name: Run one predeclared follow-up cohort
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/run_chicago_k2_fixed_panel.py \
+            --protocol code/ai_pilot/data_pipeline/production_audit/CHICAGO_K2_FOLLOWUP_PROTOCOL.json \
+            --window-index "${{ matrix.index }}" --indexed-count-transport \
+            --output-dir tmp/chicago-k2-followup-attempts
+      - name: Upload the complete fail-closed attempt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.slug }}
+          path: tmp/chicago-k2-followup-attempts/${{ matrix.slug }}
+          if-no-files-found: warn
+          retention-days: 90
+
+  followup-aggregate:
+    needs: [followup-prepare, followup-cohorts]
+    if: ${{ always() && needs.followup-prepare.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: chicago-k2-followup-prepared
+          path: tmp/chicago-k2-followup
+      - name: Restore every available attempt artifact
+        if: needs.followup-prepare.outputs.selected_count != '0'
+        continue-on-error: true
+        uses: actions/download-artifact@v4
+        with:
+          pattern: cohort_*
+          path: tmp/chicago-k2-followup-attempts
+      - name: Merge terminal records and preserve missing-artifact failures
+        env:
+          EXPECTED_INDICES: ${{ needs.followup-prepare.outputs.indices }}
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/chicago_k2_followup.py \
+            --checkpoint-dir tmp/chicago-k2-followup \
+            --merge-dir tmp/chicago-k2-followup-attempts \
+            --expected-indices-json "$EXPECTED_INDICES" --source-run "${{ github.run_id }}"
+      - name: Upload recoverable 96-window checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-followup-checkpoint
+          path: tmp/chicago-k2-followup
+          if-no-files-found: error
+          retention-days: 90
+      - name: Upload aggregate ledger and TeX
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-followup-summary
+          path: |
+            tmp/chicago-k2-followup/followup_report.json
+            tmp/chicago-k2-followup/followup_windows.csv
+            tmp/chicago-k2-followup/FOLLOWUP_REPORT.md
+            tmp/chicago-k2-followup/FOLLOWUP_RESULTS.tex
           if-no-files-found: error
           retention-days: 90

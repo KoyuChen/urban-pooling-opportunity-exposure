@@ -32,14 +32,32 @@ Aggregate records, artifact digests and TeX are preserved in
 
 A transport-only amendment was declared before recovery: 120-second requests,
 30-minute window deadlines and two concurrent workers. Run `34240720735`
-restores all source checkpoints, reuses terminal records and retries only the
-13 transport failures; it does not refetch completed scientific records.
-The source protocol and geometry producer stay frozen. Fifteen targeted tests
-pass, covering independent triple counts, full denominators and predecessor
-validation. Recovery results are pending and cannot yet raise the gate.
+restored all source checkpoints, reused terminal records and retried only the
+13 transport failures; it did not refetch completed scientific records. The
+verified recovery artifact (`10067398726`, ZIP SHA-256
+`daaf81f8fcd57e07996e48f98e3348306804a52c40135b97b0a026992ab1888d`)
+still reports **8 geometry-complete, 3 protocol-ineligible, 11 transport
+failures and 2 transport deadlines**. Window 20 reached geometry completion in
+the job log, but artifact finalization returned HTTP 403; without its report
+and replay fields it remains the prior transport failure in the scientific
+ledger. The recovery Gate therefore remains **HOLD**.
+
+The source protocol and geometry producer stayed frozen. The recovery manifest,
+all four output hashes and the 24-cell denominator replay correctly. Fifteen
+targeted tests pass, covering independent triple counts, full denominators and
+predecessor validation. A concise recovery audit and TeX fragment are under
+`geometry_census_20260908/recovery_attempt/`.
 `docs/NYC_GEOMETRY_CENSUS.md` documents the design and claim boundary.
-The unique next task is to harvest and verify the recovery ledger; only after
-all statuses are accounted for should a fixed-q full-world comparison be frozen.
+No further wait-budget expansion is justified without a transport redesign.
+
+The frozen Chicago 96-window follow-up now has a fail-closed staged controller.
+It distinguishes unstarted windows, missing artifacts, transport failures,
+scientific exclusions and complete records across the full denominator. Batches
+contain 12 consecutive indices and cannot advance until all earlier windows are
+scientifically terminal. The first batch is configured to start from an empty,
+hash-pinned checkpoint; no follow-up result is claimed before its artifacts are
+aggregated. Five controller tests pass. This is the current highest-priority
+execution Gate.
 
 The adversarially repaired ATR v4 dyad audit has 170 eligible fixed snapshots and 850 radius
 cells. All are computationally closed: 806 have replayed numerical MILP optima

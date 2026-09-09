@@ -1,0 +1,26 @@
+{
+  "version": "nyc-geometry-recovery-audit/v1",
+  "source_run_id": 34237155750,
+  "recovery_run_id": 34240720735,
+  "recovery_source_commit": "68d7ef0f02a8706eaa4501f9cb2c8b2f8c0ff632",
+  "summary_artifact_id": 10067398726,
+  "summary_artifact_zip_sha256": "daaf81f8fcd57e07996e48f98e3348306804a52c40135b97b0a026992ab1888d",
+  "manifest_verified": true,
+  "declared_cells": 24,
+  "distinct_scan_windows": 20,
+  "status": "HOLD_INCOMPLETE_OR_INCONSISTENT",
+  "status_counts": {
+    "GEOMETRY_COMPLETE": 8,
+    "INELIGIBLE_NO_QUALIFIED_CORE": 3,
+    "TRANSPORT_FAILURE": 11,
+    "TRANSPORT_DEADLINE": 2
+  },
+  "eligible_full_views": 8,
+  "full_nonclique_event_available_views": 8,
+  "eligible_time_only_4_plus_12_views": 8,
+  "small_complete_clique_views": 4,
+  "retained_unique_attempts": 36,
+  "missing_retry_record_indices": [20],
+  "missing_retry_record_reason": "Window 20 logged GEOMETRY_COMPLETE, but actions/upload-artifact failed to finalize with HTTP 403. No report artifact was admitted; the prior transport-failure record remains in the scientific ledger.",
+  "claim_boundary": "Geometry only. Event-column availability is not full-world extendability, a fixed-q endpoint effect, true vehicle-event identification or population prevalence."
+}

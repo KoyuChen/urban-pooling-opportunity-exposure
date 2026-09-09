@@ -21,6 +21,22 @@ separate statuses.
 This is a public-data certification panel, not a probability sample, hidden-run
 recovery study, partner-recall benchmark, or Chicago population estimate.
 
+## Frozen 96-window follow-up controller
+
+`CHICAGO_K2_FOLLOWUP_PROTOCOL.json` separately declares 96 calendar-disjoint
+windows in eight consecutive 12-window batches. `chicago_k2_followup.py`
+initializes a full-denominator checkpoint before acquisition, distinguishes
+`UNSTARTED` from attempted failures, preserves old attempts and emits JSON,
+CSV, Markdown and TeX after every batch. Batch `b+1` is rejected unless every
+window through batch `b` has a completed or scientifically ineligible record.
+
+The existing workflow starts batch 0 on its controller deployment. Later
+batches require the preceding `chicago-k2-followup-checkpoint` run ID and the
+next fixed batch index. Empty or missing artifacts are recorded as execution
+failures; they are never treated as infeasibility. The 24-window pilot remains
+under its original checkpoint schema and is not pooled into follow-up counts
+until both summaries have first been reported separately.
+
 ## Verified initial checkpoint, 2026-09-07
 
 The first panel run, `34048658431` at source commit
