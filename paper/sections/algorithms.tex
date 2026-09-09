@@ -22,62 +22,36 @@ This standard reduction supplies a baseline, not the general-event algorithm.
 When timestamps are uncertain, the bijection is between partitions and
 matchings; a partition can have many timestamp completions.
 
-\begin{theorem}[Alternating decomposition of a pair-mean frontier]
-\label{thm:k2alternating}
-For $H(M)=m^{-1}\sum_{e\in M}w_e$, let $M^-,M^+$ attain the endpoints
-at the same cardinality $m>0$. Their symmetric difference decomposes into
-vertex-disjoint alternating paths and even cycles $\mathcal A$, and
-\begin{equation}
- \overline H-\underline H
- =\frac1m\sum_{A\in\mathcal A}
- \left(\sum_{e\in A\cap M^+}w_e-
-       \sum_{e\in A\cap M^-}w_e\right).
- \label{eq:alternating-width}
-\end{equation}
-Cycles are edge-count balanced. Path imbalances belong to $\{-1,0,1\}$ and
-sum to zero, so imbalanced paths may require coupled exchanges.
-\end{theorem}
-
-For per-core queries, replace $m$ in Eq.~\eqref{eq:alternating-width} by
-$|C_0|$. The decomposition describes witness differences, not a new matching
-algorithm.
-
-\paragraph{Candidate-support sensitivity.}
-Within a declared outer graph $E$, choose a base $E_0\subseteq E$ and let
-$d_e=|e\cap C_0|\ind\{e\notin E_0\}$. Allow at most $\Gamma$ core
-incidences through edges outside the base:
-\begin{equation}
- \sum_{e\in E}d_ex_e\le\Gamma.
- \label{eq:k2omission}
-\end{equation}
-
-\begin{proposition}[Nested candidate-omission frontier]
-\label{prop:k2omission}
-At fixed $q$, these feasible sets expand with $\Gamma$, from the base graph
-at $0$ to the full graph at $|C_0|$. On nonempty sets, lower endpoints cannot
-increase and upper endpoints cannot decrease.
-\end{proposition}
-
-\begin{proposition}[Support contraction and threshold decisions]
-\label{prop:k2thresholdcontraction}
-For $E'\subseteq E$ with both fixed-$q$ sets nonempty,
-$\underline H_E\le\underline H_{E'}\le\overline H_{E'}\le\overline H_E$.
-An ambiguous threshold remains ambiguous exactly when
-$\underline H_{E'}<\eta\le\overline H_{E'}$.
-\end{proposition}
-
-These are nesting consequences. Budget-constrained matching is solved
-numerically; no extension of the polynomial matching claim to arbitrary
-side constraints is implied. Nor does the budget cover relations outside $E$.
+\paragraph{Sensitivity and witness decomposition.}
+Within a declared outer graph, an omitted-incidence budget limits core
+incidences through edges outside a chosen base. At fixed $q$, increasing the
+budget expands the frontier; it says nothing about edges outside that outer
+graph. The appendix states the nesting and threshold consequences and the
+alternating-path decomposition of two endpoint matchings. Arbitrary budget
+side constraints are solved numerically and do not inherit a polynomial
+matching guarantee.
 
 \subsection{Integral pricing for one fixed-time event}
 Fix exact intervals, a core root $r$, and a span $[a,b)$ containing $I_r$.
 Only intervals contained in this span may be selected. Sorted observed
-endpoints induce elementary segments and internal boundaries. A selected
-family has span $[a,b)$ and positive-overlap connectivity precisely when each
-segment is covered and each internal boundary is strictly crossed by some
-selected interval. Segment coverage is additionally bounded above by $C$.
-Boundary crossing rules out components that only touch.
+endpoints induce elementary segments and internal boundaries.
+
+\begin{lemma}[Connectivity by coverage and bridges]
+\label{lem:connectivity}
+A nonempty selected family has span $[a,b)$ and connected positive-overlap
+graph if and only if every elementary segment is covered and every internal
+boundary is strictly crossed by a selected interval.
+\end{lemma}
+\begin{proof}
+A connected family fills its span. If no interval crosses an internal
+boundary, the nonempty families on its two sides cannot be joined by a
+positive-overlap path. Conversely, all intervals covering one elementary
+segment overlap. An interval strictly crossing each intervening boundary
+joins the components of the adjacent segments. Induction connects every
+segment, and every positive-length selected interval covers some segment.
+\end{proof}
+Bounding each segment's coverage above by $C$ imposes occupancy. This extra
+bridge condition distinguishes positive overlap from mere endpoint touching.
 
 \begin{theorem}[Integral rooted single-event oracle]
 \label{thm:oracle}
@@ -120,6 +94,26 @@ If a feasible restricted master is optimal and exhaustive exact pricing
 finds no positive reduced gain, its value equals the full-master LP optimum.
 \end{proposition}
 
+\begin{proposition}[Aggregates with additive pricing]
+\label{prop:aggregateclass}
+Fix $q$ and a known rational $d(q)>0$. Write $z_i(F)$ for row selection. For fixed
+rational coefficients $a_i,\gamma$, every aggregate
+\[
+ H(F)=\frac{\sum_i a_i z_i(F)+\gamma|\Pi(F)|}{d(q)}
+\]
+has column coefficient $h_R=(\sum_{i\in R}a_i+\gamma)/d(q)$.
+Adding $\sum_R b_R\lambda_R=q$ to the master preserves additive pricing for
+both endpoint directions: reduced gains are a constant plus row weights.
+Thus Theorem~\ref{thm:oracle} also supplies their root-LP pricing.
+\end{proposition}
+The fixed-$q$ dual contributes another multiple of $b_R$, so the claim follows
+by substitution. This covers selected-buffer means and second moments
+($d=q>0$), and events per core ($a_i=0$, $\gamma=1$, $d=|C_0|$).
+Variance with an unfixed mean and general within-event pair dispersion are
+not row-additive; the latter uses edge weights only in the $K=2$ case.
+This is pricing compatibility, not a polynomial global endpoint algorithm;
+the frozen branch-and-price implementation targets support maximization.
+
 Local integrality does not imply an integral master: the appendix exhibits
 $\operatorname{OPT}_{LP}=4>3=\operatorname{OPT}_{IP}$ at capacity two.
 Solving an integer model on root-LP columns alone is therefore insufficient.
@@ -146,14 +140,30 @@ restricted-master value is not a full-master upper bound. This result concerns
 fixed-time support maximization, not arbitrary aggregate queries or a
 polynomial-time global algorithm.
 
+\paragraph{Complexity boundary.}
+Fixed-time support decision is in NP: a selected-row partition is a
+polynomially checkable certificate. With one core, at most one event is
+possible, so the single-event oracle solves support maximization in polynomial
+time. General core-cover complexity, including fixed $C=2$, is not settled
+here. The fractional master proves a formulation gap, not NP-hardness;
+single-event span enumeration has only $O(|V|^2)$ choices.
+
 \subsection{Set-valued timestamps and numerical status}
-With uncertain time, membership and one common timestamp completion must be
-chosen jointly. Substituting full outer intervals can add false bridges or
-artificial concurrency; the appendix gives both counterexamples. The
-continuous MILP handles rectangular start/end supports and uses a declared
-positive overlap/length margin $\epsilon$,
-and certificates refer to that formulation. It need not coincide with all
-strictly positive overlaps of arbitrarily small duration. We distinguish
-replayed feasible witnesses, numerical optimality, model infeasibility, and
-unresolved termination. A witness proves feasibility but not an endpoint;
-a timeout proves neither optimality nor infeasibility.
+For rectangular endpoint supports, define $\F_\epsilon$ by requiring every
+row, including unused buffers, to have duration at least $\epsilon>0$ and
+every event to be connected by edges of overlap length at least $\epsilon$.
+Capacity still measures ordinary half-open simultaneous occupancy.
+
+\begin{proposition}[Joint-completion equivalence]
+\label{prop:epsilon}
+For bounded rational endpoint boxes and rational $\epsilon>0$, the
+rooted-flow/seat MILP is feasible if and only if $\F_\epsilon$ is nonempty.
+Moreover $\F=\bigcup_{\epsilon>0}\F_\epsilon$ under the same rectangular
+supports. Feasible partitions stabilize for some sufficiently small positive
+$\epsilon$; if $\F$ is nonempty, so do its partition-only aggregate endpoints.
+\end{proposition}
+The appendix proves both directions and the limiting claim. A fixed positive
+margin may exclude a world; setting $\epsilon=0$ instead admits touching
+chains. Neither operation is silently identified with the strict model.
+Numerical optimality and witness replay refer to the declared positive margin;
+neither a feasible witness nor a timeout alone certifies an endpoint.

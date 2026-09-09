@@ -1,5 +1,51 @@
 \section{Nesting and the Joint-Completion Distinction}
 
+\paragraph{Proof of Proposition~\ref{prop:modelcontainment}.}
+Every admissible pair is a positive-overlap clique, and every nonempty clique
+is connected. The same partition and selected rows therefore establish both
+inclusions, with capacity and $q$ unchanged. For any finite family of
+pairwise-positive-overlapping intervals, let $s^*=\max_i s_i$ and
+$e^*=\min_i e_i$. The rows attaining these extrema overlap positively
+(or are the same positive-length row), so $s^*<e^*$.
+All members are simultaneously present on $[s^*,e^*)$. A clique under
+capacity two therefore has at most two members, and the model requires at
+least two. This proves pair--clique equality at $C=2$.
+
+If the full graph is a disjoint union of cliques, every connected selected
+event lies in one component and hence is itself a clique. This proves
+event--clique equality for every capacity. In particular, a common positive
+intersection of all candidates yields one clique; no condition that $C$ be
+large is needed. Under uncertain times, such equality at one completion
+concerns only that completion's worlds, not the union over all completions.
+Minimizing or maximizing the same $H$ over nonempty nested sets proves
+frontier inclusion. Strict set inclusion alone does not force strict bounds
+for a particular $H$; the following witnesses establish that they can differ.
+
+\paragraph{Strict clique--event endpoints at the same support.}
+For Figure~\ref{fig:chain}, use cores $c_1=[0,2)$, $c_2=[1,3)$ and buffers
+$b_0=[-1,1/2)$, $b_1=[5/2,4)$, $b_2=[7/2,5)$.
+Fix $C=2$, $q=2$, and buffer values $v_{b_0}=v_{b_1}=0$, $v_{b_2}=1$.
+Let $H=q^{-1}\sum_{i\in B_0}v_i z_i$. The full graph is the five-row chain
+$b_0-c_1-c_2-b_1-b_2$. Pair/clique has the unique world
+$\{\{c_1,b_0\},\{c_2,b_1\}\}$ and hence range $[0,0]$.
+The event model also permits the single event $\{c_1,c_2,b_1,b_2\}$,
+which has depth two and mean $1/2$. Since at most one selected value is one,
+the event range is exactly $[0,1/2]$. Independent complete enumeration gives
+one pair, one clique, and three event partitions.
+
+\paragraph{Strict pair--clique endpoints at the same support.}
+Use three cores and four buffers. Rows $c_1,a_1,a_2$ all have interval
+$[0,1)$; rows $c_2,c_3,b_1,b_2$ all have interval $[2,3)$.
+Fix $C=3$, $q=3$, values $v_{a_1}=v_{a_2}=1$ and $v_{b_1}=v_{b_2}=0$,
+and the same selected-buffer mean. Pair worlds must match $c_1$ with one
+$a$ buffer and the other cores with both $b$ buffers, giving $[1/3,1/3]$.
+Clique worlds additionally permit $\{\{c_1,a_1,a_2\},\{c_2,c_3,b_1\}\}$,
+giving $2/3$. At least one $a$ buffer is necessary to cover $c_1$, and only
+two exist, so clique/event bounds are exactly $[1/3,2/3]$.
+Complete enumeration gives four pair and six clique/event partitions.
+Both examples use the additive-pricing aggregate class of
+Proposition~\ref{prop:aggregateclass}; neither is a public-data measurement.
+
 \paragraph{Proof of Proposition~\ref{prop:nesting}.}
 Take $F=(t,\Pi)\in\F(\T,C,q)$. Since $t_i\in\T_i\subseteq\T'_i$, the
 same completion is allowed after coarsening. Every event keeps its
@@ -32,22 +78,56 @@ full-envelope substitution is neither an inner nor an outer event model in
 general. These examples identify the necessary constraint distinction; they
 do not measure how often it changes an aggregate in a public dataset.
 
-\paragraph{Capacity-equivalent information loss.}
-For fine support $\T$ and coarser $\T'\supseteq\T$, an auxiliary descriptive
-quantity is
-\begin{equation}
- \kappa_{\T\to\T'}(C)
- =\min\{k\in\mathbb Z_{\ge0}:M(\T,C+k)\ge M(\T',C)\},
- \label{eq:kappa}
-\end{equation}
-with value $+\infty$ if no such capacity exists. This definition presumes the
-displayed maxima are defined. It compares reachable support, not outcome
-identification. Replacing the coarse maximum by a certified feasible lower
-bound $L\le M(\T',C)$ can only lower the required $k$, provided the fine-time
-maxima used for the comparison are themselves certified. Such a comparison
-is a lower bound on $\kappa$, not its sharp value.
-
 \section{Two-Member Matching and Sensitivity Proofs}
+
+\begin{theorem}[Alternating decomposition of a pair-mean frontier]
+\label{thm:k2alternating}
+For $H(M)=m^{-1}\sum_{e\in M}w_e$, let $M^-,M^+$ attain the endpoints
+at the same cardinality $m>0$. Their symmetric difference decomposes into
+vertex-disjoint alternating paths and even cycles $\mathcal A$, and
+\begin{equation}
+ \overline H-\underline H
+ =\frac1m\sum_{A\in\mathcal A}
+ \left(\sum_{e\in A\cap M^+}w_e-
+       \sum_{e\in A\cap M^-}w_e\right).
+ \label{eq:alternating-width}
+\end{equation}
+Cycles are edge-count balanced. Path imbalances belong to $\{-1,0,1\}$ and
+sum to zero, so imbalanced paths may require coupled exchanges.
+\end{theorem}
+
+For per-core queries, replace $m$ in Eq.~\eqref{eq:alternating-width} by
+$|C_0|$. The decomposition describes witness differences, not a new matching
+algorithm.
+
+\paragraph{Candidate-support sensitivity.}
+Within a declared outer graph $E$, choose a base $E_0\subseteq E$ and let
+$d_e=|e\cap C_0|\ind\{e\notin E_0\}$. Allow at most $\Gamma$ core
+incidences through edges outside the base:
+\begin{equation}
+ \sum_{e\in E}d_ex_e\le\Gamma.
+ \label{eq:k2omission}
+\end{equation}
+
+\begin{proposition}[Nested candidate-omission frontier]
+\label{prop:k2omission}
+At fixed $q$, these feasible sets expand with $\Gamma$, from the base graph
+at $0$ to the full graph at $|C_0|$. On nonempty sets, lower endpoints cannot
+increase and upper endpoints cannot decrease.
+\end{proposition}
+
+\begin{proposition}[Support contraction and threshold decisions]
+\label{prop:k2thresholdcontraction}
+For $E'\subseteq E$ with both fixed-$q$ sets nonempty,
+$\underline H_E\le\underline H_{E'}\le\overline H_{E'}\le\overline H_E$.
+An ambiguous threshold remains ambiguous exactly when
+$\underline H_{E'}<\eta\le\overline H_{E'}$.
+\end{proposition}
+
+These are nesting consequences. Budget-constrained matching is solved
+numerically; no extension of the polynomial matching claim to arbitrary
+side constraints is implied. Nor does the budget cover relations outside $E$.
+
 
 \paragraph{Proof of Theorem~\ref{thm:k2matching}.}
 Map every two-member event partition to its set of edges. Disjoint membership
@@ -114,17 +194,9 @@ companion $c$. For additive weights $w_i$ the fixed-span LP is
 \end{align*}
 Replacing max by min changes none of the arguments.
 
-For an integral selection, the segment lower bounds imply that its union
-fills the proposed span. A connected positive-overlap family must cover these
-segments and must strictly cross every internal endpoint boundary: without a
-crossing interval, rows to the left and right cannot be joined by a
-positive-overlap path. Conversely, an interval crossing a boundary overlaps
-the intervals covering the adjacent elementary segments. Inducting from left
-to right puts all segment-covering intervals in one component. Each selected
-interval has positive length and overlaps that component on a segment it
-covers. Thus the constraints characterize connectivity. Segment upper bounds
-characterize occupancy, including half-open boundary times because their
-active set equals that of the segment immediately to the right.
+Lemma~\ref{lem:connectivity} proves the connectivity equivalence. Segment
+upper bounds characterize occupancy, including half-open boundary times:
+the active set there equals that of the segment immediately to the right.
 
 Interleave the rows as $A_0,B_1,A_1,\ldots,B_{\ell-1},A_{\ell-1}$.
 An interval beginning at $u_p$ and ending at $u_q$ occupies the consecutive
@@ -185,6 +257,83 @@ bounds; unfinished pricing uses a previously established ancestor bound or a
 trivial bound such as $|B_0|$. Taking the maximum of these bounds and the
 incumbent gives the global upper bound. Discarding an unpriced live region,
 or treating its restricted LP value as an upper bound, would invalidate it.
+
+\section{The Common-Completion MILP and Its Overlap Margin}
+\label{app:epsilon-equivalence}
+Let row $i$ have the rectangular endpoint box
+$[\ell_i^s,u_i^s]\times[\ell_i^e,u_i^e]$, intersected with $s_i<e_i$.
+For $\epsilon>0$, define $\F_\epsilon(\T,C,q)$ by the same worlds as
+$\F(\T,C,q)$, with two additional requirements: every row, including an
+unused buffer, has $e_i-s_i\ge\epsilon$; and every event's graph with edges
+$ij$ satisfying $|I_i\cap I_j|\ge\epsilon$ is connected. Capacity still
+bounds ordinary simultaneous occupancy of half-open intervals; it is not
+computed from the thresholded overlap graph.
+
+\paragraph{Proof of Proposition~\ref{prop:epsilon}: formulation equivalence.}
+The projection of the MILP onto completions and event partitions is exactly
+$\F_\epsilon$. Here mathematical feasibility is distinguished from a solver's
+floating-point termination status.
+
+\begin{proof}
+A feasible integral assignment activates one root per event, chosen as its
+smallest-index core, assigns every core once, uses every buffer at most once,
+and selects exactly $q$ buffers. Each active event has at least two members.
+The endpoint bounds and duration constraints give a common completion for
+all rows. On a selected connectivity edge $ij$, the inequalities
+$s_i+\epsilon\le e_j$ and $s_j+\epsilon\le e_i$, together with both rows'
+minimum durations, are equivalent to
+$\min(e_i,e_j)-\max(s_i,s_j)\ge\epsilon$.
+Rooted flow sends one unit to every other selected member, so these edges
+connect the event. Each selected interval has one of $C$ seat colors, and
+same-color intervals satisfy either $e_i\le s_j$ or $e_j\le s_i$.
+Consequently no point is occupied by more than $C$ members. This is a world
+in $\F_\epsilon$.
+
+Conversely, take a world in $\F_\epsilon$ and choose each event's
+smallest-index core as root. A spanning tree of its $\epsilon$-overlap graph
+carries one unit from the root to every other member; no edge needs more
+than $|V|-1$ units. Color the ordinary interval-overlap graph with $C$
+colors: process intervals in start-time order, reusing a color as soon as
+its last interval ends. If no color were free, the new interval and $C$
+earlier intervals would violate the occupancy bound. Set seat variables to
+these colors and order variables to their temporal orders. Set all unused
+assignments and flow to zero. If $D$ is the difference between the largest
+and smallest endpoint bounds, $M\ge D+\epsilon$ deactivates every unused
+overlap and ordering inequality; the implementation uses
+$M=\max\{1,D+2\epsilon\}$. All MILP constraints then hold.
+\end{proof}
+
+\paragraph{The limit is a union, not substitution of zero.}
+For the positive-duration supports above,
+\begin{equation}
+ \F(\T,C,q)=\bigcup_{\epsilon>0}\F_\epsilon(\T,C,q),\qquad
+ 0<\epsilon'\le\epsilon
+ \ \Longrightarrow\ \F_\epsilon\subseteq\F_{\epsilon'}.
+ \label{eq:epsilon-union}
+\end{equation}
+For any strict-positive-overlap world, choose one positive-overlap spanning
+tree per event. There are finitely many tree edges and row durations, so
+their smallest positive length gives a margin at which the same world is
+retained. Conversely, every positive-margin world is a strict-overlap world.
+A fixed margin can therefore exclude events that can only be connected
+through shorter overlaps, or worlds containing shorter row durations;
+no strict-overlap world is excluded from the union. Setting $\epsilon=0$
+is different: endpoint-touching chains and zero-length completions can then
+satisfy the relaxed formulation.
+
+\paragraph{Partition-only aggregate endpoints.}
+Since there are finitely many event partitions, choose one strict-overlap
+witness and a positive margin for each feasible partition. The minimum of
+these finitely many margins is positive. Thus there exists an
+instance-dependent $\bar\epsilon>0$ such that every
+$0<\epsilon\le\bar\epsilon$ preserves the feasible partition set and hence
+the endpoints of every partition/public-attribute aggregate $H$ used in
+Section~\ref{sec:model}. This is an existence statement; it does not certify
+that the audit's chosen margin is small enough. For exact timestamps on a
+grid of spacing $g>0$, the explicit choice $0<\epsilon\le g$ does preserve
+all positive overlaps and durations. Rational bounds with continuous
+uncertain completions alone do not justify such a grid argument.
+
 
 \section{Master Nonintegrality Witness}
 At capacity two, use four cores

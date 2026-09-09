@@ -1,5 +1,15 @@
 # Verified project status
 
+The September 9 theory reinforcement now proves exact-time pair/clique/event
+containment, common-intersection collapse, two strict fixed-q mean examples,
+the main-text coverage/bridge connectivity lemma, and the positive-margin
+MILP equivalence. The fixed-q pricing-compatible aggregate class is explicit.
+Sixteen focused boundary tests pass. This adds mathematical examples and
+verification, not new public-data outcomes. Exact-time general support
+complexity, including C=2 hardness, remains unestablished; the current claims
+are NP membership and polynomial single-core support. Details and excluded
+hardness transfers are in `docs/THEORY_REINFORCEMENT.md`.
+
 Latest verified evidence checkpoint: 2026-09-09, Chicago follow-up batch 0 recorded.
 The next-stage plan is in `docs/NEXT_RESEARCH_GATE.md`. A separate 96-window
 Chicago calendar is declared in `CHICAGO_K2_FOLLOWUP_PROTOCOL.json`; its interim

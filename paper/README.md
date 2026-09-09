@@ -16,6 +16,18 @@ This is a working draft, not a claim of submission or scientific readiness.
 
 ## What changed
 
+- Adds fixed-q pair/clique/event containment, exact collapse conditions, and
+  two strictly different selected-buffer-mean examples with nonempty models.
+- Promotes the coverage-plus-bridges connectivity equivalence into the main text.
+- States the row-additive-plus-event-count aggregate class preserved by pricing;
+  general within-event dispersion is explicitly outside that local oracle.
+- Proves the declared epsilon-MILP equivalence and the positive-epsilon union
+  bridge to strict overlap. A sufficiently small instance-dependent margin
+  preserves all partition-only endpoints; the chosen audit margin is not
+  automatically certified small enough.
+- Records the remaining complexity gap: support decision is in NP and the
+  one-core case is polynomial, but no C=2 NP-hardness result is established.
+  See `docs/THEORY_REINFORCEMENT.md` for the proof and verification map.
 - Centers joint temporal-event feasibility, sequential membership, and the
   fixed-time integral event-pricing primitive.
 - Credits prior aggregate bounds, candidate-omission sensitivity, interval
@@ -39,7 +51,7 @@ Paths below are relative to the repository root.
 | ATR support transfer and degree cap | `code/ai_pilot/benchmarks/results/atr_diamor_support_calibration/` and `atr_diamor_density_cap/` |
 | Chicago pilot 23 complete, 1 ineligible | `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/latest_panel_report.json` |
 | Chicago interim 10 complete, 2 ineligible, 84 unstarted | `code/ai_pilot/data_pipeline/results/chicago_k2_followup/batch0_20260909/MANIFEST.json` |
-| NYC 101 exact endpoint pairs, 125 witnessed ambiguous cells, 126 total | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_PANEL_SUMMARY.json` |
+| NYC 101 numerically closed endpoint pairs, 125 witnessed ambiguous cells, 126 total | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_PANEL_SUMMARY.json` |
 | NYC structural comparison 0/24 changes | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/REPORT.md` |
 | NYC geometry 8 complete, 3 excluded, 13 transport unresolved | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/geometry_census_20260908/recovery_attempt/REPORT.md` |
 | NYC 18/18 support-maximization closures | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/BRANCH_AND_PRICE_SCALE_REPORT.md` |

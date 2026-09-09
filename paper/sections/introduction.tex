@@ -49,8 +49,11 @@ Our contributions are threefold.
 \begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=3pt]
 \item \textbf{A precise event-level identification model.} We combine required
 and optional rows, sequential membership, simultaneous occupancy, and joint
-timestamp completion. Separation examples show why event cardinality, pairwise
-compatibility, and outer time envelopes cannot substitute for these conditions.
+timestamp completion. A fixed-$q$ separation changes a row-additive aggregate
+under the event model; a collapse condition explains when it cannot differ
+from cliques. An overlap-margin equivalence connects the continuous MILP to
+the same strict-overlap object. Pairwise compatibility and outer time
+envelopes cannot substitute for joint feasibility.
 Support nesting and threshold certification specify the resulting guarantee;
 they are consequences of possible-world semantics, not new general principles.
 \item \textbf{An integral local optimization primitive.} With exact intervals,
@@ -58,7 +61,8 @@ a fixed root and span, and additive row weights, interleaved segment-coverage
 and boundary-bridge constraints preserve the consecutive-ones structure. The
 resulting integral LP prices a single event. We integrate this primitive into
 Dantzig--Wolfe decomposition and branch-and-price for support maximization,
-with a nonintegral master and explicit bounds when search is incomplete.
+identify an aggregate class preserving its pricing structure, and retain
+explicit bounds when search is incomplete. No global hardness result is claimed.
 \item \textbf{An audit separating three evidentiary questions.} Controlled
 ordered-event instances check optimization and decision logic. Annotated
 pedestrian dyads test whether geometric candidate rules retain a real relation.

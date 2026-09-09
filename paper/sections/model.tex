@@ -80,23 +80,55 @@ This is set-inclusion reasoning, not an additional optimization result.
 Evaluating each capacity at its own $q=M(\T,C)$ changes the conditioning
 population, so those outcome ranges need not nest.
 
+\paragraph{What changes when the event model changes.}
+Fix one exact completion $t$. Let $\F_{\rm pair}(q)$ require two-member
+events, and $\F_{\rm clique}(q)$ require pairwise positive overlap within
+events. All models keep the same rows, roles, capacity, and selected-buffer
+count as $\F_{\rm event}(q)=\F(t,C,q)$.
+
+\begin{proposition}[Containment, collapse, and strict answers]
+\label{prop:modelcontainment}
+For $C\ge2$,
+\[
+ \F_{\rm pair}(q)\subseteq\F_{\rm clique}(q)
+ \subseteq\F_{\rm event}(q).
+\]
+The first inclusion is equality at $C=2$. The second is equality for every
+$C$ if the full positive-overlap graph is a disjoint union of cliques; a
+common positive-length intersection of all rows is sufficient. On nonempty
+families, the corresponding aggregate intervals nest. Each inclusion can be
+strict and can change a selected-buffer mean at the same $q$.
+\end{proposition}
+Pairwise-overlapping intervals share a positive common segment, so a clique
+at capacity two has exactly two members. The other inclusions follow from
+connectivity. The appendix proves the claims and gives both strict witnesses.
+Figure~\ref{fig:chain} illustrates the capacity-two witness: at $q=2$, with
+buffer values $(0,0,1)$, pair/clique mean bounds are $[0,0]$, whereas event
+bounds are $[0,1/2]$. All three families are nonempty. Thus the changed answer
+does not come from changing $q$ or declaring the restricted model infeasible.
+
 \begin{figure}[t]
 \centering
-\begin{tikzpicture}[x=0.78cm,y=0.54cm]
-\draw[->] (0,0) -- (8.4,0) node[right]{time};
-\foreach \y/\lab in {3/A,2/B,1/C}{
-  \node[left] at (0,\y) {$\lab$};
+\begin{tikzpicture}[x=0.9cm,y=0.39cm]
+\draw[->] (-1.3,0) -- (5.3,0) node[right]{time};
+\foreach \x in {-1,0,1,2,3,4,5}{
+  \draw (\x,0.1)--(\x,-0.1) node[below,font=\scriptsize]{$\x$};
 }
-\draw[line width=2.2pt] (0.7,3) -- (3.8,3);
-\draw[line width=2.2pt] (2.6,2) -- (5.8,2);
-\draw[line width=2.2pt] (4.8,1) -- (7.5,1);
-\draw[dashed] (3.2,0.15) -- (3.2,3.35);
-\draw[dashed] (5.2,0.15) -- (5.2,3.35);
-\node[align=center] at (4.1,-0.75) {three event members, simultaneous capacity two};
+\node[left] at (-1.3,5) {$b_0$};
+\node[left] at (-1.3,4) {$c_1$};
+\node[left] at (-1.3,3) {$c_2$};
+\node[left] at (-1.3,2) {$b_1$};
+\node[left] at (-1.3,1) {$b_2$};
+\draw[line width=1.3pt] (-1,5)--(0.5,5);
+\draw[line width=2.4pt] (0,4)--(2,4);
+\draw[line width=2.4pt] (1,3)--(3,3);
+\draw[line width=1.3pt] (2.5,2)--(4,2);
+\draw[line width=1.3pt] (3.5,1)--(5,1);
 \end{tikzpicture}
-\caption{A feasible fixed-time event can be an overlap chain. This differs
-from both a clique and the two-member restriction $K=2$.}
-\Description{Three intervals form a positive-overlap chain, with at most two
-active simultaneously.}
+\caption{A fixed-$q$ separation. Thick intervals are cores. Pairs select
+$b_0,b_1$; a capacity-two event can select $b_1,b_2$ through sequential
+membership. Only $b_2$ has nonzero outcome. This is a constructed example.}
+\Description{Five intervals form the chain b0, c1, c2, b1, b2. The final
+buffer has no direct core overlap but belongs to a feasible four-member event.}
 \label{fig:chain}
 \end{figure}

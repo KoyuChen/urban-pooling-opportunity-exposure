@@ -14,7 +14,8 @@ PAPER = ROOT / "paper"
 
 
 def main() -> int:
-    tex_files = sorted(PAPER.rglob("*.tex"))
+    # Audit canonical modular sources, not generated standalone copies in build/.
+    tex_files = [PAPER / "main.tex", *sorted((PAPER / "sections").rglob("*.tex"))]
     text = "\n".join(path.read_text(encoding="utf-8") for path in tex_files)
     bib = (PAPER / "references.bib").read_text(encoding="utf-8")
 
