@@ -1,13 +1,11 @@
-\documentclass[sigconf,anonymous,review,balance=false]{acmart}
-
+\documentclass[sigconf,anonymous,review]{acmart}
 \AtBeginDocument{\providecommand\BibTeX{{\BibTeX}}}
 \setcopyright{none}
-\settopmatter{printacmref=true,printccs=true,printfolios=true}
+\settopmatter{printacmref=false,printccs=true,printfolios=true}
 \renewcommand\footnotetextcopyrightpermission[1]{}
-\acmConference[KDD '27]{The 33rd ACM SIGKDD Conference on Knowledge Discovery and Data Mining}{August 2027}{San Jose, California, USA}
+\acmConference[KDD '27]{The 33rd ACM SIGKDD Conference on Knowledge Discovery and Data Mining}{August 1--5, 2027}{San Jose, California, USA}
 \acmYear{2027}
 \copyrightyear{2027}
-
 \usepackage{mathtools}
 \usepackage{booktabs}
 \usepackage{enumitem}
@@ -15,9 +13,10 @@
 \usepackage{tabularx}
 \usepackage{microtype}
 \usepackage{url}
+\usepackage{xurl}
+\setlength{\emergencystretch}{1em}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,calc,fit}
-
 \newcommand{\F}{\mathcal F}
 \newcommand{\T}{\mathcal T}
 \newcommand{\R}{\mathcal R}
@@ -26,51 +25,39 @@
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
-
-\title{Visible Rows, Hidden Events: Certified Aggregates for Relation-Incomplete Event Streams}
-
+\title{EventFrontier: Aggregate Identification from Logs with Hidden Event Membership and Coarsened Time}
 \begin{document}
-
 \begin{abstract}
-Many event streams are row-complete but relation-incomplete: every transaction
-is visible, yet the key joining rows into shared referrals, visits, service
-episodes, or vehicle runs is suppressed. Choosing one linkage can turn this
-structural uncertainty into apparently precise but decision-unstable
-statistics. We introduce \methodname, which optimizes aggregate queries over
-all temporally ordered event decompositions consistent with released rows,
-timestamp supports, and a declared simultaneous-capacity bound. An event need
-not be a clique: sequential members may form an $A$--$B$--$C$ overlap chain
-although $A$ and $C$ never coexist. We prove joint nesting under timestamp
-support expansion and capacity relaxation. For a fixed root and span,
-connectivity and occupancy have a consecutive-ones formulation, yielding an
-integral LP pricing oracle. Dantzig--Wolfe decomposition closes the full LP;
-branching on row usage and Ryan--Foster co-membership, while reusing exact
-branch-compatible pricing, gives a certified integer algorithm. In 3,000
-controlled-truth experiments, full candidate support covers the true aggregate
-in every instance, while a feasible temporal point rule makes threshold errors
-in 17.4--19.0\% of cases; every such error is flagged by a frontier crossing the
-threshold. Retaining about 84\% of true members leaves the complete true event
-world representable only 31--33\% of the time. On annotated pedestrian dyads,
-a pilot-selected support covers 81/82 follow-up snapshots but certifies only
-29/246 threshold decisions; a degree cap removes 8.0\% of candidate edges
-without changing any decision. A predeclared NYC audit yields 21
-eligible windows and 126 outcome--capacity cells: 125 are certified ambiguous
-at the candidate-median threshold, and four feasible point methods disagree in
-19.0\% of cells. Branch-and-price certifies all 18 predeclared cells in one
-deterministic nested-size scale lattice through $16+48$ rows. A Chicago audit count-closes 60 cores, 611
-temporal candidates, and 50,405 endpoint-bin contributors. These are
-conditional feasible-world claims, not recovered operational event identities,
-realized capacities, or population effects.
+Event logs can preserve individual participations while suppressing event
+identifiers and coarsening timestamps. Aggregate queries about shared events
+then depend on both a hidden partition and a common time realization.
+Existing uncertain-linkage bounds motivate our approach, but pairwise
+compatibility alone need not describe a realizable temporal event.
+We introduce \methodname, a conditional identification framework for
+positive-overlap-connected events with bounded simultaneous occupancy.
+Sequential turnover permits event membership to exceed capacity; uncertain
+timestamps must be completed jointly. For exact intervals, fixed root and span,
+and additive row weights, segment-coverage and boundary-bridge constraints
+yield an integral LP pricing oracle. We embed it in a nonintegral event-column
+master and branch-and-price for support maximization; uncertain-time models
+retain explicit feasibility and unresolved statuses. In 3,000 controlled
+instances, a feasible point rule makes 17.4--19.0\% threshold errors, all
+flagged when the true world is admissible. On annotated pedestrian dyads, a
+pilot-selected support retains 81/82 follow-up worlds but certifies only
+29/246 decisions. A Chicago pair benchmark numerically closes 2,744 data-complete endpoint
+pairs across 23 eligible pilot windows; a separate 96-window follow-up
+remains incomplete. NYC yields 125 witness-certified ambiguous cells out of
+126, but a fixed-input structural audit finds no endpoint change in 24
+comparable model comparisons. The evidence supports conditional ambiguity and
+bounded-scale computation while leaving the public-data advantage of general
+ordered-event structure unresolved.
 \end{abstract}
-
 \ccsdesc[500]{Information systems~Data provenance}
 \ccsdesc[500]{Information systems~Data integration}
 \ccsdesc[500]{Theory of computation~Mathematical optimization}
 \ccsdesc[300]{Computing methodologies~Structured outputs}
-\keywords{partial identification, relation-incomplete data, hidden event membership, interval graphs, branch-and-price}
-
+\keywords{partial identification, temporal event logs, hidden event membership, interval graphs, branch-and-price}
 \maketitle
-
 \input{sections/introduction}
 \input{sections/related_work}
 \input{sections/model}
@@ -79,13 +66,13 @@ realized capacities, or population effects.
 \input{sections/atr_transfer}
 \input{sections/data_results}
 \input{sections/discussion}
-
 \clearpage
+\balance
 \bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
-
 \clearpage
+\nobalance
 \appendix
 \input{sections/appendix}
-
+\clearpage
 \end{document}

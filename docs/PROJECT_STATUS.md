@@ -1,9 +1,26 @@
 # Verified project status
 
-Latest execution checkpoint: 2026-09-08, NYC fixed-input structural diagnostic closed.
+Latest verified evidence checkpoint: 2026-09-09, Chicago follow-up batch 0 recorded.
 The next-stage plan is in `docs/NEXT_RESEARCH_GATE.md`. A separate 96-window
-Chicago calendar is declared in `CHICAGO_K2_FOLLOWUP_PROTOCOL.json`; it has no
-results yet and does not change the closed 24-window pilot's evidence counts.
+Chicago calendar is declared in `CHICAGO_K2_FOLLOWUP_PROTOCOL.json`; its interim
+results do not change the closed 24-window pilot's evidence counts.
+
+Chicago run `34298803324` has 10 completed windows, 2 fixed-core exclusions,
+and 84 unstarted windows across the frozen 96-window denominator. It has
+1,192 numerically certified endpoint pairs, 300 missing-public-value pairs,
+and 8 computationally unresolved pairs (1,500 total; 99.33% certification among
+the 1,200 data-complete pairs). All eight unresolved lower endpoints concern
+duration gap in the January 15 evening window. The source ZIP and all 235
+checkpoint files have been hash-verified; a durable aggregate-only snapshot is
+in `results/chicago_k2_followup/batch0_20260909/` under the data pipeline.
+Batch 1 is eligible for dispatch under the record-terminal protocol; this is
+not a claim that all batch-0 endpoints are exact. The follow-up Gate is HOLD.
+
+The September 9 manuscript rewrite centers temporal-event feasibility and
+the fixed-time additive pricing oracle, explicitly credits prior aggregate
+bounds and interval decomposition, and preserves the NYC structural null.
+It corrects the matching-cardinality normalization and distinguishes
+positive-overlap tolerance in continuous MILP from unrestricted strict overlap.
 
 The new NYC structural comparison fixes one 4-core/12-buffer input at capacities
 2, 3 and 4. All 36 outcome endpoint pairs close; 117 support-feasibility checks
@@ -54,10 +71,9 @@ The frozen Chicago 96-window follow-up now has a fail-closed staged controller.
 It distinguishes unstarted windows, missing artifacts, transport failures,
 scientific exclusions and complete records across the full denominator. Batches
 contain 12 consecutive indices and cannot advance until all earlier windows are
-scientifically terminal. The first batch is configured to start from an empty,
-hash-pinned checkpoint; no follow-up result is claimed before its artifacts are
-aggregated. Five controller tests pass. This is the current highest-priority
-execution Gate.
+record-terminal. The first batch started from an empty hash-pinned checkpoint
+and its interim aggregate is reported above. The next batch remains the
+highest-priority execution Gate; manuscript work does not launch or complete it.
 
 The adversarially repaired ATR v4 dyad audit has 170 eligible fixed snapshots and 850 radius
 cells. All are computationally closed: 806 have replayed numerical MILP optima

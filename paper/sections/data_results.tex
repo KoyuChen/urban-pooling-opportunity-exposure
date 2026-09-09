@@ -1,143 +1,158 @@
-\section{Public-Data Audit Design}
+\section{Public-Data Audits}
 \label{sec:data}
 
-\paragraph{Complementary releases.}
-Chicago's TNP release provides a declared two-transaction shared-trip benchmark
-with nearest-15-minute public times and privacy-coarsened geography
-\citep{chicagodata2026,chicagomanual2026,chicagoprivacy2026}. NYC's High Volume
-For-Hire Vehicle release provides second-level pickup and drop-off times,
-shared-match indicators, Taxi Zones, trip miles, and trip time, but no public
-co-rider or run key. We use the official 2023 Open Data table\footnote{Dataset
-\texttt{u253-aew4}: \url{https://data.cityofnewyork.us/d/u253-aew4}.} for
-audited exact optimization and the May 2026 monthly Parquet only for a current
-candidate-multiplicity audit. Neither release supplies operational event
-membership truth.
+\paragraph{Releases and distinct validation targets.}
+Chicago's TNP release supplies a declared two-transaction shared-trip
+benchmark with nearest-15-minute times and coarsened geography
+\citep{chicagodata2026,chicagomanual2026,chicagoprivacy2026}.
+NYC's 2023 High Volume For-Hire Vehicle table supplies second-level pickup and
+drop-off times, shared-match indicators, Taxi Zones, miles, and trip seconds,
+but no public event key. Neither release reveals operational co-membership.
+Chicago therefore tests extraction and optimization on a public-envelope
+$K=2$ graph; NYC tests fixed-time ordered-event optimization. These are
+different validation targets: success on the graph benchmark does not verify
+joint timestamp realizability or identify actual vehicle runs.
 
-\paragraph{Candidate universes and frozen designs.}
-A candidate rule is part of the estimand rather than hidden preprocessing.
-Chicago uses a boundary-complete core-incident temporal universe and reports
-radius and omitted-incidence sensitivity separately. NYC uses provider and
-temporal proximity; exact Taxi Zone equality is only a sensitivity screen
-because it can delete plausible relations. No public outcome enters headline
-candidate construction. The frozen NYC decision panel predeclares 24 windows:
-20 eight-core windows across four seasons, weekday/weekend regimes, and
-morning, midday, or evening periods, plus four 16-core weekday-evening stress
-cells. Each eligible window is evaluated for two outcomes and
-$C\in\{2,3,4\}$. The integer scale lattice predeclares six core/buffer sizes
-from $4+12$ through $16+48$ at the same capacities. Eligibility is determined
-before outcomes are optimized.
+\paragraph{Frozen cohorts and certification.}
+Candidate rules use public temporal information and boundary roles; spatial
+screening and omitted-incidence budgets are explicit sensitivity parameters.
+The Chicago calendar and eligibility rules precede each campaign's outcome
+evaluation, and ineligible dates are retained without replacement. We report
+the original pilot separately from the calendar-disjoint follow-up, which was
+declared after inspecting the pilot. Neither is a probability sample or a
+pristine holdout. Repeated queries and parameter settings within one window
+are not independent cohorts. A numerical endpoint certificate requires an
+optimal solver status and witness replay under the recorded tolerances;
+this is distinct from exact-arithmetic verification. Missing public outcomes,
+transport failures, and unresolved optimization have separate denominators.
+Published artifacts contain aggregate results and provenance hashes rather
+than row identifiers, partner assignments, or latent timestamps.
 
-\paragraph{Solver and disclosure contracts.}
-Exact fixed-time frontiers use complete enumeration only where declared.
-Column generation closes the full LP after every rooted pricing problem has no
-improving column. Branch-and-price calls an integer optimum only after the node
-queue closes; otherwise it retains an incumbent and open-node upper bound.
-Continuous cells use solver certificates and witness replay. Technical failure,
-scientific ineligibility, unresolved optimization, and infeasibility are never
-conflated. Artifacts publish aggregate tables, hashes, and statuses, but no raw
-identifiers, event columns, partner assignments, or latent timestamps.
-
-\section{Public-Data Results}
+\section{Results and Their Boundaries}
 \label{sec:results}
 
-\subsection{Fine timestamps do not identify the hidden relation}
-The May 2026 NYC file contains 222,149 public shared-match rows. In a fixed
-200-row cohort, exact public interval overlap yields 154,708 directed
-core-candidate incidences over 1,042 candidate nodes; the median core degree is
-786. Requiring equal pickup and drop-off Taxi Zones leaves only 44 incidences.
-Zone equality is therefore an aggressive candidate screen, not a defensible
-necessary condition for hidden co-membership.
-
-Table~\ref{tab:pairwise} uses a separate fixed 2023 pairwise cohort. Exact
-seconds already leave broad ranges. Artificial 15-minute time coarsening adds
-79.5\% more candidate edges and increases the three displayed identified
-widths by 12.4--15.3\%. Time coarsening aggravates ambiguity but does not create
-it.
+\subsection{Chicago: graph optimization closes before the study does}
+The pilot predeclares 24 weekday/time windows from January 5--14, 2026.
+All return terminal records: 23 complete and one scientifically ineligible.
+The completed windows contain 34--77 core rows and 363--913 candidate rows.
+Every completed extraction passes public source-count closure, which verifies
+the declared temporal extraction, not true-partner completeness.
+Table~\ref{tab:chicagopanel} keeps the query and window denominators separate.
+All 2,744 pairs with complete public query values close numerically; the other
+686 pairs lack required public values and publish no certified interval.
 
 \begin{table}[t]
-\caption{NYC pairwise benchmark: exact seconds versus artificial 15-minute
-outer intervals. Endpoint pairs are solver-certified with zero reported gap.}
-\label{tab:pairwise}
+\caption{Chicago public-envelope $K=2$ audits. Endpoint rows count query--parameter
+pairs in completed windows. Complete-data rate excludes missing values
+but includes computationally unresolved pairs. Follow-up is an interim snapshot.}
+\label{tab:chicagopanel}
+\centering
 \small
-\begin{tabular}{@{}lrrr@{}}
+\begin{tabular}{@{}lrr@{}}
 \toprule
-Quantity & Exact & 15-min & Change \\
+Quantity & Pilot & Follow-up \\
 \midrule
-Candidate edges & 5,837 & 10,475 & +79.5\% \\
-Minimum core degree & 130 & 260 & +100.0\% \\
-Miles-gap width & 12.285 & 13.807 & +12.4\% \\
-Trip-time-gap width (min) & 38.113 & 43.934 & +15.3\% \\
-Same-dropoff-zone width & 0.737 & 0.842 & +14.3\% \\
+Declared windows & 24 & 96 \\
+Completed / ineligible & 23 / 1 & 10 / 2 \\
+Execution failures / unstarted & 0 / 0 & 0 / 84 \\
+Endpoint pairs & 3,430 & 1,500 \\
+Numerically certified pairs & 2,744 & 1,192 \\
+Missing-public-value pairs & 686 & 300 \\
+Computationally unresolved pairs & 0 & 8 \\
+Complete-data rate & 100\% & 99.33\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Capacity uncertainty is front-loaded}
-At a common support of 72 selected buffers, miles width nearly doubles from
-$C=2$ to 3 but rises only 6.0\% from $C=3$ to 4; duration behaves similarly.
-The first relaxation accounts for 89.2\% of total miles widening and 86.2\% of
-duration widening through $C=4$ (Appendix Table~\ref{tab:capacitydetail}). This
-is cohort-specific identification, not realized capacity. At each capacity's
-own maximum support, ranges may instead contract because the conditioning event
-forces more rows; fixed support restores Proposition~\ref{prop:nesting}.
+The follow-up predeclares 96 windows from January 15--February 27 under the
+same eligibility and 60-second endpoint budgets. Its first 12 windows produce
+10 completed records and two ineligible records; 84 windows remain unstarted.
+The eight unresolved pairs all concern duration-gap lower endpoints in the
+January 15 evening window. Their feasible incumbents are not certified
+minima, so the pair-level intervals remain withheld. Thus a completed window
+does not mean every query is certified, and 120 declared windows across the
+two designs do not mean 120 completed or eligible cohorts.
 
-\subsection{Point decisions are usually not relation-certifiable}
-All 24 predeclared NYC windows return terminal reports. Twenty-one are
-scientifically eligible; three outcome-blind windows fail to produce an
-integrity- and cap-qualified core; technical failures are zero. The eligible
-windows yield 126 outcome--capacity cells. Table~\ref{tab:decisionpanel} shows
-that 101 endpoint pairs close exactly. At the candidate-median threshold, 125
-cells contain attained feasible values on both sides and are therefore
-certified ambiguous; the remaining 16-core miles cell is unresolved rather
-than forced into a conclusion.
+\paragraph{Stable support sensitivity can coexist with weak identification.}
+One frozen January 13 evening audit illustrates the distinction. Completing
+the boundary adds 92 buffers and 2,629 edges, increasing the graph by 12.15\%.
+Miles-gap width grows only 0.53\%, from 20.159 to 20.266 miles; duration-gap
+width grows 1.02\%, from 46.470 to 46.942 minutes. The boundary correction
+therefore has little effect on these already broad intervals. Community-area
+fractions retain the full $[0,1]$ range. Moreover, 48.88\% of temporal edges
+lack complete public endpoint centroids and remain in every radius screen.
+Small radius sensitivity consequently does not establish geographic
+precision. These are descriptive results for one declared candidate graph,
+not evidence of operational co-rider identity or citywide prevalence.
+
+\subsection{NYC: decision ambiguity need not await optimal endpoints}
+The frozen exact-second decision panel declares 24 windows: 20 eight-core
+windows across seasons, weekday/weekend regimes, and times of day, plus four
+16-core stress windows. Twenty-one are eligible and three fail the
+outcome-blind core-integrity/cap criteria; technical failures are zero.
+Two selected-buffer outcomes, miles and trip minutes, at $C=2,3,4$ yield 126
+cells (Table~\ref{tab:decisionpanel}). Of these, 101 endpoint pairs close;
+125 cells have replayed feasible values on both sides of the candidate-median
+threshold, certifying ambiguity even where extrema remain unresolved.
+One 16-core miles cell has an unresolved decision status.
 
 \begin{table}[t]
-\caption{Frozen NYC exact-second decision panel. ``Point split'' means that the
-four feasible deterministic point methods disagree with one another; public
-data do not reveal which is accurate.}
+\caption{NYC decision panel. Ambiguity requires attained values on both sides;
+point disagreement compares deterministic methods, not predictions with truth.}
 \label{tab:decisionpanel}
-\scriptsize
 \centering
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{@{}crrrrrr@{}}
 \toprule
-Core & Elig. & Cells & Exact & Ambig. & Unres. & Point split \\
+Core & Eligible & Cells & Closed & Ambiguous & Unresolved & Point split \\
 \midrule
-8  & 17 & 102 & 91 (89.2\%)  & 102 & 0 & 24 (23.5\%) \\
-16 & 4  & 24  & 10 (41.7\%)  & 23  & 1 & 0 \\
-All& 21 & 126 & 101 (80.2\%) & 125 & 1 & 24 (19.0\%) \\
+8 & 17 & 102 & 91 & 102 & 0 & 24 \\
+16 & 4 & 24 & 10 & 23 & 1 & 0 \\
+All & 21 & 126 & 101 & 125 & 1 & 24 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The point methods---nearest-time and zone-aware pairings plus temporal-score and
-zone-score ordered decompositions---produce 498 capacity-indexed decisions;
-494 (99.2\%) lie in cells where the relation-invariant side is not certified.
-The 19.0\% figure is disagreement \emph{among} point methods, not disagreement
-with observed truth. In all 102 eight-core cells, ambiguity persists at the
-candidate first quartile, median, and third quartile, so the median result is
-not generated by one threshold choice.
+Nearest-time and zone-aware pairings, together with temporal-score and
+zone-score ordered decompositions, disagree in 24/126 cells (19.0\%).
+All 102 eight-core cells remain ambiguous at the candidate first quartile,
+median, and third quartile. These thresholds probe relation sensitivity;
+they are not validated operational decision thresholds. Because event truth
+is absent, neither ambiguity nor point disagreement measures prediction error.
 
-\subsection{Exact integer decomposition has a visible scale boundary}
-A predeclared 18-cell lattice closes every integer optimum through $16+48$ at
-$C=2,3,4$ (Appendix Table~\ref{tab:scaledetail}). The four initially open cells
-retain their anytime intervals in the audit history, then close at 30, 36, 44,
-and 48 under longer budgets. This is an exact medium-instance path, not a
-city-scale runtime guarantee; no timeout is relabeled as optimality.
+\subsection{The structural comparator returns an informative null}
+A separate retrospective four-core/twelve-buffer audit compares ordered
+events, pairs, and overlap cliques on identical exact times, roles, and
+outcomes. Every positive selected-buffer count $q$ feasible in all three
+models is compared, holding the estimand fixed. Across two outcomes, three
+capacities, two common counts, and two restrictions, \emph{none of the 24
+endpoint-pair comparisons changes}. The reason is observable: all 16
+intervals share 14 seconds, yielding a complete overlap graph. Every
+capacity-feasible ordered event is already a clique on this input.
 
-\subsection{Chicago extraction is count-closed, not identity-complete}
-The repaired Chicago audit uses a narrow overlap index followed by 14 exact
-released-start shards and 14/13 contributor start/end shards. It obtains 60
-core rows, 611 K=2 temporal candidates, and all 50,405 public trips contributing
-to their endpoint bins. Counts close before and after extraction, no candidate
-has a null time endpoint, and the public snapshot remains stable.
+At $C=3,4$, ordered events reach eight and twelve selected buffers, whereas
+pairs reach four. Those differences concern attainable support; they do not
+demonstrate a changed outcome at a common $q$. This audit therefore provides
+no empirical advantage for sequential turnover over clique modeling.
+Its result is retained rather than replacing the cohort after inspection.
 
-Among 24,274 closed outer-envelope intersections, 18,462 have positive length
-and 5,812 only touch at a boundary. On the positive-length graph, two optimal
-core covers are certified with zero reported MIP gap and replay residual; all
-60 core assignments differ. This demonstrates conditional graph-cover
-multiplicity. It does \emph{not} construct common exact-time witnesses, pair all
-remaining buffers, validate provider/vehicle feasibility, or produce two full
-Chicago hidden-run worlds. The audit therefore retains the status
-\texttt{PARTIAL\_DOCUMENTED\_PUBLIC\_CONSISTENCY}, emits no inferred LOW tract
-literals, and never interprets a public blank as a privacy cell without
-independent evidence.
+A subsequent geometry census retains all 24 declared cells. Recovery leaves
+eight geometry-complete, three scientifically ineligible, and thirteen
+transport-unresolved cells (eleven failures and two deadlines). All eight
+completed full views contain a core-touching non-clique event column, while
+four of their time-only $4+12$ views are cliques. A local non-clique column
+does not establish a complete feasible world or a fixed-$q$ outcome effect.
+The incomplete census therefore cannot resolve the structural audit's null
+or establish population prevalence.
+
+\subsection{Integer support optimization has a bounded scale claim}
+The separate branch-and-price lattice closes all 18 maximum-support problems
+at six sizes from $4+12$ through $16+48$ and $C=2,3,4$
+(Appendix Table~\ref{tab:scaledetail}). Four initially open cells close under
+longer budgets; their earlier anytime bounds remain in the audit history.
+This establishes certified support optimization on one deterministic cohort.
+It does not close the 25 numerically unclosed outcome pairs in the decision panel, provide
+a city-scale runtime guarantee, or recover true memberships. The evidence
+supports conditional computation and substantial relation ambiguity; the
+empirical importance of the full temporal-event structure remains open.

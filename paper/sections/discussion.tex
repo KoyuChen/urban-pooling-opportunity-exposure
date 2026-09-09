@@ -1,91 +1,79 @@
 \section{Discussion}
 
-\paragraph{Knowledge discovery under missing relations.}
-The method changes the target from ``recover one plausible relation'' to
-``certify which downstream statements are invariant to admissible relations.''
-The controlled experiments show why this is substantive: a fully feasible point
-world can cross the wrong threshold, while the frontier marks the conclusion as
-ambiguous. Conversely, when the entire frontier lies on one side, every feasible
-world agrees. This certified-decision view is portable to referrals, household
-or field visits, service tours, and other row-complete streams with hidden
-temporal grouping.
+\paragraph{The scope of the contribution.}
+\methodname{} specializes aggregate identification to latent temporal events.
+Possible-world bounds, matching optimization, total unimodularity, and
+branch-and-price are established tools. The specific algorithmic result is
+that positive-overlap connectivity and simultaneous capacity admit an integral
+fixed-span, fixed-time single-event formulation for additive pricing. Global
+row competition remains an integer problem. The temporal-completion model
+also identifies a quantifier error that a pairwise compatibility graph cannot
+resolve: its edges may rely on different realizations of the same row.
 
-\paragraph{What is identified.}
-Endpoints are sharp or certified only relative to the declared candidate
-universe, timestamp supports, connectivity rule, capacity, and query. They do
-not identify a unique partition. Expanding timestamp support or capacity cannot
-shrink a fixed-support feasible set, but comparisons at capacity-specific
-maximum support change the conditioning event. Candidate truncation is more
-fundamental: if a true event is deleted before optimization, endpoint
-certification cannot restore it. The controlled benchmark demonstrates that
-high member recall, a nonempty frontier, and even scalar coverage can coexist
-with omission of the true joint world.
+\paragraph{Three different failures.}
+A solver gap means an endpoint has not been established. A support failure
+means the true world may have been removed before optimization. An ambiguous
+decision means the admitted worlds disagree, even if both endpoints are known
+exactly. Increasing solver time addresses only the first failure. ATR shows
+that high empirical support coverage can coexist with weak decision
+informativeness. The public NYC structural null shows that a richer model
+need not change a particular query on a particular input. These are distinct
+scientific conclusions, not interchangeable notions of success.
 
-\paragraph{Decision ambiguity is not point-estimator accuracy.}
-In the NYC panel, four feasible point methods disagree in 19.0\% of
-outcome--capacity cells, while 494 of their 498 capacity-indexed decisions are
-made inside certified-ambiguous cells. These facts show instability across
-admissible point summaries; they do not reveal which point answer is correct,
-because public memberships are absent. The frontier's role is to separate a
-relation-invariant decision from a forced choice, not to retrospectively score
-an unobserved ground truth.
-
-\paragraph{Algorithmic boundary.}
-Theorem~\ref{thm:oracle} makes fixed-span event pricing polynomial, and
-Proposition~\ref{prop:cg} certifies the full LP without enumerating all columns.
-Proposition~\ref{prop:bp} supplies an exact integer path through
-branch-compatible row and pair disjunctions. The full algorithm is not claimed
-polynomial: forced-in/forced-out pricing cases can grow exponentially with
-branch depth. The longer-budget follow-up closes all 18 predeclared scale cells
-through $16+48$ at $C=2,3,4$. This is stronger than a toy correctness check but remains a
-medium-instance result, not city-scale closure.
-
-\paragraph{Public-release boundary.}
-Chicago and NYC play complementary roles. NYC's second-level timestamps show
-that fine time does not identify event membership. Chicago's successful sharded
-transport establishes snapshot-relative count closure for candidates and all
-endpoint-bin contributors. The two Chicago graph covers establish multiplicity
-only inside the positive-length outer-envelope graph; they are not two fully
-constructed operational worlds. Neither release validates provider matching
-logic, hidden-run closure, realized capacity, or partner recall outside the
-declared candidate universe.
+\paragraph{The remaining empirical test.}
+The general event model should be tested on fixed inputs where sequential
+turnover and joint timestamp completion are active. Comparing event families
+at each family's own maximum buffer count changes the target population;
+an informative structural comparison holds the query and buffer count fixed.
+Our frozen diagnostic does so and reports a null result. The incomplete
+geometry census does not overturn it. Chicago's pair benchmark and ATR dyads
+provide useful lower-complexity audits, but cannot establish the value of
+higher-cardinality ordered events by themselves.
 
 \section{Limitations and Ethical Considerations}
 
-The 24-window NYC design is predeclared but purposive rather than probabilistic;
-21 windows are eligible and three fail an outcome-blind integrity/cap screen.
-The 16-core stress cells close only 10 of 24 endpoint pairs exactly, and one
-median-threshold decision remains unresolved. These are disclosed computational
-and design boundaries, not population estimates. The controlled generator
-validates logic under known truth but does not turn its error rates into city
-accuracy estimates.
+\paragraph{Identification and sampling.}
+The declared time supports, positive-overlap connectivity, capacity, and
+candidate universe define the estimand. They are not a complete model of
+vehicle routing, provider compatibility, or human social interaction.
+Public releases lack membership truth; no urban partner-recall or causal
+claim follows from their frontiers. The city calendars are purposive, not
+probability samples. The Chicago follow-up and NYC geometry census retain
+their full denominators and unresolved records. Neither supports city-scale
+closure or population prevalence.
 
-Numerical claims retain their certificate class. Complete enumeration is used
-only where stated; branch-and-price optima require an exhausted node queue;
-time-limited runs keep valid incumbents and open-node bounds. Candidate support
-remains an analyst-facing assumption rather than hidden preprocessing.
+\paragraph{Validation and computation.}
+The controlled generator deliberately includes the proposed event structure.
+ATR uses one-coder social-group annotations, label-assisted eligibility, and
+oracle dyad counts; DIAMOR-2 is a predeclared follow-up, not a pristine holdout.
+Snapshot and threshold cells are not independent replications. The dyad
+unknown-count audit does not remove label-assisted selection. Exact-time
+local LP integrality does not extend automatically to arbitrary event
+functionals, extra constraints, or uncertain timestamps. Reported MILP
+optima use solver tolerances and replay; they are distinguished from exact
+enumeration and are not rational-arithmetic proof certificates.
 
-The unit of analysis is a released transaction, not a stable person. Zones and
-neighborhood attributes describe context, not individual socioeconomic status
-or preferences. Extremal assignments can create reidentification risk, so the
-artifact suppresses row identifiers, event columns, and latent-world witnesses
-and reports only aggregate results and provenance metadata.
+\paragraph{Responsible disclosure.}
+Rows represent recorded transactions or participations, not stable personal
+identities. Geographic context does not identify individual socioeconomic
+status or preference. We publish aggregate results, source manifests, and
+solver statuses while withholding raw identifiers, reconstructed partners,
+latent timestamps, and detailed endpoint assignments. These restrictions
+limit independent public replay of private witnesses, which are checked during
+the originating computation.
 
 \section{Generative AI Usage}
-Generative AI assisted drafting, code review, counterexample search, and
-editing. All mathematical claims, empirical outputs, citations, and artifact
-states remain author-verified; generated text is not treated as city evidence.
+Generative AI assisted manuscript drafting, literature comparison, code review,
+and counterexample development. The authors are responsible for verifying the
+mathematics, citations, computational evidence, and final claims. Generated
+examples are distinguished from observed-data results.
 
 \section{Conclusion}
-Row-complete data can remain relation-incomplete enough to reverse downstream
-decisions. \methodname{} represents admissible ordered temporal events and
-reports only aggregate conclusions that survive that uncertainty. Across 3,000
-controlled instances, feasible point answers make threshold errors that the
-frontier always flags as ambiguous, while candidate truncation shows that row
-recall is not relational-world coverage. In the NYC panel, 125 of 126
-outcome--capacity cells are certified ambiguous at the candidate median and
-point methods disagree in 19.0\% of cells; the scale lattice certifies all 18
-predeclared integer optima. Chicago adds a repeatable count-closed
-public extraction without converting graph-cover multiplicity into recovered
-partners. The resulting object is not a preferred hidden graph, but a certified
-boundary between discoverable and relation-dependent aggregate knowledge.
+Event logs can preserve individual participations while leaving their shared
+event structure unidentified. \methodname{} describes the aggregate conclusions
+supported by joint temporal-event completions and provides an integral
+exact-time pricing primitive within a global integer decomposition. The
+experiments separate conditional endpoint validity, retention of an annotated
+world, and decision informativeness. Current public audits establish substantial
+conditional ambiguity and a finite computational boundary; the additional
+empirical value of the general ordered-event model remains an open test.

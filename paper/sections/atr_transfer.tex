@@ -14,12 +14,13 @@ candidate-support stress test, not a claim of general external validity.
 \paragraph{Release operator and scope.}
 At each fixed snapshot, candidate dyads satisfy a distance radius
 $r\in\{1,1.5,2,3,5\}$ meters and at most $90$ degrees of heading difference.
-The annotated dyad count $q$ is disclosed but membership is hidden, yielding a
-cardinality-$q$ matching frontier for mean within-dyad separation. Labels also
+The annotated dyad count $m$ is disclosed but membership is hidden, yielding a
+cardinality-$m$ matching frontier for mean within-dyad separation. This dyad
+count is distinct from the selected-buffer count $q$ in the event model. Labels also
 determine eligibility and exclusions, so the experiment is explicitly
 oracle-assisted. The frozen protocol uses a two-minute grid; DIAMOR-1 is the
 pilot and DIAMOR-2 the predeclared follow-up, not a pristine holdout. Full
-annotation handling and non-oracle-$q$ checks are in the appendix.
+annotation handling and unknown-dyad-count checks are in the appendix.
 
 \begin{table}[t]
 \caption{ATR dyad audit. Coverage is evaluated only where every annotated dyad
@@ -28,19 +29,20 @@ occurring at thresholds crossed by the frontier.}
 \label{tab:atr-truth}
 \centering
 \small
+\setlength{\tabcolsep}{3pt}
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Day & Eligible snapshots & Cells & Truth coverage & Errors flagged \\
+Day & Snapshots & Cells & Covered & Flagged \\
 \midrule
-DIAMOR-1 (pilot) & 88 & 440 & 388/388 & 36/36 \\
-DIAMOR-2 (follow-up) & 82 & 410 & 381/381 & 32/32 \\
+DIAMOR-1 & 88 & 440 & 388/388 & 36/36 \\
+DIAMOR-2 & 82 & 410 & 381/381 & 32/32 \\
 \midrule
 Total & 170 & 850 & 769/769 & 68/68 \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Truth coverage and candidate completeness.}
+\paragraph{Coverage and support.}
 All 850 radius--snapshot cells terminate with either replayed numerical MILP
 optima (806 cells) or candidate-graph infeasibility (44 cells).  All 195 cells
 within a 12-vertex limit also agree with an independent subset-recursion oracle.

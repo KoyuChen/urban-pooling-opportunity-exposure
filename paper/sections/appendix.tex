@@ -1,97 +1,190 @@
-\section{Proof of Proposition~\ref{prop:nesting}}
-Take $F=(t,\Pi)\in\F(\T,C,q)$. Since each $t_i\in\T_i\subseteq\T'_i$, the
-same completion is allowed by $\T'$. Every event in $\Pi$ has the same
-positive-overlap graph under the unchanged completion, and its maximum
-occupancy is at most $C\le C'$. Core and buffer incidence constraints and the
-selected-buffer count $q$ are unchanged. Hence
-$F\in\F(\T',C',q)$. Set inclusion gives nesting of reachable counts and
-maxima. Minimizing a fixed functional over a superset can only weakly lower its
-optimum, and maximizing can only weakly raise it.
+\section{Nesting and the Joint-Completion Distinction}
 
-\section{$K=2$ Matching and Sensitivity Proofs}
+\paragraph{Proof of Proposition~\ref{prop:nesting}.}
+Take $F=(t,\Pi)\in\F(\T,C,q)$. Since $t_i\in\T_i\subseteq\T'_i$, the
+same completion is allowed after coarsening. Every event keeps its
+positive-overlap graph and its occupancy is at most $C\le C'$. Core coverage,
+buffer nonreuse, and $q$ remain unchanged. Hence
+$F\in\F(\T',C',q)$. Set inclusion gives nesting of reachable counts and their
+maxima whenever defined. Minimizing a fixed functional over a superset weakly
+lowers its minimum; maximizing weakly raises its maximum.
+
+\paragraph{Proof of Proposition~\ref{prop:jointcompletion}.}
+There is no $AC$ overlap. Thus the three-vertex overlap graph can be connected
+only if both $AB$ and $BC$ are edges under the same $s$.
+Given $s\in[0,3]$, positive $AB$ overlap requires $s<1$, whereas positive $BC$
+overlap requires $s+1>3$, or $s>2$. The requirements are inconsistent.
+Individually they are feasible, for example at $s=0$ and $s=3$, respectively.
+The obstruction is joint temporal feasibility, not simultaneous capacity.
+
+\paragraph{Outer envelopes can err in either direction.}
+Replacing each uncertain interval by its union over supports creates
+$I_B^{\mathrm{out}}=[0,4)$ in the preceding example. Together with $A$ and $C$
+this is connected and has maximum occupancy two. The envelope model therefore
+admits an event with no valid common completion.
+
+For the reverse direction, take three length-one intervals
+$I_i=[s_i,s_i+1)$ with independent supports $s_i\in[0,2]$.
+The choices $(s_1,s_2,s_3)=(0,3/4,3/2)$ form a connected chain at capacity
+two. All three outer envelopes equal $[0,3)$, whose simultaneous occupancy is
+three; the capacity-two envelope model rejects this feasible event. Hence
+full-envelope substitution is neither an inner nor an outer event model in
+general. These examples identify the necessary constraint distinction; they
+do not measure how often it changes an aggregate in a public dataset.
+
+\paragraph{Capacity-equivalent information loss.}
+For fine support $\T$ and coarser $\T'\supseteq\T$, an auxiliary descriptive
+quantity is
+\begin{equation}
+ \kappa_{\T\to\T'}(C)
+ =\min\{k\in\mathbb Z_{\ge0}:M(\T,C+k)\ge M(\T',C)\},
+ \label{eq:kappa}
+\end{equation}
+with value $+\infty$ if no such capacity exists. This definition presumes the
+displayed maxima are defined. It compares reachable support, not outcome
+identification. Replacing the coarse maximum by a certified feasible lower
+bound $L\le M(\T',C)$ can only lower the required $k$, provided the fine-time
+maxima used for the comparison are themselves certified. Such a comparison
+is a lower bound on $\kappa$, not its sharp value.
+
+\section{Two-Member Matching and Sensitivity Proofs}
 
 \paragraph{Proof of Theorem~\ref{thm:k2matching}.}
-Map each two-row event in a feasible world to its edge. Disjoint event
-membership implies that the selected edges form a matching, and core coverage
-implies that every core vertex is saturated. Conversely, every matching that
-saturates $C_0$ defines disjoint two-row events covering each core exactly once;
-unmatched buffers are unused. These maps are inverse. Pair additivity gives
-equality of the world aggregate and selected-edge weight term by term.
+Map every two-member event partition to its set of edges. Disjoint membership
+makes this a matching; compulsory core assignment saturates every core.
+Conversely, such a matching defines disjoint admissible pairs, with unmatched
+buffers unused. These maps are inverse on partitions. When temporal
+admissibility is defined by independent row supports, disjoint pairs use
+disjoint timestamp variables, so their individual witnesses combine into one
+completion. This assertion would require further verification in the presence
+of cross-event constraints. It is not a bijection of timestamp-completed
+worlds, since a given partition can admit many completions.
+
+The selected rows number $|C_0|+q=2m$. Thus fixing buffer support $q$ is
+equivalent to fixing matching size $m$, when this size is integral and
+feasible. Pair additivity gives equality of objective values term by term.
+Any declared normalization constant must be applied to both endpoints.
 
 \paragraph{Proof of Theorem~\ref{thm:k2alternating}.}
-Every vertex has degree at most two in $M^-\mathbin{\triangle}M^+$ and is
-incident to at most one edge of each matching. Each nontrivial connected
-component is therefore a path or cycle whose edge colors alternate. A cycle is
-even and balanced. An alternating path has equal color counts or one extra edge
-of one color. Since $|M^-|=|M^+|=q$, the path imbalances sum to zero. Common
-edges cancel from $w(M^+)-w(M^-)$; grouping the remaining terms by component
-and dividing by $q$ proves Eq.~\eqref{eq:alternating-width}. A balanced cycle or
-path can be exchanged alone, whereas imbalanced paths must be exchanged in a
-cardinality-balanced collection. The decomposition need not be unique when an
-endpoint has multiple optimal witnesses; endpoint values remain unique.
+Each vertex in $M^-\mathbin{\triangle}M^+$ has degree at most two and at most
+one incident edge of each matching. Every nontrivial component is consequently
+an alternating path or even cycle. Cycles have equal color counts; paths have
+imbalance $-1$, $0$, or $1$. Because $|M^-|=|M^+|=m$, path imbalances sum to
+zero. Common edges cancel from $w(M^+)-w(M^-)$; grouping the remaining terms by
+component and dividing by $m$ proves Eq.~\eqref{eq:alternating-width}.
+For the core-cover feasible sets, a path endpoint cannot be a core: every core
+has degree one in both matchings. Balanced component exchanges preserve core
+coverage and cardinality, while imbalanced paths must be exchanged in
+cardinality-balanced collections. Additional side constraints, when present,
+may prevent exchanging components separately. Different optimal witnesses can
+give different decompositions but have the same endpoint values.
 
 \paragraph{Proof of Proposition~\ref{prop:k2omission}.}
-Nesting follows because only the right-hand side increases. Every omitted edge
-has positive core incidence, giving the first endpoint identity. In any
-core-saturating matching, summing $|e\cap C_0|$ over selected edges counts each
-core exactly once and therefore equals $|C_0|$; the constraint is redundant at
-the second endpoint. Optimization over nested feasible sets gives the stated
-endpoint monotonicity.
+Only the right-hand side increases, which proves nesting at fixed $q$.
+Every edge outside $E_0$ has positive core incidence, so $\Gamma=0$ forces all
+selected edges into $E_0$. In a core-saturating matching,
+$\sum_{e\in M}|e\cap C_0|=|C_0|$. The budget is therefore redundant at
+$\Gamma=|C_0|$. Optimization over nonempty nested feasible sets gives the
+endpoint inequalities.
 
 \paragraph{Proof of Proposition~\ref{prop:k2thresholdcontraction}.}
-Every feasible matching on $E'$ is feasible on $E$, so minimization over the
-smaller set weakly raises the lower endpoint and maximization weakly lowers the
-upper endpoint. The threshold rule certifies positive iff the lower endpoint
-is at least $\eta$, certifies negative iff the upper endpoint is below $\eta$,
-and is ambiguous otherwise, giving the equivalence.
+Every feasible matching on $E'$ is feasible on $E$, giving the interval
+inclusion. The decision rule is $\ind\{H\ge\eta\}$, so a nonempty feasible set
+is ambiguous precisely when it contains an attained value below $\eta$ and
+one at least $\eta$. This is equivalent to the stated endpoint condition.
+A narrower real-valued range may still straddle the same threshold.
 
 \section{Fixed-Span Connectivity and Total Unimodularity}
-Let $S$ be a selected interval family with union span $[a,b)$. If the
-positive-overlap graph is connected, the union is connected and covers every
-elementary segment. At an internal endpoint boundary, a path from an interval
-active immediately to its left to one active immediately to its right must
-contain an interval crossing the boundary strictly; endpoint touching alone is
-not a positive-overlap edge.
-
-Conversely, suppose every elementary segment is covered and every internal
-boundary is strictly crossed. Moving from left to right, the crossing interval
-at each boundary overlaps intervals covering the adjacent segments with
-positive length. Induction joins the segment-covering intervals into one
-positive-overlap component. Any selected interval lies inside the covered span
-and overlaps that component on a segment it covers, so the full family is
-connected.
-
-Interleaving segment and boundary rows makes every interval column
-consecutive. Lower-coverage, upper-capacity, and bridge constraints are signed
-copies of this interval matrix; root and companion fixes are identity rows.
-The matrix is totally unimodular with integral right-hand side, proving
-Theorem~\ref{thm:oracle}.
-
-\section{Proof Detail for Proposition~\ref{prop:bp}}
-At every branch node, exact pricing establishes the optimum of the node LP over
-the full column universe compatible with that node. If a free optional row has
-fractional total usage $z_i\in(0,1)$, every integer solution satisfies either
-$z_i=0$ or $z_i=1$, so the two children partition the parent integer set.
-
-When all row usages are integral but the column vector remains fractional,
-Ryan--Foster branching selects active rows $i,j$ with fractional co-membership
+Let exact rational intervals have endpoints in the sorted finite list
+$a=u_0<u_1<\cdots<u_\ell=b$ inside a proposed span. Intervals not contained
+in $[a,b)$ are excluded. For the remaining candidates define
 \[
-0<\sum_{R\ni i,j}\lambda_R<1.
+ A_{ki}=\ind\{s_i\le u_k,\ e_i\ge u_{k+1}\},\qquad
+ B_{ki}=\ind\{s_i<u_k<e_i\}.
 \]
-Every integer partition places $i$ and $j$ either in the same event or in
-different events. The together and separate children again form an exhaustive
-disjunction. In a priced event column, together means either both rows are
-selected or both are excluded; separate means at least one is excluded.
-Enumerating these finite Boolean cases yields forced-in/forced-out subproblems.
-For each root and span, they add only variable bounds and identity equalities to
-the totally unimodular interval formulation, so pricing remains exact.
+Here $k=0,\ldots,\ell-1$ indexes segment rows $A$, and
+$k=1,\ldots,\ell-1$ indexes boundary rows $B$. Fix a core root $r$ and distinct
+companion $c$. For additive weights $w_i$ the fixed-span LP is
+\begin{align*}
+ \max_x\quad &\sum_i w_ix_i\\
+ \text{s.t.}\quad &1\le (Ax)_k\le C
+       && k=0,\ldots,\ell-1,\\
+ &(Bx)_k\ge1 &&k=1,\ldots,\ell-1,\\
+ &0\le x_i\le1,\qquad x_r=x_c=1.
+\end{align*}
+Replacing max by min changes none of the arguments.
 
-Node LP values are valid upper bounds for support maximization. Incumbents are
-valid lower bounds after replay against core-equality, buffer-at-most-once,
-connectivity, and capacity constraints. Standard best-bound branch-and-bound
-therefore preserves the global gap. When the queue is empty, no unexplored
-integer solution can exceed the incumbent; if the queue remains nonempty, the
-largest open-node LP value remains a valid global upper bound.
+For an integral selection, the segment lower bounds imply that its union
+fills the proposed span. A connected positive-overlap family must cover these
+segments and must strictly cross every internal endpoint boundary: without a
+crossing interval, rows to the left and right cannot be joined by a
+positive-overlap path. Conversely, an interval crossing a boundary overlaps
+the intervals covering the adjacent elementary segments. Inducting from left
+to right puts all segment-covering intervals in one component. Each selected
+interval has positive length and overlaps that component on a segment it
+covers. Thus the constraints characterize connectivity. Segment upper bounds
+characterize occupancy, including half-open boundary times because their
+active set equals that of the segment immediately to the right.
+
+Interleave the rows as $A_0,B_1,A_1,\ldots,B_{\ell-1},A_{\ell-1}$.
+An interval beginning at $u_p$ and ending at $u_q$ occupies the consecutive
+block $A_p,B_{p+1},\ldots,A_{q-1}$. This binary matrix has the consecutive-ones
+property by columns and is totally unimodular. Signed row duplication for
+lower and upper inequalities preserves total unimodularity, as does appending
+identity rows for bounds and fixed membership. Integer right-hand sides then
+make every vertex integral. This proves Theorem~\ref{thm:oracle}; arbitrary
+pair or global cardinality constraints are not part of this TU statement.
+
+Every feasible event has a span starting and ending at observed endpoints,
+so $O(|V|^2)$ span choices suffice. Requiring one companion is an exhaustive
+way to enforce at least two members, using at most $|V|-1$ LPs per root and
+span. With rational weights, each LP has polynomial encoding size. For a span
+strictly larger than the root interval, coverage already forces a companion;
+the implementation exploits this to skip unnecessary cases. Multiple roots
+may generate the same membership column, which is deduplicated.
+
+\section{Full-Master and Branch-and-Price Certificates}
+
+\paragraph{Proof of Proposition~\ref{prop:cg}.}
+The restricted-master dual satisfies the constraints for generated columns.
+If exact pricing finds no positive reduced gain, those same dual variables
+satisfy every omitted-column inequality as well. They are full-master dual
+feasible. The restricted primal solution is also full-master feasible, and
+the two have equal objectives by restricted-master strong duality. Weak
+duality therefore proves full-master optimality. A restricted-master value
+alone does not provide this certificate.
+
+\paragraph{Proof of Proposition~\ref{prop:bp}.}
+At each closed branch node, exact compatible pricing establishes the full
+node-LP optimum. If a free optional row has fractional usage $z_i\in(0,1)$,
+every integer solution satisfies either $z_i=0$ or $z_i=1$; these are
+exhaustive children. Once all row usages are integral, a fractional
+distinct-column solution admits active rows $i,j$ with
+\[
+ 0<\sum_{R\ni i,j}\lambda_R<1.
+\]
+To see why, suppose instead that all pair usages were zero or one. For an
+active row $i$ of total usage one, all positive columns containing it would
+have identical co-membership with every other row and hence identical member
+sets. After deduplication this gives one column of weight one, contradicting
+fractionality.
+
+An integer partition places $i,j$ together or separately. For a priced column,
+together permits both-in or both-out; separate forbids both-in.
+Enumerating the consistent Boolean cases fixes individual variables without
+adding arbitrary rows to the TU formulation. This yields exhaustive exact
+pricing at each child, although the number of cases need not be polynomial.
+
+The node relaxation upper-bounds all integer solutions below that node.
+An incumbent is a lower bound after replay of core coverage, buffer nonreuse,
+connectivity, and capacity. With distinct columns and finite disjunctions,
+the full search is finite. If every branch is fathomed, the incumbent is
+optimal, or infeasibility is certified if none exists. At early termination
+all live regions, including the currently processed node, retain valid upper
+bounds; unfinished pricing uses a previously established ancestor bound or a
+trivial bound such as $|B_0|$. Taking the maximum of these bounds and the
+incumbent gives the global upper bound. Discarding an unpriced live region,
+or treating its restricted LP value as an upper bound, would invalidate it.
 
 \section{Master Nonintegrality Witness}
 At capacity two, use four cores
@@ -153,10 +246,12 @@ cardinality, objective, and primal--dual residuals. The 195 cells with at most
 12 vertices also agree with an independent subset-recursion oracle.
 
 \paragraph{Removing oracle cardinality.}
-We union fixed-$q$ frontiers over either $q\pm1$ or every positive cardinality
+Here $m$ denotes the annotated number of dyads, distinct from the selected
+buffer count $q$ in the core--buffer model. We union fixed-$m$ frontiers over
+either $m\pm1$ or every positive cardinality
 through half the visible population. The latter removes labels from endpoint
 cardinality, although labels still determine eligibility, exclusions, and
-evaluation. Relative to oracle $q$, the all-positive-$q$ regime makes 826
+evaluation. Relative to annotated $m$, the all-positive-$m$ regime makes 826
 rather than 806 cells feasible because some candidate graphs admit a smaller
 matching than the annotated count. This is apparent feasibility, not restored
 relational coverage. Mean width increases from $1.176$ to $1.297$ meters, and
@@ -167,7 +262,7 @@ annotated world; none occurs under representable truth.
 \paragraph{Cross-day, multi-query point reconstruction.}
 We train a class-balanced logistic dyad score on DIAMOR-1 using only distance,
 heading difference, and speed difference, freeze it, and construct
-cardinality-$q$ matchings on DIAMOR-2. The same matching is evaluated for mean
+cardinality-$m$ matchings on DIAMOR-2. The same matching is evaluated for mean
 distance, speed gap, and heading gap. Across 381 exact cells with representable
 truth, the learned and closest-distance rules have similar mean dyad recall
 (89.24\% versus 89.62\%) but different downstream errors. The learned rule
@@ -187,8 +282,8 @@ Theorem~\ref{thm:k2alternating}; they are not required for it.
 \section{Frozen NYC Decision-Panel Detail}
 The panel predeclares 20 eight-core windows and four 16-core stress windows.
 Seventeen eight-core and all four 16-core windows are eligible. The three
-outcome-blind ineligible labels are \texttt{jul\_weekend\_pm\_n8},
-\texttt{oct\_weekend\_am\_n8}, and \texttt{oct\_weekend\_pm\_n8}; each failed
+outcome-blind ineligible windows are July weekend PM, October weekend AM,
+and October weekend PM, all at eight cores; each failed
 to produce an integrity- and cap-qualified core. All 24 terminal reports are
 observed and technical failures are zero.
 
@@ -197,11 +292,11 @@ observed and technical failures are zero.
 the candidate-median threshold; point split is disagreement among four
 feasible deterministic point methods.}
 \label{tab:paneldetail}
-\scriptsize
+\small
 \centering
 \begin{tabular}{@{}llrrrrrr@{}}
 \toprule
-Core & Outcome & $C$ & Cells & Exact & Ambig. & Point split & Median width \\
+Core & Outcome & $C$ & Cells & Closed & Ambig. & Point split & Median width \\
 \midrule
 8 & Miles   & 2 & 17 & 13 & 17 & 2 & 19.291 \\
 8 & Miles   & 3 & 17 & 16 & 17 & 2 & 20.441 \\
@@ -224,10 +319,14 @@ sides of the threshold; exact endpoints are not required for that conclusion.
 The sole unresolved median-threshold decision is the 16-core miles cell at
 $C=2$. Candidate-quartile and transparent 5-mile/30-minute references are
 reported in the artifact and are not claimed operational policy thresholds.
+Table~\ref{tab:paneldetail} separates numerical endpoint closure from witnessed
+ambiguity. Table~\ref{tab:capacitydetail} retains the earlier common-support
+comparison: the certified $C=2$ maximum of 72 selected buffers is held fixed
+across capacities on one eight-core input.
 
 \begin{table*}[t]
-\caption{Ordered-event outcome frontiers at a common support of 72 selected
-buffers.}
+\caption{Frontiers of mean selected-buffer miles and trip minutes at a common
+support of 72 selected buffers.}
 \label{tab:capacitydetail}
 \centering
 \begin{tabular}{@{}crrrr@{}}
@@ -242,11 +341,14 @@ $C$ & Miles range & Width & Minutes range & Width \\
 \end{table*}
 
 \section{Frozen Branch-and-Price Scale Detail}
+Table~\ref{tab:scaledetail} gives the final support-maximization lattice.
+Its integer closures refer to the declared numerical and witness-replay
+protocol; they do not certify the decision panel's separate outcome endpoints.
 \begin{table*}[t]
 \caption{All 18 predeclared NYC integer scale cells. A bracket is the valid
 [integer incumbent, global upper bound] interval at termination.}
 \label{tab:scaledetail}
-\scriptsize
+\small
 \centering
 \begin{tabular}{@{}rrrrlrrr@{}}
 \toprule

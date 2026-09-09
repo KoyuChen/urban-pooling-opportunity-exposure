@@ -1,52 +1,63 @@
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{Uncertain linkage and aggregate queries.}
-Record-linkage research represents globally compatible links as constrained
-matchings rather than independent pair decisions \citep{sadinle2017linkage}.
-Database work propagates linkage uncertainty to aggregate queries
-\citep{hua2012aggregate} and optimizes extremal aggregate answers over
-candidate-constrained two-table integrations \citep{turkcapar2023aggregate}.
-Attribute-uncertain databases likewise track value bounds through relational
-queries \citep{feng2021audb}. We share the possible-worlds principle but study a
-different latent object: rows inside one event stream must be partitioned into
-temporally ordered groups whose total membership may exceed simultaneous
-capacity, while exact timestamps may themselves be set-valued. The estimand is
-an aggregate frontier over joint grouping and time completions, not a posterior
-over pair identities.
+\paragraph{Aggregate uncertainty from unresolved relationships.}
+Resolution-aware query answering retains unresolved entities and computes
+aggregate bounds without requiring probabilities over resolutions
+\citep{sismanis2009resolution}. Probabilistic linkage supports aggregate
+queries \citep{hua2012aggregate}, while Bayesian linkage represents entire
+compatible matchings and quantifies their uncertainty
+\citep{sadinle2017linkage}. Our closest comparator,
+\citet{turkcapar2023aggregate}, optimizes aggregate ranges over
+candidate-constrained, one-to-many integrations of two tables using graph
+matching. Their coverage statement assumes that the candidates retain the
+true matching; their experiments also study false negatives and failures to
+bound the true aggregate. Thus neither extremal aggregation nor the risk of
+candidate omission is new here. Our latent object is a partition into
+positive-overlap-connected events with bounded simultaneous occupancy.
+Sequential membership can exceed capacity, and set-valued timestamps require
+one common completion for an entire event. These constraints determine the
+specific optimization problem studied below.
 
-\paragraph{Temporal grouping and mobility applications.}
-Shareability networks and dynamic trip--vehicle assignment solve a forward
-allocation problem when requests and candidate trips are observed
-\citep{santi2014shareability,alonsomora2017ondemand,ozkanward2020dynamic}.
-Empirical work predicts sharing or matching outcomes
-\citep{taiebat2022sharing,mucci2024understanding}, studies pooled demand across
-neighborhoods \citep{soria2021sociospatial}, or constructs proxy groups by
-spatiotemporal clustering \citep{sebtichen2026hidden}. Our city audit is
-inverse: the release preserves transaction rows and outcomes but removes the
-event key. More broadly, the same inferential object arises in referral,
-household-visit, and service-tour streams. We do not select the most likely
-cluster; we certify which downstream aggregate claims survive all declared
-temporal-event decompositions.
+\paragraph{Possible worlds, repairs, and sensitivity.}
+Range-consistent query answering optimizes aggregates across legal database
+repairs, with tractability results for query rewriting under primary-key
+violations \citep{elkhalfioui2024range,elkhalfioui2026upper}.
+Attribute-uncertain databases propagate value bounds through relational
+queries \citep{feng2021audb}. EventFrontier adopts the same general principle
+of quantifying over admissible worlds; its contribution concerns a temporal
+event family, rather than a new semantics for uncertain data. Query resilience
+studies the smallest input deletion that makes a Boolean query false
+\citep{freire2015resilience}. Our omission budgets instead parameterize
+candidate support for latent relationships. We report sensitivity within this
+declared family, without claiming a new general notion of robustness or an
+unconditional coverage guarantee.
 
-\paragraph{Structured optimization.}
-Integer programming is standard for globally coupled disclosure constraints
-\citep{fischetti2001suppression}, and bounded-width dynamic programming is
-standard in structured inference \citep{freuder1990ktree,dechter1999bucket}.
-Our decomposition exploits a more specific interval structure. One rooted
-event with a fixed span has an integral consecutive-ones formulation, which
-becomes an exact pricing oracle for a Dantzig--Wolfe master. The master itself
-is nonintegral, so we use branch-compatible row-usage and pair-co-membership
-disjunctions. This separates a polynomial local pricing problem from a
-potentially exponential global integer search while retaining valid anytime
-bounds.
+\paragraph{Interval optimization and decomposition.}
+Interval scheduling already admits structured pricing, column generation,
+and branch-and-price. In particular, \citet{muir2023interval} partition fixed
+interval jobs under economies-of-scale costs, giving polynomial pricing for
+the max-weight case and pseudo-polynomial pricing for a broader class.
+Their schedules forbid simultaneous jobs on the same machine; our events
+require positive-overlap connectivity while limiting occupancy. Our local
+result jointly encodes segment coverage, boundary bridges, capacity, and
+fixed membership in a consecutive-ones formulation. For fixed exact times,
+root, span, and additive weights, this yields an integral event-pricing LP.
+Total unimodularity and decomposition are established tools; the specific
+claim is their applicability to this connected event formulation.
+The coupled master can remain fractional, and branch-compatible pricing may
+require exponentially many cases. We make no polynomial-time claim for the
+full partition problem or for arbitrary set-valued timestamps.
 
-\paragraph{Candidate restrictions and calibrated learning.}
-Learning can sharpen a feasible-world set, but node-level event indicators do
-not identify partner probabilities without assumptions. Matching-level
-conformal prediction and weakly supervised structured prediction have
-well-developed foundations \citep{lei2018conformal,cauchois2024weak}. We keep
-learned scoring outside the central contribution. Headline candidate rules are
-score-free and outcome-blind; the controlled study instead asks whether simple
-point reconstructions yield decisions invariant to the certified frontier and
-how candidate truncation affects full-world coverage.
+\paragraph{Mobility as an observation setting.}
+Shareability networks and trip--vehicle assignment optimize prospective
+allocations \citep{santi2014shareability,alonsomora2017ondemand}.
+Studies of public ride-hailing data predict sharing outcomes or construct
+proxy groups \citep{taiebat2022sharing,sebtichen2026hidden}.
+Our application instead asks which retrospective aggregates are compatible
+with released rows after event identifiers and time precision are removed.
+The public audits establish conditional ranges, not recovery of actual
+vehicle assignments or evidence of social interaction. Chicago and ATR
+dyads test the matching special case and candidate-support validity; evidence
+for the general temporal-event contribution must additionally exercise
+sequential membership and joint timestamp feasibility.

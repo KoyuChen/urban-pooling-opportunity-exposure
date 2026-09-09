@@ -16,6 +16,18 @@ identifies local exploration provenance and does not label it as workflow execut
 | Aggregate public evidence | `code/ai_pilot/data_pipeline/results/` |
 | Deterministic verification | `.github/workflows/ci.yml` |
 
+## Chicago follow-up interim snapshot (September 9, 2026)
+
+`code/ai_pilot/data_pipeline/results/chicago_k2_followup/batch0_20260909/`
+stores the aggregate summary, full 96-window ledger, and manifest from run
+`34298803324`, artifact `10084804589`. Source ZIP SHA-256:
+`6d616909ae04d963aa801a593c6f0cef20fcc23478f7f5eecf92a4fe720c6fcf`.
+All 235 source checkpoint files were hash-verified before copying aggregates.
+Counts are 10 completed, 2 ineligible, 84 unstarted; 1,192 numerical certified
+pairs, 300 missing-public-value pairs, 8 computationally unresolved pairs.
+This is a HOLD interim graph audit, not completed 96-window or temporal-world
+certification. The separate closed 24-window pilot remains unchanged.
+
 ## Controlled truth
 
 - 3,000 instances over `C=2,3,4`.
@@ -41,7 +53,7 @@ Disclosure-safe aggregate evidence is stored under:
 - `code/ai_pilot/benchmarks/results/atr_diamor_alternating_structure/`.
 
 The base dyad audit contains 170 eligible snapshots and 850 radius cells. All
-806 feasible cells have replayed exact endpoints and 44 are certified
+806 feasible cells have replayed numerically optimal endpoints and 44 are certified
 infeasible. Conditional on candidate support containing the annotated world,
 769/769 frontiers cover the annotated aggregate and flag 68/68 closest-pair
 point errors. Under misspecified support, 16 wrong point decisions remain
@@ -89,7 +101,7 @@ Results:
 - 24 predeclared windows; 21 eligible, three outcome-blind ineligible, zero
   technical failures, and zero missing terminal reports;
 - 126 outcome--capacity cells;
-- 101/126 (80.2%) exact endpoint pairs;
+- 101/126 (80.2%) numerically closed endpoint pairs;
 - 125/126 (99.2%) certified ambiguous candidate-median decisions and one
   unresolved decision;
 - four feasible point methods disagree with one another in 24/126 cells

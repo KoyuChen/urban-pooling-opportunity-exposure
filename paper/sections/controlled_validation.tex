@@ -44,9 +44,11 @@ straddles the threshold:
 \[
 \Pr(\text{frontier flags ambiguity}\mid \text{point decision is wrong})=1.
 \]
-Thus the method's downstream value is not to promise a superior missing-link
-guess. It identifies when the desired conclusion is invariant to all admissible
-relations and abstains precisely on these observed point-rule failures.
+This is a positive control: when both the true world and a point world belong
+to the optimized set and disagree at a threshold, the frontier must cross that
+threshold. The result checks implementation consistency; it does not establish
+unconditional coverage, optimal abstention, or a new general certification
+principle.
 
 \paragraph{Candidate recall is not world coverage.}
 We next rank buffers by the same outcome-blind temporal score and retain only

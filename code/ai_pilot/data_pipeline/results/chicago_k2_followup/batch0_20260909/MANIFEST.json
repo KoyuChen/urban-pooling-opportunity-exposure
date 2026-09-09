@@ -1,0 +1,17 @@
+{
+  "audit_date": "2026-09-09",
+  "source_commit": "4ec6c6f99d1ed14a6001abaeca41c98408a707c6",
+  "workflow_run_id": 34298803324,
+  "artifact_id": 10084804589,
+  "artifact_zip_sha256": "6d616909ae04d963aa801a593c6f0cef20fcc23478f7f5eecf92a4fe720c6fcf",
+  "protocol_sha256": "11181d587ae19b1e116b8ff3e5dc2c166ad2783d8fa269a83a01c6d4d83e0f62",
+  "checkpoint_files_verified": 235,
+  "gate": "HOLD_INCOMPLETE",
+  "files": {
+    "followup_report.json": "568c34755b4d4fef648b4dfa3af47e4c5cf6a8b89a6cadb914070f2cfc1d1953",
+    "followup_windows.csv": "99c8f0d7e08acfeab7d9119e8d06401e9c16ab82565d38aeba464cca5a772649",
+    "FOLLOWUP_REPORT.md": "fedd9a3fb77a0dac846d52ee3cea4758b599cd2c207321dcfcbc35cbe8fa1d08",
+    "FOLLOWUP_RESULTS.tex": "c9b199cf7315dee58b37d2a7c4335108fe850bf0287b31e911d21232fa8daf2b"
+  },
+  "scope": "Aggregate interim snapshot of the first 12 of 96 declared windows. No latent identifiers or assignments. Numerical certificates conditional on declared public-envelope graph; 8 pairs unresolved and 84 windows unstarted."
+}
