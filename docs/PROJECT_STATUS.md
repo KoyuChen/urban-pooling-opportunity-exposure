@@ -1,5 +1,16 @@
 # Verified project status
 
+September 10 execution update: CI run `34328127844` for theory commit
+`160b7eb` completed successfully. Batch-0 checkpoint verification still passes
+all 235 file pins and the frozen producer/protocol hashes. The next launch is
+the declared batch 1 (indices 12--23, January 21, 22, 23 and 26), restoring
+run `34298803324` rather than initializing or recomputing batch 0.
+The workflow requires an explicit `[chicago-followup-batch-1]` launch marker
+and checks the seed checkpoint SHA-256 before the existing sequential gate.
+This launch configuration is not evidence of completed new windows; follow-up
+scientific counts remain 10 completed, 2 ineligible and 84 not yet in the ledger
+until new attempt artifacts are merged. See `docs/CHICAGO_BATCH1_LAUNCH.md`.
+
 The September 9 theory reinforcement now proves exact-time pair/clique/event
 containment, common-intersection collapse, two strict fixed-q mean examples,
 the main-text coverage/bridge connectivity lemma, and the positive-margin

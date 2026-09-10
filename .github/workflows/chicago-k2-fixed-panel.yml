@@ -219,7 +219,8 @@ jobs:
           retention-days: 90
 
   followup-prepare:
-    if: ${{ github.event_name == 'push' || inputs.mode == 'followup' }}
+    # A deliberate launch commit resumes batch 1; ordinary edits do not refetch it.
+    if: ${{ (github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-followup-batch-1]')) || (github.event_name == 'workflow_dispatch' && inputs.mode == 'followup') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -227,8 +228,9 @@ jobs:
       selected_count: ${{ steps.plan.outputs.selected_count }}
       indices: ${{ steps.plan.outputs.indices }}
     env:
-      BATCH_INDEX: ${{ inputs.batch_index || '0' }}
-      RESUME_RUN: ${{ inputs.resume_run_id }}
+      BATCH_INDEX: ${{ github.event_name == 'push' && '1' || inputs.batch_index || '0' }}
+      RESUME_RUN: ${{ github.event_name == 'push' && '34298803324' || inputs.resume_run_id }}
+      EXPECTED_SEED_SHA256: ${{ github.event_name == 'push' && '6f6f67a0a1939dbbad7f5d4b3e56f47222eef2b98c16131ced73598078bd1caa' || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -242,6 +244,17 @@ jobs:
           run-id: ${{ env.RESUME_RUN }}
           name: chicago-k2-followup-checkpoint
           path: tmp/chicago-k2-followup
+      - name: Verify the pinned batch-0 launch checkpoint
+        if: env.EXPECTED_SEED_SHA256 != ''
+        run: |
+          python - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          checkpoint = Path('tmp/chicago-k2-followup/checkpoint.json')
+          assert hashlib.sha256(checkpoint.read_bytes()).hexdigest() == os.environ['EXPECTED_SEED_SHA256'], 'launch checkpoint hash mismatch'
+          assert os.environ['BATCH_INDEX'] == '1'
+          assert os.environ['RESUME_RUN'] == '34298803324'
+          PY
       - name: Initialize only the first batch when no checkpoint is supplied
         if: env.RESUME_RUN == ''
         run: |
