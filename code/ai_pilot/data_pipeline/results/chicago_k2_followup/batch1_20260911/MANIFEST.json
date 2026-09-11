@@ -1,0 +1,19 @@
+{
+  "audit_date": "2026-09-11",
+  "source_commit": "c73704227bbffdd37d6bd11842f986b6a46d44a7",
+  "workflow_run_id": 34423799714,
+  "artifact_id": 10132962606,
+  "artifact_zip_sha256": "8986a0bc56797b0275cc4e72c5746a73b738e0dfbcc78e7a56f459436ee7bda9",
+  "checkpoint_sha256": "835f7712b052f7c47ac051df620766025c03cba35506eac362990facdc01a196",
+  "checkpoint_files_verified": 490,
+  "protocol_sha256": "11181d587ae19b1e116b8ff3e5dc2c166ad2783d8fa269a83a01c6d4d83e0f62",
+  "gate": "HOLD_INCOMPLETE",
+  "files": {
+    "followup_report.json": "6c710ccc533ed24eda71234c0ec8a3ac359348ef7ac2f36fd704c3ad99e4610e",
+    "followup_windows.csv": "76d7cf8e147a5f96864cddea02c90df2d24229a64e17abf3c2522a7e687b8f04",
+    "FOLLOWUP_REPORT.md": "22ca67a2f1c1a90af66f94c775e77dc3658d5038bf9d74ab1ff4f8942897bb0a",
+    "FOLLOWUP_RESULTS.tex": "9ffc09607e4718b221aba11132a47d31415c4f5ffafe15eeb30a8c70f1eab225",
+    "UNRESOLVED_AUDIT.json": "388dd3f46fc9e2f75dad369dfe9fffc3ff6123b0eba954e6f2ab5c33435171d4"
+  },
+  "scope": "Aggregate snapshot after 24 of 96 declared windows. Numerical optimality conditional on declared public-envelope graph; not rational exact arithmetic or city-scale closure."
+}

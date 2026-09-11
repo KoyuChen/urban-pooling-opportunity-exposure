@@ -1,15 +1,26 @@
 # Verified project status
 
-September 10 execution update: CI run `34328127844` for theory commit
-`160b7eb` completed successfully. Batch-0 checkpoint verification still passes
-all 235 file pins and the frozen producer/protocol hashes. The next launch is
-the declared batch 1 (indices 12--23, January 21, 22, 23 and 26), restoring
-run `34298803324` rather than initializing or recomputing batch 0.
-The workflow requires an explicit `[chicago-followup-batch-1]` launch marker
-and checks the seed checkpoint SHA-256 before the existing sequential gate.
-This launch configuration is not evidence of completed new windows; follow-up
-scientific counts remain 10 completed, 2 ineligible and 84 not yet in the ledger
-until new attempt artifacts are merged. See `docs/CHICAGO_BATCH1_LAUNCH.md`.
+September 11 execution update: batch-1 run `34423799714` and CI `34423799606`
+completed successfully. The downloaded archive, all 490 checkpoint file pins,
+frozen producer/protocol hashes and independently regenerated aggregate agree.
+The 96-window follow-up now has **21 completed, 3 ineligible, 72 unstarted**,
+with no execution failures: 3,130 endpoint pairs comprise 2,492 numerical
+optimal pairs, 626 missing-public-value pairs and 12 unresolved pairs.
+The data-complete numerical certification rate is 2,492 / 2,504 = 99.52%.
+These are verified prior-run results, not new optimization on September 11.
+The durable aggregate snapshot is `results/chicago_k2_followup/batch1_20260911/`
+under the data pipeline. Its unresolved audit identifies all four newly open
+points at index 17 (January 22 evening), for trip-miles gap, not duration gap.
+All four lower endpoints are incumbent-only limits; upper statuses are optimal.
+The gamma point reuses the temporal-only endpoint, so four CSV points must not
+be called four independent hard problems. No full interval is certified there.
+
+The next launch is batch 2, indices 24--35 (January 27--30), restoring the
+verified batch-1 checkpoint without refetching indices 0--23. The workflow
+requires `[chicago-followup-batch-2]`, a pinned seed hash and the sequential
+record-terminal gate. This is not an all-endpoints-exact gate. Scientific
+status remains **HOLD_INCOMPLETE** until further evidence is actually returned.
+See `docs/CHICAGO_BATCH2_LAUNCH.md` for provenance and reproduction.
 
 The September 9 theory reinforcement now proves exact-time pair/clique/event
 containment, common-intersection collapse, two strict fixed-q mean examples,
@@ -21,12 +32,12 @@ complexity, including C=2 hardness, remains unestablished; the current claims
 are NP membership and polynomial single-core support. Details and excluded
 hardness transfers are in `docs/THEORY_REINFORCEMENT.md`.
 
-Latest verified evidence checkpoint: 2026-09-09, Chicago follow-up batch 0 recorded.
+Latest verified evidence checkpoint: 2026-09-11, Chicago follow-up batch 1 verified.
 The next-stage plan is in `docs/NEXT_RESEARCH_GATE.md`. A separate 96-window
 Chicago calendar is declared in `CHICAGO_K2_FOLLOWUP_PROTOCOL.json`; its interim
 results do not change the closed 24-window pilot's evidence counts.
 
-Chicago run `34298803324` has 10 completed windows, 2 fixed-core exclusions,
+Historical batch-0 baseline: Chicago run `34298803324` has 10 completed windows, 2 fixed-core exclusions,
 and 84 unstarted windows across the frozen 96-window denominator. It has
 1,192 numerically certified endpoint pairs, 300 missing-public-value pairs,
 and 8 computationally unresolved pairs (1,500 total; 99.33% certification among
@@ -34,8 +45,8 @@ the 1,200 data-complete pairs). All eight unresolved lower endpoints concern
 duration gap in the January 15 evening window. The source ZIP and all 235
 checkpoint files have been hash-verified; a durable aggregate-only snapshot is
 in `results/chicago_k2_followup/batch0_20260909/` under the data pipeline.
-Batch 1 is eligible for dispatch under the record-terminal protocol; this is
-not a claim that all batch-0 endpoints are exact. The follow-up Gate is HOLD.
+Batch 1 has since completed and is superseded by the cumulative counts above.
+This is not a claim that all batch-0 endpoints are exact. The follow-up Gate is HOLD.
 
 The September 9 manuscript rewrite centers temporal-event feasibility and
 the fixed-time additive pricing oracle, explicitly credits prior aggregate

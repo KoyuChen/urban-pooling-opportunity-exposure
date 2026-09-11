@@ -1,4 +1,5 @@
 import json
+import hashlib
 from pathlib import Path
 import sys
 import tempfile
@@ -82,6 +83,32 @@ class ChicagoFollowupTests(unittest.TestCase):
         self.assertIn("Of 96 declared windows, 0 completed", tex)
         self.assertIn("96 were unstarted", tex)
         self.assertIn("not a probability sample", tex)
+
+    def test_archived_batch1_hashes_and_complete_denominators(self):
+        root = followup.panel.HERE.parent / "results/chicago_k2_followup/batch1_20260911"
+        manifest = followup.read_json(root / "MANIFEST.json")
+        for name, digest in manifest["files"].items():
+            self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), digest)
+        report = followup.read_json(root / "followup_report.json")
+        self.assertEqual([w["window_index"] for w in report["windows"]], list(range(96)))
+        self.assertEqual(report["status_counts"], {
+            "COMPLETED": 21, "INELIGIBLE_FIXED_CORE": 3, "UNSTARTED": 72,
+        })
+        self.assertEqual(report["endpoint_pair_count"], 2492 + 626 + 12)
+        self.assertEqual(report["gate_status"], "HOLD_INCOMPLETE")
+
+    def test_archived_batch1_limits_are_not_infeasibility_or_full_intervals(self):
+        root = followup.panel.HERE.parent / "results/chicago_k2_followup/batch1_20260911"
+        records = followup.read_json(root / "UNRESOLVED_AUDIT.json")["records"]
+        self.assertEqual(len(records), 12)
+        new = [r for r in records if r["window_index"] == 17]
+        self.assertEqual(len(new), 4)
+        self.assertEqual({r["query"] for r in new}, {"mean_absolute_trip_miles_gap_per_core"})
+        self.assertEqual(sum(r["endpoint_source"] == "canonical_temporal_only_identity" for r in new), 1)
+        for row in records:
+            self.assertEqual((row["lower"], row["upper"]), ("", ""))
+            self.assertEqual(row["lower_status"], "INCUMBENT_ONLY_UNRESOLVED_LIMIT")
+            self.assertEqual(row["upper_status"], "OPTIMAL_NUMERICAL_MILP")
 
 
 if __name__ == "__main__":
