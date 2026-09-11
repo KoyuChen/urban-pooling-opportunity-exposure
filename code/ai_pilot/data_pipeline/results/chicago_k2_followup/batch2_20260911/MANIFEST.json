@@ -1,0 +1,16 @@
+{
+  "source_commit": "c63cf7aa82bcda00422fa0048892b91b059eb95d",
+  "workflow_run_id": 34549243865,
+  "artifact_id": 10181281467,
+  "artifact_zip_sha256": "ff616b7d6e53a85cc16bdff64e681f6ddda6e65f5d0dff5deedbd244514157dc",
+  "checkpoint_sha256": "ca1b939c8d28ad5d2e01cb58a1dc03b0526bd43159c865e268b41a2172256816",
+  "checkpoint_files_verified": 724,
+  "gate": "HOLD_INCOMPLETE",
+  "scope": "36 of 96 follow-up records terminal; 31 completed, 5 ineligible. 3692 numerical optimal endpoint pairs, 926 missing public values, 12 unresolved. Not city-scale closure.",
+  "files": {
+    "followup_report.json": "9a000ffee13260459daca2bcb6507425cbab4c3da043d017f44b6ce509cbd7c7",
+    "followup_windows.csv": "b5c13e9467c320c4dd035e3c29287f0e21e32e13b87844671ddfadd0609b16f6",
+    "FOLLOWUP_REPORT.md": "5ac46f27c74bb8ce0aeaa374f1a2d467f8de3929333f47cbf631e78f46c05c7f",
+    "FOLLOWUP_RESULTS.tex": "c0274b3245a3b03091e273c24b5620637a3f4a7a76c6cf7a5d8375d26ec5556a"
+  }
+}

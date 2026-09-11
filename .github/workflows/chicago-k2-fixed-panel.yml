@@ -20,6 +20,19 @@ on:
         default: "0"
         type: choice
         options: ["0", "1", "2", "3", "4", "5", "6", "7"]
+      continue_campaign:
+        description: "Continue through batch 7; at most two transport-only retries per batch"
+        type: boolean
+        default: false
+      retry_attempt:
+        description: "Bounded continuation retry index"
+        type: choice
+        options: ["0", "1", "2"]
+        default: "0"
+      expected_seed_sha256:
+        description: "Checkpoint digest supplied by the preceding verified batch"
+        type: string
+        default: ""
   push:
     branches: [main]
     paths:
@@ -31,7 +44,7 @@ permissions:
 
 concurrency:
   group: chicago-k2-fixed-panel
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   prepare:
@@ -219,8 +232,8 @@ jobs:
           retention-days: 90
 
   followup-prepare:
-    # A deliberate launch commit resumes batch 2; ordinary edits do not refetch it.
-    if: ${{ (github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-followup-batch-2]')) || (github.event_name == 'workflow_dispatch' && inputs.mode == 'followup') }}
+    # Explicit completion launch; ordinary edits do not start a campaign.
+    if: ${{ (github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-followup-complete]')) || (github.event_name == 'workflow_dispatch' && inputs.mode == 'followup') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -228,9 +241,9 @@ jobs:
       selected_count: ${{ steps.plan.outputs.selected_count }}
       indices: ${{ steps.plan.outputs.indices }}
     env:
-      BATCH_INDEX: ${{ github.event_name == 'push' && '2' || inputs.batch_index || '0' }}
-      RESUME_RUN: ${{ github.event_name == 'push' && '34423799714' || inputs.resume_run_id }}
-      EXPECTED_SEED_SHA256: ${{ github.event_name == 'push' && '835f7712b052f7c47ac051df620766025c03cba35506eac362990facdc01a196' || '' }}
+      BATCH_INDEX: ${{ github.event_name == 'push' && '3' || inputs.batch_index || '0' }}
+      RESUME_RUN: ${{ github.event_name == 'push' && '34549243865' || inputs.resume_run_id }}
+      EXPECTED_SEED_SHA256: ${{ github.event_name == 'push' && 'ca1b939c8d28ad5d2e01cb58a1dc03b0526bd43159c865e268b41a2172256816' || inputs.expected_seed_sha256 || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -244,7 +257,7 @@ jobs:
           run-id: ${{ env.RESUME_RUN }}
           name: chicago-k2-followup-checkpoint
           path: tmp/chicago-k2-followup
-      - name: Verify the pinned batch-1 launch checkpoint
+      - name: Verify the pinned predecessor checkpoint
         if: env.EXPECTED_SEED_SHA256 != ''
         run: |
           python - <<'PY'
@@ -252,8 +265,8 @@ jobs:
           from pathlib import Path
           checkpoint = Path('tmp/chicago-k2-followup/checkpoint.json')
           assert hashlib.sha256(checkpoint.read_bytes()).hexdigest() == os.environ['EXPECTED_SEED_SHA256'], 'launch checkpoint hash mismatch'
-          assert os.environ['BATCH_INDEX'] == '2'
-          assert os.environ['RESUME_RUN'] == '34423799714'
+          assert 0 <= int(os.environ['BATCH_INDEX']) < 8
+          assert os.environ['RESUME_RUN'].isdigit()
           PY
       - name: Initialize only the first batch when no checkpoint is supplied
         if: env.RESUME_RUN == ''
@@ -374,3 +387,73 @@ jobs:
             tmp/chicago-k2-followup/FOLLOWUP_RESULTS.tex
           if-no-files-found: error
           retention-days: 90
+
+  followup-continue:
+    needs: followup-aggregate
+    if: ${{ needs.followup-aggregate.result == 'success' && github.run_attempt == 1 && ((github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-followup-complete]')) || (github.event_name == 'workflow_dispatch' && inputs.mode == 'followup' && inputs.continue_campaign)) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: write
+    env:
+      BATCH_INDEX: ${{ github.event_name == 'push' && '3' || inputs.batch_index }}
+      RETRY_ATTEMPT: ${{ inputs.retry_attempt || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: chicago-k2-followup-checkpoint
+          path: tmp/chicago-k2-followup
+      - name: Verify evidence and plan one bounded continuation
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/advance_chicago_followup.py \
+            --checkpoint-dir tmp/chicago-k2-followup --batch-index "$BATCH_INDEX" \
+            --retry-attempt "$RETRY_ATTEMPT" --output tmp/continuation.json
+      - name: Preserve continuation decision before dispatch
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-continuation-decision
+          path: tmp/continuation.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Dispatch the verified next batch or stop
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          plan = json.loads(Path('tmp/continuation.json').read_text())
+          if plan['action'] != 'DISPATCH':
+              print(json.dumps(plan, sort_keys=True))
+              if plan['reason'] != 'CALENDAR_EXECUTION_COMPLETE':
+                  raise SystemExit('Continuation stopped for diagnosis: ' + plan['reason'])
+              raise SystemExit(0)
+          base = 'https://api.github.com/repos/' + os.environ['GITHUB_REPOSITORY']
+          headers = {'Authorization': 'Bearer ' + os.environ['GH_TOKEN'],
+                     'Accept': 'application/vnd.github+json',
+                     'Content-Type': 'application/json'}
+          request = urllib.request.Request(base + '/commits/main', headers=headers)
+          with urllib.request.urlopen(request, timeout=60) as response:
+              head = json.load(response)['sha']
+          if head != os.environ['GITHUB_SHA']:
+              raise SystemExit('Source revision changed; refusing automatic continuation')
+          payload = {'ref': 'main', 'inputs': {
+              'mode': 'followup', 'resume_run_id': os.environ['GITHUB_RUN_ID'],
+              'batch_index': str(plan['batch_index']),
+              'retry_attempt': str(plan['retry_attempt']),
+              'continue_campaign': 'true',
+              'expected_seed_sha256': plan['checkpoint_sha256']}}
+          request = urllib.request.Request(
+              base + '/actions/workflows/chicago-k2-fixed-panel.yml/dispatches',
+              data=json.dumps(payload).encode(), headers=headers, method='POST')
+          # Do not retry an ambiguous POST: that could create duplicate runs.
+          with urllib.request.urlopen(request, timeout=60) as response:
+              if response.status != 204:
+                  raise SystemExit('Unexpected dispatch response')
+          print(json.dumps({'dispatch_accepted': True, 'inputs': payload['inputs']}))
+          PY

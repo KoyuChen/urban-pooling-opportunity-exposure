@@ -1,5 +1,23 @@
 # Verified project status
 
+Latest update: the third batch (run `34549243865`) is now independently verified:
+724 file pins, frozen producer/protocol hashes and regenerated aggregate pass.
+The current 96-window ledger has **31 completed, 5 ineligible, 60 unstarted**,
+no execution failures, and 3,692 / 3,704 numerical optimal data-complete pairs
+(99.68%). Another 926 pairs lack public query values; 12 remain unresolved.
+The aggregate snapshot is `results/chicago_k2_followup/batch2_20260911/` under
+the data pipeline. These counts supersede the historical batch-1 counts below.
+
+To resolve the remaining execution HOLD, the completion campaign resumes
+indices 36--47 and automatically continues through indices 95 after each
+verified aggregate. It preserves the frozen four-worker limit and all scientific
+parameters, retries only transport/artifact failures up to twice per batch,
+and stops for diagnosis otherwise. No new schedule is created. See
+`docs/CHICAGO_COMPLETION_CAMPAIGN.md`. Until new results return, execution remains
+HOLD; even a future `PASS_EXECUTION` is not full endpoint or city-scale closure.
+
+## Historical batch-1 checkpoint
+
 September 11 execution update: batch-1 run `34423799714` and CI `34423799606`
 completed successfully. The downloaded archive, all 490 checkpoint file pins,
 frozen producer/protocol hashes and independently regenerated aggregate agree.
