@@ -1,0 +1,81 @@
+{
+  "source_commit": "6b1b5ced901a61cc0b71b3d8725857d350b21c36",
+  "source_run_id": 34644324691,
+  "seed_artifact_id": 10283410153,
+  "seed_archive_sha256": "b067936665256c96e4c62e3379550413188629103875876c9dd4a5618d287442",
+  "seed_checkpoint_files_verified": 1862,
+  "merged_checkpoint_files_verified": 2096,
+  "merged_checkpoint_sha256": "744370cab34cbc5db427b47eaabc0434679a0c96cd58918633e8f64eb40abee9",
+  "attempt_artifacts_verified": [
+    {
+      "id": 10282986294,
+      "name": "cohort_095_20260227T1730",
+      "digest": "sha256:ac3eb96a10c6c546be4c93eb63dec07d1a845551b56e040e6dc9f9046b61f7cc"
+    },
+    {
+      "id": 10282156331,
+      "name": "cohort_087_20260225T0800",
+      "digest": "sha256:868b92694bf3e5fd309301f3f7017e7e452acca87f34997aac450676a2dfbe7f"
+    },
+    {
+      "id": 10281767155,
+      "name": "cohort_086_20260224T1730",
+      "digest": "sha256:3fcd158a38c55fe8e541fee55fe457d9a6d918f2ee9039d2a9abddb5c86efe02"
+    },
+    {
+      "id": 10281693853,
+      "name": "cohort_092_20260226T1730",
+      "digest": "sha256:385d0010b2183259235e848180a372d39dda601d0a0b120b93c8535a5b1193f6"
+    },
+    {
+      "id": 10281689672,
+      "name": "cohort_094_20260227T1200",
+      "digest": "sha256:820f40f633529ade9f89c580b81634bccb669e266b8697cde72d8824c06b7263"
+    },
+    {
+      "id": 10281612467,
+      "name": "cohort_088_20260225T1200",
+      "digest": "sha256:cf5dc7c59a3949be6ee5219174b358b0bfda419cc4235d9607009c4245f87769"
+    },
+    {
+      "id": 10281277753,
+      "name": "cohort_089_20260225T1730",
+      "digest": "sha256:2b74ef623f294722a2578be8a68ee6f15a2e56309438eea99ad6b1b61613d9c3"
+    },
+    {
+      "id": 10281247221,
+      "name": "cohort_085_20260224T1200",
+      "digest": "sha256:9459a3633390d647864d5e1384a74d7a5768acc344526499324daf46cff6c4c5"
+    },
+    {
+      "id": 10281153079,
+      "name": "cohort_091_20260226T1200",
+      "digest": "sha256:49aefaec97127318352239d363369f5ed6ada49fd021298f671126b371a07136"
+    },
+    {
+      "id": 10281123089,
+      "name": "cohort_090_20260226T0800",
+      "digest": "sha256:2dec6c165a59e0a56c4f7b4ef6e9095dd46bc9b3ec8dff1ba9034d26e4fe9c33"
+    },
+    {
+      "id": 10281094099,
+      "name": "cohort_093_20260227T0800",
+      "digest": "sha256:976b18f7c5b149e3f1afe68cb5189c0aa3e9e33b754c529b0f4637eeaf95c1e3"
+    },
+    {
+      "id": 10281004993,
+      "name": "cohort_084_20260224T0800",
+      "digest": "sha256:f1323832f95e4c778fd2adf1880bd39d10850faf5416dd0c9224028ccb30ecb4"
+    }
+  ],
+  "gate": "HOLD_INCOMPLETE",
+  "files": {
+    "followup_report.json": "0c5192c740e4bb82b1937df001d960f820dac01722bcf67134defa45055fcd7d",
+    "followup_windows.csv": "a8c298773f3329249ef993d662fed5a08a7a59c720648e23bd998d54ce59728d",
+    "FOLLOWUP_REPORT.md": "6f1e08c0504a6244bd1367fc853fb4ab2777e8f9ac4539a3819b09b83f7bdded",
+    "FOLLOWUP_RESULTS.tex": "ac456a8553ffb6e56cd6cf280d9713c3c58135b0e2215847256da9f5fdbaf46f",
+    "WINDOW_093_FAILURE.json": "a4790b83dfe27eef9a2d614709dc534177d0515807661200c006ef6efa16c48f",
+    "UNRESOLVED_AUDIT.json": "01259399a9fe08f961e981449476fb4c2bff97f7cac981e51cb83f83365adde4"
+  },
+  "scope": "All 96 attempted; 89 complete, 6 scientific exclusions, 1 non-transport failure. Merge repair only; no new solve or relaxed eligibility."
+}

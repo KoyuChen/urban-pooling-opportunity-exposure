@@ -47,6 +47,48 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  recover-final-aggregate:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-followup-recover-final]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: "34644324691"
+          name: chicago-k2-followup-checkpoint
+          path: tmp/chicago-k2-followup
+      - name: Verify final predecessor before recovery
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          assert hashlib.sha256(Path('tmp/chicago-k2-followup/checkpoint.json').read_bytes()).hexdigest() == 'c0a68b51332e8a49403a190223a85dd9191dcffa42d1f45ea1c5a9c5bd69d911'
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: "34644324691"
+          pattern: cohort_*
+          path: tmp/chicago-final-attempts
+      - name: Preserve every final attempt without recomputing cohorts
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/chicago_k2_followup.py \
+            --checkpoint-dir tmp/chicago-k2-followup \
+            --merge-dir tmp/chicago-final-attempts \
+            --expected-indices-json '[84,85,86,87,88,89,90,91,92,93,94,95]' \
+            --source-run '34644324691'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-followup-checkpoint
+          path: tmp/chicago-k2-followup
+          if-no-files-found: error
+          retention-days: 90
+
   prepare:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.mode == 'pilot-recovery' }}
     runs-on: ubuntu-latest

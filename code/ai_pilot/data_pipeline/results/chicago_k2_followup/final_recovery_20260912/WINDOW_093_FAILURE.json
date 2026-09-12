@@ -1,0 +1,18 @@
+{
+  "error_message": "no complete, certified, monotone sensitivity query chain remains",
+  "error_type": "LiveDataError",
+  "generated_at_utc": "2026-09-11T20:49:42+00:00",
+  "progress": {
+    "determinate_expected": 523,
+    "expected_count": 58,
+    "fetched": 523,
+    "indeterminate_expected": 0,
+    "partition_count": 12,
+    "partition_number": 12,
+    "released_start": "2026-02-27T09:30:00",
+    "stage": "partitioned_candidate_fetch_complete"
+  },
+  "raw_rows_emitted": false,
+  "raw_trip_ids_emitted": false,
+  "status": "failed"
+}

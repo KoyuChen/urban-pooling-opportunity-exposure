@@ -260,8 +260,12 @@ def merge(root: Path, attempts: Path, expected: list[int], source_run: str) -> d
     for index, directory in actual.items():
         resume.verify_driver(directory, protocol, index, windows[index])
         row = panel.summarize_window(index=index, start=windows[index], directory=directory)
-        if row["status"] not in REUSABLE and not is_retryable(row):
-            raise ValueError("attempt is neither terminal nor a recorded transport failure")
+        # Preserve diagnosed/non-transport failures in the ledger too. They are
+        # not reusable or automatically retryable; plan() still blocks on them.
+        # Rejecting their whole batch would discard other completed records and
+        # misreport attempted windows as UNSTARTED.
+        if row["status"] not in REUSABLE and row["status"] != "EXECUTION_FAILED":
+            raise ValueError("attempt has an unsupported scientific status")
     observations = read_json(root / OBSERVATIONS)
     applied = []
     for index in expected:

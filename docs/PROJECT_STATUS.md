@@ -1,5 +1,34 @@
 # Verified project status
 
+## September 12: final-batch ledger recovery
+
+The continuous campaign reached the last batch and attempted all 96 windows.
+Run `34644324691` failed during aggregation, not dispatch: index 93 returned
+`no complete, certified, monotone sensitivity query chain remains`. The prior
+merge rejected any non-transport failure before recording the rest of its batch.
+Its uploaded summary consequently still described 12 windows as unstarted.
+
+The repaired merge preserves valid failure records as `EXECUTION_FAILED`, keeps
+them non-reusable/non-retryable, and admits the other completed records. Seed
+archive, 1,862 seed file hashes and all 12 cohort archives were verified before
+recovery; the merged checkpoint has 2,096 verified files. Current cumulative
+counts are **89 completed, 6 ineligible, 1 execution failure, 0 unstarted**.
+There are 13,240 endpoint pairs: **10,608 numerical optimal pairs, 2,598 missing
+public values and 34 computationally unresolved** (99.68% of 10,642 data-complete
+pairs). These endpoint counts exclude the failed window, which has no report.
+
+The Gate stays **HOLD_INCOMPLETE**, now for exactly one non-transport execution
+failure rather than an unfinished calendar. The 34 numerical limits remain a
+separate issue. No original query, budget, producer hash or eligibility changed.
+The snapshot is `results/chicago_k2_followup/final_recovery_20260912/` under the
+data pipeline. A one-shot recovery workflow remerges existing final artifacts
+and uploads the full checkpoint without recomputing a cohort. Next priority:
+diagnose window 93 with failure-time query-chain diagnostics; do not reclassify
+it as scientific exclusion or blindly expand timeouts. See
+`docs/CHICAGO_FINAL_RECOVERY.md`.
+
+## Historical completion-campaign launch
+
 Latest update: the third batch (run `34549243865`) is now independently verified:
 724 file pins, frozen producer/protocol hashes and regenerated aggregate pass.
 The current 96-window ledger has **31 completed, 5 ineligible, 60 unstarted**,

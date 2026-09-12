@@ -1,5 +1,6 @@
 import json
 import hashlib
+from unittest.mock import patch
 from pathlib import Path
 import sys
 import tempfile
@@ -77,6 +78,31 @@ class ChicagoFollowupTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "outside"):
             followup.plan(self.root, 8)
 
+    def test_nontransport_failure_is_preserved_without_poisoning_other_records(self):
+        attempts = self.root.parent / "attempts"
+        windows = followup.panel.expand_windows(followup.panel.load_protocol(followup.PROTOCOL))
+        for index in [0, 1]:
+            directory = attempts / followup.panel.window_slug(index, windows[index])
+            directory.mkdir(parents=True)
+            followup.write_json(directory / "failure.json", {
+                "error_type": "LiveDataError",
+                "error_message": ("no complete, certified, monotone sensitivity query chain remains"
+                                  if index == 0 else
+                                  "no scan bin met the core-count and timestamp/id-integrity requirements"),
+            })
+        # Isolate ledger behavior; genuine driver verification is tested separately.
+        with patch.object(followup.resume, "verify_driver"):
+            report = followup.merge(self.root, attempts, [0, 1], "test-nontransport")
+        self.assertEqual(report['status_counts'], {
+            'EXECUTION_FAILED': 1, 'INELIGIBLE_FIXED_CORE': 1, 'UNSTARTED': 94})
+        self.assertEqual(report['gate_status'], 'HOLD_INCOMPLETE')
+        self.assertFalse(followup.is_retryable(report['windows'][0]))
+        followup.verify(self.root)
+        with self.assertRaisesRegex(ValueError, 'non-transport failure'):
+            followup.plan(self.root, 0)
+        with self.assertRaisesRegex(ValueError, 'earlier batch'):
+            followup.plan(self.root, 1)
+
     def test_tex_retains_all_status_denominators(self):
         followup.aggregate(self.root)
         tex = (self.root / "FOLLOWUP_RESULTS.tex").read_text(encoding="utf-8")
@@ -96,6 +122,24 @@ class ChicagoFollowupTests(unittest.TestCase):
         })
         self.assertEqual(report["endpoint_pair_count"], 2492 + 626 + 12)
         self.assertEqual(report["gate_status"], "HOLD_INCOMPLETE")
+
+    def test_final_recovery_keeps_failed_window_in_denominator(self):
+        root = followup.panel.HERE.parent / 'results/chicago_k2_followup/final_recovery_20260912'
+        manifest = followup.read_json(root / 'MANIFEST.json')
+        for name, digest in manifest['files'].items():
+            self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), digest)
+        report = followup.read_json(root / 'followup_report.json')
+        self.assertEqual(report['status_counts'], {
+            'COMPLETED': 89, 'INELIGIBLE_FIXED_CORE': 6, 'EXECUTION_FAILED': 1})
+        self.assertEqual(report['unstarted_window_count'], 0)
+        self.assertEqual(report['gate_status'], 'HOLD_INCOMPLETE')
+        self.assertEqual(report['endpoint_pair_count'], 10608 + 2598 + 34)
+        failure = report['windows'][93]
+        self.assertEqual(failure['status'], 'EXECUTION_FAILED')
+        self.assertFalse(followup.is_retryable(failure))
+        points = followup.read_json(root / 'UNRESOLVED_AUDIT.json')['records']
+        self.assertEqual(len(points), 34)
+        self.assertFalse(any(p['window'].startswith('cohort_093_') for p in points))
 
     def test_archived_batch1_limits_are_not_infeasibility_or_full_intervals(self):
         root = followup.panel.HERE.parent / "results/chicago_k2_followup/batch1_20260911"
