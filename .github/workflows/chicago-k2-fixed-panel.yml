@@ -47,6 +47,41 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  diagnose-window-93:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-diagnose-93]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      PYTHONHASHSEED: "0"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned dependencies
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8
+      - name: Diagnose the original failed window under unchanged scientific arguments
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/diagnose_chicago_k2_sensitivity.py \
+            --output-dir tmp/chicago-diagnostic-93 --core-start 2026-02-27T08:00:00 \
+            --min-core-rows 2 --max-core-rows 80 --max-candidate-rows 5000 \
+            --page-size 100 --request-timeout 240 --request-attempts 3 \
+            --base-radius-km 2 --solver-time-limit 60 \
+            --boundary-padding-minutes 0,15
+      - name: Upload fail-closed diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-window-93-diagnostic
+          path: tmp/chicago-diagnostic-93
+          if-no-files-found: error
+          retention-days: 90
+
   recover-final-aggregate:
     if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-followup-recover-final]') }}
     runs-on: ubuntu-latest

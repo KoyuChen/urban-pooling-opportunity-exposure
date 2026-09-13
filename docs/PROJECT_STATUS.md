@@ -1,5 +1,24 @@
 # Verified project status
 
+## September 13: diagnose the remaining Chicago execution failure
+
+The final recovery and CI at commit `82553b8` passed. The only execution failure
+is index 93. A diagnostic-only wrapper now reruns that fixed timestamp with the
+same public query, candidate construction, objectives and 60-second endpoint
+budget, and records the complete monotonicity audit before the original producer
+can abort. It serializes no raw rows, trip IDs or matching witnesses and is not
+merged into the canonical ledger automatically. The launch marker is
+`[chicago-diagnose-93]`. This rerun cannot by itself prove identical inputs to
+the earlier failed acquisition, whose abort artifact lacks a raw-row hash.
+
+The diagnostic distinguishes three cases: zero fully certified chains due to
+missing/nonoptimal endpoints; malformed sensitivity rows; and actual nesting
+violations. Only after that classification can a scientific repair be declared.
+The current gate and verified counts below remain unchanged until a complete,
+auditable replacement record exists.
+
+## September 12: final-batch ledger recovery
+
 ## September 12: final-batch ledger recovery
 
 The continuous campaign reached the last batch and attempted all 96 windows.
