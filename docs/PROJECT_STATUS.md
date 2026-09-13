@@ -1,5 +1,25 @@
 # Verified project status
 
+## September 13: cross-window support stability after execution closure
+
+The sealed 90-window evidence was aggregated without reacquisition. The audit
+reproduces all 13,390 endpoint-pair statuses before summarizing: 10,728
+numerically certified, 2,628 unavailable from public-value missingness, and 34
+computationally unresolved. Cells along a curve are never treated as independent
+cohorts, and variable maximum omission budgets are paired to each window's own
+full-support endpoint.
+
+For duration, the marginal median frontier width rises from 40.748 minutes per
+core trip at the 0-km measured-radius support to 44.234 under temporal-only
+support; the paired median increase is 2.599 minutes per core trip. Generic
+candidate-omission sensitivity saturates much earlier: at core-incidence budget
+8, 86 of 87 paired numerically certified duration chains are within 1% of their
+own full-support width. This is evidence that support expansion matters while
+most of the generic omission effect is concentrated in a small incidence budget;
+it is not a sampling statement or a hidden-partner coverage result. Reproducible
+CSV, figure, report, TeX, and hash manifest are under
+`results/chicago_k2_followup/support_stability_20260913/` in the data pipeline.
+
 ## September 13: Chicago execution HOLD closed by an explicit audit amendment
 
 Run `34729675076` reproduced the index-93 abort under the original timestamp,

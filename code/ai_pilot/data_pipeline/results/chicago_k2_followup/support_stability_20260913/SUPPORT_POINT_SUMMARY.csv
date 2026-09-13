@@ -1,0 +1,121 @@
+curve_type,query,unit,parameter_label,window_count,certified_count,missing_public_value_count,computationally_unresolved_count,data_complete_certification_rate,width_q25,width_median,width_q75
+buffer_padding,mean_absolute_duration_gap_per_core,minutes,0 min,90,90,0,0,1.0,37.07928321678321,42.419100076103504,47.43478009259259
+buffer_padding,mean_absolute_duration_gap_per_core,minutes,15 min,90,90,0,0,1.0,38.09962752525253,44.2337798432659,48.77994995435577
+buffer_padding,mean_absolute_fare_gap_per_core,dollars,0 min,90,3,87,0,1.0,11.470588235294118,22.941176470588236,23.105203619909503
+buffer_padding,mean_absolute_fare_gap_per_core,dollars,15 min,90,2,88,0,1.0,23.942307692307693,24.294871794871796,24.647435897435898
+buffer_padding,mean_absolute_trip_miles_gap_per_core,miles,0 min,90,90,0,0,1.0,19.750958945160324,21.088344322344323,22.745980263157893
+buffer_padding,mean_absolute_trip_miles_gap_per_core,miles,15 min,90,89,0,1,0.9888888888888889,20.23837837837838,21.6247619047619,23.27754716981132
+buffer_padding,same_dropoff_community_area_fraction_per_core,fraction,0 min,90,90,0,0,1.0,1.0,1.0,1.0
+buffer_padding,same_dropoff_community_area_fraction_per_core,fraction,15 min,90,90,0,0,1.0,1.0,1.0,1.0
+buffer_padding,same_pickup_community_area_fraction_per_core,fraction,0 min,90,90,0,0,1.0,1.0,1.0,1.0
+buffer_padding,same_pickup_community_area_fraction_per_core,fraction,15 min,90,90,0,0,1.0,1.0,1.0,1.0
+candidate_omission,mean_absolute_duration_gap_per_core,minutes,0,90,90,0,0,1.0,37.07928321678321,42.419100076103504,47.43478009259259
+candidate_omission,mean_absolute_duration_gap_per_core,minutes,1,90,90,0,0,1.0,37.39427083333334,43.142461685823754,48.132098765432104
+candidate_omission,mean_absolute_duration_gap_per_core,minutes,2,90,89,0,1,0.9888888888888889,37.63777777777777,43.18591954022989,48.63981481481482
+candidate_omission,mean_absolute_duration_gap_per_core,minutes,4,89,88,0,1,0.9887640449438202,37.80558712121211,43.64249042145593,48.2673439945227
+candidate_omission,mean_absolute_duration_gap_per_core,minutes,8,89,87,0,2,0.9775280898876404,37.914545454545454,43.41264367816092,48.284238215488216
+candidate_omission,mean_absolute_duration_gap_per_core,minutes,full-support,90,88,0,2,0.9777777777777777,37.97768939393939,43.76056886810832,48.678347515649456
+candidate_omission,mean_absolute_fare_gap_per_core,dollars,0,90,3,87,0,1.0,11.470588235294118,22.941176470588236,23.105203619909503
+candidate_omission,mean_absolute_fare_gap_per_core,dollars,1,90,2,88,0,1.0,23.918269230769234,24.278846153846153,24.639423076923077
+candidate_omission,mean_absolute_fare_gap_per_core,dollars,2,90,2,88,0,1.0,23.942307692307693,24.294871794871796,24.647435897435898
+candidate_omission,mean_absolute_fare_gap_per_core,dollars,4,89,1,88,0,1.0,23.58974358974359,23.58974358974359,23.58974358974359
+candidate_omission,mean_absolute_fare_gap_per_core,dollars,8,89,1,88,0,1.0,23.589743589743588,23.589743589743588,23.589743589743588
+candidate_omission,mean_absolute_fare_gap_per_core,dollars,full-support,90,2,88,0,1.0,23.942307692307693,24.294871794871796,24.647435897435898
+candidate_omission,mean_absolute_trip_miles_gap_per_core,miles,0,90,90,0,0,1.0,19.750958945160324,21.088344322344323,22.745980263157893
+candidate_omission,mean_absolute_trip_miles_gap_per_core,miles,1,90,90,0,0,1.0,20.00493161094225,21.404940958164644,22.927873299319728
+candidate_omission,mean_absolute_trip_miles_gap_per_core,miles,2,90,90,0,0,1.0,20.174872640095895,21.531895604395604,23.03734562607204
+candidate_omission,mean_absolute_trip_miles_gap_per_core,miles,4,89,89,0,0,1.0,20.461290322580645,21.669999999999998,23.206792452830186
+candidate_omission,mean_absolute_trip_miles_gap_per_core,miles,8,89,89,0,0,1.0,20.46225806451613,21.67189655172414,23.27754716981132
+candidate_omission,mean_absolute_trip_miles_gap_per_core,miles,full-support,90,90,0,0,1.0,20.294348299912816,21.64832922824302,23.270614081062195
+candidate_omission,same_dropoff_community_area_fraction_per_core,fraction,0,90,90,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_dropoff_community_area_fraction_per_core,fraction,1,90,90,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_dropoff_community_area_fraction_per_core,fraction,2,90,90,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_dropoff_community_area_fraction_per_core,fraction,4,89,89,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_dropoff_community_area_fraction_per_core,fraction,8,89,89,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_dropoff_community_area_fraction_per_core,fraction,full-support,90,90,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_pickup_community_area_fraction_per_core,fraction,0,90,90,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_pickup_community_area_fraction_per_core,fraction,1,90,90,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_pickup_community_area_fraction_per_core,fraction,2,90,90,0,0,1.0,0.9999999999999999,1.0,1.0
+candidate_omission,same_pickup_community_area_fraction_per_core,fraction,4,89,89,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_pickup_community_area_fraction_per_core,fraction,8,89,89,0,0,1.0,1.0,1.0,1.0
+candidate_omission,same_pickup_community_area_fraction_per_core,fraction,full-support,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,mean_absolute_duration_gap_per_core,minutes,0,90,90,0,0,1.0,36.46241987179487,41.04220749332596,44.90387399145705
+gamma,mean_absolute_duration_gap_per_core,minutes,1,90,90,0,0,1.0,36.759375000000006,41.47631066611042,45.94542045837546
+gamma,mean_absolute_duration_gap_per_core,minutes,2,90,90,0,0,1.0,36.993541666666665,41.854154498678895,46.312521312872974
+gamma,mean_absolute_duration_gap_per_core,minutes,4,89,89,0,0,1.0,37.304878048780495,42.439869281045745,46.86594202898551
+gamma,mean_absolute_duration_gap_per_core,minutes,8,89,89,0,0,1.0,37.76136363636364,43.04420289855073,47.687654320987654
+gamma,mean_absolute_duration_gap_per_core,minutes,full-support,90,90,0,0,1.0,38.09962752525253,44.2337798432659,48.77994995435577
+gamma,mean_absolute_fare_gap_per_core,dollars,0,90,2,88,0,1.0,5.7131410256410255,11.426282051282051,17.139423076923077
+gamma,mean_absolute_fare_gap_per_core,dollars,1,90,2,88,0,1.0,23.46153846153846,23.974358974358974,24.48717948717949
+gamma,mean_absolute_fare_gap_per_core,dollars,2,90,2,88,0,1.0,23.533653846153843,24.022435897435898,24.51121794871795
+gamma,mean_absolute_fare_gap_per_core,dollars,4,89,1,88,0,1.0,23.205128205128204,23.205128205128204,23.205128205128204
+gamma,mean_absolute_fare_gap_per_core,dollars,8,89,1,88,0,1.0,23.333333333333336,23.333333333333336,23.333333333333336
+gamma,mean_absolute_fare_gap_per_core,dollars,full-support,90,2,88,0,1.0,23.942307692307693,24.294871794871796,24.647435897435898
+gamma,mean_absolute_trip_miles_gap_per_core,miles,0,90,90,0,0,1.0,19.765637133612486,21.190911618378692,22.834812667261374
+gamma,mean_absolute_trip_miles_gap_per_core,miles,1,90,90,0,0,1.0,19.85404929577465,21.29412600459242,22.901942411402157
+gamma,mean_absolute_trip_miles_gap_per_core,miles,2,90,90,0,0,1.0,19.90519244779019,21.370371699196326,22.95588594276094
+gamma,mean_absolute_trip_miles_gap_per_core,miles,4,89,89,0,0,1.0,20.020985915492957,21.494328358208953,23.068703703703704
+gamma,mean_absolute_trip_miles_gap_per_core,miles,8,89,89,0,0,1.0,20.347413793103446,21.64764705882353,23.212777777777777
+gamma,mean_absolute_trip_miles_gap_per_core,miles,full-support,90,89,0,1,0.9888888888888889,20.23837837837838,21.6247619047619,23.27754716981132
+gamma,same_dropoff_community_area_fraction_per_core,fraction,0,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,same_dropoff_community_area_fraction_per_core,fraction,1,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,same_dropoff_community_area_fraction_per_core,fraction,2,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,same_dropoff_community_area_fraction_per_core,fraction,4,89,89,0,0,1.0,1.0,1.0,1.0
+gamma,same_dropoff_community_area_fraction_per_core,fraction,8,89,89,0,0,1.0,1.0,1.0,1.0
+gamma,same_dropoff_community_area_fraction_per_core,fraction,full-support,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,same_pickup_community_area_fraction_per_core,fraction,0,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,same_pickup_community_area_fraction_per_core,fraction,1,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,same_pickup_community_area_fraction_per_core,fraction,2,90,90,0,0,1.0,1.0,1.0,1.0
+gamma,same_pickup_community_area_fraction_per_core,fraction,4,89,89,0,0,1.0,1.0,1.0,1.0
+gamma,same_pickup_community_area_fraction_per_core,fraction,8,89,89,0,0,1.0,1.0,1.0,1.0
+gamma,same_pickup_community_area_fraction_per_core,fraction,full-support,90,90,0,0,1.0,1.0,1.0,1.0
+radius,mean_absolute_duration_gap_per_core,minutes,0 km,90,89,0,1,0.9888888888888889,36.395,40.748,44.3895061728395
+radius,mean_absolute_duration_gap_per_core,minutes,0.25 km,90,89,0,1,0.9888888888888889,36.395,40.748,44.3895061728395
+radius,mean_absolute_duration_gap_per_core,minutes,0.5 km,90,89,0,1,0.9888888888888889,36.395,40.77089201877935,44.50891472868217
+radius,mean_absolute_duration_gap_per_core,minutes,1 km,90,90,0,0,1.0,36.310528846153844,40.88299502899751,44.6417387199364
+radius,mean_absolute_duration_gap_per_core,minutes,16 km,90,90,0,0,1.0,37.76763888888889,43.72069939606468,48.40997299382716
+radius,mean_absolute_duration_gap_per_core,minutes,2 km,90,90,0,0,1.0,36.46241987179487,41.04220749332596,44.90387399145705
+radius,mean_absolute_duration_gap_per_core,minutes,32 km,90,88,0,2,0.9777777777777777,37.770359848484844,43.39135097943986,48.30347748316498
+radius,mean_absolute_duration_gap_per_core,minutes,4 km,90,90,0,0,1.0,36.71239583333334,41.368425810040335,45.5219230246158
+radius,mean_absolute_duration_gap_per_core,minutes,8 km,90,90,0,0,1.0,37.41418560606061,42.94268280918387,46.94809423769508
+radius,mean_absolute_duration_gap_per_core,minutes,temporal-only,90,90,0,0,1.0,38.09962752525253,44.2337798432659,48.77994995435577
+radius,mean_absolute_fare_gap_per_core,dollars,0 km,90,1,88,1,0.5,22.62820512820513,22.62820512820513,22.62820512820513
+radius,mean_absolute_fare_gap_per_core,dollars,0.25 km,90,1,88,1,0.5,22.62820512820513,22.62820512820513,22.62820512820513
+radius,mean_absolute_fare_gap_per_core,dollars,0.5 km,90,1,88,1,0.5,22.660256410256412,22.660256410256412,22.660256410256412
+radius,mean_absolute_fare_gap_per_core,dollars,1 km,90,2,88,0,1.0,5.713141025641026,11.426282051282053,17.13942307692308
+radius,mean_absolute_fare_gap_per_core,dollars,16 km,90,2,88,0,1.0,5.881410256410256,11.762820512820513,17.64423076923077
+radius,mean_absolute_fare_gap_per_core,dollars,2 km,90,2,88,0,1.0,5.7131410256410255,11.426282051282051,17.139423076923077
+radius,mean_absolute_fare_gap_per_core,dollars,32 km,90,2,88,0,1.0,5.897435897435898,11.794871794871796,17.692307692307693
+radius,mean_absolute_fare_gap_per_core,dollars,4 km,90,2,88,0,1.0,5.737179487179488,11.474358974358976,17.211538461538463
+radius,mean_absolute_fare_gap_per_core,dollars,8 km,90,2,88,0,1.0,5.873397435897436,11.746794871794872,17.620192307692307
+radius,mean_absolute_fare_gap_per_core,dollars,temporal-only,90,2,88,0,1.0,23.942307692307693,24.294871794871796,24.647435897435898
+radius,mean_absolute_trip_miles_gap_per_core,miles,0 km,90,89,0,1,0.9888888888888889,19.59755102040816,20.87588235294118,22.757
+radius,mean_absolute_trip_miles_gap_per_core,miles,0.25 km,90,89,0,1,0.9888888888888889,19.59755102040816,20.87588235294118,22.757
+radius,mean_absolute_trip_miles_gap_per_core,miles,0.5 km,90,89,0,1,0.9888888888888889,19.63824324324324,20.906200000000002,22.771363636363635
+radius,mean_absolute_trip_miles_gap_per_core,miles,1 km,90,90,0,0,1.0,19.66329450139795,20.98114035087719,22.767772727272728
+radius,mean_absolute_trip_miles_gap_per_core,miles,16 km,90,90,0,0,1.0,20.25731255448997,21.62541461412151,23.238096926713947
+radius,mean_absolute_trip_miles_gap_per_core,miles,2 km,90,90,0,0,1.0,19.765637133612486,21.190911618378692,22.834812667261374
+radius,mean_absolute_trip_miles_gap_per_core,miles,32 km,90,89,0,1,0.9888888888888889,20.21351351351351,21.624761904761904,23.27754716981132
+radius,mean_absolute_trip_miles_gap_per_core,miles,4 km,90,90,0,0,1.0,19.879313380281687,21.25719129554656,22.86806818181818
+radius,mean_absolute_trip_miles_gap_per_core,miles,8 km,90,90,0,0,1.0,20.07069664492078,21.338830971659917,22.935524168236032
+radius,mean_absolute_trip_miles_gap_per_core,miles,temporal-only,90,89,0,1,0.9888888888888889,20.23837837837838,21.6247619047619,23.27754716981132
+radius,same_dropoff_community_area_fraction_per_core,fraction,0 km,90,89,0,1,0.9888888888888889,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,0.25 km,90,89,0,1,0.9888888888888889,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,0.5 km,90,89,0,1,0.9888888888888889,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,1 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,16 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,2 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,32 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,4 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,8 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_dropoff_community_area_fraction_per_core,fraction,temporal-only,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,0 km,90,89,0,1,0.9888888888888889,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,0.25 km,90,89,0,1,0.9888888888888889,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,0.5 km,90,89,0,1,0.9888888888888889,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,1 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,16 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,2 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,32 km,90,90,0,0,1.0,0.9999999999999999,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,4 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,8 km,90,90,0,0,1.0,1.0,1.0,1.0
+radius,same_pickup_community_area_fraction_per_core,fraction,temporal-only,90,90,0,0,1.0,1.0,1.0,1.0
