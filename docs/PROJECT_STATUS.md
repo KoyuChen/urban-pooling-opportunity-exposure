@@ -2,22 +2,25 @@
 
 ## September 13: diagnose the remaining Chicago execution failure
 
-The final recovery and CI at commit `82553b8` passed. The only execution failure
-is index 93. A diagnostic-only wrapper now reruns that fixed timestamp with the
-same public query, candidate construction, objectives and 60-second endpoint
-budget, and records the complete monotonicity audit before the original producer
-can abort. It serializes no raw rows, trip IDs or matching witnesses and is not
-merged into the canonical ledger automatically. The launch marker is
-`[chicago-diagnose-93]`. This rerun cannot by itself prove identical inputs to
-the earlier failed acquisition, whose abort artifact lacks a raw-row hash.
+Run `34729675076` reproduced the index-93 abort under the original timestamp,
+candidate construction, objectives and 60-second endpoint budget. Its redacted
+diagnostic contains 95 radius/Gamma query points: 76 numerical endpoint pairs
+and 19 fare pairs unavailable because of public missingness. Seven of ten full
+chains passed. The sole apparent reversal was the duration upper endpoint from
+16 to 32 km: 44.721474 to 44.720833 minutes per core, a decrease of 0.000641.
+The 32-km result's reported relative MIP gap of 0.000021501 implies a conservative
+objective allowance of 0.000962, larger than that decrease. This is therefore
+not evidence of a support-nesting violation; the old fixed `1e-7` comparison was
+stricter than the solver's own stopping accuracy.
 
-The diagnostic distinguishes three cases: zero fully certified chains due to
-missing/nonoptimal endpoints; malformed sensitivity rows; and actual nesting
-violations. Only after that classification can a scientific repair be declared.
-The current gate and verified counts below remain unchanged until a complete,
-auditable replacement record exists.
-
-## September 12: final-batch ledger recovery
+The corrected audit records such a comparison as numerically indeterminate,
+does not count its chain as fully monotone, and still fails any reversal outside
+the reported MIP-gap allowance. A rerun is an explicit post-diagnostic protocol
+amendment, not a silent replacement of frozen evidence. It serializes no raw
+rows, trip IDs or matching witnesses. Input identity with the original failed
+acquisition remains unprovable because that abort artifact lacks a raw-row hash.
+The current gate and verified counts below remain unchanged until the amended
+run returns a complete record and a cross-version aggregate is audited.
 
 ## September 12: final-batch ledger recovery
 

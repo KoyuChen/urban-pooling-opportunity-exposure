@@ -1361,6 +1361,7 @@ def monotonicity_audit(
     """
 
     violations: list[dict[str, Any]] = []
+    gap_indeterminate_comparisons: list[dict[str, Any]] = []
     certification_failures: list[dict[str, Any]] = []
     malformed_rows: list[dict[str, Any]] = []
     grouped: dict[tuple[str, str], list[Mapping[str, Any]]] = defaultdict(list)
@@ -1421,6 +1422,24 @@ def monotonicity_audit(
         if not math.isfinite(numeric):
             return 2, math.inf, str(row.get("parameter_label", ""))
         return 0, numeric, str(row.get("parameter_label", ""))
+
+    def incumbent_gap_allowance(value: float, raw_gap: Any) -> float:
+        """Conservative objective allowance implied by a reported relative MIP gap.
+
+        HiGHS may return status 0 after meeting its relative MIP-gap tolerance,
+        so an incumbent can differ slightly from the exact optimum even when it
+        is independently replayable.  The ``/(1-gap)`` form is at least as wide
+        as ``abs(value) * gap`` for the nonnegative objectives audited here.
+        Invalid gaps deliberately provide no allowance.
+        """
+
+        try:
+            gap = float(raw_gap)
+        except (TypeError, ValueError):
+            return 0.0
+        if not math.isfinite(gap) or gap <= 0.0 or gap >= 1.0:
+            return 0.0
+        return abs(value) * gap / (1.0 - gap)
 
     chain_audits: list[dict[str, Any]] = []
     for (curve_type, query), group in grouped.items():
@@ -1587,39 +1606,62 @@ def monotonicity_audit(
                     }
                 )
                 continue
+            comparisons = []
             if lower > upper + 1e-7:
-                violations.append(
-                    {
-                        "curve_type": curve_type,
-                        "query": query,
-                        "direction": "lower_exceeds_upper",
-                        "lower": lower,
-                        "upper": upper,
-                        "parameter": parameter,
-                    }
+                comparisons.append(
+                    (
+                        "lower_exceeds_upper",
+                        lower - upper,
+                        incumbent_gap_allowance(lower, row.get("lower_mip_gap"))
+                        + incumbent_gap_allowance(upper, row.get("upper_mip_gap")),
+                        {"lower": lower, "upper": upper},
+                    )
                 )
             if previous_lower is not None and lower > previous_lower + 1e-7:
-                violations.append(
-                    {
-                        "curve_type": curve_type,
-                        "query": query,
-                        "direction": "lower_increased",
-                        "previous": previous_lower,
-                        "current": lower,
-                        "parameter": parameter,
-                    }
+                comparisons.append(
+                    (
+                        "lower_increased",
+                        lower - previous_lower,
+                        incumbent_gap_allowance(lower, row.get("lower_mip_gap")),
+                        {"previous": previous_lower, "current": lower},
+                    )
                 )
             if previous_upper is not None and upper < previous_upper - 1e-7:
-                violations.append(
-                    {
-                        "curve_type": curve_type,
-                        "query": query,
-                        "direction": "upper_decreased",
-                        "previous": previous_upper,
-                        "current": upper,
-                        "parameter": parameter,
-                    }
+                comparisons.append(
+                    (
+                        "upper_decreased",
+                        previous_upper - upper,
+                        incumbent_gap_allowance(upper, row.get("upper_mip_gap")),
+                        {"previous": previous_upper, "current": upper},
+                    )
                 )
+            for direction, observed_difference, gap_allowance, values in comparisons:
+                record = {
+                    "curve_type": curve_type,
+                    "query": query,
+                    "direction": direction,
+                    "parameter": parameter,
+                    **values,
+                }
+                if observed_difference <= gap_allowance + 1e-7:
+                    gap_indeterminate_comparisons.append(
+                        {
+                            **record,
+                            "observed_difference": observed_difference,
+                            "mip_gap_objective_allowance": gap_allowance,
+                        }
+                    )
+                    certification_failures.append(
+                        {
+                            "curve_type": curve_type,
+                            "query": query,
+                            "parameter": parameter,
+                            "reason": "monotonicity_indeterminate_within_mip_gap",
+                            "direction": direction,
+                        }
+                    )
+                else:
+                    violations.append(record)
             previous_lower = lower
             previous_upper = upper
 
@@ -1689,6 +1731,8 @@ def monotonicity_audit(
         "malformed_rows": malformed_rows,
         "violation_count": len(violations),
         "violations": violations,
+        "gap_indeterminate_comparison_count": len(gap_indeterminate_comparisons),
+        "gap_indeterminate_comparisons": gap_indeterminate_comparisons,
         "status": status,
     }
 
