@@ -1,0 +1,15 @@
+{
+  "amended_report_sha256": "e25bde9c7a6bdc70d4cffe829ae75148860f6aed6b58bea70ccc77fa9282c141",
+  "amended_sensitivity_sha256": "4ae6fbaeda97d5bcc7367294fa3546630a9c2f52bbdc189048b9fe1ab32b3d5f",
+  "amendment_commit": "ec4ce6b3f63da1877d08d6aebca4908039c4d3db",
+  "amendment_version": "chicago-k2-gap-aware-audit/v1",
+  "core_start_local": "2026-02-27T08:00:00",
+  "input_identity_limitation": "The original abort emitted no raw-row hash, so identical inputs cannot be proven; the amended acquisition retains the declared timestamp and records its own raw-row hash.",
+  "original_failure_sha256": "a4790b83dfe27eef9a2d614709dc534177d0515807661200c006ef6efa16c48f",
+  "raw_rows_sha256": "259d98d33da18b86066f2bc842dd1a5b1a1926af386a3319d2f41aab6f615241",
+  "rule": "A reversal no larger than the current incumbent's conservative reported MIP-gap objective allowance is indeterminate, never PASS; a larger reversal remains FAIL.",
+  "source_artifact_digest": "sha256:a688617ee2df89bd631f00bae71e741513b446de37d8d84c90e76406a52ee1b2",
+  "source_checkpoint_sha256": "744370cab34cbc5db427b47eaabc0434679a0c96cd58918633e8f64eb40abee9",
+  "source_run": "34731152117",
+  "window_index": 93
+}

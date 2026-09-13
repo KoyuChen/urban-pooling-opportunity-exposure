@@ -1,27 +1,33 @@
 # Verified project status
 
-## September 13: diagnose the remaining Chicago execution failure
+## September 13: Chicago execution HOLD closed by an explicit audit amendment
 
 Run `34729675076` reproduced the index-93 abort under the original timestamp,
-candidate construction, objectives and 60-second endpoint budget. Its redacted
-diagnostic contains 95 radius/Gamma query points: 76 numerical endpoint pairs
-and 19 fare pairs unavailable because of public missingness. Seven of ten full
-chains passed. The sole apparent reversal was the duration upper endpoint from
-16 to 32 km: 44.721474 to 44.720833 minutes per core, a decrease of 0.000641.
-The 32-km result's relative MIP gap of 0.000021501 implies a conservative
-objective allowance of 0.000962, larger than that decrease. This is not evidence
-of a support-nesting violation; the fixed `1e-7` comparison was stricter than
-the solver's stopping accuracy.
+candidate construction, objectives and 60-second endpoint budget. Its sole
+apparent reversal was the duration upper endpoint from 16 to 32 km: 44.721474 to
+44.720833 minutes per core, a decrease of 0.000641. The 32-km result's relative
+MIP gap of 0.000021501 implies a conservative objective allowance of 0.000962,
+larger than that decrease. The fixed `1e-7` comparison was therefore stricter
+than the solver's stopping accuracy, not evidence of a support-nesting failure.
 
-A diagnostic-only amendment wrapper now records such a comparison as
-numerically indeterminate, never as a passing chain, while reversals outside the
-reported MIP-gap allowance remain hard failures. The frozen producer is byte
-unchanged, so prior checkpoint hashes remain valid. The amended rerun is not
-merged into the canonical ledger automatically, emits no raw rows, trip IDs or
-matching witnesses, and cannot prove input identity with the earlier abort
-artifact because that artifact lacks a raw-row hash. The current gate and counts
-remain unchanged until a complete amended record and cross-version aggregate
-are audited.
+The isolated amendment wrapper records such a comparison as numerically
+indeterminate, never as a passing chain; a reversal outside the reported MIP-gap
+allowance remains a hard failure. The frozen producer is byte unchanged. Run
+`34731152117` completed index 93 with 52 core rows, 471 buffers, 19,986 temporal
+edges and 150 query pairs: 120 numerical endpoint pairs and 30 unavailable from
+public fare missingness. Fifteen of 20 complete sensitivity chains passed, one
+comparison was gap-indeterminate, and no hard reversal remained.
+
+Run `34731708395` then sealed a new checkpoint without recomputation. Independent
+download verification passed all **2,121 file pins**. The 96-window ledger is now
+**90 completed, 6 scientifically ineligible, 0 failed and 0 unstarted**, with
+10,728 numerical endpoint pairs, 2,628 missing-public-value pairs and 34
+computationally unresolved pairs. The data-complete numerical certification rate
+is **10,728 / 10,762 = 99.684%**. The execution gate is `PASS_EXECUTION`; this is
+not complete endpoint closure, a probability sample, hidden-partner recovery or
+a Chicago population estimate. The original failed acquisition emitted no
+raw-row hash, so exact input identity with the amended acquisition cannot be
+proved; that limitation and the amended raw-row hash are pinned in the record.
 
 ## September 12: final-batch ledger recovery
 

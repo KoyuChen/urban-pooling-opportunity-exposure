@@ -1,0 +1,17 @@
+{
+  "artifact_digest": "sha256:27727eb911ba17941beee9e46f531c37bd594ec898a553e4247befe3fe7b5c1b",
+  "artifact_id": 10308489958,
+  "artifact_name": "chicago-k2-followup-gap-amended-checkpoint",
+  "checkpoint_sha256": "def6c93064be06b3947222647b0809dabd0e52ca2ebe971f42e8b71c0e952695",
+  "claim_status": "PASS_EXECUTION_NOT_FULL_ENDPOINT_CLOSURE",
+  "commit": "b8e89e93e1f8fe0190e50d25d9a9e7dbc3bf7274",
+  "data_complete_endpoint_pair_count": 10762,
+  "data_complete_numerical_certification_rate": 0.996840735922691,
+  "declared_window_count": 96,
+  "file_pin_count": 2121,
+  "sealed_run": 34731708395,
+  "source_amendment_artifact_digest": "sha256:a688617ee2df89bd631f00bae71e741513b446de37d8d84c90e76406a52ee1b2",
+  "source_amendment_run": 34731152117,
+  "source_checkpoint_artifact_digest": "sha256:c758ff24492b0984f4afbe164c66be60124ff719e2c1f37d0fbf5a974e8a279d",
+  "source_checkpoint_run": 34663782364
+}
