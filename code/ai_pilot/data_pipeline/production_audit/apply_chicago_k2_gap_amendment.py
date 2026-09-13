@@ -75,8 +75,10 @@ def apply(
     checkpoint = followup.verify(source)
     if output.exists():
         raise ValueError("output directory already exists")
-    if not re.fullmatch(r"sha256:[0-9a-f]{64}", artifact_digest):
+    digest_match = re.fullmatch(r"(?:sha256:)?([0-9a-f]{64})", artifact_digest)
+    if digest_match is None:
         raise ValueError("artifact digest must be a sha256 digest")
+    artifact_digest = "sha256:" + digest_match.group(1)
     if not re.fullmatch(r"[0-9a-f]{40}", commit_sha):
         raise ValueError("amendment commit must be a full Git SHA")
     validated = validate_amended_result(amended)

@@ -125,6 +125,46 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
+  seal-window-93-recovery:
+    if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-seal-93]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Restore the verified 89-complete final checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: "34663782364"
+          name: chicago-k2-followup-checkpoint
+          path: tmp/chicago-source-checkpoint
+      - name: Restore the successful gap-aware amendment
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: "34731152117"
+          name: chicago-k2-window-93-diagnostic
+          path: tmp/chicago-amended-window
+      - name: Seal without recomputing the cohort
+        run: |
+          python code/ai_pilot/data_pipeline/production_audit/apply_chicago_k2_gap_amendment.py \
+            --source-checkpoint tmp/chicago-source-checkpoint \
+            --amended-artifact tmp/chicago-amended-window \
+            --output-dir tmp/chicago-amended-checkpoint \
+            --source-run "34731152117" \
+            --artifact-digest "sha256:a688617ee2df89bd631f00bae71e741513b446de37d8d84c90e76406a52ee1b2" \
+            --commit "ec4ce6b3f63da1877d08d6aebca4908039c4d3db"
+      - name: Upload sealed amended checkpoint
+        uses: actions/upload-artifact@v4
+        with:
+          name: chicago-k2-followup-gap-amended-checkpoint
+          path: tmp/chicago-amended-checkpoint
+          if-no-files-found: error
+          retention-days: 90
+
   recover-final-aggregate:
     if: ${{ github.event_name == 'push' && contains(github.event.head_commit.message, '[chicago-followup-recover-final]') }}
     runs-on: ubuntu-latest
