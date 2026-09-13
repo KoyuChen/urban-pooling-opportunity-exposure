@@ -562,8 +562,6 @@ class MonotonicityTests(unittest.TestCase):
         upper_status: str = "OPTIMAL_NUMERICAL_MILP",
         certification: str = "CERTIFIED_OPTIMAL_PAIR",
         width: float | None = None,
-        lower_mip_gap: float | None = 0.0,
-        upper_mip_gap: float | None = 0.0,
     ) -> dict:
         return {
             "curve_type": "gamma",
@@ -580,8 +578,6 @@ class MonotonicityTests(unittest.TestCase):
             "lower_status": lower_status,
             "upper_status": upper_status,
             "endpoint_pair_certification": certification,
-            "lower_mip_gap": lower_mip_gap,
-            "upper_mip_gap": upper_mip_gap,
         }
 
     def test_nested_endpoint_audit_passes_and_detects_reversal(self) -> None:
@@ -685,32 +681,6 @@ class MonotonicityTests(unittest.TestCase):
             MODULE.monotonicity_audit([*good, *reversal])["status"],
             "FAIL",
         )
-
-    def test_reversal_within_mip_gap_is_indeterminate_not_a_violation(self) -> None:
-        good = [
-            self.row(query="good", label="0", value=0, lower=1.0, upper=2.0),
-            self.row(query="good", label="1", value=1, lower=0.5, upper=2.5),
-        ]
-        numerical = [
-            self.row(
-                query="numerical", label="0", value=0, lower=1.0, upper=44.721474,
-            ),
-            self.row(
-                query="numerical", label="1", value=1, lower=0.5,
-                upper=44.720833, upper_mip_gap=2.151e-5,
-            ),
-        ]
-        audit = MODULE.monotonicity_audit([*good, *numerical])
-        self.assertEqual(audit["status"], "PARTIAL")
-        self.assertEqual(audit["violation_count"], 0)
-        self.assertEqual(audit["gap_indeterminate_comparison_count"], 1)
-        self.assertEqual(audit["fully_certified_monotone_chain_count"], 1)
-
-        numerical[1]["upper"] = 44.70
-        numerical[1]["width"] = numerical[1]["upper"] - numerical[1]["lower"]
-        outside = MODULE.monotonicity_audit([*good, *numerical])
-        self.assertEqual(outside["status"], "FAIL")
-        self.assertEqual(outside["violation_count"], 1)
 
     def test_expected_chain_completeness_prevents_vacuous_pass(self) -> None:
         rows = [

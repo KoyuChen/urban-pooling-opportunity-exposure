@@ -8,19 +8,20 @@ diagnostic contains 95 radius/Gamma query points: 76 numerical endpoint pairs
 and 19 fare pairs unavailable because of public missingness. Seven of ten full
 chains passed. The sole apparent reversal was the duration upper endpoint from
 16 to 32 km: 44.721474 to 44.720833 minutes per core, a decrease of 0.000641.
-The 32-km result's reported relative MIP gap of 0.000021501 implies a conservative
-objective allowance of 0.000962, larger than that decrease. This is therefore
-not evidence of a support-nesting violation; the old fixed `1e-7` comparison was
-stricter than the solver's own stopping accuracy.
+The 32-km result's relative MIP gap of 0.000021501 implies a conservative
+objective allowance of 0.000962, larger than that decrease. This is not evidence
+of a support-nesting violation; the fixed `1e-7` comparison was stricter than
+the solver's stopping accuracy.
 
-The corrected audit records such a comparison as numerically indeterminate,
-does not count its chain as fully monotone, and still fails any reversal outside
-the reported MIP-gap allowance. A rerun is an explicit post-diagnostic protocol
-amendment, not a silent replacement of frozen evidence. It serializes no raw
-rows, trip IDs or matching witnesses. Input identity with the original failed
-acquisition remains unprovable because that abort artifact lacks a raw-row hash.
-The current gate and verified counts below remain unchanged until the amended
-run returns a complete record and a cross-version aggregate is audited.
+A diagnostic-only amendment wrapper now records such a comparison as
+numerically indeterminate, never as a passing chain, while reversals outside the
+reported MIP-gap allowance remain hard failures. The frozen producer is byte
+unchanged, so prior checkpoint hashes remain valid. The amended rerun is not
+merged into the canonical ledger automatically, emits no raw rows, trip IDs or
+matching witnesses, and cannot prove input identity with the earlier abort
+artifact because that artifact lacks a raw-row hash. The current gate and counts
+remain unchanged until a complete amended record and cross-version aggregate
+are audited.
 
 ## September 12: final-batch ledger recovery
 

@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      DIAGNOSTIC_PROTOCOL: "gap-aware-monotonicity-v2"
+      DIAGNOSTIC_PROTOCOL: "gap-aware-amendment-wrapper-v3"
       PYTHONHASHSEED: "0"
       OPENBLAS_NUM_THREADS: "1"
       OMP_NUM_THREADS: "1"
