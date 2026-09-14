@@ -1,5 +1,25 @@
 # Verified project status
 
+## September 14: controlled candidate and decision coverage closed
+
+The frozen 3,000-instance controlled design was rerun with unchanged generator,
+seeds, capacities, candidate ranking, retention levels, and thresholds. The new
+joint panel adds only derived truncation diagnostics: frontier width, threshold
+certification, and false certification relative to known truth. At six of eight
+retained buffers, mean candidate recall is 83.4--83.8%, full-world coverage is
+31.4--32.6%, and true-aggregate coverage is 69.2--71.7%.
+
+The decision result is sharper: these truncated frontiers certify 63.4--64.0%
+of threshold cells, yet 6.9--7.7% of certified decisions contradict truth. With
+all eight candidates, certification falls to 32.1--35.6% because the valid
+frontier is wider, while the false-certificate rate is zero. Candidate deletion
+can therefore manufacture apparent precision. Outputs include all 9,000
+truncation cells, summary CSV, figure, Markdown, TeX, and source/output hashes
+under `benchmarks/results/controlled_truth_joint_coverage_20260914/`.
+
+This closes the controlled-truth Gate under the declared synthetic generator;
+it does not establish operational candidate recall or population coverage.
+
 ## September 13: cross-window support stability after execution closure
 
 The sealed 90-window evidence was aggregated without reacquisition. The audit

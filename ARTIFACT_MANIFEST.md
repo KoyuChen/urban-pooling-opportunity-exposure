@@ -12,21 +12,19 @@ identifies local exploration provenance and does not label it as workflow execut
 |---|---|
 | Manuscript | `paper/main.tex` |
 | Ordered-event algorithms and public audits | `code/ai_pilot/data_pipeline/production_audit/` |
-| Controlled-truth benchmark | `code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py` |
+| Controlled-truth benchmark | `code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py` and `controlled_truth_joint_panel.py` |
 | Aggregate public evidence | `code/ai_pilot/data_pipeline/results/` |
 | Deterministic verification | `.github/workflows/ci.yml` |
 
-## Chicago follow-up interim snapshot (September 9, 2026)
+## Chicago follow-up closed execution ledger (September 13, 2026)
 
-`code/ai_pilot/data_pipeline/results/chicago_k2_followup/batch0_20260909/`
-stores the aggregate summary, full 96-window ledger, and manifest from run
-`34298803324`, artifact `10084804589`. Source ZIP SHA-256:
-`6d616909ae04d963aa801a593c6f0cef20fcc23478f7f5eecf92a4fe720c6fcf`.
-All 235 source checkpoint files were hash-verified before copying aggregates.
-Counts are 10 completed, 2 ineligible, 84 unstarted; 1,192 numerical certified
-pairs, 300 missing-public-value pairs, 8 computationally unresolved pairs.
-This is a HOLD interim graph audit, not completed 96-window or temporal-world
-certification. The separate closed 24-window pilot remains unchanged.
+`code/ai_pilot/data_pipeline/results/chicago_k2_followup/gap_amendment_20260913/`
+pins the sealed 96-window ledger: 90 completed, 6 scientifically ineligible,
+0 failed and 0 unstarted. There are 10,728 numerically certified pairs, 2,628
+missing-public-value pairs and 34 computationally unresolved pairs. The
+execution status is `PASS_EXECUTION`, not full endpoint or city-scale closure.
+The cross-window support summaries and their hashes are stored under
+`code/ai_pilot/data_pipeline/results/chicago_k2_followup/support_stability_20260913/`.
 
 ## Controlled truth
 
@@ -37,6 +35,12 @@ certification. The separate closed 24-window pilot remains unchanged.
   frontier.
 - Retaining six of eight candidates preserves roughly 84% of true members but
   the complete true event world only 31--33% of the time.
+- At that same truncation, 63.4--64.0% of threshold cells are certified, but
+  6.9--7.7% of those certificates contradict known truth. Full support has no
+  false certificates.
+
+The 9,000-cell joint table, figure, TeX and hash manifest are stored under
+`code/ai_pilot/benchmarks/results/controlled_truth_joint_coverage_20260914/`.
 
 These results validate the declared generator and method, not transfer to an
 operational city dataset.

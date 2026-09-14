@@ -1,0 +1,36 @@
+{
+  "base_seed": 20260902,
+  "candidate_retention_levels": [
+    4,
+    6,
+    8
+  ],
+  "capacities": [
+    2,
+    3,
+    4
+  ],
+  "claim_status": "PASS_CONTROLLED_NOT_OPERATIONAL_COVERAGE",
+  "instance_count": 3000,
+  "instances_per_capacity": 1000,
+  "output_sha256": {
+    "JOINT_COVERAGE_PANEL.pdf": "090185a8c52fb1537e05cc36c7f0e58a2d564310286d177d597a01ca975892c0",
+    "JOINT_COVERAGE_PANEL.png": "b001deb22e7dd05d60dde5810e84627e5d347ee5de6c610b943f28ba5656b90b",
+    "JOINT_COVERAGE_SUMMARY.csv": "32b6aecf64f37669f72fd5a74a7a938aefcb7273e53e0c6cc8f9266e9d29379e",
+    "JOINT_TRUNCATION_CELLS.csv": "e244278586296d125ff82333d859f5bc7c5a863071e7af624465ab18c422a415",
+    "REPORT.md": "4012171800fd95f7fecd40526cd6422a9d72c6de0142567abb13c0aecb9fe1bd",
+    "RESULTS.tex": "c5db18c4b5ca6360263b7ea9d504f5e9dc60a14e410aa264f27f1809fa00c761"
+  },
+  "report_version": "controlled-truth-joint-coverage/v1",
+  "source_sha256": {
+    "controlled_truth_joint_panel.py": "c1044ef6a23505b40480747b5415e775123b1f39b541261464c24c5952f7b6ef",
+    "event_frontier_truth_benchmark.py": "b5fd683dd0294fdb89e116947f7e4b2c4df39879acdde404e4a9cba47c2eb4ac",
+    "event_frontier_truth_benchmark_scale.py": "1b1b05d4493de6d05709e0871f1c458e0ad03073fb80117766d69c00ddfb9315",
+    "relation_incomplete_event_benchmark.py": "b2facbb06a59e354737c4f53081e39f7238dcb3a0cd39509236a4e7214af94f8"
+  },
+  "thresholds": [
+    0.25,
+    0.5,
+    0.75
+  ]
+}

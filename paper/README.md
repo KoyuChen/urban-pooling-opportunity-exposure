@@ -36,9 +36,9 @@ This is a working draft, not a claim of submission or scientific readiness.
   the alternating-component normalization.
 - Limits efficient pricing to fixed exact intervals and additive weights;
   separates the rectangular timestamp-support MILP and its positive margin.
-- Retains the 0/24 public fixed-q structural null and both incomplete campaigns.
-- Updates Chicago from an extraction-only illustration to separate pilot and
-  interim follow-up aggregates. No new scientific experiment was run for this rewrite.
+- Retains the 0/24 public fixed-q structural null and explicit unresolved cells.
+- Updates Chicago to the sealed 96-window execution ledger and adds the joint
+  controlled-truth coverage panel. Neither result is a population estimate.
 
 ## Headline evidence mapping
 
@@ -46,11 +46,12 @@ Paths below are relative to the repository root.
 
 | Manuscript evidence | Source |
 |---|---|
-| Controlled truth, 3,000 instances | `code/ai_pilot/benchmarks/` and `ARTIFACT_MANIFEST.md` |
+| Controlled truth, 3,000 instances and 9,000 truncation cells | `code/ai_pilot/benchmarks/results/controlled_truth_joint_coverage_20260914/` |
 | ATR 170 snapshots, 850 cells | `code/ai_pilot/benchmarks/results/atr_diamor_truth/` |
 | ATR support transfer and degree cap | `code/ai_pilot/benchmarks/results/atr_diamor_support_calibration/` and `atr_diamor_density_cap/` |
 | Chicago pilot 23 complete, 1 ineligible | `code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/latest_panel_report.json` |
-| Chicago interim 10 complete, 2 ineligible, 84 unstarted | `code/ai_pilot/data_pipeline/results/chicago_k2_followup/batch0_20260909/MANIFEST.json` |
+| Chicago 96-window extension: 90 complete, 6 ineligible | `code/ai_pilot/data_pipeline/results/chicago_k2_followup/gap_amendment_20260913/MANIFEST.json` |
+| Chicago cross-window support sensitivity | `code/ai_pilot/data_pipeline/results/chicago_k2_followup/support_stability_20260913/` |
 | NYC 101 numerically closed endpoint pairs, 125 witnessed ambiguous cells, 126 total | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_PANEL_SUMMARY.json` |
 | NYC structural comparison 0/24 changes | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/REPORT.md` |
 | NYC geometry 8 complete, 3 excluded, 13 transport unresolved | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/geometry_census_20260908/recovery_attempt/REPORT.md` |

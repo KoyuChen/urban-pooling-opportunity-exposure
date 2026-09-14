@@ -78,8 +78,15 @@ $C$ & Member recall & World repr. & Frontier exists & Scalar covered \\
 Scalar coverage can also survive by coincidence after the joint world is
 removed: this occurs in 37.8--39.2\% of instances. Consequently, validating
 only an aggregate, or only average candidate recall, can conceal a misspecified
-relation universe. The correct workflow reports candidate-support sensitivity
-as a separate identification layer. Pair matching and connected components are
+relation universe. Worse, truncation can create false precision. At six retained
+buffers, the truncated frontier certifies 63.4--64.0\% of threshold cells, but
+6.9--7.7\% of those certificates disagree with known truth. With all eight
+buffers, only 32.1--35.6\% of threshold cells are certified, but no certificate
+is false. A higher certification rate under a smaller candidate universe is
+therefore not evidence of better identification.
+
+The correct workflow reports candidate-support sensitivity as a separate
+identification layer. Pair matching and connected components are
 also evaluated in the artifact, but their failure rates are generator-specific:
 the generator intentionally includes sequential non-clique events and bounded
 occupancy. We therefore use them as diagnostic misspecification baselines, not
