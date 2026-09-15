@@ -81,6 +81,13 @@ checked by deterministic tests.
 
 ## NYC frozen decision panel
 
+The cross-object claim ledger is stored under
+`code/ai_pilot/data_pipeline/results/nyc_hvfhv/evidence_ledger_20260915/`.
+It checks the outcome panel, support-maximization lattice, fixed-$q$ structure
+comparator, and geometry census as distinct certificate classes. Its aggregate
+status is `PASS_CLAIM_ALIGNMENT_WITH_GEOMETRY_HOLD`: manuscript-level claim
+alignment passes, while the geometry census remains transport-incomplete.
+
 Repository summaries:
 
 - `code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_PANEL_REPORT.md`

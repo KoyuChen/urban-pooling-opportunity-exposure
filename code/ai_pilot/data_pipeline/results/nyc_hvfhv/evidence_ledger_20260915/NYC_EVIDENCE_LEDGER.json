@@ -1,0 +1,95 @@
+{
+  "global_boundary": "No object identifies realized memberships, population prevalence, production logic, or a city-scale guarantee.",
+  "overall_status": "PASS_CLAIM_ALIGNMENT_WITH_GEOMETRY_HOLD",
+  "records": [
+    {
+      "analysis_cells": 126,
+      "certificate_type": "NUMERICAL_ENDPOINT_PAIR_OR_TWO_SIDED_FEASIBLE_WITNESSES",
+      "declared_units": 24,
+      "eligible_units": 21,
+      "evidence_object": "outcome_decision_panel",
+      "not_supported": "actual event membership, true partner recall, realized capacity, production logic, population prevalence, point-method accuracy without ground truth, or causal effects",
+      "primary_certified_count": 101,
+      "primary_unresolved_count": 25,
+      "question": "What outcome ranges and threshold decisions are invariant over the declared feasible worlds?",
+      "scientifically_ineligible_units": 3,
+      "secondary_result": "125/126 candidate-median decisions witness-certified ambiguous; 1 unresolved",
+      "source_files": [
+        "ORDERED_DECISION_PANEL_SUMMARY.json",
+        "ORDERED_DECISION_PANEL_GROUPS.csv",
+        "ORDERED_DECISION_THRESHOLD_GROUPS.csv"
+      ],
+      "status": "PASS_PANEL_WITH_UNRESOLVED_ENDPOINTS",
+      "supported_claim": "Conditional fixed-support outcome frontiers and decision ambiguity on 21 eligible windows.",
+      "transport_or_missing_units": 0
+    },
+    {
+      "analysis_cells": 18,
+      "certificate_type": "INTEGER_INCUMBENT_EQUALS_GLOBAL_BOUND_AND_BRANCH_QUEUE_CLOSED",
+      "declared_units": 18,
+      "eligible_units": 18,
+      "evidence_object": "support_maximization_lattice",
+      "not_supported": "city-scale runtime, operational event recovery, population prevalence, or provider production-logic validation",
+      "primary_certified_count": 18,
+      "primary_unresolved_count": 0,
+      "question": "Can the branch-and-price implementation certify maximum selected-buffer support on the frozen nested-size cohort?",
+      "scientifically_ineligible_units": 0,
+      "secondary_result": "4 cells were initially open and later closed; earlier anytime bounds remain in provenance",
+      "source_files": [
+        "BRANCH_AND_PRICE_SCALE_MANIFEST.json",
+        "BRANCH_AND_PRICE_SCALE_CELLS.csv"
+      ],
+      "status": "PASS_INTEGER_SUPPORT",
+      "supported_claim": "certified integer optima or valid global intervals for one deterministic public exact-second cohort under the declared ordered-event model",
+      "transport_or_missing_units": 0
+    },
+    {
+      "analysis_cells": 24,
+      "certificate_type": "CERTIFIED_FIXED_Q_ENDPOINT_COMPARISON",
+      "declared_units": 24,
+      "eligible_units": 24,
+      "evidence_object": "fixed_q_structure_comparator",
+      "not_supported": "True run recovery, candidate-world coverage, population prevalence, city-scale certification, or proof of novelty relative to prior work.",
+      "primary_certified_count": 24,
+      "primary_unresolved_count": 0,
+      "question": "Do pair or clique restrictions change endpoints at common positive q on one fixed small input?",
+      "scientifically_ineligible_units": 0,
+      "secondary_result": "0/24 comparisons change an endpoint",
+      "source_files": [
+        "structure_audit_20260908/REPORT.json"
+      ],
+      "status": "PASS_VERIFIED_NULL",
+      "supported_claim": "Conditional effects of restricting event families on one fixed small public exact-time input.",
+      "transport_or_missing_units": 0
+    },
+    {
+      "analysis_cells": 24,
+      "certificate_type": "LOCAL_EVENT_COLUMN_AVAILABILITY_ONLY",
+      "declared_units": 24,
+      "eligible_units": 8,
+      "evidence_object": "outcome_blind_geometry_census",
+      "not_supported": "Event-column availability is not full-world extendability, a fixed-q endpoint effect, true vehicle-event identification or population prevalence.",
+      "primary_certified_count": 8,
+      "primary_unresolved_count": 13,
+      "question": "How often is a local non-clique event column available in the declared public candidate geometry?",
+      "scientifically_ineligible_units": 3,
+      "secondary_result": "8/8 completed full views contain a local core-touching non-clique column; 13/24 cells remain transport-unresolved",
+      "source_files": [
+        "geometry_census_20260908/recovery_attempt/RECOVERY_AUDIT.json"
+      ],
+      "status": "HOLD_TRANSPORT_INCOMPLETE",
+      "supported_claim": "Geometry-only availability among eight completed views, with the full 24-cell denominator retained.",
+      "transport_or_missing_units": 13
+    }
+  ],
+  "report_version": "nyc-evidence-claim-ledger/v1",
+  "source_sha256": {
+    "BRANCH_AND_PRICE_SCALE_CELLS.csv": "d0c8ad51f4ca177fe0727907e3780476ec6ca62ee97cf0f47edc59af6baa32e6",
+    "BRANCH_AND_PRICE_SCALE_MANIFEST.json": "c401c280d953570185c4acab5145ef617f98c1bc003078c50164f9c646483d88",
+    "ORDERED_DECISION_PANEL_GROUPS.csv": "be6bcf1e8cb74805ca59a7c41d16baf46d35d7c024ca10c952838c5b9e4d9dc1",
+    "ORDERED_DECISION_PANEL_SUMMARY.json": "ea36f70555511b5bc071a159cec09eb884078417b77951faa71deace10715e34",
+    "ORDERED_DECISION_THRESHOLD_GROUPS.csv": "76d41c91bb26bf65271a493feb4723b825ca600bf273acb24680b3798060f998",
+    "geometry_census_20260908/recovery_attempt/RECOVERY_AUDIT.json": "f55e5220c90e4d90b4299f7f0598d9c1df48ca78e57860f6eb76af1ed96942c0",
+    "structure_audit_20260908/REPORT.json": "f435d9f6f5384ab7514f0c029fd1acaf3f5bcc59545ff09add57b3e864901118"
+  }
+}

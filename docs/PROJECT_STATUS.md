@@ -1,5 +1,22 @@
 # Verified project status
 
+## September 15: NYC evidence classes reconciled
+
+A deterministic claim ledger now recomputes and separates four frozen NYC
+evidence objects. The outcome panel has 101/126 numerically closed endpoint
+pairs, 25 unresolved endpoint pairs, and 125/126 candidate-median decisions
+certified ambiguous by two-sided feasible witnesses. The separate
+support-maximization lattice has 18/18 integer optima; this does not close the
+outcome panel. The fixed-$q$ structure comparator is a verified 0/24 null on
+one common-intersection input. The geometry census remains
+`HOLD_TRANSPORT_INCOMPLETE`: 8/24 complete, three scientifically ineligible,
+and thirteen transport-unresolved.
+
+The generated JSON, CSV, Markdown, TeX and hash manifest are under
+`results/nyc_hvfhv/evidence_ledger_20260915/` in the data pipeline. Claim
+alignment passes while the geometry evidence remains incomplete; neither
+status is promoted to city-scale or membership identification.
+
 ## September 14: controlled candidate and decision coverage closed
 
 The frozen 3,000-instance controlled design was rerun with unchanged generator,

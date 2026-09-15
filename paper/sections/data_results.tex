@@ -44,7 +44,7 @@ All 2,744 pairs with complete public query values close numerically; the other
 \begin{table}[t]
 \caption{Chicago public-envelope $K=2$ audits. Endpoint rows count query--parameter
 pairs in completed windows. Complete-data rate excludes missing values
-but includes computationally unresolved pairs. Follow-up is an interim snapshot.}
+but includes computationally unresolved pairs.}
 \label{tab:chicagopanel}
 \centering
 \small
@@ -53,37 +53,36 @@ but includes computationally unresolved pairs. Follow-up is an interim snapshot.
 Quantity & Pilot & Follow-up \\
 \midrule
 Declared windows & 24 & 96 \\
-Completed / ineligible & 23 / 1 & 10 / 2 \\
-Execution failures / unstarted & 0 / 0 & 0 / 84 \\
-Endpoint pairs & 3,430 & 1,500 \\
-Numerically certified pairs & 2,744 & 1,192 \\
-Missing-public-value pairs & 686 & 300 \\
-Computationally unresolved pairs & 0 & 8 \\
-Complete-data rate & 100\% & 99.33\% \\
+Completed / ineligible & 23 / 1 & 90 / 6 \\
+Execution failures / unstarted & 0 / 0 & 0 / 0 \\
+Endpoint pairs & 3,430 & 13,390 \\
+Numerically certified pairs & 2,744 & 10,728 \\
+Missing-public-value pairs & 686 & 2,628 \\
+Computationally unresolved pairs & 0 & 34 \\
+Complete-data rate & 100\% & 99.68\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 The follow-up predeclares 96 windows from January 15--February 27 under the
-same eligibility and 60-second endpoint budgets. Its first 12 windows produce
-10 completed records and two ineligible records; 84 windows remain unstarted.
-The eight unresolved pairs all concern duration-gap lower endpoints in the
-January 15 evening window. Their feasible incumbents are not certified
-minima, so the pair-level intervals remain withheld. Thus a completed window
-does not mean every query is certified, and 120 declared windows across the
-two designs do not mean 120 completed or eligible cohorts.
+same eligibility and 60-second endpoint budgets. All have terminal records:
+90 are complete and six are scientifically ineligible. Of 10,762 pairs with
+complete public query values, 10,728 close numerically and 34 retain valid
+incumbent/bound information without a numerical endpoint certificate. Thus a
+completed window does not mean every query is certified. Across the two
+calendar-disjoint designs, 113 of 120 declared windows are complete and seven
+are ineligible; neither design is a probability sample.
 
 \paragraph{Stable support sensitivity can coexist with weak identification.}
-One frozen January 13 evening audit illustrates the distinction. Completing
-the boundary adds 92 buffers and 2,629 edges, increasing the graph by 12.15\%.
-Miles-gap width grows only 0.53\%, from 20.159 to 20.266 miles; duration-gap
-width grows 1.02\%, from 46.470 to 46.942 minutes. The boundary correction
-therefore has little effect on these already broad intervals. Community-area
-fractions retain the full $[0,1]$ range. Moreover, 48.88\% of temporal edges
-lack complete public endpoint centroids and remain in every radius screen.
-Small radius sensitivity consequently does not establish geographic
-precision. These are descriptive results for one declared candidate graph,
-not evidence of operational co-rider identity or citywide prevalence.
+Across the 90 completed follow-up windows, median duration-gap width rises
+from 40.748 minutes per core trip at the 0-km measured-radius support to 44.234
+under temporal-only support; the within-window paired median increase is 2.599
+minutes. Under the separate generic omitted-incidence model, 86 of 87
+numerically comparable duration chains are within 1\% of their own
+full-support width by budget $\Gamma=8$. The effect of omitted candidates is
+therefore concentrated but nonzero. These are paired descriptive summaries
+on declared candidate graphs, not independent samples, operational partner
+coverage, or citywide prevalence.
 
 \subsection{NYC: decision ambiguity need not await optimal endpoints}
 The frozen exact-second decision panel declares 24 windows: 20 eight-core
@@ -91,7 +90,8 @@ windows across seasons, weekday/weekend regimes, and times of day, plus four
 16-core stress windows. Twenty-one are eligible and three fail the
 outcome-blind core-integrity/cap criteria; technical failures are zero.
 Two selected-buffer outcomes, miles and trip minutes, at $C=2,3,4$ yield 126
-cells (Table~\ref{tab:decisionpanel}). Of these, 101 endpoint pairs close;
+cells (Table~\ref{tab:decisionpanel}). Of these, 101 endpoint pairs close
+numerically and 25 remain numerically unresolved;
 125 cells have replayed feasible values on both sides of the candidate-median
 threshold, certifying ambiguity even where extrema remain unresolved.
 One 16-core miles cell has an unresolved decision status.
@@ -153,7 +153,7 @@ at six sizes from $4+12$ through $16+48$ and $C=2,3,4$
 (Appendix Table~\ref{tab:scaledetail}). Four initially open cells close under
 longer budgets; their earlier anytime bounds remain in the audit history.
 This establishes certified support optimization on one deterministic cohort.
-It does not close the 25 numerically unclosed outcome pairs in the decision panel, provide
+It does not close the 25 numerically unresolved outcome pairs in the decision panel, provide
 a city-scale runtime guarantee, or recover true memberships. The evidence
 supports conditional computation and substantial relation ambiguity; the
 empirical importance of the full temporal-event structure remains open.
