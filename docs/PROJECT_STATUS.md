@@ -1,5 +1,25 @@
 # Verified project status
 
+## September 16: core theory Gate closed with explicit scope conditions
+
+The manuscript now states decision certification as a theorem: a valid global
+lower bound on the minimum can certify a positive decision, a valid global
+upper bound on the maximum can certify a negative decision, and two feasible
+opposite-side witnesses can certify ambiguity without endpoint optimality.
+Agreement with reality remains conditional on the true world belonging to the
+declared feasible set. A separate candidate-support proposition proves
+fixed-q endpoint nesting when optional buffers are added without changing old
+rules, while explicitly excluding endogenous maximum-q comparisons.
+
+Independent exact-rational tests now compare K=2 event partitions with a
+separate core-saturating matching enumerator, verify parity infeasibility, and
+exercise positive, negative, ambiguous, and unresolved decision boundaries.
+The nested-support witness reproduces support-induced false precision: the
+full frontier crosses the threshold, while deletion of a truth-bearing buffer
+creates a negative certificate. This closes the requested matching/nesting/
+decision theory Gate; it does not establish general C=2 hardness or truth
+coverage in public city data.
+
 ## September 15: NYC evidence classes reconciled
 
 A deterministic claim ledger now recomputes and separates four frozen NYC

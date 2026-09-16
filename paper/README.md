@@ -25,6 +25,9 @@ This is a working draft, not a claim of submission or scientific readiness.
   bridge to strict overlap. A sufficiently small instance-dependent margin
   preserves all partition-only endpoints; the chosen audit margin is not
   automatically certified small enough.
+- States decision certification directly: one-sided global bounds certify a
+  common decision, opposite-side feasible witnesses certify ambiguity, and
+  truth agreement remains conditional on candidate-world coverage.
 - Records the remaining complexity gap: support decision is in NP and the
   one-core case is polynomial, but no C=2 NP-hardness result is established.
   See `docs/THEORY_REINFORCEMENT.md` for the proof and verification map.

@@ -73,7 +73,71 @@ def _mean_range(worlds, cores, values):
     return min(means), max(means)
 
 
+def _core_saturating_matchings(intervals, cores, q):
+    """Independent graph oracle for the K=2 theorem."""
+    cores = frozenset(cores)
+    if (len(cores) + q) % 2:
+        return set()
+    edge_count = (len(cores) + q) // 2
+
+    def overlaps(left, right):
+        return (max(intervals[left][0], intervals[right][0])
+                < min(intervals[left][1], intervals[right][1]))
+
+    edges = [
+        (left, right)
+        for left, right in combinations(sorted(intervals), 2)
+        if cores.intersection((left, right)) and overlaps(left, right)
+    ]
+    result = set()
+    for matching in combinations(edges, edge_count):
+        vertices = [vertex for edge in matching for vertex in edge]
+        if len(set(vertices)) != len(vertices):
+            continue
+        if not cores.issubset(vertices):
+            continue
+        if len(set(vertices) - cores) != q:
+            continue
+        result.add(frozenset(frozenset(edge) for edge in matching))
+    return result
+
+
+def _decision_status(bounds, threshold):
+    lower, upper = bounds
+    if lower >= threshold:
+        return "CERTIFIED_POSITIVE"
+    if upper < threshold:
+        return "CERTIFIED_NEGATIVE"
+    return "AMBIGUOUS"
+
+
+def _anytime_certificate(threshold, minimum_lower=None, maximum_upper=None,
+                         feasible_values=()):
+    """Audit the sufficient bound/witness conditions without exact endpoints."""
+    if minimum_lower is not None and minimum_lower >= threshold:
+        return "CERTIFIED_POSITIVE"
+    if maximum_upper is not None and maximum_upper < threshold:
+        return "CERTIFIED_NEGATIVE"
+    if (any(value < threshold for value in feasible_values)
+            and any(value >= threshold for value in feasible_values)):
+        return "AMBIGUOUS"
+    return "UNRESOLVED"
+
+
 class EventModelContainmentTests(unittest.TestCase):
+    def test_k2_worlds_equal_core_saturating_matchings(self):
+        intervals = {
+            row: (Fraction(0), Fraction(1))
+            for row in ("c1", "c2", "b1", "b2", "b3")
+        }
+        cores = {"c1", "c2"}
+        for q in (0, 1, 2):
+            with self.subTest(q=q):
+                pair_worlds = _worlds(intervals, cores, q, 2, "pair")
+                graph_matchings = _core_saturating_matchings(intervals, cores, q)
+                self.assertEqual(pair_worlds, graph_matchings)
+        self.assertFalse(_worlds(intervals, cores, 1, 2, "pair"))
+
     def test_c2_event_changes_fixed_q_selected_buffer_mean(self):
         # The full overlap graph is the path b0--c1--c2--b1--b2.
         intervals = {
@@ -142,6 +206,66 @@ class EventModelContainmentTests(unittest.TestCase):
         for family in ("pair", "clique", "event"):
             with self.subTest(family=family):
                 self.assertFalse(_worlds(intervals, {"c1", "c2"}, 0, 2, family))
+
+    def test_candidate_addition_expands_frontier_but_coverage_is_required(self):
+        outer_intervals = {
+            "c1": (Fraction(0), Fraction(2)),
+            "c2": (Fraction(1), Fraction(3)),
+            "b0": (Fraction(-1), Fraction(1, 2)),
+            "b1": (Fraction(5, 2), Fraction(4)),
+            "b2": (Fraction(7, 2), Fraction(5)),
+        }
+        cores = {"c1", "c2"}
+        values = {"b2": 1}
+        outer = _worlds(outer_intervals, cores, 2, 2, "event")
+        inner = _worlds(
+            {row: interval for row, interval in outer_intervals.items() if row != "b2"},
+            cores,
+            2,
+            2,
+            "event",
+        )
+        self.assertTrue(inner.issubset(outer))
+        self.assertEqual(_mean_range(inner, cores, values), (0, 0))
+        self.assertEqual(_mean_range(outer, cores, values), (0, Fraction(1, 2)))
+
+        threshold = Fraction(1, 4)
+        self.assertEqual(_decision_status(_mean_range(inner, cores, values), threshold),
+                         "CERTIFIED_NEGATIVE")
+        self.assertEqual(_decision_status(_mean_range(outer, cores, values), threshold),
+                         "AMBIGUOUS")
+        omitted_truth = frozenset({frozenset({"c1", "c2", "b1", "b2"})})
+        self.assertIn(omitted_truth, outer)
+        self.assertNotIn(omitted_truth, inner)
+
+    def test_decision_certification_boundary_conventions(self):
+        threshold = Fraction(1)
+        self.assertEqual(_decision_status((Fraction(1), Fraction(2)), threshold),
+                         "CERTIFIED_POSITIVE")
+        self.assertEqual(_decision_status((Fraction(0), Fraction(1, 2)), threshold),
+                         "CERTIFIED_NEGATIVE")
+        self.assertEqual(_decision_status((Fraction(0), Fraction(1)), threshold),
+                         "AMBIGUOUS")
+
+    def test_anytime_bounds_and_witnesses_need_not_be_optimal(self):
+        threshold = Fraction(1)
+        self.assertEqual(_anytime_certificate(threshold, minimum_lower=threshold),
+                         "CERTIFIED_POSITIVE")
+        self.assertEqual(
+            _anytime_certificate(threshold, maximum_upper=Fraction(9, 10)),
+            "CERTIFIED_NEGATIVE",
+        )
+        self.assertEqual(
+            _anytime_certificate(
+                threshold,
+                feasible_values=(Fraction(1, 2), Fraction(3, 2)),
+            ),
+            "AMBIGUOUS",
+        )
+        self.assertEqual(
+            _anytime_certificate(threshold, feasible_values=(Fraction(3, 2),)),
+            "UNRESOLVED",
+        )
 
 
 if __name__ == "__main__":

@@ -11,6 +11,8 @@ does not add public-data observations or establish a global hardness result.
 | When should the public structural comparison return no event/clique difference? | Same proposition: equality whenever the exact overlap graph is a disjoint union of cliques, for every capacity | Common-intersection examples at capacities 2, 3, 4, 6 |
 | What makes interval connectivity different from touching or a clique? | `lem:connectivity`, main algorithm section: segment coverage plus a crossing interval at every internal boundary is equivalent to positive-overlap connectivity | Two-direction proof; endpoint-touching tests |
 | Which aggregates preserve local pricing? | `prop:aggregateclass`: fixed-q row sums plus a constant per event, divided by a known positive denominator | Direct column coefficient and dual substitution |
+| When is a threshold decision genuinely certified? | `thm:decisioncertification`: valid one-sided global bounds certify a common decision; two feasible opposite-side witnesses certify ambiguity; correctness requires truth coverage | Exact finite boundary tests for positive, negative, crossing and support-induced false precision |
+| Does adding candidate buffers narrow the frontier? | `prop:candidatesupport`: no, at a common feasible q with unchanged rules and compatible H; endogenous maximum support is excluded | Exact rational nested-support enumeration |
 | Does the uncertain-time MILP describe the declared object? | `prop:epsilon`, main statement and appendix two-direction proof | Twelve geometric MILP boundary cases with witness replay |
 | How does positive epsilon relate to strict overlap? | Strict worlds are the union over positive margins; all feasible partitions and partition-only extrema stabilize at a sufficiently small positive margin | Finite spanning-tree and finite-partition argument |
 | Is exact-time support maximization NP-hard at capacity two? | Not established. Only NP membership and polynomial single-core support are asserted | Hardness transfer audit below |
@@ -100,6 +102,24 @@ claiming it is an established open problem throughout the literature.
 An approximation scheme, a general-H complexity taxonomy and statistical
 inference are outside this revision.
 
+## Adversarial scope audit of the three certification claims
+
+- The K=2 theorem is about two-member partitions on a graph with no
+  buffer--buffer edges, compulsory core coverage, and a feasible fixed q.
+  With uncertain timestamps, pair witnesses combine only under independent
+  row supports and no cross-event constraints. It is not a bijection of
+  timestamp completions and does not make side-constrained matching
+  polynomial.
+- Candidate-support nesting holds only when candidates are added without
+  changing old rows or rules and q is held fixed. Re-estimating a score,
+  screening old edges differently, or evaluating each graph at its own
+  maximum q is a different comparison.
+- A bound or witness certifies a statement over the declared feasible set.
+  Agreement with reality additionally requires the true world to lie in that
+  set. Candidate deletion can therefore create a mathematically valid but
+  externally false certificate, exactly as the controlled truncation panel
+  demonstrates.
+
 ## Reproduction
 
 ```
@@ -109,7 +129,7 @@ python -m unittest discover \
 python scripts/audit_tex_references.py
 ```
 
-Result: 16 focused tests PASS; 39 labels, 23 referenced labels and 18 citation
+Result: 20 focused tests PASS; 41 labels, 25 referenced labels and 18 citation
 keys PASS. Production solvers are unchanged. The reference audit now excludes
 generated standalone TeX copies in `paper/build/` and checks canonical modular
 sources, avoiding duplicate-label false positives after packaging.

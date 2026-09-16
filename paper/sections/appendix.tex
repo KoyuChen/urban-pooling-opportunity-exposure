@@ -55,6 +55,26 @@ $F\in\F(\T',C',q)$. Set inclusion gives nesting of reachable counts and their
 maxima whenever defined. Minimizing a fixed functional over a superset weakly
 lowers its minimum; maximizing weakly raises its maximum.
 
+\paragraph{Proof of Theorem~\ref{thm:decisioncertification}.}
+For every $F\in\F$, $H(F)\ge\underline H\ge L$ and
+$H(F)\le\overline H\le U$. The first two certificates follow immediately.
+The two feasible witnesses produce opposite threshold decisions, proving
+ambiguity without an optimality claim. Attainment of the finite-partition
+extrema makes $\underline H\ge\eta$, $\overline H<\eta$, and
+$\underline H<\eta\le\overline H$ exhaustive when endpoints are exact. If a
+true world is in $\F$, the universal statements apply to it. If it is absent,
+the theorem makes no statement about its decision.
+
+\paragraph{Proof of Proposition~\ref{prop:candidatesupport}.}
+Take an old world and choose any allowed completion for every newly added
+buffer, leaving each new buffer unused. Optionality and the unchanged event
+rules preserve every old event, core assignment, and selected-buffer count.
+The compatibility assumption preserves its value of $H$. Thus the old
+reachable-value set is contained in the new one, which gives the endpoint
+inequalities. Endogenous support counts compare different feasible slices;
+changing old rules can remove old worlds; and truth coverage is a separate
+assumption, so none is implied by this inclusion.
+
 \paragraph{Proof of Proposition~\ref{prop:jointcompletion}.}
 There is no $AC$ overlap. Thus the three-vertex overlap graph can be connected
 only if both $AB$ and $BC$ are edges under the same $s$.
