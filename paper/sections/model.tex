@@ -67,13 +67,11 @@ otherwise. Correctness is conditional on the true world belonging to $\F$.
 
 \begin{theorem}[Decision certification from bounds or witnesses]
 \label{thm:decisioncertification}
-Let $\F$ be nonempty. A valid global lower bound $L\le\underline H$ certifies
-every world positive when $L\ge\eta$; a valid global upper bound
-$U\ge\overline H$ certifies every world negative when $U<\eta$. Two feasible
-witnesses with values $h^-<\eta\le h^+$ certify ambiguity without optimal
-endpoints. With exact endpoints these three cases are exhaustive. If the true
-world lies in $\F$, every positive or negative certificate agrees with its
-decision; without that coverage assumption no such guarantee follows.
+For nonempty $\F$, bounds $L\le\underline H$ and $U\ge\overline H$ certify
+positive if $L\ge\eta$ and negative if $U<\eta$. Feasible values
+$h^-<\eta\le h^+$ certify ambiguity without optimal endpoints. Exact endpoints
+make the three cases exhaustive. A directional certificate agrees with any
+true world in $\F$; without coverage, no truth guarantee follows.
 \end{theorem}
 
 \begin{proposition}[Support and capacity nesting]
@@ -91,15 +89,10 @@ This is set-inclusion reasoning, not an additional optimization result.
 Evaluating each capacity at its own $q=M(\T,C)$ changes the conditioning
 population, so those outcome ranges need not nest.
 
-\begin{proposition}[Candidate-support nesting]
-\label{prop:candidatesupport}
-Hold the cores, capacity, fixed feasible $q$, event rules, and old-row supports
-fixed. If optional buffer candidates are added, and $H$ agrees on worlds using
-only old rows, every old reachable value remains reachable. Hence the lower
-endpoint cannot increase and the upper endpoint cannot decrease. These
-inequalities do not compare supports evaluated at their own maximum counts,
-survive changes to old rules, or imply that the larger support contains truth.
-\end{proposition}
+Adding optional buffers without changing old rules expands the reachable
+values at fixed $q$, so its frontier weakly expands
+(Proposition~\ref{prop:candidatesupport}). This does not compare endogenous
+maximum counts or imply truth coverage.
 
 \paragraph{What changes when the event model changes.}
 Fix one exact completion $t$. Let $\F_{\rm pair}(q)$ require two-member

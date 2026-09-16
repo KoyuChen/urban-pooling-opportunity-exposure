@@ -65,7 +65,14 @@ $\underline H<\eta\le\overline H$ exhaustive when endpoints are exact. If a
 true world is in $\F$, the universal statements apply to it. If it is absent,
 the theorem makes no statement about its decision.
 
-\paragraph{Proof of Proposition~\ref{prop:candidatesupport}.}
+\begin{proposition}[Candidate-support nesting]
+\label{prop:candidatesupport}
+Hold cores, capacity, a fixed feasible $q$, event rules, and old-row supports
+fixed. Adding optional buffers preserves every old reachable value whenever
+$H$ agrees on old-row worlds; therefore the lower endpoint cannot increase
+and the upper endpoint cannot decrease.
+\end{proposition}
+\begin{proof}
 Take an old world and choose any allowed completion for every newly added
 buffer, leaving each new buffer unused. Optionality and the unchanged event
 rules preserve every old event, core assignment, and selected-buffer count.
@@ -74,6 +81,7 @@ reachable-value set is contained in the new one, which gives the endpoint
 inequalities. Endogenous support counts compare different feasible slices;
 changing old rules can remove old worlds; and truth coverage is a separate
 assumption, so none is implied by this inclusion.
+\end{proof}
 
 \paragraph{Proof of Proposition~\ref{prop:jointcompletion}.}
 There is no $AC$ overlap. Thus the three-vertex overlap graph can be connected
