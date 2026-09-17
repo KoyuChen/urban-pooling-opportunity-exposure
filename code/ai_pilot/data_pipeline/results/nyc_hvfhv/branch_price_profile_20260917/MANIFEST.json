@@ -1,0 +1,13 @@
+{
+  "certificate_statuses_changed": false,
+  "deterministic": true,
+  "outputs": {
+    "PROFILE.json": "e8a56e896bac2f5b964a2ed483baeada359bf369c76104ad1bb92537b3daeba8",
+    "PROFILE_CELLS.csv": "b2576c14a12cfafbd5d5aa7e7abad719bbee7910d1fc959022b2236cad1dc7d7",
+    "REPORT.md": "8ab17ff936f0a43ff9ea6543bc0578f0a787d82044e1aa35e6ec6d37cbbebf27",
+    "RESULTS.tex": "36d19516ddedd90b53ac12e875e3f06ec17c104359aee852ca841bbf9377cad0"
+  },
+  "report_version": "nyc-branch-price-scale-profile/v1",
+  "source": "BRANCH_AND_PRICE_SCALE_CELLS.csv",
+  "source_sha256": "d0c8ad51f4ca177fe0727907e3780476ec6ca62ee97cf0f47edc59af6baa32e6"
+}

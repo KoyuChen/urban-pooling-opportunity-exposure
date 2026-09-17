@@ -1,5 +1,24 @@
 # Verified project status
 
+## September 17: frozen branch-and-price bottleneck localized
+
+A deterministic profile now derives normalized performance diagnostics from
+all 18 certified NYC support-maximization cells without rerunning the solver or
+changing any certificate. The lattice used 9,511.19 seconds (2.64 solver-hours),
+2,389,799 fixed-span oracle LP solves, and only 59 processed branch nodes; no
+cell processed more than 11 nodes. The four slowest cells account for 88.0% of
+runtime. On log1p scales, runtime correlates 0.986 with oracle-LP volume and
+0.544 with processed nodes. Thus repeated rooted fixed-span pricing, rather
+than a large branch tree, is the primary observed scaling signal on this frozen
+lattice.
+
+The JSON, CSV, Markdown, TeX, and hash manifest are under
+`results/nyc_hvfhv/branch_price_profile_20260917/`. The profile is descriptive
+and does not establish causal speedup, a complexity class, or population
+runtime. The next scalability experiment must therefore be a paired exact
+pricing-work ablation on frozen inputs; expanding the lattice first would not
+isolate the bottleneck.
+
 ## September 16: core theory Gate closed with explicit scope conditions
 
 The manuscript now states decision certification as a theorem: a valid global

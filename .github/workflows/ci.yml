@@ -48,6 +48,7 @@ jobs:
             code/ai_pilot/data_pipeline/production_audit/chicago_k2_followup.py \
             code/ai_pilot/data_pipeline/production_audit/diagnose_chicago_k2_sensitivity.py \
             code/ai_pilot/data_pipeline/production_audit/apply_chicago_k2_gap_amendment.py \
+            code/ai_pilot/data_pipeline/production_audit/profile_nyc_branch_price_scale.py \
             scripts/audit_tex_references.py
           python scripts/audit_tex_references.py
           python \
@@ -193,6 +194,32 @@ jobs:
           assert target_values[(12, 4)] == 36.0
           assert target_values[(16, 3)] == 44.0
           assert target_values[(16, 4)] == 48.0
+
+          profile = json.loads(
+              (
+                  nyc
+                  / "branch_price_profile_20260917"
+                  / "PROFILE.json"
+              ).read_text(encoding="utf-8")
+          )
+          assert profile["report_version"] == (
+              "nyc-branch-price-scale-profile/v1"
+          )
+          assert profile["input_scope"]["cell_count"] == 18
+          assert profile["input_scope"]["certified_cell_count"] == 18
+          assert profile["totals"]["oracle_lp_solve_count"] == 2389799
+          assert profile["totals"]["nodes_processed"] == 59
+          assert profile["totals"]["maximum_nodes_in_one_cell"] == 11
+          assert profile["runtime_concentration"]["top_four_share"] > 0.87
+          assert profile["log1p_pearson_with_runtime"][
+              "total_oracle_lp_solve_count"
+          ] > 0.98
+          assert profile["log1p_pearson_with_runtime"][
+              "nodes_processed"
+          ] < 0.55
+          assert profile["bottleneck"]["classification"] == (
+              "PRICING_LP_VOLUME_PRIMARY_SCALING_SIGNAL"
+          )
 
           chicago = json.loads(
               (

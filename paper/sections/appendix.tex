@@ -521,6 +521,12 @@ $C$ & Miles range & Width & Minutes range & Width \\
 Table~\ref{tab:scaledetail} gives the final support-maximization lattice.
 Its integer closures refer to the declared numerical and witness-replay
 protocol; they do not certify the decision panel's separate outcome endpoints.
+Across these 18 cells, the solver performs 2,389,799 fixed-span oracle LP
+solves but processes only 59 branch nodes (at most 11 in one cell).  The four
+slowest cells consume 88.0\% of runtime; on $\log(1+x)$ scales, runtime
+correlates 0.986 with oracle-LP volume and 0.544 with processed nodes.  This
+descriptive profile localizes repeated pricing work as the main scaling signal
+on this lattice; it is not a causal ablation or runtime-complexity claim.
 \begin{table*}[t]
 \caption{All 18 predeclared NYC integer scale cells. A bracket is the valid
 [integer incumbent, global upper bound] interval at termination.}
