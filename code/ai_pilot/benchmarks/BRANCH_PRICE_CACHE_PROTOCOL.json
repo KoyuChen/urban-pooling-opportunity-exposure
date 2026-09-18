@@ -1,0 +1,14 @@
+{
+  "protocol_version": "ordered-branch-price-cache-paired/v1",
+  "repetitions": 2,
+  "max_nodes": 500,
+  "time_limit_seconds": 60.0,
+  "cases": [
+    {"label": "fractional_master", "kind": "integrality_gap", "capacity": 2},
+    {"label": "regular_n3_c2", "kind": "regular_turnover", "core_rows": 3, "capacity": 2},
+    {"label": "regular_n3_c3", "kind": "regular_turnover", "core_rows": 3, "capacity": 3},
+    {"label": "regular_n4_c2", "kind": "regular_turnover", "core_rows": 4, "capacity": 2},
+    {"label": "regular_n4_c3", "kind": "regular_turnover", "core_rows": 4, "capacity": 3}
+  ],
+  "claim_boundary": "constructed fixed-time paired audit; not the frozen NYC public cohort, a city-scale runtime claim, or a complexity result"
+}

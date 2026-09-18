@@ -21,7 +21,7 @@ the full integer decomposition.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import heapq
 import itertools
 import math
@@ -76,6 +76,29 @@ class NodeMaster:
     buffer_violation: float | None = None
     solver_status: int | None = None
     message: str | None = None
+
+
+@dataclass
+class PricingCache:
+    """Objective-independent geometry cache for branch-compatible pricing.
+
+    Only boxes rejected by the exact integer geometry precheck are memoized as
+    infeasible.  A numerical LP status is never inserted into this cache.
+    The cache belongs to one solver invocation; keys nevertheless include the
+    capacity so direct test calls cannot accidentally reuse another model.
+    """
+
+    enabled: bool = True
+    span_matrices: dict[
+        tuple[int, tuple[int, int]], tuple[np.ndarray, np.ndarray]
+    ] = field(default_factory=dict)
+    infeasible_boxes: set[
+        tuple[int, tuple[int, int], tuple[int, ...], tuple[int, ...]]
+    ] = field(default_factory=set)
+    span_matrix_cache_hits: int = 0
+    infeasible_box_cache_hits: int = 0
+    exact_box_prunes: int = 0
+    interval_signature: tuple[tuple[int, int], ...] | None = None
 
 
 def _pair(left: int, right: int) -> tuple[int, int]:
@@ -432,35 +455,94 @@ def _solve_fixed_span_forced(
     capacity: int,
     forced_in: frozenset[int],
     forced_out: frozenset[int],
+    *,
+    cache: PricingCache | None = None,
 ) -> dict[str, Any]:
+    if cache is not None and cache.enabled:
+        signature = tuple((interval.start, interval.end) for interval in intervals)
+        if cache.interval_signature is None:
+            cache.interval_signature = signature
+        elif cache.interval_signature != signature:
+            raise ValueError("pricing cache cannot span different interval universes")
     if forced_in & forced_out:
-        return {"status": "PROVEN_INFEASIBLE"}
+        return {"status": "PROVEN_INFEASIBLE", "lp_solve_count": 0}
     if any(not allowed_in_span(intervals[position], span) for position in forced_in):
-        return {"status": "PROVEN_INFEASIBLE"}
+        return {"status": "PROVEN_INFEASIBLE", "lp_solve_count": 0}
     a, b = span
-    bounds = []
+    lower: list[int] = []
+    upper: list[int] = []
     for position, interval in enumerate(intervals):
+        lower.append(int(position in forced_in))
         if position in forced_out or not allowed_in_span(interval, span):
-            bounds.append((0.0, 0.0))
+            upper.append(0)
         else:
-            bounds.append((0.0, 1.0))
+            upper.append(1)
+    if any(lo > hi for lo, hi in zip(lower, upper)):
+        return {"status": "PROVEN_INFEASIBLE", "lp_solve_count": 0}
 
-    inequality_rows: list[np.ndarray] = []
-    inequality_rhs: list[float] = []
-    for segment in range(a, b):
-        row = np.asarray(
-            [float(covers_segment(interval, segment)) for interval in intervals]
+    box_key = (capacity, span, tuple(lower), tuple(upper))
+    if cache is not None and cache.enabled and box_key in cache.infeasible_boxes:
+        cache.infeasible_box_cache_hits += 1
+        return {
+            "status": "PROVEN_INFEASIBLE",
+            "reason": "CACHED_EXACT_BOX_INFEASIBILITY",
+            "lp_solve_count": 0,
+        }
+
+    matrix_key = (capacity, span)
+    cached_matrix = (
+        cache.span_matrices.get(matrix_key)
+        if cache is not None and cache.enabled
+        else None
+    )
+    if cached_matrix is not None:
+        cache.span_matrix_cache_hits += 1
+        inequality_matrix, inequality_rhs_array = cached_matrix
+    else:
+        inequality_rows: list[np.ndarray] = []
+        inequality_rhs: list[int] = []
+        for segment in range(a, b):
+            row = np.asarray(
+                [int(covers_segment(interval, segment)) for interval in intervals],
+                dtype=np.int64,
+            )
+            inequality_rows.append(row)
+            inequality_rhs.append(capacity)
+            inequality_rows.append(-row)
+            inequality_rhs.append(-1)
+        for boundary in range(a + 1, b):
+            row = np.asarray(
+                [int(bridges_boundary(interval, boundary)) for interval in intervals],
+                dtype=np.int64,
+            )
+            inequality_rows.append(-row)
+            inequality_rhs.append(-1)
+        inequality_matrix = np.asarray(inequality_rows, dtype=np.int64)
+        inequality_rhs_array = np.asarray(inequality_rhs, dtype=np.int64)
+        if cache is not None and cache.enabled:
+            cache.span_matrices[matrix_key] = (
+                inequality_matrix,
+                inequality_rhs_array,
+            )
+
+    if cache is not None and cache.enabled:
+        # For A x <= b over a binary box, the minimum possible left-hand side
+        # is exact integer arithmetic.  If even that minimum exceeds b, the box
+        # is empty for every pricing objective and can be reused safely.
+        lower_array = np.asarray(lower, dtype=np.int64)
+        upper_array = np.asarray(upper, dtype=np.int64)
+        best_lhs = (
+            np.maximum(inequality_matrix, 0) @ lower_array
+            + np.minimum(inequality_matrix, 0) @ upper_array
         )
-        inequality_rows.append(row)
-        inequality_rhs.append(float(capacity))
-        inequality_rows.append(-row)
-        inequality_rhs.append(-1.0)
-    for boundary in range(a + 1, b):
-        row = np.asarray(
-            [float(bridges_boundary(interval, boundary)) for interval in intervals]
-        )
-        inequality_rows.append(-row)
-        inequality_rhs.append(-1.0)
+        if np.any(best_lhs > inequality_rhs_array):
+            cache.infeasible_boxes.add(box_key)
+            cache.exact_box_prunes += 1
+            return {
+                "status": "PROVEN_INFEASIBLE",
+                "reason": "EXACT_BOX_INFEASIBILITY",
+                "lp_solve_count": 0,
+            }
 
     equality_rows: list[np.ndarray] = []
     equality_rhs: list[float] = []
@@ -473,17 +555,18 @@ def _solve_fixed_span_forced(
     objective = np.asarray(weights, dtype=float)
     result = linprog(
         -objective,
-        A_ub=np.asarray(inequality_rows, dtype=float),
-        b_ub=np.asarray(inequality_rhs, dtype=float),
+        A_ub=inequality_matrix,
+        b_ub=inequality_rhs_array,
         A_eq=np.asarray(equality_rows, dtype=float),
         b_eq=np.asarray(equality_rhs, dtype=float),
-        bounds=bounds,
+        bounds=list(zip(lower, upper)),
         method="highs",
     )
     if not result.success or result.x is None:
         return {
             "status": "PROVEN_INFEASIBLE" if result.status == 2 else "UNRESOLVED",
             "solver_status": int(result.status),
+            "lp_solve_count": 1,
         }
     rounded = np.rint(result.x)
     residual = float(np.max(np.abs(result.x - rounded)))
@@ -491,12 +574,14 @@ def _solve_fixed_span_forced(
         return {
             "status": "NONINTEGRAL_NUMERICAL_RESULT",
             "integrality_residual": residual,
+            "lp_solve_count": 1,
         }
     return {
         "status": "CERTIFIED_OPTIMAL_LP_INTEGER",
         "value": float(objective @ rounded),
         "x": tuple(int(value) for value in rounded),
         "integrality_residual": residual,
+        "lp_solve_count": 1,
     }
 
 
@@ -526,6 +611,8 @@ def _solve_rooted_case(
     capacity: int,
     forced_in: frozenset[int],
     forced_out: frozenset[int],
+    *,
+    cache: PricingCache | None = None,
 ) -> dict[str, Any]:
     earliest_forced_start = min(intervals[position].start for position in forced_in)
     latest_forced_end = max(intervals[position].end for position in forced_in)
@@ -564,8 +651,9 @@ def _solve_rooted_case(
                 capacity,
                 forced_in,
                 forced_out,
+                cache=cache,
             )
-            lp_solve_count += 1
+            lp_solve_count += int(result.get("lp_solve_count", 0))
             if result["status"] == "PROVEN_INFEASIBLE":
                 continue
             if result["status"] != "CERTIFIED_OPTIMAL_LP_INTEGER":
@@ -591,8 +679,9 @@ def _solve_rooted_case(
                         capacity,
                         forced_in | {companion},
                         forced_out,
+                        cache=cache,
                     )
-                    lp_solve_count += 1
+                    lp_solve_count += int(forced.get("lp_solve_count", 0))
                     if forced["status"] == "PROVEN_INFEASIBLE":
                         continue
                     if forced["status"] != "CERTIFIED_OPTIMAL_LP_INTEGER":
@@ -628,6 +717,7 @@ def solve_rooted_run_at_node(
     node: BranchNode,
     *,
     max_cases: int,
+    cache: PricingCache | None = None,
 ) -> dict[str, Any]:
     _equalities, _free, excluded = _row_classes(model, node)
     try:
@@ -650,6 +740,7 @@ def solve_rooted_run_at_node(
             capacity,
             forced_in,
             forced_out,
+            cache=cache,
         )
         total_lp_solves += int(result.get("lp_solve_count", 0))
         total_spans += int(result.get("candidate_span_count", 0))
@@ -704,6 +795,7 @@ def price_node_columns(
     node: BranchNode,
     *,
     max_cases: int,
+    cache: PricingCache | None = None,
 ) -> dict[str, Any]:
     duals = dict(master.equality_duals)
     duals.update(dict(master.inequality_duals))
@@ -728,6 +820,7 @@ def price_node_columns(
             capacity,
             node,
             max_cases=max_cases,
+            cache=cache,
         )
         total_lp_solves += int(priced.get("lp_solve_count", 0))
         total_spans += int(priced.get("candidate_span_count", 0))
@@ -862,6 +955,7 @@ def column_generation_at_node(
     initial_columns: Sequence[root_cg.RunColumn] = (),
     max_iterations_per_phase: int = 100,
     max_pricing_cases: int = 4096,
+    pricing_cache: PricingCache | None = None,
 ) -> dict[str, Any]:
     model = root_cg.layout(rows)
     contradiction = _node_contradiction(model, node)
@@ -904,6 +998,7 @@ def column_generation_at_node(
                 capacity,
                 node,
                 max_cases=max_pricing_cases,
+                cache=pricing_cache,
             )
             total_oracle_lp_solves += int(priced.get("lp_solve_count", 0))
             total_candidate_spans += int(priced.get("candidate_span_count", 0))
@@ -1115,6 +1210,7 @@ def branch_and_price_max_support(
     time_limit_seconds: float = 1800.0,
     max_iterations_per_phase: int = 100,
     max_pricing_cases: int = 4096,
+    use_pricing_cache: bool = True,
 ) -> dict[str, Any]:
     """Certify the integer support maximum or return a rigorous open gap."""
 
@@ -1122,7 +1218,10 @@ def branch_and_price_max_support(
         raise ValueError("capacity must be at least two")
     if max_nodes <= 0 or time_limit_seconds <= 0:
         raise ValueError("node and time limits must be positive")
+    if not isinstance(use_pricing_cache, bool):
+        raise ValueError("use_pricing_cache must be boolean")
     model = root_cg.layout(rows)
+    pricing_cache = PricingCache(enabled=use_pricing_cache)
     started = time.perf_counter()
     root = _canonical_node()
     queue: list[
@@ -1176,6 +1275,7 @@ def branch_and_price_max_support(
             initial_columns=warm_columns,
             max_iterations_per_phase=max_iterations_per_phase,
             max_pricing_cases=max_pricing_cases,
+            pricing_cache=pricing_cache,
         )
         nodes_processed += 1
         maximum_depth = max(maximum_depth, node.depth)
@@ -1293,6 +1393,11 @@ def branch_and_price_max_support(
             "total_oracle_lp_solve_count": total_oracle_lp_solves,
             "total_pricing_case_count": total_pricing_cases,
             "maximum_pricing_cases_for_one_root": maximum_pricing_cases_for_one_root,
+            "pricing_infeasible_box_cache_hits": (
+                pricing_cache.infeasible_box_cache_hits
+            ),
+            "pricing_exact_box_prunes": pricing_cache.exact_box_prunes,
+            "pricing_span_matrix_cache_hits": pricing_cache.span_matrix_cache_hits,
             "selected_column_count": len(incumbent_masks),
             "elapsed_seconds": elapsed,
         }
@@ -1329,6 +1434,11 @@ def branch_and_price_max_support(
         "total_oracle_lp_solve_count": total_oracle_lp_solves,
         "total_pricing_case_count": total_pricing_cases,
         "maximum_pricing_cases_for_one_root": maximum_pricing_cases_for_one_root,
+        "pricing_infeasible_box_cache_hits": (
+            pricing_cache.infeasible_box_cache_hits
+        ),
+        "pricing_exact_box_prunes": pricing_cache.exact_box_prunes,
+        "pricing_span_matrix_cache_hits": pricing_cache.span_matrix_cache_hits,
         "elapsed_seconds": elapsed,
     }
 

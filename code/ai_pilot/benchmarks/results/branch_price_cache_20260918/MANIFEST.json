@@ -1,0 +1,14 @@
+{
+  "deterministic_fields": "certificates, branch paths, LP-call counts, cache counts",
+  "nondeterministic_fields": "elapsed_seconds and derived runtime ratios",
+  "outputs": {
+    "PAIRED_CELLS.csv": "45c27214e47f701ea54416a473f74aa5dff50da936056dcd1f7347beec127a95",
+    "REPORT.md": "aa815b33b6d1612db3dac9973c74a328db421c37965add785bd45e94cd0d9aec",
+    "RESULTS.tex": "8398978b14c625e07002b59bc942a28dd72b5c3952db82384f14db7a6270cf65",
+    "RUNS.json": "47e49ae0429f34459d81ed10bdcea0978edd95c4647047502168cf1824a2a12b",
+    "SUMMARY.json": "f0d2788ac6caecd6b6f8fab72f453969244ee8c4d81b78955252a8f81572f94f"
+  },
+  "protocol_sha256": "66dea2e9834327bfff31c2ffca00f8facbb9aaf2e53e5a3ce534e6e733b98d1b",
+  "report_version": "ordered-branch-price-cache-paired/v1",
+  "solver_sha256": "87ea8a90989dd482f707c0976c19261963a2d5d305cba38a7ecfe33c2eb441c6"
+}

@@ -1,5 +1,24 @@
 # Verified project status
 
+## September 18: exact pricing cache passes a paired constructed audit
+
+The branch-compatible pricing implementation now reuses span-constraint
+matrices and memoizes only boxes rejected by an exact integer-arithmetic
+geometry precheck.  It never memoizes a numerical LP status, and a cache is
+bound to one interval universe and one solver invocation.  Five fixed-time
+constructed cells were run twice with the cache off and on, alternating order.
+All 10 pairs returned identical integer certificates and branch paths.  Across
+one copy of each cell, actual fixed-span LP calls fell from 9,900 to 7,770
+(21.5%); the cached variant was faster in all 10 runner-specific wall-clock
+pairs.
+
+Frozen JSON, CSV, Markdown, TeX, and hashes are under
+`benchmarks/results/branch_price_cache_20260918/`.  This establishes a local
+causal acceleration on constructed inputs, not on the frozen NYC public
+cohort, and does not support city-scale runtime or a complexity claim.  The
+next Gate is a cache-off/cache-on paired rerun of the dominant frozen NYC
+cells, conditional on reproducing their exact input snapshots.
+
 ## September 17: frozen branch-and-price bottleneck localized
 
 A deterministic profile now derives normalized performance diagnostics from

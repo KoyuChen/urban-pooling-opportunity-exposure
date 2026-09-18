@@ -1,0 +1,6 @@
+label,kind,core_rows,buffer_rows,capacity,repetitions,certificate_equal,integer_optimum,nodes_processed,baseline_oracle_lp_calls,accelerated_oracle_lp_calls,oracle_lp_call_reduction,oracle_lp_call_reduction_rate,infeasible_box_cache_hits,exact_box_prunes,span_matrix_cache_hits,baseline_median_seconds,accelerated_median_seconds,median_runtime_ratio
+fractional_master,integrality_gap,4,5,2,2,True,3.0,17,1030,573,457,0.4436893203883495,414,85,714,1.5764911884998583,1.0072296380003536,0.6389059738156881
+regular_n3_c2,regular_turnover,3,9,2,2,True,9.0,3,960,866,94,0.09791666666666667,71,23,846,1.4931912295000984,1.3454330760005178,0.9010453915209184
+regular_n3_c3,regular_turnover,3,9,3,2,True,9.0,1,396,396,0,0.0,0,0,353,0.6416696100000081,0.6362873489997583,0.9916120992542412
+regular_n4_c2,regular_turnover,4,12,2,2,True,12.0,7,6520,4941,1579,0.24217791411042944,1297,282,5147,10.534491244000037,7.879327350500262,0.7479551853050298
+regular_n4_c3,regular_turnover,4,12,3,2,True,12.0,1,994,994,0,0.0,0,0,918,1.7181534569995165,1.6677072090001275,0.9706392651984151

@@ -43,6 +43,7 @@ jobs:
             code/ai_pilot/benchmarks/atr_diamor_support_calibration.py \
             code/ai_pilot/benchmarks/atr_diamor_density_cap.py \
             code/ai_pilot/benchmarks/atr_diamor_alternating_structure.py \
+            code/ai_pilot/benchmarks/branch_price_cache_audit.py \
             code/ai_pilot/data_pipeline/production_audit/compact_event_slot_probe.py \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py \
             code/ai_pilot/data_pipeline/production_audit/chicago_k2_followup.py \
@@ -70,6 +71,7 @@ jobs:
             --self-test
           python code/ai_pilot/benchmarks/compact_event_slot_audit.py --self-test
           python code/ai_pilot/benchmarks/check_compact_event_slot_evidence.py
+          python code/ai_pilot/benchmarks/branch_price_cache_audit.py --self-test
           actual="$(find .github/workflows -maxdepth 1 -type f -printf '%f\n' | sort)"
           expected="$(printf 'chicago-k2-fixed-panel.yml\nchicago-live-audits.yml\nci.yml\nnyc-bp-24h.yml\n')"
           test "$actual" = "$expected"
@@ -220,6 +222,23 @@ jobs:
           assert profile["bottleneck"]["classification"] == (
               "PRICING_LP_VOLUME_PRIMARY_SCALING_SIGNAL"
           )
+
+          cache = json.loads(
+              Path(
+                  "code/ai_pilot/benchmarks/results/"
+                  "branch_price_cache_20260918/SUMMARY.json"
+              ).read_text(encoding="utf-8")
+          )
+          assert cache["report_version"] == (
+              "ordered-branch-price-cache-paired/v1"
+          )
+          assert cache["paired_run_count"] == 10
+          assert cache["all_certificates_equal"] is True
+          assert cache["all_runs_integer_optimum_certified"] is True
+          assert cache["total_baseline_oracle_lp_calls"] == 9900
+          assert cache["total_accelerated_oracle_lp_calls"] == 7770
+          assert cache["total_oracle_lp_call_reduction"] == 2130
+          assert "not the frozen NYC public cohort" in cache["claim_boundary"]
 
           chicago = json.loads(
               (

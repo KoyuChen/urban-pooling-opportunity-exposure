@@ -527,6 +527,13 @@ slowest cells consume 88.0\% of runtime; on $\log(1+x)$ scales, runtime
 correlates 0.986 with oracle-LP volume and 0.544 with processed nodes.  This
 descriptive profile localizes repeated pricing work as the main scaling signal
 on this lattice; it is not a causal ablation or runtime-complexity claim.
+An objective-independent cache subsequently memoized only boxes rejected by
+an exact integer-arithmetic geometry precheck, never a numerical LP status.
+In a paired constructed audit (five cells, two repetitions), enabling that
+cache preserved every integer certificate and branch path while reducing
+actual fixed-span LP calls from 9,900 to 7,770 (21.5\%).  This isolates a local
+causal reduction in pricing work; it is not a rerun of the frozen NYC cohort
+or a city-scale runtime result.
 \begin{table*}[t]
 \caption{All 18 predeclared NYC integer scale cells. A bracket is the valid
 [integer incumbent, global upper bound] interval at termination.}

@@ -53,6 +53,23 @@ The number of cases may grow exponentially in branch depth. Consequently:
 - the implementation is an exact medium-instance algorithm, not a polynomial
   algorithm for the full integer decomposition.
 
+## Objective-independent pricing cache
+
+Within one solver invocation, repeated branch cases may share a span and a
+binary variable box.  The implementation therefore reuses the span inequality
+matrix and performs an exact integer-arithmetic box check before calling the LP
+solver.  Only boxes rejected by this exact check are memoized as infeasible.
+HiGHS statuses, including numerical infeasibility and interrupted solves, are
+never cached.  The cache is bound to one interval universe and its keys include
+capacity, span, and every lower/upper bound, so it cannot alter the set of
+admissible pricing columns.
+
+The frozen constructed audit in
+`benchmarks/results/branch_price_cache_20260918/` compares identical solves
+with this switch off and on.  All certificates and branch paths agree; actual
+fixed-span LP calls fall 21.5%.  The accompanying runtime measurements are
+runner-specific, and this audit is not a rerun of the NYC lattice.
+
 ## Correctness statement
 
 **Proposition.** Assume every branch-compatible pricing case is solved exactly,
@@ -76,11 +93,11 @@ nearest temporal buffers. Capacities two, three, and four are solved both by
 branch-and-price and the exhaustive small-instance master; all three integer
 values agree.
 
-The live aggregate results are frozen in:
+The public aggregate results are frozen in:
 
-- `results/nyc_hvfhv/BRANCH_AND_PRICE_REPORT.md`;
-- `results/nyc_hvfhv/BRANCH_AND_PRICE_CELLS.csv`;
-- `results/nyc_hvfhv/BRANCH_AND_PRICE_MANIFEST.json`.
+- `results/nyc_hvfhv/BRANCH_AND_PRICE_SCALE_CELLS.csv`;
+- `results/nyc_hvfhv/BRANCH_AND_PRICE_SCALE_MANIFEST.json`;
+- `results/nyc_hvfhv/branch_price_profile_20260917/`.
 
 No output contains raw rows, row identifiers, run columns, or selected-run
 witnesses. The audit does not recover actual partners or vehicle runs and does
