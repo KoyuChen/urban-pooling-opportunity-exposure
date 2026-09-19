@@ -2,6 +2,10 @@ name: nyc-bp-cache-replay
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/nyc-bp-cache-replay.yml
 
 permissions:
   contents: read
