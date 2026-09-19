@@ -531,9 +531,14 @@ An objective-independent cache subsequently memoized only boxes rejected by
 an exact integer-arithmetic geometry precheck, never a numerical LP status.
 In a paired constructed audit (five cells, two repetitions), enabling that
 cache preserved every integer certificate and branch path while reducing
-actual fixed-span LP calls from 9,900 to 7,770 (21.5\%).  This isolates a local
-causal reduction in pricing work; it is not a rerun of the frozen NYC cohort
-or a city-scale runtime result.
+actual fixed-span LP calls from 9,900 to 7,770 (21.5\%).  A second paired audit
+reconstructed the four dominant public cells from the matching dataset
+fingerprint, provider, time window, and source counts.  Every cache-off run
+reproduced the historical integer certificate and branch path; cache-on
+preserved them while reducing actual LP calls from 1,880,627 to 1,324,841
+(29.6\%), with a runner-specific time win in all four pairs.  The old artifacts
+retained neither rows nor an input hash, so this is a snapshot-consistent
+deterministic reconstruction, not a byte-identical replay or city-scale claim.
 \begin{table*}[t]
 \caption{All 18 predeclared NYC integer scale cells. A bracket is the valid
 [integer incumbent, global upper bound] interval at termination.}

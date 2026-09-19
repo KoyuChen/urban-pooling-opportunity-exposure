@@ -29,3 +29,15 @@ The four predeclared targets are `10+30,C=4`, `12+36,C=4`, `16+48,C=3`, and
 `16+48,C=4`, which accounted for the dominant runtime in the frozen lattice.
 Even if all pass, the result remains a snapshot-consistent reconstruction, not
 a byte-identical historical replay or a city-scale runtime claim.
+
+## Closed audit
+
+The September 19 run closed all four targets. Cache-off reproduced the
+historical certificate and branch path in every cell; cache-on preserved them
+and reduced actual fixed-span LP calls from 1,880,627 to 1,324,841 (29.6%).
+Per-cell reductions range from 22.2% to 32.0%. The frozen aggregate is in
+`results/nyc_hvfhv/branch_price_cache_reconstruction_20260919/`.
+
+The absence of an old fixed-row hash remains an archival boundary. It prevents
+a byte-identity claim but does not turn any solver timeout or numerical status
+into a scientific conclusion.

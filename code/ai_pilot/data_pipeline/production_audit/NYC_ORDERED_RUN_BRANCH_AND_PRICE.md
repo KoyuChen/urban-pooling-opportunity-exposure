@@ -68,7 +68,13 @@ The frozen constructed audit in
 `benchmarks/results/branch_price_cache_20260918/` compares identical solves
 with this switch off and on.  All certificates and branch paths agree; actual
 fixed-span LP calls fall 21.5%.  The accompanying runtime measurements are
-runner-specific, and this audit is not a rerun of the NYC lattice.
+runner-specific.  A second paired audit under
+`results/nyc_hvfhv/branch_price_cache_reconstruction_20260919/` reconstructs
+the four dominant public cells after matching the frozen source fingerprint,
+cohort counts, and historical diagnostics.  It preserves every certificate
+and branch path while reducing actual LP calls by 29.6%.  Because the older
+artifacts lack row payloads and an input hash, this is snapshot-consistent
+rather than byte-identical; neither audit is a city-scale runtime claim.
 
 ## Correctness statement
 

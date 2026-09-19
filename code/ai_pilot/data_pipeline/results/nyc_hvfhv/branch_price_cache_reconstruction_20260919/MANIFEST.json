@@ -1,0 +1,13 @@
+{
+  "input_report_sha256": {
+    "10:4": "cbb0c541bd9c1e13cf10aa226084da0f99ebc05b40e5875740b792d006c8b2bc",
+    "12:4": "71db9b00596cdbe9c375a0ce0ee7a5fbda0c32a9e0871f7e852ee81fa9349028",
+    "16:3": "6853ab7dd9e26b1723233eda1f1e8e15dfee2ba39b16e162bf6445bc48952014",
+    "16:4": "dd2ef50565f83d4df7a38b35980091b59e5240cd515d3522e889f063d40dc30c"
+  },
+  "report_sha256": "c503aabaa0a772efebbbc5d666c5c113192b6dbf1bad8cf209752373bcb2ae69",
+  "report_version": "nyc-branch-price-cache-reconstruction/v1",
+  "runner_sha256": "c5274a1d88426512b934ad8fdda27e9d3d877ca7650412b486153ee806a6c230",
+  "summary_sha256": "8c3567d2575d9fce37b8ab622c35aca00dc86e3f8aea03c447114543bba6a873",
+  "tex_sha256": "4a5946f5bc74737daafb70298f3988b7a59d8d5321c04dd899f8fd1f1dee6da2"
+}

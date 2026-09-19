@@ -242,6 +242,21 @@ jobs:
           assert cache["total_oracle_lp_call_reduction"] == 2130
           assert "not the frozen NYC public cohort" in cache["claim_boundary"]
 
+          public_cache = json.loads(
+              (
+                  nyc
+                  / "branch_price_cache_reconstruction_20260919"
+                  / "SUMMARY.json"
+              ).read_text(encoding="utf-8")
+          )
+          assert public_cache["cell_count"] == 4
+          assert public_cache["all_certificates_and_branch_paths_equal"] is True
+          assert public_cache["all_baselines_match_historical_diagnostics"] is True
+          assert public_cache["byte_identical_old_input_claim"] is False
+          assert public_cache["total_baseline_oracle_lp_calls"] == 1880627
+          assert public_cache["total_accelerated_oracle_lp_calls"] == 1324841
+          assert public_cache["runtime_win_cells"] == 4
+
           chicago = json.loads(
               (
                   root

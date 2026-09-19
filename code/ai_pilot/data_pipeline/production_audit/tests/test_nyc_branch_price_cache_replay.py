@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 import sys
 import unittest
@@ -13,6 +15,32 @@ import nyc_branch_price_cache_replay as target  # noqa: E402
 
 
 class NycBranchPriceCacheReplayTests(unittest.TestCase):
+    def test_frozen_public_reconstruction_summary(self) -> None:
+        result_dir = (
+            HERE.parent
+            / "results"
+            / "nyc_hvfhv"
+            / "branch_price_cache_reconstruction_20260919"
+        )
+        summary_path = result_dir / "SUMMARY.json"
+        manifest = json.loads((result_dir / "MANIFEST.json").read_text())
+        summary = json.loads(summary_path.read_text())
+        self.assertEqual(summary["cell_count"], 4)
+        self.assertEqual(summary["total_baseline_oracle_lp_calls"], 1_880_627)
+        self.assertEqual(summary["total_accelerated_oracle_lp_calls"], 1_324_841)
+        self.assertEqual(summary["runtime_win_cells"], 4)
+        self.assertAlmostEqual(summary["total_oracle_lp_call_reduction_rate"], 0.295532287901854)
+        hashes = {
+            (row["target"]["core_rows"], row["target"]["capacity"]):
+            row["reconstructed_fixed_input_sha256"]
+            for row in summary["cells"]
+        }
+        self.assertEqual(hashes[(16, 3)], hashes[(16, 4)])
+        self.assertEqual(
+            hashlib.sha256(summary_path.read_bytes()).hexdigest(),
+            manifest["summary_sha256"],
+        )
+
     def test_historical_path_check_uses_frozen_diagnostics(self) -> None:
         frozen = target.frozen_cell(16, 4)
         reconstructed = {"status": frozen["status"]}
@@ -77,6 +105,10 @@ class NycBranchPriceCacheReplayTests(unittest.TestCase):
         self.assertEqual(summary["cell_count"], 4)
         self.assertEqual(summary["total_oracle_lp_call_reduction"], 80)
         self.assertEqual(summary["runtime_win_cells"], 4)
+        self.assertAlmostEqual(summary["descriptive_elapsed_time_reduction_rate"], 0.5)
+        tex = target.render_tex(summary)
+        self.assertIn("Dominant-cell pricing-cache reconstruction", tex)
+        self.assertIn("19.7", tex)
         with self.assertRaisesRegex(ValueError, "exactly the four"):
             target.aggregate_reports(reports[:-1])
 

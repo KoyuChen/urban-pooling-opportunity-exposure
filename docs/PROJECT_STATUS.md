@@ -1,5 +1,24 @@
 # Verified project status
 
+## September 19: dominant NYC cells confirm exact pricing-cache acceleration
+
+The four cells responsible for 88.0% of the frozen branch-and-price lattice's
+runtime were deterministically reconstructed only after the TLC dataset
+fingerprint, provider, time window, 38 source-core rows, and 437 source
+candidate rows matched the frozen report.  Every cache-off run reproduced its
+historical integer certificate and branch-path diagnostics; every cache-on
+pair preserved them.  Actual fixed-span LP calls fell from 1,880,627 to
+1,324,841 (29.6%), with reductions of 22.2%--32.0% in every cell.  The cached
+variant was faster in 4/4 runner-specific pairs (47.5% aggregate elapsed-time
+reduction).
+
+Frozen JSON, Markdown, TeX, and hashes are under
+`results/nyc_hvfhv/branch_price_cache_reconstruction_20260919/`.  The original
+2026-09-04 artifacts intentionally retained neither row payloads nor a
+fixed-input hash.  This is therefore a snapshot-consistent deterministic
+reconstruction, not a byte-identical replay, city-scale runtime result, or
+population claim.  The scalability Gate passes at this stated boundary.
+
 ## September 18: exact pricing cache passes a paired constructed audit
 
 The branch-compatible pricing implementation now reuses span-constraint
