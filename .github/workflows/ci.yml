@@ -51,8 +51,10 @@ jobs:
             code/ai_pilot/data_pipeline/production_audit/apply_chicago_k2_gap_amendment.py \
             code/ai_pilot/data_pipeline/production_audit/profile_nyc_branch_price_scale.py \
             code/ai_pilot/data_pipeline/production_audit/nyc_branch_price_cache_replay.py \
-            scripts/audit_tex_references.py
+            scripts/audit_tex_references.py \
+            scripts/audit_submission_claims.py
           python scripts/audit_tex_references.py
+          python scripts/audit_submission_claims.py
           python \
             code/ai_pilot/data_pipeline/production_audit/live_chicago_k2_frontier_boundary.py \
             --self-test

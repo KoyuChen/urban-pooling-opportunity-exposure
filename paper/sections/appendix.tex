@@ -541,7 +541,8 @@ retained neither rows nor an input hash, so this is a snapshot-consistent
 deterministic reconstruction, not a byte-identical replay or city-scale claim.
 \begin{table*}[t]
 \caption{All 18 predeclared NYC integer scale cells. A bracket is the valid
-[integer incumbent, global upper bound] interval at termination.}
+[integer incumbent, global upper bound] interval at termination. ``Certified''
+means bound closure plus witness replay under recorded tolerances, not exact arithmetic.}
 \label{tab:scaledetail}
 \small
 \centering
@@ -549,24 +550,24 @@ deterministic reconstruction, not a byte-identical replay or city-scale claim.
 \toprule
 Core & Buffer & $C$ & Root LP & Status & Bracket & Nodes & Seconds \\
 \midrule
-4  & 12 & 2 & 4  & Exact & [4,4]   & 1 & 0.48 \\
-4  & 12 & 3 & 8  & Exact & [8,8]   & 4 & 6.98 \\
-4  & 12 & 4 & 12 & Exact & [12,12] & 2 & 6.22 \\
-6  & 18 & 2 & 8  & Exact & [8,8]   & 1 & 4.04 \\
-6  & 18 & 3 & 14 & Exact & [14,14] & 8 & 56.32 \\
-6  & 18 & 4 & 18 & Exact & [18,18] & 1 & 15.26 \\
-8  & 24 & 2 & 12 & Exact & [12,12] & 1 & 12.21 \\
-8  & 24 & 3 & 20 & Exact & [20,20] & 3 & 62.05 \\
-8  & 24 & 4 & 24 & Exact & [24,24] & 4 & 79.94 \\
-10 & 30 & 2 & 16 & Exact & [16,16] & 1 & 52.47 \\
-10 & 30 & 3 & 26 & Exact & [26,26] & 1 & 86.36 \\
-10 & 30 & 4 & 30 & Exact & [30,30] & 8 & 1031.00 \\
-12 & 36 & 2 & 20 & Exact & [20,20] & 1 & 145.94 \\
-12 & 36 & 3 & 32 & Exact & [32,32] & 1 & 198.91 \\
-12 & 36 & 4 & 36 & Exact & [36,36] & 11 & 2075.49 \\
-16 & 48 & 2 & 28 & Exact & [28,28] & 1 & 415.59 \\
-16 & 48 & 3 & 44 & Exact & [44,44] & 3 & 1068.73 \\
-16 & 48 & 4 & 48 & Exact & [48,48] & 7 & 4193.20 \\
+4  & 12 & 2 & 4  & Certified & [4,4]   & 1 & 0.48 \\
+4  & 12 & 3 & 8  & Certified & [8,8]   & 4 & 6.98 \\
+4  & 12 & 4 & 12 & Certified & [12,12] & 2 & 6.22 \\
+6  & 18 & 2 & 8  & Certified & [8,8]   & 1 & 4.04 \\
+6  & 18 & 3 & 14 & Certified & [14,14] & 8 & 56.32 \\
+6  & 18 & 4 & 18 & Certified & [18,18] & 1 & 15.26 \\
+8  & 24 & 2 & 12 & Certified & [12,12] & 1 & 12.21 \\
+8  & 24 & 3 & 20 & Certified & [20,20] & 3 & 62.05 \\
+8  & 24 & 4 & 24 & Certified & [24,24] & 4 & 79.94 \\
+10 & 30 & 2 & 16 & Certified & [16,16] & 1 & 52.47 \\
+10 & 30 & 3 & 26 & Certified & [26,26] & 1 & 86.36 \\
+10 & 30 & 4 & 30 & Certified & [30,30] & 8 & 1031.00 \\
+12 & 36 & 2 & 20 & Certified & [20,20] & 1 & 145.94 \\
+12 & 36 & 3 & 32 & Certified & [32,32] & 1 & 198.91 \\
+12 & 36 & 4 & 36 & Certified & [36,36] & 11 & 2075.49 \\
+16 & 48 & 2 & 28 & Certified & [28,28] & 1 & 415.59 \\
+16 & 48 & 3 & 44 & Certified & [44,44] & 3 & 1068.73 \\
+16 & 48 & 4 & 48 & Certified & [48,48] & 7 & 4193.20 \\
 \bottomrule
 \end{tabular}
 \end{table*}

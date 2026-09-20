@@ -1,6 +1,22 @@
 # Verified project status
 
-## September 19: dominant NYC cells confirm exact pricing-cache acceleration
+## September 20: submission claims are now evidence-locked
+
+A manuscript-level audit now recomputes the controlled candidate-coverage,
+ATR transfer, Chicago execution, NYC panel/structure/geometry, and pricing-cache
+headline numbers from their frozen artifacts, then checks their exact manuscript
+locations and required limitations. CI fails if a headline drifts, an unresolved
+denominator disappears, or a numerical certificate is relabeled as exact
+arithmetic. The NYC scale table now uses **Certified** rather than **Exact**,
+matching the solver-tolerance and witness-replay protocol. The public-results
+section also reports the four-cell 29.6% pricing-LP reduction while retaining
+the snapshot-consistent, non-byte-identical, descriptive-timing boundary.
+
+The claim-alignment Gate is `PASS_SUBMISSION_CLAIM_ALIGNMENT_WITH_OPEN_LIMITS`.
+This closes wording consistency, not the open global complexity classification,
+NYC geometry transport hold, or the empirical ordered-event advantage.
+
+## September 19: dominant NYC cells confirm certified pricing-cache acceleration
 
 The four cells responsible for 88.0% of the frozen branch-and-price lattice's
 runtime were deterministically reconstructed only after the TLC dataset

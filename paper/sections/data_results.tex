@@ -152,8 +152,12 @@ The separate branch-and-price lattice closes all 18 maximum-support problems
 at six sizes from $4+12$ through $16+48$ and $C=2,3,4$
 (Appendix Table~\ref{tab:scaledetail}). Four initially open cells close under
 longer budgets; their earlier anytime bounds remain in the audit history.
-This establishes certified support optimization on one deterministic cohort.
-It does not close the 25 numerically unresolved outcome pairs in the decision panel, provide
-a city-scale runtime guarantee, or recover true memberships. The evidence
+On a snapshot-consistent reconstruction of the four slowest cells, an exact
+geometry cache preserves every certificate and branch path while cutting
+actual pricing-LP calls by 29.6\%. The old artifacts lack fixed-input hashes,
+so this is not a byte-identical replay and timing remains descriptive.
+This establishes certified support optimization on one deterministic cohort,
+but does not close the 25 numerically unresolved outcome pairs, provide a
+city-scale runtime guarantee, or recover true memberships. The evidence
 supports conditional computation and substantial relation ambiguity; the
 empirical importance of the full temporal-event structure remains open.
