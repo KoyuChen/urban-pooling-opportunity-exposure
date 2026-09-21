@@ -25,18 +25,19 @@
 \newtheorem{proposition}{Proposition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{theorem}{Theorem}
-\title{EventFrontier: Aggregate Identification from Logs with Hidden Event Membership and Coarsened Time}
+\title{EventFrontier: Aggregate Identification over Hidden Temporal-Event Partitions}
 \begin{document}
 \begin{abstract}
-Event logs can preserve individual participations while suppressing event
-identifiers and coarsening timestamps. Aggregate queries about shared events
-then depend on both a hidden partition and a common time realization.
-Existing uncertain-linkage bounds motivate our approach, but pairwise
-compatibility alone need not describe a realizable temporal event.
+Existing methods bound aggregates over uncertain record linkages or database
+repairs. Event logs pose a different latent object when released rows must be
+partitioned into temporal events: feasibility depends on a common timestamp
+completion, overlap connectivity, and capacity at every instant. Pairwise
+compatibility alone need not describe a realizable event, while sequential
+membership can exceed simultaneous capacity.
 We introduce \methodname, a conditional identification framework for
 positive-overlap-connected events with bounded simultaneous occupancy.
-Sequential turnover permits event membership to exceed capacity; uncertain
-timestamps must be completed jointly. For exact intervals, fixed root and span,
+Uncertain timestamps are completed jointly rather than link by link. For exact
+intervals, fixed root and span,
 and additive row weights, segment-coverage and boundary-bridge constraints
 yield an integral LP pricing oracle. We embed it in a nonintegral event-column
 master and branch-and-price for support maximization; uncertain-time models

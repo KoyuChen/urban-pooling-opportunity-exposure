@@ -5,19 +5,24 @@
 Resolution-aware query answering retains unresolved entities and computes
 aggregate bounds without requiring probabilities over resolutions
 \citep{sismanis2009resolution}. Probabilistic linkage supports aggregate
-queries \citep{hua2012aggregate}, while Bayesian linkage represents entire
-compatible matchings and quantifies their uncertainty
-\citep{sadinle2017linkage}. Our closest comparator,
-\citet{turkcapar2023aggregate}, optimizes aggregate ranges over
-candidate-constrained, one-to-many integrations of two tables using graph
-matching. Their coverage statement assumes that the candidates retain the
-true matching; their experiments also study false negatives and failures to
-bound the true aggregate. Thus neither extremal aggregation nor the risk of
-candidate omission is new here. Our latent object is a partition into
-positive-overlap-connected events with bounded simultaneous occupancy.
-Sequential membership can exceed capacity, and set-valued timestamps require
-one common completion for an entire event. These constraints determine the
-specific optimization problem studied below.
+queries \citep{hua2012aggregate}; constrained probabilistic similarity joins
+likewise define one-to-one, one-to-many, and many-to-many matching worlds and
+evaluate aggregates over them \citep{chen2019constrained}. Bayesian linkage
+represents entire compatible matchings and quantifies their uncertainty
+\citep{sadinle2017linkage}. Our closest optimization comparator,
+\citet{turkcapar2023aggregate}, computes aggregate ranges over
+candidate-constrained one-to-many table integrations via graph matching. It
+also studies false-negative candidates and failure to cover the true
+aggregate. Thus possible-world aggregation, matching constraints, extremal
+bounds, and candidate-omission risk are not new here.
+
+The narrow distinction is the latent world being quantified over. A matching
+selects links; our world partitions rows into variable-cardinality temporal
+events. Each event must admit one common timestamp completion, connected
+positive overlap, and bounded occupancy at every instant. Consequently,
+membership can exceed capacity through sequential turnover, while individually
+compatible links may be jointly unrealizable. These are object-level
+constraints rather than a new semantics for uncertain aggregation.
 
 \paragraph{Possible worlds, repairs, and sensitivity.}
 Range-consistent query answering optimizes aggregates across legal database

@@ -48,6 +48,19 @@ def main() -> None:
     evidence_checks = 0
     boundary_guards = 0
 
+    boundary_guards += require(
+        "paper/main.tex",
+        "Aggregate Identification over Hidden Temporal-Event Partitions",
+        "Existing methods bound aggregates over uncertain record linkages or database repairs",
+    )
+    boundary_guards += require(
+        "paper/sections/related_work.tex",
+        "chen2019constrained",
+        "possible-world aggregation, matching constraints, extremal bounds, and candidate-omission risk are not new here",
+        "The narrow distinction is the latent world being quantified over",
+        "object-level constraints rather than a new semantics for uncertain aggregation",
+    )
+
     controlled_path = (
         RESULTS
         / "benchmarks"

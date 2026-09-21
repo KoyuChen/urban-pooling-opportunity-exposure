@@ -1,7 +1,7 @@
 # EventFrontier manuscript
 
-Working research draft, rewritten September 9, 2026:
-**EventFrontier: Aggregate Identification from Logs with Hidden Event Membership and Coarsened Time**.
+Current KDD 2027 research draft:
+**EventFrontier: Aggregate Identification over Hidden Temporal-Event Partitions**.
 
 Build from this directory with `latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex`
 in a full TeX Live installation containing `acmart`, Libertine, NewTX,
