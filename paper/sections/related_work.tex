@@ -4,39 +4,31 @@
 \paragraph{Aggregate uncertainty from unresolved relationships.}
 Resolution-aware query answering retains unresolved entities and computes
 aggregate bounds without requiring probabilities over resolutions
-\citep{sismanis2009resolution}. Probabilistic linkage supports aggregate
-queries \citep{hua2012aggregate}; constrained probabilistic similarity joins
-likewise define one-to-one, one-to-many, and many-to-many matching worlds and
-evaluate aggregates over them \citep{chen2019constrained}. Bayesian linkage
-represents entire compatible matchings and quantifies their uncertainty
-\citep{sadinle2017linkage}. Our closest optimization comparator,
-\citet{turkcapar2023aggregate}, computes aggregate ranges over
-candidate-constrained one-to-many table integrations via graph matching. It
-also studies false-negative candidates and failure to cover the true
-aggregate. Thus possible-world aggregation, matching constraints, extremal
-bounds, and candidate-omission risk are not new here.
-
-The narrow distinction is the latent world being quantified over. A matching
-selects links; our world partitions rows into variable-cardinality temporal
-events. Each event must admit one common timestamp completion, connected
-positive overlap, and bounded occupancy at every instant. Consequently,
-membership can exceed capacity through sequential turnover, while individually
-compatible links may be jointly unrealizable. These are object-level
-constraints rather than a new semantics for uncertain aggregation.
+\citep{sismanis2009resolution}. Probabilistic and Bayesian linkage propagate
+uncertainty over matching worlds \citep{hua2012aggregate,sadinle2017linkage};
+constrained similarity joins also cover one-to-one, one-to-many, and
+many-to-many aggregate queries \citep{chen2019constrained}. Our closest
+optimization comparator computes extrema over candidate-constrained
+one-to-many table integrations and studies candidate false negatives
+\citep{turkcapar2023aggregate}. Thus possible-world aggregation, matching
+constraints, extremal bounds, and candidate-omission risk are not new here.
+The narrow distinction is the latent world being quantified over: we partition
+rows into variable-cardinality events that require one common timestamp
+completion, connected positive overlap, and bounded instantaneous occupancy.
+Membership can exceed capacity through turnover, while pairwise-compatible
+links may be jointly unrealizable. These are object-level constraints rather
+than a new semantics for uncertain aggregation.
 
 \paragraph{Possible worlds, repairs, and sensitivity.}
 Range-consistent query answering optimizes aggregates across legal database
 repairs, with tractability results for query rewriting under primary-key
 violations \citep{elkhalfioui2024range,elkhalfioui2026upper}.
 Attribute-uncertain databases propagate value bounds through relational
-queries \citep{feng2021audb}. EventFrontier adopts the same general principle
-of quantifying over admissible worlds; its contribution concerns a temporal
-event family, rather than a new semantics for uncertain data. Query resilience
-studies the smallest input deletion that makes a Boolean query false
-\citep{freire2015resilience}. Our omission budgets instead parameterize
-candidate support for latent relationships. We report sensitivity within this
-declared family, without claiming a new general notion of robustness or an
-unconditional coverage guarantee.
+queries \citep{feng2021audb}. EventFrontier inherits this range semantics for a
+temporal event family. Query resilience studies the smallest deletion making a
+Boolean query false \citep{freire2015resilience}; our omission budgets instead
+vary candidate support for latent relationships. They are not a new general
+robustness notion or an unconditional coverage guarantee.
 
 \paragraph{Interval optimization and decomposition.}
 Interval scheduling already admits structured pricing, column generation,
