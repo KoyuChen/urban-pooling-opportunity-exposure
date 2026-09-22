@@ -16,6 +16,7 @@ does not add public-data observations or establish a global hardness result.
 | Does the uncertain-time MILP describe the declared object? | `prop:epsilon`, main statement and appendix two-direction proof | Twelve geometric MILP boundary cases with witness replay |
 | How does positive epsilon relate to strict overlap? | Strict worlds are the union over positive margins; all feasible partitions and partition-only extrema stabilize at a sufficiently small positive margin | Finite spanning-tree and finite-partition argument |
 | Is exact-time support maximization NP-hard at capacity two? | Not established. Only NP membership and polynomial single-core support are asserted | Hardness transfer audit below |
+| Is there another global tractable boundary? | Yes. If full exact occupancy is already at most capacity, maximum support has a component formula; a well-anchored subclass admits every fixed q | Complete enumeration of 2,956 small low-depth cases and 752 fixed-q cells |
 
 ## Fixed-q strict witnesses
 
@@ -101,6 +102,13 @@ The draft says the general complexity is not settled **here**, rather than
 claiming it is an established open problem throughout the literature.
 An approximation scheme, a general-H complexity taxonomy and statistical
 inference are outside this revision.
+
+The September 22 follow-up sharpens this boundary in
+`docs/COMPLEXITY_AUDIT_20260922.md`. It proves the low-depth component formula
+and gives an exact capacity-two witness with $Q=\{0,2\}$. Consequently a
+reduction for maximum support does not automatically classify exact-q
+feasibility, and connectivity without over-capacity conflicts is insufficient
+for the missing hardness claim.
 
 ## Adversarial scope audit of the three certification claims
 

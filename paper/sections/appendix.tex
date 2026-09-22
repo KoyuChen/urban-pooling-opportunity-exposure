@@ -243,6 +243,42 @@ strictly larger than the root interval, coverage already forces a companion;
 the implementation exploits this to skip unnecessary cases. Multiple roots
 may generate the same membership column, which is deduplicated.
 
+\section{A Tractable Global Boundary and a Fixed-Support Gap}
+\begin{proposition}[Low-depth closure]
+\label{prop:lowdepth}
+Let exact intervals have full-family maximum occupancy at most $C$, and let
+$\mathcal K$ be the connected components of their positive-overlap graph. If
+some $K\in\mathcal K$ contains a core and $|K|=1$, no world exists. Otherwise,
+\[
+ M=\sum_{K\in\mathcal K:K\cap C_0\ne\varnothing}|K\cap B_0|.
+\]
+Moreover, if every component of the core-induced overlap graph has at least
+two vertices and every buffer overlaps a core, then
+$Q=\{0,1,\ldots,|B_0|\}$.
+\end{proposition}
+
+\begin{proof}
+Capacity is automatic for every subset. A full component containing a core is
+itself one connected event unless it is a singleton; taking all such
+components covers all cores and selects every buffer in them. A buffer in a
+component without a core cannot belong to any feasible event, proving the
+formula and singleton obstruction.
+
+For the final claim, begin with one event for each core-induced component;
+each already has two rows. For any chosen subset of buffers, assign each
+chosen buffer to one such event containing an overlapping core. The resulting
+events remain connected, disjoint, and within capacity. This constructs a
+world for every chosen subset and hence every stated cardinality.
+\end{proof}
+
+The extra condition is necessary for the no-gap conclusion. At $C=2$, take
+cores $c_0=[0,7)$ and $c_1=[3,5)$ and buffers $b_0=[2,4)$ and
+$b_1=[4,6)$. At $q=0$, $\{c_0,c_1\}$ is an event; at $q=2$, use
+$\{c_0,b_0\}$ and $\{c_1,b_1\}$. At $q=1$, the chosen buffer cannot be
+joined to both cores without triple occupancy, while separating the cores
+leaves one without a companion. Thus $Q=\{0,2\}$. In particular, deciding
+whether support is at least one does not decide feasibility at exactly one.
+
 \section{Full-Master and Branch-and-Price Certificates}
 
 \paragraph{Proof of Proposition~\ref{prop:cg}.}

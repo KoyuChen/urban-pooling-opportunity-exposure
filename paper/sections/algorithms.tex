@@ -144,9 +144,13 @@ polynomial-time global algorithm.
 Fixed-time support decision is in NP: a selected-row partition is a
 polynomially checkable certificate. With one core, at most one event is
 possible, so the single-event oracle solves support maximization in polynomial
-time. General core-cover complexity, including fixed $C=2$, is not settled
-here. The fractional master proves a formulation gap, not NP-hardness;
-single-event span enumeration has only $O(|V|^2)$ choices.
+time. A second tractable boundary is exact full-family depth at most $C$:
+Proposition~\ref{prop:lowdepth} gives a component formula for maximum support
+and a sufficient condition under which every fixed $q$ is feasible. Outside
+that condition, $Q$ need not be an interval, so exact-$q$ feasibility and
+support-at-least-$q$ are distinct. General core-cover complexity, including
+fixed $C=2$, is not settled here. The fractional master proves a formulation
+gap, not NP-hardness; single-event span enumeration has only $O(|V|^2)$ choices.
 
 \subsection{Set-valued timestamps and numerical status}
 For rectangular endpoint supports, define $\F_\epsilon$ by requiring every

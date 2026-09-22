@@ -30,7 +30,9 @@ This is a working draft, not a claim of submission or scientific readiness.
   truth agreement remains conditional on candidate-world coverage.
 - Records the remaining complexity gap: support decision is in NP and the
   one-core case is polynomial, but no C=2 NP-hardness result is established.
-  See `docs/THEORY_REINFORCEMENT.md` for the proof and verification map.
+  A low-depth component formula identifies another tractable boundary, while
+  an exact four-row witness shows that feasible fixed-q support can have gaps.
+  See `docs/COMPLEXITY_AUDIT_20260922.md` for the fail-closed audit.
 - Centers joint temporal-event feasibility, sequential membership, and the
   fixed-time integral event-pricing primitive.
 - Credits prior aggregate bounds, candidate-omission sensitivity, interval

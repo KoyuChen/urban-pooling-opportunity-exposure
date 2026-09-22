@@ -1,5 +1,22 @@
 # Verified project status
 
+## September 22: complexity audit closes fail-closed, not NP-hard
+
+The exact-time, fixed-support complexity audit found no valid reduction for
+the unrestricted multi-core model and therefore preserves the manuscript's
+complexity-open wording. It adds a positive boundary instead: when the full
+exact interval family already has depth at most capacity, maximum support is
+given by core-containing overlap components. Under a stronger core-anchoring
+condition, every q from zero through the full buffer count is feasible.
+
+Complete event-column enumeration checked this result on 2,956 low-depth
+role/capacity cases and checked 752 fixed-q cells with no mismatch. A separate
+four-row capacity-two witness has feasible support set Q={0,2}, proving that
+exact-q feasibility is not interchangeable with a support-at-least decision.
+The Gate is `PASS_TRACTABLE_BOUNDARY_WITH_HARDNESS_OPEN`: no timeout, fractional
+master, or neighboring hard problem is relabeled as an infeasibility or
+hardness certificate. See `docs/COMPLEXITY_AUDIT_20260922.md`.
+
 ## September 20: submission claims are now evidence-locked
 
 A manuscript-level audit now recomputes the controlled candidate-coverage,

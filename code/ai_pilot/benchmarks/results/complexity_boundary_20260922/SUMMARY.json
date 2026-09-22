@@ -1,0 +1,99 @@
+{
+  "claim_boundary": "No complete polynomial reduction to the present core/buffer world model was verified; the manuscript must retain complexity-open wording.",
+  "exhaustive_validation": {
+    "catalog_interval_count": 7,
+    "component_formula_mismatches": 0,
+    "fixed_q_cells_checked": 752,
+    "low_depth_capacity_cases_checked": 2956,
+    "low_depth_feasible_cases": 1614,
+    "low_depth_infeasible_cases": 1342,
+    "role_or_absence_assignments_with_a_core": 2059,
+    "well_anchored_cases_checked": 322,
+    "well_anchored_fixed_q_mismatches": 0
+  },
+  "fixed_q_corollary": "If, additionally, every core-overlap component has at least two cores and every buffer overlaps a core, every q from 0 through |B| is feasible.",
+  "fixed_q_gap_witness": {
+    "capacity": 2,
+    "feasible_q_values": [
+      0,
+      2
+    ],
+    "q_one_infeasible": true,
+    "rows": [
+      {
+        "end": 7,
+        "name": "c_long",
+        "role": "core",
+        "start": 0
+      },
+      {
+        "end": 4,
+        "name": "b_left",
+        "role": "buffer",
+        "start": 2
+      },
+      {
+        "end": 5,
+        "name": "c_right",
+        "role": "core",
+        "start": 3
+      },
+      {
+        "end": 6,
+        "name": "b_right",
+        "role": "buffer",
+        "start": 4
+      }
+    ],
+    "support_at_least_one_feasible": true
+  },
+  "gate": "PASS_TRACTABLE_BOUNDARY_WITH_HARDNESS_OPEN",
+  "hardness_status": "NOT_ESTABLISHED",
+  "proved_boundary": "If full interval depth is at most C, maximum support is exactly the number of buffers in core-containing overlap components, unless a core lies in a singleton full component, in which case no world exists.",
+  "rejected_transfers": [
+    "unrelated-machine scheduling adds machine-dependent intervals or eligibility",
+    "balanced connected k-partition fixes the number of parts and optimizes balance",
+    "same-size star partition fixes event shape; its interval-graph case is polynomial",
+    "a capacity-two event need not be a path, as the exact star witness shows"
+  ],
+  "report_version": "exact-time-complexity-boundary/v1",
+  "scope": "exact-time event partitions; no uncertain-time or city-scale claim",
+  "star_witness": {
+    "connected": true,
+    "maximum_depth": 2,
+    "maximum_overlap_graph_degree": 4,
+    "path_claim_refuted": true,
+    "rows": [
+      {
+        "end": 8,
+        "name": "center",
+        "role": "core",
+        "start": 0
+      },
+      {
+        "end": 1,
+        "name": "leaf_0",
+        "role": "buffer",
+        "start": 0
+      },
+      {
+        "end": 3,
+        "name": "leaf_1",
+        "role": "buffer",
+        "start": 2
+      },
+      {
+        "end": 5,
+        "name": "leaf_2",
+        "role": "buffer",
+        "start": 4
+      },
+      {
+        "end": 7,
+        "name": "leaf_3",
+        "role": "buffer",
+        "start": 6
+      }
+    ]
+  }
+}

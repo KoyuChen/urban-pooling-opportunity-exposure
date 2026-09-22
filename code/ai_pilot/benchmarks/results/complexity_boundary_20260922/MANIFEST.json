@@ -1,0 +1,8 @@
+{
+  "files": {
+    "REPORT.md": "c7df2ada15ab36a17cb1273775af8f5344645daa819e7b1cd3513f6cff4323a1",
+    "SUMMARY.json": "5008bc3cda32e8bb7d3b776380bf4f5124b9922d230e1029e818833ce372c6c4"
+  },
+  "gate": "PASS_TRACTABLE_BOUNDARY_WITH_HARDNESS_OPEN",
+  "report_version": "exact-time-complexity-boundary/v1"
+}

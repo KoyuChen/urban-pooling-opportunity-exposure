@@ -223,6 +223,35 @@ def main() -> None:
         "or population prevalence",
     )
 
+    complexity = read_json(
+        "code/ai_pilot/benchmarks/results/complexity_boundary_20260922/SUMMARY.json"
+    )
+    validation = complexity["exhaustive_validation"]
+    assert complexity["gate"] == "PASS_TRACTABLE_BOUNDARY_WITH_HARDNESS_OPEN"
+    assert complexity["hardness_status"] == "NOT_ESTABLISHED"
+    assert validation["low_depth_capacity_cases_checked"] == 2956
+    assert validation["fixed_q_cells_checked"] == 752
+    assert validation["component_formula_mismatches"] == 0
+    assert validation["well_anchored_fixed_q_mismatches"] == 0
+    assert complexity["fixed_q_gap_witness"]["feasible_q_values"] == [0, 2]
+    evidence_checks += 7
+    boundary_guards += require(
+        "paper/sections/algorithms.tex",
+        "exact-$q$ feasibility and support-at-least-$q$ are distinct",
+        "General core-cover complexity, including fixed $C=2$, is not settled here",
+        "not NP-hardness",
+    )
+    boundary_guards += require(
+        "paper/sections/appendix.tex",
+        "A Tractable Global Boundary and a Fixed-Support Gap",
+        "Thus $Q=\\{0,2\\}$",
+    )
+    boundary_guards += forbid(
+        "paper/sections/algorithms.tex",
+        "fixed $C=2$ is NP-hard",
+        "fixed $C=2$ is polynomial",
+    )
+
     print(
         "Submission claim audit: PASS "
         f"({evidence_checks} evidence checks, {boundary_guards} boundary guards)"
