@@ -12,7 +12,8 @@ recomputes the headline counts and fails CI if the manuscript wording drifts.
 | ATR/DIAMOR dyads | Pilot-selected support retains 81/82 follow-up annotated worlds and certifies 29/246 decisions | One-coder, label-assisted reference; not city-rule validation or prevalence |
 | Chicago K=2 | 90/96 windows complete, six ineligible; 10,728/10,762 data-complete endpoint pairs numerically certified and 34 unresolved | Purposive calendar, hidden partners unidentified, not exact-arithmetic or population inference |
 | NYC outcome panel | 101/126 endpoint pairs numerically closed; 125/126 decisions witness-certified ambiguous | Conditional on the declared support; 25 endpoints remain unresolved |
-| NYC structure comparator | 0/24 common-\(q\) comparisons change an endpoint | Honest null on one fixed small input, not evidence against the general model |
+| NYC structure comparator | 0/24 common-\(q\) comparisons change an endpoint | Honest null on one fixed complete-clique input, not evidence against the general model |
+| NYC outcome-blind non-clique diagnostic | Ordered adds worlds versus clique in 1/24 common-feasible cells, but 0/48 ordered--clique endpoints change across two queries | Conditional four-window null; 13 geometry cells remain transport-unresolved; not model equivalence, accuracy, or prevalence |
 | NYC geometry census | 8 complete, 3 ineligible, 13 transport-unresolved | Local columns are not complete worlds; prevalence remains unidentified |
 | NYC support lattice | 18/18 integer brackets close under the numerical and witness-replay protocol | “Certified,” not exact arithmetic; separate from outcome closure and city scale |
 | Pricing cache | Four dominant reconstructed cells preserve certificates and paths while actual LP calls fall 29.6% | Snapshot-consistent, not byte-identical; elapsed time is descriptive |

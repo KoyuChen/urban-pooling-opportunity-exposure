@@ -1,5 +1,24 @@
 # Verified project status
 
+## September 23: outcome-blind non-clique public diagnostic returns a conditional endpoint null
+
+The frozen NYC geometry census predeclared exactly four completed time-only
+4+12 views with a core-touching induced path before public query values were
+attached. All four reproduce their prior projection and geometry hashes.
+Complete enumeration, independent MILP verification, and witness replay leave
+zero unresolved verification cells.
+
+Of 192 declared fixed-q comparisons, 96 are feasible in all three event
+families and certified. Ordered events admit more buffer worlds than cliques in
+1/24 common-feasible window-capacity-q cells and more than pairs in 3/24, so
+the structural restriction is genuinely active. Nevertheless, neither public
+query changes an endpoint: 0/48 ordered-versus-clique and 0/48
+ordered-versus-pair comparisons. The Gate is
+`PASS_PUBLIC_NONCLIQUE_TEST_NULL`. This is a conditional null, not model
+equivalence or evidence against sequential events. The geometry census still
+retains 13 transport-unresolved and 3 scientifically ineligible cells; no
+city-scale, true-membership, or prevalence claim follows.
+
 ## September 22: complexity audit closes fail-closed, not NP-hard
 
 The exact-time, fixed-support complexity audit found no valid reduction for

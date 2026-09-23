@@ -1,0 +1,12 @@
+{
+  "aggregate_only": true,
+  "files_sha256": {
+    "COMPARISONS.csv": "ee819922700e2a37599abb67e160b332c600f6fb29bae3d1dcb22254c0c8423a",
+    "REPORT.md": "84d61fc68555d63f95adfc8b3d2e8e082893509708c69dea6f1f05126d534242",
+    "RESULTS.tex": "cba25ac5b1d68928ac204641fd7c730c92c7ee6f8dc5bb1e34b9c9342b1b3f73",
+    "SUMMARY.json": "45156ec6a2636aaeec4d31232c8b8a4658590efef1cd40861e1ddfc94bf6f5c7",
+    "SUPPORT.csv": "9558cb6386b3ca6111acd34dab10302fdc582774b86e62d321d156a992230b5a",
+    "WORLD_COUNTS.csv": "73661cfdbaace4fa8daeba1df5c3201f09c57acf9fdcff4bde9f95f832fd0624"
+  },
+  "version": "nyc-outcome-blind-nonclique-manifest/v1"
+}

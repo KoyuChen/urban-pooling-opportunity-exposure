@@ -41,7 +41,9 @@ This is a working draft, not a claim of submission or scientific readiness.
   the alternating-component normalization.
 - Limits efficient pricing to fixed exact intervals and additive weights;
   separates the rectangular timestamp-support MILP and its positive margin.
-- Retains the 0/24 public fixed-q structural null and explicit unresolved cells.
+- Retains the 0/24 complete-clique null and the outcome-blind non-clique
+  diagnostic: extra ordered worlds in 1/24 common-feasible cells but 0/48
+  ordered--clique endpoint changes. Explicit unresolved cells remain visible.
 - Updates Chicago to the sealed 96-window execution ledger and adds the joint
   controlled-truth coverage panel. Neither result is a population estimate.
 
@@ -60,6 +62,7 @@ Paths below are relative to the repository root.
 | NYC cross-object claim ledger | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/evidence_ledger_20260915/` |
 | NYC 101 numerically closed endpoint pairs, 125 witnessed ambiguous cells, 126 total | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_PANEL_SUMMARY.json` |
 | NYC structural comparison 0/24 changes | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/structure_audit_20260908/REPORT.md` |
+| NYC outcome-blind non-clique comparison 0/48 endpoint changes | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/REPORT.md` |
 | NYC geometry 8 complete, 3 excluded, 13 transport unresolved | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/geometry_census_20260908/recovery_attempt/REPORT.md` |
 | NYC 18/18 support-maximization closures | `code/ai_pilot/data_pipeline/results/nyc_hvfhv/BRANCH_AND_PRICE_SCALE_REPORT.md` |
 

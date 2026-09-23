@@ -38,8 +38,10 @@ simultaneous occupancy rather than total membership.
   identifies population prevalence.
 - The full event-partition problem is polynomial, NP-hard, or city-scale; the
   current manuscript establishes none of those global statements.
-- Public data currently demonstrate a practical advantage of ordered events
-  over pair or clique models; the frozen fixed-input comparison is 0/24.
+- Public data demonstrate a practical outcome advantage of ordered events over
+  pair or clique models. The fixed complete-clique comparison is 0/24, and an
+  outcome-blind four-window non-clique diagnostic adds worlds in 1/24
+  common-feasible cells versus cliques but changes 0/48 query endpoints.
 
 ## Claims supported at the current evidence level
 

@@ -1,5 +1,24 @@
 # Next EventFrontier research gate
 
+## September 23 update: the outcome-blind non-clique test is complete
+
+Exactly four previously completed NYC 4+12 views were eligible under the
+frozen geometry-only rule. All four replay their prior hashes. Of 192 declared
+comparisons, 96 are common-support eligible and certified; 0/48
+ordered--clique and 0/48 ordered--pair comparisons change either public-query
+endpoint. This is not a vacuous clique collapse: ordered events admit more
+buffer worlds in 1/24 common-feasible cells than cliques and in 3/24 than
+pairs. The result is therefore a conditional endpoint null with an active
+structural distinction, not model equivalence.
+
+Gate: **PASS_PUBLIC_NONCLIQUE_TEST_NULL**. The 13 transport-unresolved and 3
+scientifically ineligible geometry cells remain in the declared denominator.
+Do not select another public query or window after seeing this null. The next
+single task is a clean-checkout artifact rehearsal: regenerate every
+manuscript-included aggregate table/fragment from frozen public artifacts,
+verify manifests and the eight-page main-text boundary, and fail closed on any
+private-row dependency or numerical drift.
+
 Decision date: 2026-09-08. Baseline evidence commit:
 `3e2427074797c5c48995b8bd3bcc2c91dd51f5e3`.
 

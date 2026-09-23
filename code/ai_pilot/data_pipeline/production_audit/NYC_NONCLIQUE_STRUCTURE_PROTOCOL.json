@@ -1,0 +1,105 @@
+{
+  "protocol_version": "nyc-outcome-blind-nonclique-structure/v1",
+  "declared_date": "2026-09-23",
+  "purpose": "Conditional public-data test of whether connected non-clique event structure changes fixed-q aggregate endpoints relative to pair and clique restrictions.",
+  "geometry_source": {
+    "protocol": "NYC_GEOMETRY_CENSUS_PROTOCOL.json",
+    "source_run_id": 34237155750,
+    "recovery_run_id": 34240720735,
+    "completed_geometry_windows": 8,
+    "eligible_nonclique_small_views": 4,
+    "complete_clique_small_views": 4,
+    "transport_unresolved_cells": 13,
+    "scientifically_ineligible_cells": 3
+  },
+  "selection_rule": "Use exactly the four completed time-only 4+12 views whose frozen outcome-blind geometry census reported a core-touching induced P3. Do not add windows after inspecting query values. The remaining four completed small views are complete cliques and remain in the denominator as geometry-ineligible for this conditional test.",
+  "projection_fields": [
+    "hvfhs_license_num",
+    "pickup_datetime",
+    "dropoff_datetime",
+    "pulocationid",
+    "dolocationid",
+    "shared_match_flag"
+  ],
+  "extraction": {
+    "scan_window_hours": 1,
+    "max_core_rows": 40,
+    "max_scan_rows": 5000,
+    "max_candidate_rows": 2500,
+    "max_indeterminate_rows": 200
+  },
+  "windows": [
+    {
+      "index": 0,
+      "label": "jan_weekday_am_n8",
+      "scan_start": "2023-01-03T06:00:00",
+      "scan_end": "2023-01-03T10:00:00",
+      "core_count": 8,
+      "provider": "HV0005",
+      "projected_candidate_multiset_sha256": "8f2018b403a01be7c2ca87ec1efc3758899f85a1418208f86b7088e605b263ed",
+      "small_geometry_input_sha256": "3c31256d57361da9080adebe620efcd9739644ce54f85e91269b17664acc99a5",
+      "small_overlap_edges": 118,
+      "small_core_incident_p3_count": 26
+    },
+    {
+      "index": 3,
+      "label": "jan_weekend_am_n8",
+      "scan_start": "2023-01-07T09:00:00",
+      "scan_end": "2023-01-07T13:00:00",
+      "core_count": 8,
+      "provider": "HV0005",
+      "projected_candidate_multiset_sha256": "66605b3b607567399914e43b4e82f8a92af11bce01477bc132d9cadbcee4ba25",
+      "small_geometry_input_sha256": "93902d34b755e54ed7e7bff09d9f45241a26950314da438d94836f8b39f1215f",
+      "small_overlap_edges": 118,
+      "small_core_incident_p3_count": 26
+    },
+    {
+      "index": 5,
+      "label": "apr_weekday_am_n8",
+      "scan_start": "2023-04-04T06:00:00",
+      "scan_end": "2023-04-04T10:00:00",
+      "core_count": 8,
+      "provider": "HV0003",
+      "projected_candidate_multiset_sha256": "612956b11f3d67842dd45e724d4530419a3e306aa55653a112ea60f88ba36e85",
+      "small_geometry_input_sha256": "1750f0dec17e74ae25b4db3f424764e7311a37d0f754b8f0d901d9be70c2fb95",
+      "small_overlap_edges": 115,
+      "small_core_incident_p3_count": 58
+    },
+    {
+      "index": 7,
+      "label": "apr_weekday_pm_n8",
+      "scan_start": "2023-04-04T17:00:00",
+      "scan_end": "2023-04-04T21:00:00",
+      "core_count": 8,
+      "provider": "HV0003",
+      "projected_candidate_multiset_sha256": "161866aec69fd8286a188b657c9725faa638f32ce91a66b2ca8a9766056c12e9",
+      "small_geometry_input_sha256": "f81e91277662d9b3c61db543644ae64c4fe927bf9983557cc9937b0f3e2fd50b",
+      "small_overlap_edges": 113,
+      "small_core_incident_p3_count": 76
+    }
+  ],
+  "expected_snapshot_revision_fingerprint_sha256": "0041ce9fa9edf98f5075978a94468c41ca6679a11d4ca6dca48f2671fb4907d1",
+  "core_rows": 4,
+  "buffer_rows": 12,
+  "capacities": [2, 3, 4],
+  "declared_q_values": [1, 2, 3, 4],
+  "overlap_epsilon_seconds": 1.0,
+  "minimum_interval_duration_seconds": 1.0,
+  "families": {
+    "ordered": "Connected positive-overlap event with simultaneous occupancy at most C.",
+    "pair": "Exactly two members under the same role and capacity rules.",
+    "clique": "Pairwise positive overlap under the same role and capacity rules."
+  },
+  "world_constraints": "Every core exactly once, every buffer at most once, at least two rows and at least one core per event, and exactly q selected buffers.",
+  "queries": [
+    {"name": "mean_selected_buffer_miles", "attribute": "miles", "scale": 1},
+    {"name": "mean_selected_buffer_observed_duration_minutes", "attribute": "seconds", "scale": 60}
+  ],
+  "outcome_rule": "Selection and eligibility use only the frozen provider/time/zone projection. Miles are attached only after the projection and small-geometry hashes match the prior census. Observed duration is derived from the already selected exact pickup and dropoff times. Missing miles make only the affected query cell ineligible; rows are never replaced.",
+  "comparison_rule": "For every declared C and q feasible in all three families, compare exact lower and upper endpoints at the same q. Preserve restricted-family infeasibility and equality. The primary distinctive comparison is ordered versus clique; ordered versus pair is secondary.",
+  "verification": "Complete column and feasible-world enumeration, independent event replay, binary set-partitioning MILP verification and exact rational endpoint scoring. Timeout remains unresolved.",
+  "milp_seconds_per_solve": 30.0,
+  "comparison_tolerance": 1e-7,
+  "publication": "Publish aggregate cells, hashes and witness hashes only. Keep row-level inputs in ignored scratch.",
+  "scope_limit": "Conditional diagnostic on four outcome-blind non-clique small views from one frozen public calendar. It is not true event recovery, partner recall, population prevalence, city-scale closure or an independent holdout."
+}

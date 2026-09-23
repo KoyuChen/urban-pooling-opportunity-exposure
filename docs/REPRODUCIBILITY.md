@@ -58,6 +58,25 @@ scale artifact is `9897266899` from run `33837187046`. Hashes and claim licenses
 are recorded in `ARTIFACT_MANIFEST.md`. Expensive frozen NYC workflows are not
 run on ordinary commits.
 
+### Outcome-blind non-clique fixed-q diagnostic
+
+The protocol selects only the four previously frozen small views whose
+geometry has a core-touching induced path. A live rerun first reproduces the
+old projected-row and geometry hashes, stores row-level caches only under the
+ignored work directory, and publishes aggregate evidence:
+
+```bash
+python \
+  code/ai_pilot/data_pipeline/production_audit/run_nyc_nonclique_structure_gate.py \
+  --work-dir tmp/nyc-nonclique-structure-gate \
+  --output-dir \
+    code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923
+```
+
+After a transport interruption, add `--resume`; validated completed caches are
+reused and only missing windows are fetched. A timeout or interruption remains
+unresolved and is never converted to infeasibility.
+
 ## Chicago live release audit
 
 ```bash

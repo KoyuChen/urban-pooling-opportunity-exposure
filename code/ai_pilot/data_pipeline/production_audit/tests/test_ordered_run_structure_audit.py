@@ -125,6 +125,40 @@ class StructureAuditTests(unittest.TestCase):
                     check_redaction(item)
         check_redaction(report)
 
+    def test_frozen_outcome_blind_nonclique_audit_integrity(self):
+        root = MODULE_DIR.parent / "results/nyc_hvfhv/nonclique_structure_20260923"
+        manifest = json.loads((root / "MANIFEST.json").read_text())
+        self.assertTrue(manifest["aggregate_only"])
+        for name, expected in manifest["files_sha256"].items():
+            self.assertEqual(hashlib.sha256((root / name).read_bytes()).hexdigest(), expected)
+        report = json.loads((root / "SUMMARY.json").read_text())
+        summary = report["summary"]
+        self.assertEqual(report["status"], "PASS_PUBLIC_NONCLIQUE_TEST_NULL")
+        self.assertEqual(report["denominator"], {
+            "protocol": "NYC_GEOMETRY_CENSUS_PROTOCOL.json",
+            "source_run_id": 34237155750,
+            "recovery_run_id": 34240720735,
+            "completed_geometry_windows": 8,
+            "eligible_nonclique_small_views": 4,
+            "complete_clique_small_views": 4,
+            "transport_unresolved_cells": 13,
+            "scientifically_ineligible_cells": 3,
+        })
+        self.assertEqual(summary["eligible_windows"], 4)
+        self.assertTrue(summary["all_windows_verified"])
+        self.assertEqual(summary["unresolved_verification_count"], 0)
+        self.assertEqual(summary["declared_comparisons"], 192)
+        self.assertEqual(summary["certified_comparisons"], 96)
+        self.assertEqual(summary["changed_comparisons"], 0)
+        self.assertEqual(summary["common_feasible_world_cells"], 24)
+        self.assertEqual(summary["ordered_more_worlds_than_clique_cells"], 1)
+        self.assertEqual(summary["ordered_more_worlds_than_pair_cells"], 3)
+        self.assertEqual(summary["by_restriction"]["clique"]["changed"], 0)
+        self.assertEqual(summary["by_restriction"]["pair"]["changed"], 0)
+        serialized = json.dumps(report, sort_keys=True)
+        for forbidden in ("pickup_datetime", "dropoff_datetime", '"rows"', "member_mask"):
+            self.assertNotIn(forbidden, serialized)
+
 
 if __name__ == "__main__":
     unittest.main()

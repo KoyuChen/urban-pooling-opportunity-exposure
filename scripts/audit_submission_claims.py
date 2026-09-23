@@ -181,10 +181,45 @@ def main() -> None:
     )
     boundary_guards += require(
         "paper/sections/data_results.tex",
-        "does not establish a complete feasible world",
-        "cannot resolve the structural audit's null",
+        "does not by itself establish a complete feasible world",
         "a city-scale runtime guarantee",
         "or recover true memberships",
+    )
+
+    nonclique = read_json(
+        "code/ai_pilot/data_pipeline/results/nyc_hvfhv/"
+        "nonclique_structure_20260923/SUMMARY.json"
+    )
+    nonclique_summary = nonclique["summary"]
+    assert nonclique["status"] == "PASS_PUBLIC_NONCLIQUE_TEST_NULL"
+    assert nonclique["denominator"]["completed_geometry_windows"] == 8
+    assert nonclique["denominator"]["eligible_nonclique_small_views"] == 4
+    assert nonclique["denominator"]["transport_unresolved_cells"] == 13
+    assert nonclique_summary["declared_comparisons"] == 192
+    assert nonclique_summary["certified_comparisons"] == 96
+    assert nonclique_summary["changed_comparisons"] == 0
+    assert nonclique_summary["common_feasible_world_cells"] == 24
+    assert nonclique_summary["ordered_more_worlds_than_clique_cells"] == 1
+    assert nonclique_summary["ordered_more_worlds_than_pair_cells"] == 3
+    assert nonclique_summary["unresolved_verification_count"] == 0
+    evidence_checks += 11
+    evidence_checks += require(
+        "paper/sections/data_results.tex",
+        "96 are common-support eligible and certified",
+        "0/48 ordered--clique and 0/48 ordered--pair comparisons",
+        "more buffer worlds than cliques in 1/24",
+    )
+    boundary_guards += require(
+        "paper/sections/data_results.tex",
+        "The remaining thirteen transport-unresolved census cells stay in the denominator",
+        "not model equivalence",
+        "neither a holdout nor evidence of true-event recovery",
+        "true-event recovery or population prevalence",
+    )
+    boundary_guards += forbid(
+        "paper/main.tex",
+        "public-data advantage of general ordered-event structure",
+        "city-scale closure",
     )
 
     cache = read_json(
