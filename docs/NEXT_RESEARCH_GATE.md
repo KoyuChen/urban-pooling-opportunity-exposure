@@ -13,6 +13,8 @@ structural distinction, not model equivalence.
 
 Gate: **PASS_PUBLIC_NONCLIQUE_TEST_NULL**. The 13 transport-unresolved and 3
 scientifically ineligible geometry cells remain in the declared denominator.
+Aggregate evidence is frozen under
+`code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/`.
 Do not select another public query or window after seeing this null. The next
 single task is a clean-checkout artifact rehearsal: regenerate every
 manuscript-included aggregate table/fragment from frozen public artifacts,
