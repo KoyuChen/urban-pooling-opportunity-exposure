@@ -1,5 +1,26 @@
 # Next EventFrontier research gate
 
+## September 24 update: aggregate artifact rehearsal passes with raw-replay limits
+
+All eight manuscript tables and their 345 data cells are now checked against
+independently rendered frozen aggregates. Two omitted machine-readable inputs
+were restored, without publishing source rows. Full synthetic regeneration and
+sealed Chicago sensitivity reaggregation reproduce their CSV/Markdown/TeX
+outputs; default clean-checkout CI does not claim to repeat private ATR or
+public NYC row-level solves. See `docs/REPRODUCIBILITY.md`.
+
+Gate: **PASS_AGGREGATE_REHEARSAL_WITH_RAW_REPLAY_LIMITS**.
+
+The next single task is an endpoint-attainment audit of the already frozen
+four NYC non-clique views. Explain the observed null by checking whether
+restricted-family feasible buffer subsets attain both ordered endpoints at
+each existing common-q/query cell, and distinguish extra event partitions
+from genuinely extra buffer subsets. Produce replayable witnesses or retain
+unresolved status if frozen inputs cannot be restored. Do not select a new
+query, window or model after observing the null, and do not interpret endpoint
+equality as equality of the feasible-world families. This is a mechanism audit
+of existing evidence, not a new holdout or a search for an advantageous query.
+
 ## September 23 update: the outcome-blind non-clique test is complete
 
 Exactly four previously completed NYC 4+12 views were eligible under the

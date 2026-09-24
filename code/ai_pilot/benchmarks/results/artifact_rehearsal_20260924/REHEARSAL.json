@@ -1,0 +1,62 @@
+{
+  "byte_identical_fragment_files": [
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/branch_price_profile_20260917/MANIFEST.json",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/branch_price_profile_20260917/PROFILE.json",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/branch_price_profile_20260917/PROFILE_CELLS.csv",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/branch_price_profile_20260917/REPORT.md",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/branch_price_profile_20260917/RESULTS.tex",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/evidence_ledger_20260915/MANIFEST.json",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/evidence_ledger_20260915/NYC_EVIDENCE_LEDGER.csv",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/evidence_ledger_20260915/NYC_EVIDENCE_LEDGER.json",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/evidence_ledger_20260915/REPORT.md",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/evidence_ledger_20260915/RESULTS.tex",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/COMPARISONS.csv",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/MANIFEST.json",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/REPORT.md",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/RESULTS.tex",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/SUMMARY.json",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/SUPPORT.csv",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_structure_20260923/WORLD_COUNTS.csv"
+  ],
+  "code_sha256": {
+    "code/ai_pilot/data_pipeline/production_audit/audit_nyc_claim_ledger.py": "4930b959ee02899dc6c4a3e65a461ceb40b7800d95ed044f17e54eaee27eb949",
+    "code/ai_pilot/data_pipeline/production_audit/profile_nyc_branch_price_scale.py": "22cb77fe0dff75f9ae67b682a90c33e40cc91f1cd6b7f52e834a1a0ac31955af",
+    "code/ai_pilot/data_pipeline/production_audit/run_nyc_nonclique_structure_gate.py": "7349f4eb64e92664d917cddadd0062369e7c6f46e548021892877a7449a13a89",
+    "scripts/rehearse_submission_artifacts.py": "dd6126bf5e1ed9cc39aeae1e73ba5c5f4bd0150145225092df5a8804905f03d8"
+  },
+  "limitations": [
+    "ATR tables are rendered from released aggregate summaries; research-use trajectories, labels and detailed witnesses are not bundled or replayed.",
+    "NYC aggregate rendering does not rerun original row-level solves or remove the 13 transport-unresolved cells.",
+    "Chicago source replay requires the separately pinned sealed ZIP; default offline mode recounts recovered window aggregates, not raw trips.",
+    "Runtime entries reproduce historical measurements; they are not fresh speed measurements.",
+    "This does not certify city-scale closure, new endpoint optima, or public structural advantage."
+  ],
+  "source_sha256": {
+    "code/ai_pilot/benchmarks/results/artifact_rehearsal_20260924/inputs/CONTROLLED_SUMMARY.json": "739ee87e9c85f1f0d96c44aead6c780d21df3ef584a1ddc23b346d753650567d",
+    "code/ai_pilot/benchmarks/results/atr_diamor_truth/SUMMARY.json": "1c12a6b9466de17b25ce4de03f75d30223be24282137d3be89c79717b596b833",
+    "code/ai_pilot/benchmarks/results/controlled_truth_joint_coverage_20260914/JOINT_COVERAGE_SUMMARY.csv": "32b6aecf64f37669f72fd5a74a7a938aefcb7273e53e0c6cc8f9266e9d29379e",
+    "code/ai_pilot/data_pipeline/results/chicago_k2_fixed_panel/latest_panel_report.json": "70c7e7e5ac005e5ff40989865e179933b234f16eabbda22d2c710821106425b1",
+    "code/ai_pilot/data_pipeline/results/chicago_k2_followup/gap_amendment_20260913/followup_report.json": "8941f681ec66847bbf16d3e3fdf2b014f50182ea0413c8d747c99a5f66860c00",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/BRANCH_AND_PRICE_SCALE_CELLS.csv": "d0c8ad51f4ca177fe0727907e3780476ec6ca62ee97cf0f47edc59af6baa32e6",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_COMMON_SUPPORT.csv": "59ecd091c531b00e2f4563b42728e0cb500abdb4300ce72c927463308c38da54",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_PANEL_GROUPS.csv": "be6bcf1e8cb74805ca59a7c41d16baf46d35d7c024ca10c952838c5b9e4d9dc1",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_PANEL_SUMMARY.json": "ea36f70555511b5bc071a159cec09eb884078417b77951faa71deace10715e34",
+    "code/ai_pilot/data_pipeline/results/nyc_hvfhv/ORDERED_DECISION_THRESHOLD_GROUPS.csv": "76d41c91bb26bf65271a493feb4723b825ca600bf273acb24680b3798060f998"
+  },
+  "status": "PASS_AGGREGATE_REHEARSAL_WITH_RAW_REPLAY_LIMITS",
+  "table_cells": 345,
+  "table_count": 8,
+  "table_rows": 53,
+  "table_sha256": {
+    "atr-truth.tex": "d47c3fe8940181b88513809de537e5cfe8fb13837a98848017f6f92caaec53a6",
+    "capacitydetail.tex": "b47f17814d30e446ef5a02f343a1fd3502aefa31e786a54eecbb9bbe3d84d064",
+    "chicagopanel.tex": "9a0dcf18344d22779b80c9f543e232aee2ba0ad294ea19de1bebb5d0e618e080",
+    "decisionpanel.tex": "ea1c7c842376db7bf63f6f87ca320828ea033d2e8fab0499751f82796356e883",
+    "paneldetail.tex": "593827a3180761fc07928a12448a9e1286872bd43f6c83f8a396d740cb1756aa",
+    "scaledetail.tex": "6363996418549f8f093f942429d85f7f944843cc1c195885ad6044c3d5013325",
+    "truncation.tex": "216c9b47e25e9588145609b3d5fb822f876d773f2a2ec1c28eaee833dff6e52e",
+    "truth.tex": "56c92fbcd1507f79c349a64938f0b0b79828960b1f58b1b4ec3b42ba8c0c07e2"
+  },
+  "verified_file_pins": 34,
+  "version": "submission-artifact-rehearsal/v1"
+}

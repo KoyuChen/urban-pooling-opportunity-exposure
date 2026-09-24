@@ -10,6 +10,67 @@ python -m pip install -r code/ai_pilot/requirements.txt
 
 ## Deterministic checks
 
+### Clean-checkout aggregate rehearsal (September 24)
+
+```bash
+python scripts/rehearse_submission_artifacts.py \
+  --output-dir tmp/submission-rehearsal
+python scripts/audit_submission_claims.py
+```
+
+The first command reads only repository files, makes no network requests and
+runs no optimization. It independently renders all eight manuscript tables
+(53 rows, 345 cells), compares every formatted cell to the paper, verifies 34
+historical/recovery file pins, and re-renders 17 NYC profile/ledger/non-clique
+files including their manifests byte for byte. A new unregistered table, a
+missing dependency, a changed pin or a numeric drift fails closed. The second
+command includes the same rehearsal in the existing CI claim audit.
+
+The initial clean-checkout exercise discovered two missing machine-readable
+inputs. `artifact_rehearsal_20260924/inputs/CONTROLLED_SUMMARY.json` was extracted
+from a full rerun of the frozen generator; the final Chicago
+`gap_amendment_20260913/followup_report.json` was recovered byte for byte from
+artifact `10308489958`, run `34731708395`. The recovery provenance and hashes
+are in `artifact_rehearsal_20260924/SOURCE_REPLAY.json`. Neither contains raw
+trip or pedestrian records.
+
+To independently repeat the stronger synthetic and Chicago source replay:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python \
+  code/ai_pilot/benchmarks/event_frontier_truth_benchmark_scale.py \
+  --instances-per-capacity 1000 --base-seed 20260902 \
+  --output-dir tmp/rehearsal-controlled
+# Download the original sealed artifact ZIP from run 34731708395 separately.
+# Do not substitute a fresh live pull or a later checkpoint.
+python scripts/rehearse_submission_artifacts.py \
+  --controlled-report tmp/rehearsal-controlled/report.json \
+  --chicago-zip tmp/chicago-amended.zip \
+  --output-dir tmp/submission-source-replay
+```
+
+The required ZIP SHA-256 is
+`27727eb911ba17941beee9e46f531c37bd594ec898a553e4247befe3fe7b5c1b`.
+This mode verifies all 2,121 sealed file pins, reaggregates 90 Chicago
+sensitivity files (13,390 endpoint rows), and compares 9,000 freshly computed
+synthetic truncation cells. Eight source-replay CSV/Markdown/TeX outputs must
+match byte for byte. JSON serialization sorts dictionary keys, so the replay
+explicitly restores each published CSV schema before comparing bytes.
+
+**Reproduction levels must not be conflated.** ATR's released aggregate tables
+can be rendered offline; its research-use trajectories, annotations and detailed
+witnesses are intentionally not bundled and are not independently replayed by
+this command. NYC summary/fragment regeneration is not a rerun of row-level
+solves. The full Chicago sensitivity replay depends on an external sealed ZIP
+whose availability/retention is separate from repository availability. If it
+expires, default table checks still work, but source replay must remain blocked
+until the identical archive is recovered. Historical runtimes are rendered,
+not remeasured. Geometry transport HOLD, computationally unresolved endpoints,
+snapshot-consistent reconstruction caveats and the public endpoint null remain
+unchanged. No all-raw-inputs-public or city-scale closure claim is made.
+
+### Solver and invariant checks
+
 ```bash
 python -m py_compile \
   code/ai_pilot/data_pipeline/production_audit/live_chicago_release_operator_audit_partitioned.py

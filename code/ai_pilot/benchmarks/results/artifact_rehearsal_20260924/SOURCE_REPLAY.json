@@ -1,0 +1,26 @@
+{
+  "boundary": "Aggregate-only recovery. No ATR raw-data replay, public row re-extraction, or new solver certificates.",
+  "chicago_artifact_id": 10308489958,
+  "chicago_endpoint_rows": 13390,
+  "chicago_sensitivity_files": 90,
+  "chicago_verified_checkpoint_files": 2121,
+  "chicago_zip_sha256": "27727eb911ba17941beee9e46f531c37bd594ec898a553e4247befe3fe7b5c1b",
+  "recovered_sha256": {
+    "code/ai_pilot/benchmarks/results/artifact_rehearsal_20260924/inputs/CONTROLLED_SUMMARY.json": "739ee87e9c85f1f0d96c44aead6c780d21df3ef584a1ddc23b346d753650567d",
+    "code/ai_pilot/data_pipeline/results/chicago_k2_followup/gap_amendment_20260913/followup_report.json": "8941f681ec66847bbf16d3e3fdf2b014f50182ea0413c8d747c99a5f66860c00"
+  },
+  "replayed_files": [
+    "code/ai_pilot/data_pipeline/results/chicago_k2_followup/support_stability_20260913/PAIRED_STABILITY_SUMMARY.csv",
+    "code/ai_pilot/data_pipeline/results/chicago_k2_followup/support_stability_20260913/SUPPORT_POINT_SUMMARY.csv",
+    "code/ai_pilot/data_pipeline/results/chicago_k2_followup/support_stability_20260913/SUPPORT_STABILITY_REPORT.md",
+    "code/ai_pilot/data_pipeline/results/chicago_k2_followup/support_stability_20260913/SUPPORT_STABILITY_RESULTS.tex",
+    "code/ai_pilot/benchmarks/results/controlled_truth_joint_coverage_20260914/JOINT_COVERAGE_SUMMARY.csv",
+    "code/ai_pilot/benchmarks/results/controlled_truth_joint_coverage_20260914/JOINT_TRUNCATION_CELLS.csv",
+    "code/ai_pilot/benchmarks/results/controlled_truth_joint_coverage_20260914/REPORT.md",
+    "code/ai_pilot/benchmarks/results/controlled_truth_joint_coverage_20260914/RESULTS.tex"
+  ],
+  "synthetic_instances": 3000,
+  "synthetic_report_sha256": "f294c9cd259d8d3a1d2f2a7c167a606a01f095dd5da7bb4e7b110bc578759817",
+  "synthetic_truncation_cells": 9000,
+  "version": "submission-table-source-recovery/v1"
+}

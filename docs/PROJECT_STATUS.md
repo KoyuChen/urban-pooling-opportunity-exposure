@@ -1,5 +1,34 @@
 # Verified project status
 
+## September 24: clean-checkout aggregate artifact rehearsal
+
+Starting from remote `c08d96b7493028c114bea43fbe1e4de92095a569`, the rehearsal
+recomputed every manuscript table: eight tables, 53 data rows, 345 cells,
+with no numerical drift. The checker derives rows from machine-readable
+evidence rather than copying the hand-maintained TeX, rejects unregistered
+tables and missing/hash-mismatched inputs, and runs inside the existing
+submission-claim CI audit. It preserves separate outcome-closure and
+threshold-ambiguity denominators.
+
+Two missing repository-level inputs were recovered: the controlled-truth
+capacity summary, after rerunning all 3,000 frozen synthetic instances, and
+the final Chicago window summary from the original sealed artifact. The ZIP
+hash and all 2,121 checkpoint file pins matched. Reaggregation of 90 sensitivity
+files reproduced 13,390 endpoint rows without changing the 34 unresolved pairs.
+The synthetic replay reproduced all 9,000 truncation cells. Eight source-replay
+CSV/Markdown/TeX files and 17 NYC ledger/profile/non-clique files (including
+their manifests) reproduced byte for byte. JSON-to-CSV replay explicitly
+restores the published column order; it never copies reference cell values.
+
+Gate: `PASS_AGGREGATE_REHEARSAL_WITH_RAW_REPLAY_LIMITS`. This is aggregate
+artifact closure, not unrestricted raw-data reproduction. ATR research-use
+trajectories/labels/witnesses remain unbundled; public NYC row-level solves
+were not repeated. The Chicago source replay still needs the separately pinned
+sealed ZIP, although every paper table now renders offline from repository
+aggregates. No endpoint or scientific claim was upgraded. Instructions and
+dependency boundaries are in `docs/REPRODUCIBILITY.md`; evidence is in
+`code/ai_pilot/benchmarks/results/artifact_rehearsal_20260924/`.
+
 ## September 23: outcome-blind non-clique public diagnostic returns a conditional endpoint null
 
 The frozen NYC geometry census predeclared exactly four completed time-only

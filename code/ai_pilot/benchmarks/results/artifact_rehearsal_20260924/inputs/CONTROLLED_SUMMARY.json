@@ -1,0 +1,80 @@
+{
+  "by_capacity": {
+    "2": {
+      "component_mask_unreachable_rate": 0.486,
+      "component_support_count_unreachable_rate": 0.486,
+      "feasible_temporal_point_threshold_error_rate": 0.179,
+      "instance_count": 1000,
+      "maximum_matching_underselection_rate": 1.0,
+      "mean_feasible_temporal_point_absolute_error": 0.12081443918341614,
+      "mean_maximum_matching_support_absolute_error": 1.497,
+      "median_frontier_width": 0.4458974794025883,
+      "nearest_q_infeasible_rate": 0.10299999999999998,
+      "nearest_q_outside_frontier_rate": 0.005,
+      "nearest_q_threshold_error_rate": 0.17733333333333334,
+      "point_errors_flagged_ambiguous_rate": 1.0,
+      "truth_coverage_rate": 1.0
+    },
+    "3": {
+      "component_mask_unreachable_rate": 0.018000000000000016,
+      "component_support_count_unreachable_rate": 0.018000000000000016,
+      "feasible_temporal_point_threshold_error_rate": 0.17433333333333334,
+      "instance_count": 1000,
+      "maximum_matching_underselection_rate": 1.0,
+      "mean_feasible_temporal_point_absolute_error": 0.11827369964344825,
+      "mean_maximum_matching_support_absolute_error": 1.51,
+      "median_frontier_width": 0.4594104109240389,
+      "nearest_q_infeasible_rate": 0.006000000000000005,
+      "nearest_q_outside_frontier_rate": 0.0,
+      "nearest_q_threshold_error_rate": 0.17466666666666666,
+      "point_errors_flagged_ambiguous_rate": 1.0,
+      "truth_coverage_rate": 1.0
+    },
+    "4": {
+      "component_mask_unreachable_rate": 0.0010000000000000009,
+      "component_support_count_unreachable_rate": 0.0010000000000000009,
+      "feasible_temporal_point_threshold_error_rate": 0.18966666666666668,
+      "instance_count": 1000,
+      "maximum_matching_underselection_rate": 1.0,
+      "mean_feasible_temporal_point_absolute_error": 0.12467855981723301,
+      "mean_maximum_matching_support_absolute_error": 1.472,
+      "median_frontier_width": 0.47346513325911616,
+      "nearest_q_infeasible_rate": 0.0030000000000000027,
+      "nearest_q_outside_frontier_rate": 0.001,
+      "nearest_q_threshold_error_rate": 0.19,
+      "point_errors_flagged_ambiguous_rate": 1.0,
+      "truth_coverage_rate": 1.0
+    }
+  },
+  "design": {
+    "buffer_rows_per_instance": 8,
+    "candidate_ranking_uses_public_outcome": false,
+    "candidate_retention_levels": [
+      4,
+      6,
+      8
+    ],
+    "capacities": [
+      2,
+      3,
+      4
+    ],
+    "capacity_four_design": "same temporal generator as C=3, re-evaluated under C=4; generated truth peak occupancy is at most two",
+    "core_rows_per_instance": 3,
+    "instances_per_capacity": 1000,
+    "point_rules": [
+      "maximum-cardinality maximum-overlap pair matching",
+      "positive-overlap connected components",
+      "nearest-q temporal selection",
+      "feasible maximum-temporal-score selection at true q"
+    ],
+    "thresholds": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "true_support_count_used_for_composition_task": true,
+    "true_support_count_used_for_support_baselines": false,
+    "truth_memberships_used_as_model_input": false
+  }
+}

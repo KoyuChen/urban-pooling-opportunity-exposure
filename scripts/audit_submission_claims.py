@@ -7,6 +7,9 @@ import csv
 import json
 import math
 from pathlib import Path
+import tempfile
+
+from rehearse_submission_artifacts import run as rehearse_artifacts
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -287,6 +290,10 @@ def main() -> None:
         "fixed $C=2$ is polynomial",
     )
 
+    with tempfile.TemporaryDirectory(prefix="eventfrontier-submission-rehearsal-") as temporary:
+        rehearsal = rehearse_artifacts(ROOT, Path(temporary))
+    print(f"Aggregate artifact rehearsal: PASS ({rehearsal['table_count']} tables, "
+          f"{rehearsal['table_cells']} cells; raw replay limits retained)")
     print(
         "Submission claim audit: PASS "
         f"({evidence_checks} evidence checks, {boundary_guards} boundary guards)"
