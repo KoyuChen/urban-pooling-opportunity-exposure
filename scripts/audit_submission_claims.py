@@ -208,16 +208,15 @@ def main() -> None:
     evidence_checks += 11
     evidence_checks += require(
         "paper/sections/data_results.tex",
-        "96 are common-support eligible and certified",
-        "0/48 ordered--clique and 0/48 ordered--pair comparisons",
-        "more buffer worlds than cliques in 1/24",
+        "All 96\ncommon-support comparisons certify",
+        "but 0/48 endpoints move for\neither restriction",
+        "add buffer worlds versus\ncliques in 1/24",
     )
     boundary_guards += require(
         "paper/sections/data_results.tex",
-        "The remaining thirteen transport-unresolved census cells stay in the denominator",
-        "not model equivalence",
-        "neither a holdout nor evidence of true-event recovery",
-        "true-event recovery or population prevalence",
+        "The census denominator remains 8 complete, 3 ineligible",
+        "this conditional null is neither model equivalence",
+        "nor evidence of true-event recovery or prevalence",
     )
     boundary_guards += forbid(
         "paper/main.tex",
@@ -241,14 +240,14 @@ def main() -> None:
     evidence_checks += 8
     evidence_checks += require(
         "paper/sections/data_results.tex",
-        "all 192 lower/upper endpoint--restriction checks",
-        "36 add only event partitions, four add projected buffer subsets, and eight coincide",
-        "none ties an audited endpoint",
+        "in all 192 lower/upper\nchecks",
+        "36 add only event partitions, four add projected\nsubsets, and eight add neither",
+        "no added subset ties a declared-query endpoint",
     )
     boundary_guards += require(
         "paper/sections/data_results.tex",
-        "without changing windows, supports, or queries",
-        "projected support can expand without changing a particular additive frontier",
+        "without changing queries",
+        "a family can expand before its projected additive frontier does",
     )
 
     cache = read_json(
