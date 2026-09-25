@@ -1,5 +1,24 @@
 # Next EventFrontier research gate
 
+## September 25 update: the endpoint-null mechanism is witnessed
+
+All 192 lower/upper endpoint--restriction checks on the four frozen public
+non-clique views are attained by pair/clique worlds using the same selected
+buffer subset as an ordered endpoint witness. Across 48 restriction cells,
+36 expand only event partitions, four expand projected buffer support, and
+eight coincide at both levels. The four projected-support expansions add nine
+subsets apiece, but none ties an endpoint for either predeclared additive
+query. Gate: **PASS_ENDPOINT_ATTAINMENT_NULL_EXPLAINED**.
+
+The next single task is to close the corresponding projection-to-frontier
+theory statement. For nested fixed-q event families, characterize equality of
+one additive frontier by intersection with the ordered exposed minimum and
+maximum faces, and equality for every additive row outcome by equality of the
+0--1 selected-buffer projections. Supply a minimal separation example and
+connect it to the frozen mechanism audit without constructing a post-hoc
+public query. Do not claim that the public null is family equivalence or that
+the existence of a separating coefficient vector is an observed city effect.
+
 ## September 24 update: aggregate artifact rehearsal passes with raw-replay limits
 
 All eight manuscript tables and their 345 data cells are now checked against

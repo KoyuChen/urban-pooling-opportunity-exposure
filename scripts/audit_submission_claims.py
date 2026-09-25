@@ -225,6 +225,32 @@ def main() -> None:
         "city-scale closure",
     )
 
+    attainment = read_json(
+        "code/ai_pilot/data_pipeline/results/nyc_hvfhv/"
+        "nonclique_endpoint_attainment_20260925/SUMMARY.json"
+    )
+    attainment_summary = attainment["summary"]
+    assert attainment["status"] == "PASS_ENDPOINT_ATTAINMENT_NULL_EXPLAINED"
+    assert attainment_summary["endpoint_attainment_checks"] == 192
+    assert attainment_summary["attained_endpoint_checks"] == 192
+    assert attainment_summary["unresolved_endpoint_checks"] == 0
+    assert attainment_summary["partition_only_cells"] == 36
+    assert attainment_summary["extra_subset_cells"] == 4
+    assert attainment_summary["identical_partition_and_subset_cells"] == 8
+    assert attainment_summary["endpoint_checks_with_ordered_only_ties"] == 0
+    evidence_checks += 8
+    evidence_checks += require(
+        "paper/sections/data_results.tex",
+        "all 192 lower/upper endpoint--restriction checks",
+        "36 add only event partitions, four add projected buffer subsets, and eight coincide",
+        "none ties an audited endpoint",
+    )
+    boundary_guards += require(
+        "paper/sections/data_results.tex",
+        "without changing windows, supports, or queries",
+        "projected support can expand without changing a particular additive frontier",
+    )
+
     cache = read_json(
         "code/ai_pilot/data_pipeline/results/nyc_hvfhv/"
         "branch_price_cache_reconstruction_20260919/SUMMARY.json"

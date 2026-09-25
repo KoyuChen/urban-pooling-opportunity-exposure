@@ -138,6 +138,35 @@ After a transport interruption, add `--resume`; validated completed caches are
 reused and only missing windows are fetched. A timeout or interruption remains
 unresolved and is never converted to infeasibility.
 
+### Endpoint-attainment mechanism audit
+
+The September 25 audit requires the same four ignored private caches produced
+by the outcome-blind non-clique run. It verifies their protocol, geometry and
+modeled-input hashes before use, and emits only aggregate counts and witness
+hashes:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python \
+  code/ai_pilot/data_pipeline/production_audit/audit_nyc_nonclique_endpoint_attainment.py \
+  --cache-dir tmp/nyc-nonclique-structure-gate \
+  --output-dir \
+    code/ai_pilot/data_pipeline/results/nyc_hvfhv/nonclique_endpoint_attainment_20260925
+```
+
+The cache directory must contain the four `window-*.private.json` files from
+the frozen run. The audit reconstructs complete event columns and counts event
+partitions by selected-buffer subset; every reported endpoint is scored with
+exact rational arithmetic and its event witness is replayed. It also compares
+all projected-world counts and endpoint values against the September 23
+aggregate. Run twice, all JSON, CSV, Markdown, TeX and manifest bytes are
+identical.
+
+The committed result deliberately cannot reconstruct row-level inputs from its
+hashes. Those caches retain public-row payloads and remain git-ignored. Absence
+of an identical cache blocks source replay; it must not be replaced by a new
+live pull and must not be relabeled infeasible. The aggregate result does not
+resolve the geometry census's 13 transport failures or identify true events.
+
 ## Chicago live release audit
 
 ```bash

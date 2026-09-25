@@ -1,0 +1,11 @@
+{
+  "aggregate_only": true,
+  "files_sha256": {
+    "ENDPOINT_ATTAINMENT.csv": "b375b7aba283f65eaa6c8904eebfdfb818ddd826b3ca0433db7929a097fe2131",
+    "MECHANISM_CELLS.csv": "3d5f3f1c12aea1adfef0bb82f39815d9e5aa3564fd87c2f0845801e632312d0e",
+    "REPORT.md": "65c08ec7bca9a9e9d983cd85fe04ab0ffe928f593eb296275afa4c5083e128b4",
+    "RESULTS.tex": "8773e67a890d06b2625c8200a7cb224d9cb5985a382c526712eb23eaeb1e23ca",
+    "SUMMARY.json": "08c317fdfa4a8e297f9a822c98563e8a362369365b8ea3c71250dda4925fecde"
+  },
+  "version": "nyc-nonclique-endpoint-attainment-manifest/v1"
+}

@@ -1,5 +1,28 @@
 # Verified project status
 
+## September 25: the public endpoint null now has a witnessed mechanism
+
+The endpoint-attainment audit reuses exactly the four frozen NYC non-clique
+views, capacities, fixed supports and two public queries from the September 23
+gate. It does not attach a post-hoc query. All 192 lower/upper
+endpoint--restriction checks have a pair or clique witness selecting the same
+buffer subset as an ordered endpoint witness; 270 distinct witness hashes
+replay and no check remains unresolved.
+
+The audit separates latent event partitions from their selected-buffer
+projection. Of 48 restriction world cells, 36 have the same projected buffer
+support but additional ordered-event partitions, four have genuinely larger
+ordered buffer support, and eight coincide at both levels. The four support
+differences all occur in `apr_weekday_pm_n8` at q=4: ordered reaches 495 subsets
+versus 486 for cliques at C=2 and versus 486 for pairs at C=2,3,4. None of the
+extra subsets ties a lower or upper endpoint for either declared query.
+
+Gate: `PASS_ENDPOINT_ATTAINMENT_NULL_EXPLAINED`. This explains 0/48 endpoint
+changes without claiming model equivalence. It does not change the 13
+transport-unresolved geometry cells, reveal true events, validate a post-hoc
+outcome, or establish city-scale closure. Aggregate results and hashes are in
+`results/nyc_hvfhv/nonclique_endpoint_attainment_20260925/`.
+
 ## September 24: clean-checkout aggregate artifact rehearsal
 
 Starting from remote `c08d96b7493028c114bea43fbe1e4de92095a569`, the rehearsal
