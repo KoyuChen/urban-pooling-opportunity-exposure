@@ -1,5 +1,24 @@
 # Next EventFrontier research gate
 
+## September 26 update: projection-to-frontier theory is closed
+
+For nested nonempty fixed-q world families, one selected-row additive frontier
+is equal exactly when the restricted projection intersects both ordered exposed
+endpoint faces. Equality for every such additive outcome holds exactly when the
+0--1 selected-buffer projections agree. A constructive separator proves the
+converse, and a minimal three-buffer example separates strict projection
+inclusion from one unchanged frontier. Gate:
+**PASS_PROJECTION_TO_FRONTIER_THEORY**.
+
+The next single task is a fail-closed submission stress test of the current
+eight-page narrative against KDD-style objections. Build a claim--reviewer-risk
+matrix from the actual manuscript and frozen evidence, then make only changes
+that are evidence-neutral: foreground the discovered three-layer distinction,
+demote unsupported ordered-event advantage language, and ensure the conditional
+null is presented as a mechanism result rather than a failed benchmark. Do not
+add a city, model, query, or unverified experiment; preserve all unresolved
+denominators and the open global complexity classification.
+
 ## September 25 update: the endpoint-null mechanism is witnessed
 
 All 192 lower/upper endpoint--restriction checks on the four frozen public

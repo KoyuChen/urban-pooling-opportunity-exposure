@@ -46,6 +46,55 @@ Complete enumeration gives four pair and six clique/event partitions.
 Both examples use the additive-pricing aggregate class of
 Proposition~\ref{prop:aggregateclass}; neither is a public-data measurement.
 
+\begin{proposition}[Projection-to-frontier equivalence]
+\label{prop:projectionfrontier}
+Let $\mathcal W_R\subseteq\mathcal W_O$ be nonempty fixed-$q$ world families,
+and let $\mathcal Z_R\subseteq\mathcal Z_O\subseteq\{0,1\}^{B_0}$ be their
+selected-buffer projections. For a selected-row additive outcome
+$H_w(W)=a+\rho w^\top z(W)$ with fixed $a$ and $\rho>0$, define the exposed
+minimum and maximum faces of $P_O=\operatorname{conv}(\mathcal Z_O)$ under
+$w$:
+\[
+ E_O^-(w)=\arg\min_{z\in P_O}w^\top z,
+ \qquad E_O^+(w)=\arg\max_{z\in P_O}w^\top z.
+\]
+The two families have the same lower and upper endpoints for this $w$ if
+and only if $\mathcal Z_R$ intersects both faces. They have the same endpoints
+for every $w\in\mathbb R^{B_0}$ if and only if
+$\mathcal Z_R=\mathcal Z_O$ (equivalently, their convex hulls agree).
+\end{proposition}
+\begin{proof}
+Because $H_w$ factors through $z(W)$, its extrema over either world family are
+the extrema of the affine functional over the corresponding finite projection.
+Nestedness implies equality of the lower endpoint exactly when some point of
+$\mathcal Z_R$ attains the ordered minimum, and likewise for the maximum; this
+is precisely intersection with both exposed faces.
+
+Equal projections plainly give equal endpoints for every $w$. Conversely,
+take $z^*\in\mathcal Z_O\setminus\mathcal Z_R$ and set
+$w_j=1$ when $z^*_j=1$ and $w_j=-1$ otherwise. For every other binary $z$,
+$w^\top z^*-w^\top z$ is their positive Hamming distance. Thus $z^*$ is the
+unique maximizer over $\mathcal Z_O$, while the restricted maximum is strictly
+smaller, a contradiction. Equality of all linear extrema is also equivalent
+to equality of the convex hulls; the constructive argument shows that finite
+0--1 projections themselves must then agree.
+\end{proof}
+
+\paragraph{Minimal separation of projection and one frontier.}
+At $q=1$, let $\mathcal Z_R=\{100,001\}$ and
+$\mathcal Z_O=\{100,010,001\}$. For $w=(0,1,2)$ both frontiers are $[0,2]$,
+but the ordered-only point has value one and is strictly interior. Three
+buffers are minimal for such a strict-interior omission under distinct
+weights: with two buffers, a strict nonempty fixed-$q$ inclusion leaves a
+singleton restriction, so adding the other point changes an endpoint.
+Separately, with four mutually overlapping exact rows at $C=2,q=2$, the partitions
+$\{\{c_1,b_1\},\{c_2,b_2\}\}$ and
+$\{\{c_1,b_2\},\{c_2,b_1\}\}$ have the same projection. Adding the second
+can enlarge a partition family without changing any selected-row additive
+frontier. Partition-dependent outcomes such as event count are outside the
+proposition. These witnesses explain possible mechanisms; they are not new
+public-data queries.
+
 \paragraph{Proof of Proposition~\ref{prop:nesting}.}
 Take $F=(t,\Pi)\in\F(\T,C,q)$. Since $t_i\in\T_i\subseteq\T'_i$, the
 same completion is allowed after coarsening. Every event keeps its

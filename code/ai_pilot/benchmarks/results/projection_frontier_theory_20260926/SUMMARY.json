@@ -1,0 +1,212 @@
+{
+  "audit": {
+    "exposed_face_checks": 503310,
+    "fixed_q_cells": 14,
+    "mismatches": 0,
+    "nested_family_pairs": 846,
+    "separator_checks": 728,
+    "strict_nested_pairs": 728
+  },
+  "cells": [
+    {
+      "exposed_face_checks": 5,
+      "integer_objectives": 5,
+      "n": 1,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 0,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    },
+    {
+      "exposed_face_checks": 5,
+      "integer_objectives": 5,
+      "n": 1,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 1,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    },
+    {
+      "exposed_face_checks": 25,
+      "integer_objectives": 25,
+      "n": 2,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 0,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    },
+    {
+      "exposed_face_checks": 125,
+      "integer_objectives": 25,
+      "n": 2,
+      "nested_family_pairs": 5,
+      "projection_points": 2,
+      "q": 1,
+      "separator_checks": 2,
+      "strict_nested_pairs": 2
+    },
+    {
+      "exposed_face_checks": 25,
+      "integer_objectives": 25,
+      "n": 2,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 2,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    },
+    {
+      "exposed_face_checks": 125,
+      "integer_objectives": 125,
+      "n": 3,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 0,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    },
+    {
+      "exposed_face_checks": 2375,
+      "integer_objectives": 125,
+      "n": 3,
+      "nested_family_pairs": 19,
+      "projection_points": 3,
+      "q": 1,
+      "separator_checks": 12,
+      "strict_nested_pairs": 12
+    },
+    {
+      "exposed_face_checks": 2375,
+      "integer_objectives": 125,
+      "n": 3,
+      "nested_family_pairs": 19,
+      "projection_points": 3,
+      "q": 2,
+      "separator_checks": 12,
+      "strict_nested_pairs": 12
+    },
+    {
+      "exposed_face_checks": 125,
+      "integer_objectives": 125,
+      "n": 3,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 3,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    },
+    {
+      "exposed_face_checks": 625,
+      "integer_objectives": 625,
+      "n": 4,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 0,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    },
+    {
+      "exposed_face_checks": 40625,
+      "integer_objectives": 625,
+      "n": 4,
+      "nested_family_pairs": 65,
+      "projection_points": 4,
+      "q": 1,
+      "separator_checks": 50,
+      "strict_nested_pairs": 50
+    },
+    {
+      "exposed_face_checks": 415625,
+      "integer_objectives": 625,
+      "n": 4,
+      "nested_family_pairs": 665,
+      "projection_points": 6,
+      "q": 2,
+      "separator_checks": 602,
+      "strict_nested_pairs": 602
+    },
+    {
+      "exposed_face_checks": 40625,
+      "integer_objectives": 625,
+      "n": 4,
+      "nested_family_pairs": 65,
+      "projection_points": 4,
+      "q": 3,
+      "separator_checks": 50,
+      "strict_nested_pairs": 50
+    },
+    {
+      "exposed_face_checks": 625,
+      "integer_objectives": 625,
+      "n": 4,
+      "nested_family_pairs": 1,
+      "projection_points": 1,
+      "q": 4,
+      "separator_checks": 0,
+      "strict_nested_pairs": 0
+    }
+  ],
+  "claim_boundary": "Selected-row additive objectives only; partition-dependent outcomes and post-hoc public-data separating queries are excluded.",
+  "minimal_separation_witness": {
+    "common_frontier": [
+      0,
+      2
+    ],
+    "ordered_only_point": [
+      0,
+      1,
+      0
+    ],
+    "ordered_only_value": 1,
+    "ordered_projection": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "partition_only_example": {
+      "common_projection": [
+        1,
+        1
+      ],
+      "ordered_partition_count": 2,
+      "restricted_partition_count": 1
+    },
+    "restricted_projection": [
+      [
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "strictly_interior": true,
+    "three_buffers_minimal_for_strict_interior_with_distinct_weights": true,
+    "two_buffer_strict_inclusions_checked": 2,
+    "weight": [
+      0,
+      1,
+      2
+    ]
+  },
+  "status": "PASS_PROJECTION_TO_FRONTIER_THEORY",
+  "version": "projection-frontier-theory/v1"
+}

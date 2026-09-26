@@ -10,6 +10,22 @@ python -m pip install -r code/ai_pilot/requirements.txt
 
 ## Deterministic checks
 
+### Projection-to-frontier theorem audit (September 26)
+
+```bash
+python code/ai_pilot/benchmarks/projection_frontier_theory_audit.py \
+  --output-dir tmp/projection-frontier-audit
+```
+
+The audit enumerates every nested nonempty fixed-cardinality projection family
+with at most four buffers. It checks 503,310 exact integer-objective cases
+against the exposed-face criterion and constructs a separating additive
+objective for all 728 strict inclusions. Outputs are deterministic JSON, CSV,
+Markdown, TeX and a hash manifest. This is regression evidence for the proof,
+not a proof by enumeration or a public-data effect. It applies only to outcomes
+that factor through selected-row incidence; event-count and other
+partition-dependent outcomes are excluded.
+
 ### Clean-checkout aggregate rehearsal (September 24)
 
 ```bash

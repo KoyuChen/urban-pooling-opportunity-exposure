@@ -250,6 +250,41 @@ def main() -> None:
         "a family can expand before its projected additive frontier does",
     )
 
+    projection = read_json(
+        "code/ai_pilot/benchmarks/results/"
+        "projection_frontier_theory_20260926/SUMMARY.json"
+    )
+    projection_audit = projection["audit"]
+    projection_witness = projection["minimal_separation_witness"]
+    assert projection["status"] == "PASS_PROJECTION_TO_FRONTIER_THEORY"
+    assert projection_audit["fixed_q_cells"] == 14
+    assert projection_audit["nested_family_pairs"] == 846
+    assert projection_audit["exposed_face_checks"] == 503_310
+    assert projection_audit["separator_checks"] == 728
+    assert projection_audit["mismatches"] == 0
+    assert projection_witness["strictly_interior"] is True
+    assert projection_witness[
+        "three_buffers_minimal_for_strict_interior_with_distinct_weights"
+    ] is True
+    evidence_checks += 8
+    evidence_checks += require(
+        "paper/sections/appendix.tex",
+        "Projection-to-frontier equivalence",
+        "if and only if $\\mathcal Z_R$ intersects both faces",
+        "for every $w\\in\\mathbb R^{B_0}$ if and only if",
+        "their positive Hamming distance",
+    )
+    evidence_checks += require(
+        "paper/sections/data_results.tex",
+        "the single-query case of Proposition~\\ref{prop:projectionfrontier}",
+        "not a claim that all additive frontiers coincide",
+    )
+    boundary_guards += require(
+        "paper/sections/appendix.tex",
+        "Partition-dependent outcomes such as event count are outside the proposition",
+        "they are not new public-data queries",
+    )
+
     cache = read_json(
         "code/ai_pilot/data_pipeline/results/nyc_hvfhv/"
         "branch_price_cache_reconstruction_20260919/SUMMARY.json"

@@ -1,0 +1,10 @@
+{
+  "files": {
+    "EXHAUSTIVE_CELLS.csv": "3eaaf73a7ac065f702dab9b9a2d056bb8f8e4b6298e6944b10bde93e765aa059",
+    "REPORT.md": "1cc638c0b5a6c06412ca75551ce2fc91597a8fab2312313b4bb510424a585e14",
+    "RESULTS.tex": "bc64c8bb0e9793521ce7d23f89987190ed072afa8897754fe15f29cc0739b764",
+    "SUMMARY.json": "aaff92e15a339e0483c1906212999fd73b2c43da614616be68251e4b0dce1146"
+  },
+  "status": "PASS_PROJECTION_TO_FRONTIER_THEORY",
+  "version": "projection-frontier-theory/v1"
+}

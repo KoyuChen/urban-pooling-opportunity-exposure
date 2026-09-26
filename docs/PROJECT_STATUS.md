@@ -1,5 +1,26 @@
 # Verified project status
 
+## September 26: projection-to-frontier theory closes the endpoint mechanism
+
+For nested nonempty fixed-q world families, the manuscript now separates event
+partitions, 0--1 selected-buffer projections and additive endpoints. A fixed
+additive frontier is equal exactly when the restricted projection intersects
+both exposed endpoint faces of the ordered projection. Equality for every
+selected-row additive outcome is equivalent to equality of the two binary
+projection sets; equality of partition families is unnecessary.
+
+The proof is constructive. Any omitted binary projection is uniquely separated
+by coefficients +1 on its selected coordinates and -1 elsewhere. Exact finite
+regression checks cover 846 nested family pairs, 503,310 objective cases and
+728 strict-inclusion separators with zero mismatches. A minimal q=1 example
+shows that a projection can expand by a strictly interior point without moving
+one declared frontier.
+
+Gate: `PASS_PROJECTION_TO_FRONTIER_THEORY`. This does not cover
+partition-dependent targets such as event count and does not create a post-hoc
+NYC query. The 13 geometry transport failures and all previous endpoint limits
+remain unchanged.
+
 ## September 25: the public endpoint null now has a witnessed mechanism
 
 The endpoint-attainment audit reuses exactly the four frozen NYC non-clique

@@ -8,6 +8,7 @@ does not add public-data observations or establish a global hardness result.
 | Question | Result and location | Verification |
 |---|---|---|
 | Does changing event structure change an answer at fixed support? | `prop:modelcontainment`, main model section and appendix: pair is contained in clique, which is contained in event; two strict selected-buffer-mean witnesses | Exact rational complete partition enumeration |
+| When does a nested structural restriction leave additive answers unchanged? | `prop:projectionfrontier`: for one outcome iff the restricted projection hits both ordered exposed faces; for every selected-row additive outcome iff the 0--1 projections agree | 503,310 exact exposed-face checks and 728 constructive strict-inclusion separators |
 | When should the public structural comparison return no event/clique difference? | Same proposition: equality whenever the exact overlap graph is a disjoint union of cliques, for every capacity | Common-intersection examples at capacities 2, 3, 4, 6 |
 | What makes interval connectivity different from touching or a clique? | `lem:connectivity`, main algorithm section: segment coverage plus a crossing interval at every internal boundary is equivalent to positive-overlap connectivity | Two-direction proof; endpoint-touching tests |
 | Which aggregates preserve local pricing? | `prop:aggregateclass`: fixed-q row sums plus a constant per event, divided by a known positive denominator | Direct column coefficient and dual substitution |
@@ -43,6 +44,16 @@ The observed NYC common 14-second intersection is a collapse instance.
 Containment explains why event and clique coincide there, but alone does not
 explain pair equality at capacities above two or equality for every fixed-q
 query; those additional observations remain empirical checks of that input.
+
+The later frozen non-clique audit exercises the other direction. Its ordered
+family adds event partitions in 36/48 restriction cells and projected buffer
+subsets in 4/48, yet the added projections miss both exposed endpoint faces
+for the two declared queries. Proposition `prop:projectionfrontier` explains
+that result without equating the world families. It also shows why equality
+for every additive outcome would require projection equality: any omitted
+binary point has a constructive linear separator. The separator establishes
+mathematical distinguishability, not an observed city effect, so it is not
+used to choose a new public query.
 
 ## Exact scope of the epsilon bridge
 
