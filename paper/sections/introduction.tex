@@ -49,11 +49,12 @@ Our contributions are threefold.
 \begin{enumerate}[leftmargin=*,itemsep=2pt,topsep=3pt]
 \item \textbf{A precise event-level identification model.} We combine required
 and optional rows, sequential membership, simultaneous occupancy, and joint
-timestamp completion. A fixed-$q$ separation changes a row-additive aggregate
-under the event model; a collapse condition explains when it cannot differ
-from cliques. An overlap-margin equivalence connects the continuous MILP to
-the same strict-overlap object. Pairwise compatibility and outer time
-envelopes cannot substitute for joint feasibility.
+timestamp completion. We separate event partitions, selected-row projections,
+and additive frontiers. For nested fixed-$q$ families, exposed faces characterize
+one frontier; projection equality characterizes all additive frontiers. A
+fixed-$q$ separation and collapse condition locate clique differences, while an
+overlap-margin equivalence connects the continuous MILP to strict overlap.
+Pairwise compatibility cannot substitute for joint feasibility.
 Support nesting and threshold certification specify the resulting guarantee;
 they are consequences of possible-world semantics, not new general principles.
 \item \textbf{An integral local optimization primitive.} With exact intervals,
@@ -63,11 +64,11 @@ resulting integral LP prices a single event. We integrate this primitive into
 Dantzig--Wolfe decomposition and branch-and-price for support maximization,
 identify an aggregate class preserving its pricing structure, and retain
 explicit bounds when search is incomplete. No global hardness result is claimed.
-\item \textbf{An audit separating three evidentiary questions.} Controlled
-ordered-event instances check optimization and decision logic. Annotated
-pedestrian dyads test whether geometric candidate rules retain a real relation.
-Public Chicago and NYC records test conditional ambiguity and computational
-coverage. No experiment is used as evidence for a different layer's claim.
+\item \textbf{A layered empirical and mechanism audit.} Controlled instances
+check decision logic; annotated dyads test relation retention; public Chicago
+and NYC records test conditional ambiguity and computation. Exact replay
+explains why richer NYC worlds leave declared endpoints unchanged. No result is
+used for another layer's claim.
 \end{enumerate}
 
 In 3,000 controlled instances, a feasible temporal point rule has
@@ -84,7 +85,8 @@ The public results delimit the contribution. Chicago's calendar-disjoint
 96-window follow-up returns 90 complete and six ineligible windows; 10,728 of
 10,762 data-complete endpoint pairs close numerically and 34 remain unresolved.
 NYC has 125 witness-certified ambiguous decisions among 126 cells, and an
-18-cell support lattice closes through 16 cores and 48 buffers. Outcome-blind
-non-clique views add ordered worlds but change 0/48 clique-comparison endpoints.
-These results support conditional ambiguity and bounded-scale computation, not
-an empirical outcome advantage.
+18-cell support lattice closes through 16 cores and 48 buffers. In the 0/48
+non-clique endpoint null, 36 restrictions add only event partitions, four also
+enlarge the selected-row projection, and none reaches either declared-query
+endpoint. This supports conditional ambiguity and a mechanism-resolved null,
+not model equivalence, city-scale closure, or an empirical outcome advantage.

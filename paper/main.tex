@@ -28,29 +28,25 @@
 \title{EventFrontier: Aggregate Identification over Hidden Temporal-Event Partitions}
 \begin{document}
 \begin{abstract}
-Existing methods bound aggregates over uncertain record linkages or database
-repairs. Event logs pose a different latent object when released rows must be
-partitioned into temporal events: feasibility depends on a common timestamp
-completion, overlap connectivity, and capacity at every instant. Pairwise
-compatibility alone need not describe a realizable event, while sequential
-membership can exceed simultaneous capacity.
-We introduce \methodname, a conditional identification framework for
-positive-overlap-connected events with bounded simultaneous occupancy.
-Uncertain timestamps are completed jointly rather than link by link. For exact
-intervals, fixed root and span,
-and additive row weights, segment-coverage and boundary-bridge constraints
-yield an integral LP pricing oracle. We embed it in a nonintegral event-column
-master and branch-and-price for support maximization; uncertain-time models
-retain explicit feasibility and unresolved statuses. In 3,000 controlled
-instances, a feasible point rule makes 17.4--19.0\% threshold errors, all
-flagged when the true world is admissible. On annotated pedestrian dyads, a
-pilot-selected support retains 81/82 follow-up worlds but certifies only
-29/246 decisions. In a predeclared Chicago pair extension, 90/96 windows
-complete and six are ineligible; 10,728/10,762 data-complete endpoint pairs are
-numerically certified, while 34 remain unresolved. NYC yields 125/126
-witness-certified ambiguous cells. Outcome-blind non-clique views add ordered
-worlds but change 0/48 clique-comparison endpoints, supporting conditional
-ambiguity rather than a public-data outcome advantage.
+Public event logs can disclose every participation while suppressing the key
+that groups rows into events. Temporal events impose a distinct feasible-world
+object: one joint timestamp completion, positive-overlap connectivity, and
+instantaneous capacity. Its uncertainty has three layers---event partitions,
+selected-row projections, and additive frontiers---that need not change
+together. \methodname{} bounds aggregates over this object. For nested fixed-$q$
+models, one frontier agrees exactly when the restricted projection reaches both
+exposed endpoint faces; all selected-row additive frontiers agree exactly when
+the binary projections agree. For exact intervals, an integral LP prices one
+fixed-root, fixed-span event inside branch-and-price; uncertain time retains
+explicit feasibility and unresolved statuses. Candidate truncation creates
+false certificates in 6.9--7.7\% of apparently certified controlled decisions.
+An annotated transfer retains 81/82 follow-up worlds but certifies only 29/246
+decisions. Chicago completes 90/96 windows and closes 10,728/10,762
+data-complete endpoint pairs; 34 remain unresolved. NYC yields 125/126
+witness-certified ambiguous cells. In non-clique views, 36/48 restrictions add
+only partitions and 4/48 also add projections, but no addition reaches a
+declared endpoint. This is a mechanism result, not model equivalence or an
+ordered-event advantage.
 \end{abstract}
 \ccsdesc[500]{Information systems~Data provenance}
 \ccsdesc[500]{Information systems~Data integration}

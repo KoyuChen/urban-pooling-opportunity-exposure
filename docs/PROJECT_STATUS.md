@@ -1,5 +1,29 @@
 # Verified project status
 
+## September 27: KDD narrative stress test passes with an open impact risk
+
+The current eight-page manuscript has been audited against the KDD 2027
+Research Track criteria using only frozen evidence. The claim--evidence--risk
+matrix covers technical merit, originality, potential impact, execution,
+presentation, related work, reproducibility and ethics. It records the allowed
+evidence-neutral answer to each likely objection and the escalation that must
+remain forbidden.
+
+The abstract, contribution list, public-results paragraph, discussion and
+conclusion now share one organizing distinction: latent event partitions map
+to selected-row projections, which map to query-specific additive frontiers.
+The NYC 0/48 endpoint result is presented as a mechanism-resolved null: 36/48
+restriction cells expand only partitions, 4/48 also expand projections, and no
+added projection reaches a declared endpoint. It is not presented as model
+equivalence or a public ordered-event advantage.
+
+Gate: `PASS_KDD_NARRATIVE_STRESS_TEST_WITH_OPEN_IMPACT_RISK`. The residual
+acceptance risk is potential impact: no wording change can manufacture the
+public-data ordered-event outcome advantage that the frozen evidence does not
+show. All Chicago and NYC unresolved denominators, raw-replay limits and the
+open global complexity classification remain unchanged. The detailed matrix is
+in `docs/KDD_REVIEW_STRESS_TEST_20260927.md`.
+
 ## September 26: projection-to-frontier theory closes the endpoint mechanism
 
 For nested nonempty fixed-q world families, the manuscript now separates event

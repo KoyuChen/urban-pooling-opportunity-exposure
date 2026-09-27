@@ -54,7 +54,26 @@ def main() -> None:
     boundary_guards += require(
         "paper/main.tex",
         "Aggregate Identification over Hidden Temporal-Event Partitions",
-        "Existing methods bound aggregates over uncertain record linkages or database repairs",
+        "event partitions, selected-row projections, and additive frontiers",
+        "36/48 restrictions add only partitions and 4/48 also add projections",
+        "not model equivalence or an ordered-event advantage",
+    )
+    boundary_guards += require(
+        "paper/sections/introduction.tex",
+        "event partitions, selected-row projections, and additive frontiers",
+        "36 restrictions add only event partitions, four also enlarge the selected-row projection",
+        "not model equivalence, city-scale closure, or an empirical outcome advantage",
+    )
+    boundary_guards += require(
+        "paper/sections/discussion.tex",
+        "Event partitions map to selected-row projections, which map to query-specific frontiers",
+        "Public-data evidence for an ordered-event outcome advantage remains open",
+    )
+    boundary_guards += require(
+        "docs/KDD_REVIEW_STRESS_TEST_20260927.md",
+        "PASS_KDD_NARRATIVE_STRESS_TEST_WITH_OPEN_IMPACT_RISK",
+        "The largest unresolved reviewer risk is **potential impact**",
+        "No empirical number, solver certificate, denominator, model, or query changes",
     )
     boundary_guards += require(
         "paper/sections/related_work.tex",
@@ -222,6 +241,7 @@ def main() -> None:
         "paper/main.tex",
         "public-data advantage of general ordered-event structure",
         "city-scale closure",
+        "model equivalence or an ordered-event advantage is established",
     )
 
     attainment = read_json(

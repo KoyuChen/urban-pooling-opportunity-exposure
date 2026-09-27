@@ -1,5 +1,23 @@
 # Next EventFrontier research gate
 
+## September 27 update: KDD narrative stress test is closed
+
+The fail-closed reviewer matrix and evidence-neutral rewrite are complete.
+Event partitions, selected-row projections and additive frontiers now organize
+the abstract, contributions, public evidence, discussion and conclusion. The
+public 0/48 endpoint result is explicitly a mechanism-resolved null; the paper
+does not claim model equivalence, city-scale closure or an ordered-event
+outcome advantage. Gate:
+**PASS_KDD_NARRATIVE_STRESS_TEST_WITH_OPEN_IMPACT_RISK**.
+
+The next single task is a page-neutral visual hierarchy audit. Rework the
+existing structural example into one compact figure that makes the three maps
+visible---partition family to selected-row projection to additive frontier---
+while preserving the strict-overlap example and the eight-page main-text
+boundary. The figure must use only the existing minimal separation witness and
+frozen NYC mechanism counts; it must not add a public query, suggest that the
+ordered model wins empirically, or hide unresolved denominators.
+
 ## September 26 update: projection-to-frontier theory is closed
 
 For nested nonempty fixed-q world families, one selected-row additive frontier
